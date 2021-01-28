@@ -11,3 +11,5 @@ Nutzer(int id primary key, String vorname length 50, String nachname length 50)
 
 Hallo, Jan ist gejoined!
 
+Das hier ist für Jan
+
