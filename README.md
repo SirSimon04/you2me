@@ -26,3 +26,20 @@ Navigationbars #1F2428
 Colors: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmspoweruser.com%2Fwp-content%2Fuploads%2F2020%2F07%2Fdark-mode-whatsapp-web-2.jpg&f=1&nofb=1
 Database: https://cdn.discordapp.com/attachments/801474474158325760/804453683517587486/unknown.png
 
+### Routen: 
+#### GET
+letzte Chats, <br />
+alle Nachrichten aus einem Chat,<br />
+Suchen nach Name, Nummer, Mail <br />
+
+#### Post
+Nachricht senden,<br />
+Account erstellen <br />
+
+#### Put
+Account updaten <br />
+
+#### Delete
+Account löschen <br />
+evtl: Nachricht löschen <br />
+ 
