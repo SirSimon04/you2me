@@ -35,19 +35,25 @@ public class NutzerWS {
     @EJB
     private NutzerEJB nutzerEJB;
     
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAll(){
-        Gson parser = new Gson();
-        List<Nutzer> alleNutzer = nutzerEJB.getAll();
-        return parser.toJson(alleNutzer);
-    }
+    
     
     @GET
     @Path("/test")
     @Produces(MediaType.TEXT_PLAIN)
     public String test() {
         return ("test succesful1");
+    }
+    
+    /*
+    Es folgen alle Methoden, die sich auf die Klasse Nutzer beziehen
+    */
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAll(){
+        Gson parser = new Gson();
+        List<Nutzer> alleNutzer = nutzerEJB.getAll();
+        return parser.toJson(alleNutzer);
     }
     
     @GET
@@ -91,5 +97,10 @@ public class NutzerWS {
         Nutzer aktNutzer = parser.fromJson(jsonStr, Nutzer.class);
         return nutzerEJB.update(aktNutzer);
     }
+    
+    /*
+    Es folgen Methoden, die die Klasse Nachricht betreffen.
+    */
+    
     
 }
