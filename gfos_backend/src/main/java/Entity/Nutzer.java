@@ -27,14 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Nutzer.findAll", query = "SELECT n FROM Nutzer n"),
     @NamedQuery(name = "Nutzer.findById", query = "SELECT n FROM Nutzer n WHERE n.id = :id"),
-    @NamedQuery(name = "Nutzer.findByBenutzername", query = "SELECT n FROM Nutzer n WHERE n.benutzername = :benutzername"),
     @NamedQuery(name = "Nutzer.findByVorname", query = "SELECT n FROM Nutzer n WHERE n.vorname = :vorname"),
-    @NamedQuery(name = "Nutzer.findByNachname", query = "SELECT n FROM Nutzer n WHERE n.nachname = :nachname"),
-    @NamedQuery(name = "Nutzer.findByEmail", query = "SELECT n FROM Nutzer n WHERE n.email = :email"),
-    @NamedQuery(name = "Nutzer.findByPasswort", query = "SELECT n FROM Nutzer n WHERE n.passwort = :passwort"),
-    @NamedQuery(name = "Nutzer.findByHandynummer", query = "SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
-    @NamedQuery(name = "Nutzer.findByProfilbild", query = "SELECT n FROM Nutzer n WHERE n.profilbild = :profilbild"),
-    @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info")})
+    @NamedQuery(name = "Nutzer.findByNachname", query = "SELECT n FROM Nutzer n WHERE n.nachname = :nachname")})
 public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,34 +40,13 @@ public class Nutzer implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 50)
-    @Column(name = "BENUTZERNAME")
-    private String benutzername;
-    @Size(max = 50)
     @Column(name = "VORNAME")
     private String vorname;
-    @Size(max = 50)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "NACHNAME")
     private String nachname;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "EMAIL")
-    private String email;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "PASSWORT")
-    private String passwort;
-    @Size(max = 50)
-    @Column(name = "HANDYNUMMER")
-    private String handynummer;
-    @Size(max = 10000)
-    @Column(name = "PROFILBILD")
-    private String profilbild;
-    @Size(max = 256)
-    @Column(name = "INFO")
-    private String info;
 
     public Nutzer() {
     }
@@ -82,11 +55,10 @@ public class Nutzer implements Serializable {
         this.id = id;
     }
 
-    public Nutzer(Integer id, String benutzername, String email, String passwort) {
+    public Nutzer(Integer id, String vorname, String nachname) {
         this.id = id;
-        this.benutzername = benutzername;
-        this.email = email;
-        this.passwort = passwort;
+        this.vorname = vorname;
+        this.nachname = nachname;
     }
 
     public Integer getId() {
@@ -95,14 +67,6 @@ public class Nutzer implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getBenutzername() {
-        return benutzername;
-    }
-
-    public void setBenutzername(String benutzername) {
-        this.benutzername = benutzername;
     }
 
     public String getVorname() {
@@ -119,46 +83,6 @@ public class Nutzer implements Serializable {
 
     public void setNachname(String nachname) {
         this.nachname = nachname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPasswort() {
-        return passwort;
-    }
-
-    public void setPasswort(String passwort) {
-        this.passwort = passwort;
-    }
-
-    public String getHandynummer() {
-        return handynummer;
-    }
-
-    public void setHandynummer(String handynummer) {
-        this.handynummer = handynummer;
-    }
-
-    public String getProfilbild() {
-        return profilbild;
-    }
-
-    public void setProfilbild(String profilbild) {
-        this.profilbild = profilbild;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
     }
 
     @Override

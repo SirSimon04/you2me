@@ -4,9 +4,5 @@
   <persistence-unit name="my_persistence_unit">
     <jta-data-source>app/db</jta-data-source>
     <class>Entity.Nutzer</class>
-    <class>Entity.Chat</class>
-    <class>Entity.Gesendet</class>
-    <class>Entity.Nachricht</class>
-    <class>Entity.Nimmtteil</class>
   </persistence-unit>
 </persistence>
