@@ -30,16 +30,18 @@ Database: https://cdn.discordapp.com/attachments/801474474158325760/804453683517
 #### GET
 letzte Chats, <br />
 alle Nachrichten aus einem Chat,<br />
-Suchen nach Name, Nummer, Mail <br />
+Suchen nach Name, Nummer, Mail, <br />
+alle Nutzer, - <br />
+Nutzer nach Id - <br />
 
 #### Post
 Nachricht senden,<br />
-Account erstellen <br />
+Nutzer erstellen - <br />
 
 #### Put
-Account updaten <br />
+Account updaten - <br />
 
 #### Delete
-Account löschen <br />
+Account löschen - <br />
 evtl: Nachricht löschen <br />
  
