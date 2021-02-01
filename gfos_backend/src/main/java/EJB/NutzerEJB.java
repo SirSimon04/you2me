@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author krink
+ * @author Simon
  */
 @Stateless
 @LocalBean
