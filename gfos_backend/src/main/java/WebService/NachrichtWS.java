@@ -34,6 +34,8 @@ public class NachrichtWS {
     @EJB
     private NachrichtEJB nachrichtEJB;
     
+    
+    //TODO: Format für timestamp im post body erfragen
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -54,8 +56,10 @@ public class NachrichtWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll() {
-    Gson parser = new Gson();
-    List<Nachricht> alleNachrichten = nachrichtEJB.getAll();
-    return parser.toJson(alleNachrichten);
+        Gson parser = new Gson();
+        List<Nachricht> alleNachrichten = nachrichtEJB.getAll();
+        return parser.toJson(alleNachrichten);
     }
+    
+    //TODO: Implementierung der Methode, die alle Nachrichten einer chatId zurückgibt
 }
