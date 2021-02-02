@@ -65,6 +65,49 @@ public class NutzerWS {
     }
     
     @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean login(String jsonStr) {
+       
+        Gson parser = new Gson();
+        try {
+            Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
+            int nutzerId = neuerNutzer.getId();
+            String nutzerName = neuerNutzer.getBenutzername();
+            System.out.println(nutzerName);
+            String nutzerPasswort = neuerNutzer.getPasswort();
+            System.out.println(nutzerPasswort);
+            
+            Nutzer dbNutzer = nutzerEJB.get(nutzerId);
+            String dbName = dbNutzer.getBenutzername();
+            System.out.println(dbName);
+            String dbPasswort = dbNutzer.getPasswort();
+            System.out.println(dbPasswort);
+            
+            if(nutzerName.equals(dbName)&& nutzerPasswort.equals(dbPasswort))
+            {   
+                System.out.println("password accepted");
+                return true;
+            }
+            else
+            {   
+                System.out.println("password wrong");
+                return false;
+            }
+            
+            
+        }
+            catch(JsonSyntaxException e) {
+                System.out.println("catch");
+                return false;
+            }
+
+        
+    }
+    
+    
+    @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
@@ -98,9 +141,6 @@ public class NutzerWS {
         return nutzerEJB.update(aktNutzer);
     }
     
-    /*
-    Es folgen Methoden, die die Klasse Nachricht betreffen.
-    */
     
-    
+     
 }
