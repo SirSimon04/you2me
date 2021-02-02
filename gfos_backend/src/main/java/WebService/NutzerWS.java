@@ -22,6 +22,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonObject;
 
 /**
  *
@@ -61,7 +62,7 @@ public class NutzerWS {
     @Produces(MediaType.APPLICATION_JSON)
     public String get(@PathParam("id") int id) {
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.get(id));
+        return parser.toJson(nutzerEJB.getById(id));
     }
     
     @POST
@@ -72,6 +73,7 @@ public class NutzerWS {
        
         Gson parser = new Gson();
         try {
+            /*
             Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
             int nutzerId = neuerNutzer.getId();
             String nutzerName = neuerNutzer.getBenutzername();
@@ -95,6 +97,40 @@ public class NutzerWS {
                 System.out.println("password wrong");
                 return false;
             }
+            */
+            /*
+            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
+            System.out.println(loginUser.get("benutzername"));
+            String username = parser.fromJson((loginUser.get("benutzername")), String.class);
+            System.out.println(username);
+            
+            
+            Nutzer dbNutzer = nutzerEJB.getbyUsername(nutzerId);
+            String dbName = dbNutzer.getBenutzername();
+            System.out.println(dbName);
+            String dbPasswort = dbNutzer.getPasswort();
+            System.out.println(dbPasswort);
+            */
+            
+            //getting the name of the body
+            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
+            String username = parser.fromJson((loginUser.get("benutzername")), String.class);
+            String passwort = parser.fromJson((loginUser.get("passwort")), String.class);
+            System.out.println(username);
+            System.out.println(passwort);
+            
+            //getting the Nutzer with the name goten before
+            Nutzer loginNutzer = nutzerEJB.getByUsername(username);
+            
+            if(loginNutzer.getPasswort().equals(passwort))
+            {
+                return true;
+            }
+            else 
+            {
+                return false;
+            }
+            
             
             
         }

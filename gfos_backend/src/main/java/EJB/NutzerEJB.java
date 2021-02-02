@@ -11,6 +11,9 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,8 +31,18 @@ public class NutzerEJB {
     }
     
     // READ
-    public Nutzer get(int id) {
+    public Nutzer getById(int id) {
         return em.find(Nutzer.class, id);
+    }
+    
+    public Nutzer getByUsername(String username){
+        
+        Query query = em.createNamedQuery("Nutzer.findByBenutzername");
+        query.setParameter("benutzername", username);
+        
+        Nutzer user = (Nutzer) query.getSingleResult();
+        
+        return user;
     }
     
     // CREATE
@@ -40,7 +53,7 @@ public class NutzerEJB {
         // DELETE
     public boolean delete(int id) {
         try {
-            em.remove(this.get(id));
+            em.remove(this.getById(id));
             return true;
         }
             catch(IllegalArgumentException e) {
@@ -52,7 +65,7 @@ public class NutzerEJB {
     public boolean update(Nutzer aktualisierterNutzer) {
         int gesuchteId = aktualisierterNutzer.getId();
         try {
-            Nutzer aktuellInDatenbank = this.get(gesuchteId);
+            Nutzer aktuellInDatenbank = this.getById(gesuchteId);
             aktuellInDatenbank.setVorname(aktualisierterNutzer.getVorname());
             return true;
         }
