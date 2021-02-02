@@ -6,7 +6,7 @@
           :complete="e1 > 1"
           step="1"
         >
-          Name of step 1
+          Benutzernamen erstellen
         </v-stepper-step>
   
         <v-divider></v-divider>
@@ -15,13 +15,13 @@
           :complete="e1 > 2"
           step="2"
         >
-          Name of step 2
+          Daten angeben
         </v-stepper-step>
   
         <v-divider></v-divider>
   
         <v-stepper-step step="3">
-          Name of step 3
+          Login
         </v-stepper-step>
       </v-stepper-header>
   
@@ -54,18 +54,22 @@
             color="primary"
             @click="e1 = 2"
           >
-            Continue
+            Weiter
           </v-btn>
   
           <v-btn text>
-            Cancel
+            Abbrechen
           </v-btn>
+          <v-checkbox
+            v-model="checkbox"
+            :label="'Ich bin bereits registriert'"
+            ></v-checkbox>
         </v-stepper-content>
   
         <v-stepper-content step="2">
           <v-card
             class="mb-12"
-            color="grey lighten-1"
+            color="white"
             height="200px"
           >
           <v-text-field
@@ -88,11 +92,11 @@
             color="primary"
             @click="e1 = 3"
           >
-            Continue
+            Weiter
           </v-btn>
   
           <v-btn text>
-            Cancel
+            Abbrechen
           </v-btn>
         </v-stepper-content>
   
@@ -102,7 +106,20 @@
             color="grey lighten-1"
             height="200px"
           >
-          <h1>Abschließen</h1>
+          <h4>Login</h4>
+          <v-text-field
+              v-model="Benuztername"
+              :rules="nameRules"
+              :counter="20"
+              label="Benutzername"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="passwort"
+              :rules="passwordRules"
+              label="Passwort"
+              required
+            ></v-text-field>
           </v-card>
   
           <v-btn
@@ -125,6 +142,7 @@
   export default {
     name: 'Registrieren',
   }
+  
     
   
   
