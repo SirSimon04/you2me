@@ -65,4 +65,12 @@ public class NachrichtWS {
     }
     
     //TODO: Implementierung der Methode, die alle Nachrichten einer chatId zurückgibt
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String get(@PathParam("id") int id) {
+        Gson parser = new Gson();
+        return parser.toJson(nachrichtEJB.getChat(id));
+    }
 }
