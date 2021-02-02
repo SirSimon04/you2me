@@ -37,6 +37,7 @@ Nutzer nach Id - <br />
 #### Post
 Nachricht senden, -<br />
 Nutzer erstellen - <br />
+Login - <br />
 
 #### Put
 Account updaten - <br />
@@ -44,4 +45,8 @@ Account updaten - <br />
 #### Delete
 Account löschen - <br />
 evtl: Nachricht löschen <br />
+
+
+### Ideen
+E-Mail Verifikation
  
