@@ -35,7 +35,7 @@ alle Nutzer, - <br />
 Nutzer nach Id - <br />
 
 #### Post
-Nachricht senden,<br />
+Nachricht senden, -<br />
 Nutzer erstellen - <br />
 
 #### Put
