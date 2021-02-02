@@ -7,50 +7,39 @@
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
+          alt="GFOS-Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="https://www.google.com/search?q=GFOS&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjR6MHw4MruAhURr6QKHZTRDQMQ_AUoAXoECA4QAw&biw=1280&bih=881#imgrc=3yx9PflhUfMLgM"
           transition="scale-transition"
           width="40"
         />
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <h1>GFOS Messenger-Projekt</h1>
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+    
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+     
+      <Chatliste/>
+      <Registrieren/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+
+import Chatliste from './components/Chatliste';
+import Registrieren from './components/Registrieren'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    
+    Chatliste,
+    Registrieren,
   },
 
   data: () => ({
