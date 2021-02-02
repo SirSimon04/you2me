@@ -22,6 +22,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  *
  * @author simon
@@ -44,6 +46,7 @@ public class NachrichtWS {
         System.out.println(jsonStr);
         Gson parser = new Gson();
         try {
+            System.out.println("entered try");
             Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
             nachrichtEJB.add(neueNachricht);
             return true;

@@ -6,7 +6,6 @@
 package Entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -52,9 +49,9 @@ public class Nachricht implements Serializable {
     private int chatid;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 30)
     @Column(name = "UHRZEIT")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date uhrzeit;
+    private String uhrzeit;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1024)
@@ -68,7 +65,7 @@ public class Nachricht implements Serializable {
         this.nachrichtid = nachrichtid;
     }
 
-    public Nachricht(Integer nachrichtid, int senderid, int chatid, Date uhrzeit, String inhalt) {
+    public Nachricht(Integer nachrichtid, int senderid, int chatid, String uhrzeit, String inhalt) {
         this.nachrichtid = nachrichtid;
         this.senderid = senderid;
         this.chatid = chatid;
@@ -100,11 +97,11 @@ public class Nachricht implements Serializable {
         this.chatid = chatid;
     }
 
-    public Date getUhrzeit() {
+    public String getUhrzeit() {
         return uhrzeit;
     }
 
-    public void setUhrzeit(Date uhrzeit) {
+    public void setUhrzeit(String uhrzeit) {
         this.uhrzeit = uhrzeit;
     }
 
