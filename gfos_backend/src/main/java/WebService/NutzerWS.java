@@ -73,45 +73,6 @@ public class NutzerWS {
        
         Gson parser = new Gson();
         try {
-            /*
-            Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
-            int nutzerId = neuerNutzer.getId();
-            String nutzerName = neuerNutzer.getBenutzername();
-            System.out.println(nutzerName);
-            String nutzerPasswort = neuerNutzer.getPasswort();
-            System.out.println(nutzerPasswort);
-            
-            Nutzer dbNutzer = nutzerEJB.get(nutzerId);
-            String dbName = dbNutzer.getBenutzername();
-            System.out.println(dbName);
-            String dbPasswort = dbNutzer.getPasswort();
-            System.out.println(dbPasswort);
-            
-            if(nutzerName.equals(dbName)&& nutzerPasswort.equals(dbPasswort))
-            {   
-                System.out.println("password accepted");
-                return true;
-            }
-            else
-            {   
-                System.out.println("password wrong");
-                return false;
-            }
-            */
-            /*
-            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
-            System.out.println(loginUser.get("benutzername"));
-            String username = parser.fromJson((loginUser.get("benutzername")), String.class);
-            System.out.println(username);
-            
-            
-            Nutzer dbNutzer = nutzerEJB.getbyUsername(nutzerId);
-            String dbName = dbNutzer.getBenutzername();
-            System.out.println(dbName);
-            String dbPasswort = dbNutzer.getPasswort();
-            System.out.println(dbPasswort);
-            */
-            
             //getting the name of the body
             JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
             String username = parser.fromJson((loginUser.get("benutzername")), String.class);
@@ -119,7 +80,7 @@ public class NutzerWS {
             System.out.println(username);
             System.out.println(passwort);
             
-            //getting the Nutzer with the name goten before
+            //getting the Nutzer with the name gotten before
             Nutzer loginNutzer = nutzerEJB.getByUsername(username);
             
             if(loginNutzer.getPasswort().equals(passwort))
