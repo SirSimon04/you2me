@@ -44,4 +44,8 @@ Account updaten - <br />
 #### Delete
 Account löschen - <br />
 evtl: Nachricht löschen <br />
+
+
+### Ideen
+E-Mail Verifikation
  
