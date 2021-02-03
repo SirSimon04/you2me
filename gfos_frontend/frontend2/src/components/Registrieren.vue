@@ -61,10 +61,7 @@
           <v-btn text>
             Impressum
           </v-btn>
-          <!--<v-checkbox
-            v-model="checkbox"
-            :label="'Ich bin bereits registriert'"
-            ></v-checkbox> -->
+          
         </v-stepper-content>
   
         <v-stepper-content step="2">
