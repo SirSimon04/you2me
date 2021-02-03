@@ -43,7 +43,8 @@ export default {
   },
 
   data: () => ({
-    //
+  
   }),
+  
 };
 </script>
