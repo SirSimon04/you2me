@@ -6,7 +6,6 @@
 package Entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,8 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Chat.findByChatid", query = "SELECT c FROM Chat c WHERE c.chatid = :chatid"),
     @NamedQuery(name = "Chat.findByErstelldatum", query = "SELECT c FROM Chat c WHERE c.erstelldatum = :erstelldatum"),
     @NamedQuery(name = "Chat.findByName", query = "SELECT c FROM Chat c WHERE c.name = :name"),
-    @NamedQuery(name = "Chat.findByBeschreibung", query = "SELECT c FROM Chat c WHERE c.beschreibung = :beschreibung"),
-    @NamedQuery(name = "Chat.findByProfilbild", query = "SELECT c FROM Chat c WHERE c.profilbild = :profilbild")})
+    @NamedQuery(name = "Chat.findByBeschreibung", query = "SELECT c FROM Chat c WHERE c.beschreibung = :beschreibung")})
 public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,18 +40,15 @@ public class Chat implements Serializable {
     private Integer chatid;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 30)
     @Column(name = "ERSTELLDATUM")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date erstelldatum;
-    @Size(max = 255)
+    private String erstelldatum;
+    @Size(max = 50)
     @Column(name = "NAME")
     private String name;
-    @Size(max = 255)
+    @Size(max = 100)
     @Column(name = "BESCHREIBUNG")
     private String beschreibung;
-    @Size(max = 10000)
-    @Column(name = "PROFILBILD")
-    private String profilbild;
 
     public Chat() {
     }
@@ -64,7 +57,7 @@ public class Chat implements Serializable {
         this.chatid = chatid;
     }
 
-    public Chat(Integer chatid, Date erstelldatum) {
+    public Chat(Integer chatid, String erstelldatum) {
         this.chatid = chatid;
         this.erstelldatum = erstelldatum;
     }
@@ -77,11 +70,11 @@ public class Chat implements Serializable {
         this.chatid = chatid;
     }
 
-    public Date getErstelldatum() {
+    public String getErstelldatum() {
         return erstelldatum;
     }
 
-    public void setErstelldatum(Date erstelldatum) {
+    public void setErstelldatum(String erstelldatum) {
         this.erstelldatum = erstelldatum;
     }
 
@@ -99,14 +92,6 @@ public class Chat implements Serializable {
 
     public void setBeschreibung(String beschreibung) {
         this.beschreibung = beschreibung;
-    }
-
-    public String getProfilbild() {
-        return profilbild;
-    }
-
-    public void setProfilbild(String profilbild) {
-        this.profilbild = profilbild;
     }
 
     @Override

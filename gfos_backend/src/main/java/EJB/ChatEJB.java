@@ -6,6 +6,13 @@
 package EJB;
 
 import javax.ejb.Stateless;
+import javax.ejb.Stateless;
+import Entity.Chat;
+import Entity.NimmtteilPK;
+import java.util.List;
+import javax.ejb.LocalBean;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -13,7 +20,16 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ChatEJB {
+    
+    @PersistenceContext
+    private EntityManager em;
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    public void addChat(Chat neuerChat) {
+        em.persist(neuerChat);
+    }
+    
+    public void takePart(NimmtteilPK nimmtteil) {
+        em.persist(nimmtteil);
+    }
+            
 }
