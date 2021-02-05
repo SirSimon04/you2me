@@ -36,15 +36,6 @@ public class NutzerWS {
     @EJB
     private NutzerEJB nutzerEJB;
     
-    
-    
-    @GET
-    @Path("/test")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test() {
-        return ("test succesful1");
-    }
-    
     /*
     Es folgen alle Methoden, die sich auf die Klasse Nutzer beziehen
     */
@@ -58,11 +49,19 @@ public class NutzerWS {
     }
     
     @GET
-    @Path("/{id}")
+    @Path("/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@PathParam("id") int id) {
+    public String getById(@PathParam("id") int id) {
         Gson parser = new Gson();
         return parser.toJson(nutzerEJB.getById(id));
+    }
+    
+    @GET
+    @Path("/benutzername/{benutzername}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getByUsername(@PathParam("benutzername") String benutzername){
+        Gson parser = new Gson();
+        return parser.toJson(nutzerEJB.getByUsername(benutzername));
     }
     
     @POST

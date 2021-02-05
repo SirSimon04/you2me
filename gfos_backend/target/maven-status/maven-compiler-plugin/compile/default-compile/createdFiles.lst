@@ -1,0 +1,14 @@
+testgfos2021/gfostest/resources/JavaEE8Resource.class
+testgfos2021/gfostest/JAXRSConfiguration.class
+WebService/ChatWS.class
+WebService/NutzerWS.class
+WebService/NachrichtWS.class
+Entity/Nutzer.class
+Entity/Chat.class
+Entity/NimmtteilPK.class
+Application/App.class
+EJB/NachrichtEJB.class
+EJB/ChatEJB.class
+EJB/NutzerEJB.class
+Entity/Nimmtteil.class
+Entity/Nachricht.class

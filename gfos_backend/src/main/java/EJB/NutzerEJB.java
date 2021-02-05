@@ -37,7 +37,7 @@ public class NutzerEJB {
     
     public Nutzer getByUsername(String username){
         
-        Query query = em.createNamedQuery("Nutzer.findByBenutzername");
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
         
         Nutzer user = (Nutzer) query.getSingleResult();

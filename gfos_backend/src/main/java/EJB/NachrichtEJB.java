@@ -32,7 +32,7 @@ public class NachrichtEJB {
     return em.createNamedQuery(Nachricht.class.getSimpleName()+".findAll").getResultList();
     }
     
-    public List<Nachricht> getChat(int id){   
+    public List<Nachricht> getByChat(int id){   
         return em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
     }
     
