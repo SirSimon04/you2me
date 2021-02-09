@@ -27,20 +27,25 @@ Colors: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmspoweruser.
 Database: https://cdn.discordapp.com/attachments/801474474158325760/804453683517587486/unknown.png
 
 ### Routen: 
+ip:8080/gfos/daten
 #### GET
 letzte Chats, <br />
-alle Nachrichten aus einem Chat,<br />
-Suchen nach Name, Nummer, Mail, <br />
-alle Nutzer, - <br />
-Nutzer nach Id - <br />
+alle Nachrichten aus einem Chat,- /nachricht/chat/{id}<br />
+alle Nachrichten - /nachricht <br />
+Suchen nach Benutzername - /nutzer/getUsernameById <br />
+alle Nutzer, - /nutzer<br />
+Nutzer nach Id, - /nutzer/id/{id}<br />
+Nutzernamen nach id - /nutzer/getUsernameById/{id}<br />
 
 #### Post
-Nachricht senden, -<br />
-Nutzer erstellen - <br />
-Login - <br />
+Nachricht senden, - /nachricht/add<br />
+Nutzer erstellen - /nutzer/add <br />
+Login - /nutzer/login <br />
+Chat erstellen - /chat/add <br />
+Nutzer zu Chat hinzufügen - /chat/takepart <br />
 
 #### Put
-Account updaten - <br />
+Account updaten - /nutzer/update<br />
 
 #### Delete
 Account löschen - <br />
