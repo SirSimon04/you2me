@@ -62,6 +62,10 @@ public class ChatWS {
     }
     /*
     Als erstes wird die Id des Chats angegeben, danach der Benutzername des Benutzers, der hinzugefügt wird
+    {
+        "chatid": 0,
+        "benutzername": "NoSkiller"
+    }
     */
     @POST
     @Path("/takepart")

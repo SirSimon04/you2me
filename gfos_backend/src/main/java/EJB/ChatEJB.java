@@ -8,7 +8,7 @@ package EJB;
 import javax.ejb.Stateless;
 import javax.ejb.Stateless;
 import Entity.Chat;
-import Entity.NimmtteilPK;
+import Entity.Nimmtteil;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
@@ -28,7 +28,7 @@ public class ChatEJB {
         em.persist(neuerChat);
     }
     
-    public void takePart(NimmtteilPK nimmtteil) {
+    public void takePart(Nimmtteil nimmtteil) {
         em.persist(nimmtteil);
     }
             

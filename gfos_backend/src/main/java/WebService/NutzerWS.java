@@ -144,7 +144,7 @@ public class NutzerWS {
     }
         
     @PUT
-    @Path("/put")
+    @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public boolean update(String jsonStr) {
