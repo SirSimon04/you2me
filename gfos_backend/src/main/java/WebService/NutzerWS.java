@@ -73,7 +73,7 @@ public class NutzerWS {
         n = nutzerEJB.getCopy(id);
         
         Nutzer nutzer = new Nutzer();
-        nutzer.setBenutzername(n.getBenutzername());
+        nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
         
         return parser.toJson(nutzer);
         
