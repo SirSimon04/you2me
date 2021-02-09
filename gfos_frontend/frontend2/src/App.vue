@@ -25,6 +25,7 @@
       <ChatListe/>
       <Chat/>
       <Registrieren/>
+      <Settings/>
     </v-main>
   </v-app>
 </template>
@@ -34,6 +35,7 @@
 import ChatListe from './components/ChatListe';
 import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
+import Settings from './components/Settings';
 
 export default {
   name: 'App',
@@ -42,6 +44,7 @@ export default {
     ChatListe,
     Registrieren,
     Chat,
+    Settings,
   },
 
   data: () => ({
