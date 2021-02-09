@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 /**
  *
  * @author simon
@@ -65,7 +66,7 @@ public class NachrichtWS {
     }
     
     
-    
+    //Inhalt, uhrzeit, username
     @GET
     @Path("/chat/{id}")
     @Produces(MediaType.APPLICATION_JSON)

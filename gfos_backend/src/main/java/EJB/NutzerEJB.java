@@ -35,6 +35,13 @@ public class NutzerEJB {
         return em.find(Nutzer.class, id);
     }
     
+    public Nutzer getCopy(int id){
+        Nutzer n = em.find(Nutzer.class, id);
+        em.detach(n);
+        return n;
+        
+    }
+    
     public Nutzer getByUsername(String username){
         
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
