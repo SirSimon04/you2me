@@ -2,7 +2,7 @@
 <template>
     <v-container>
         <v-stepper v-model="e1">
-      <v-stepper-header>
+      <v-stepper-header v-model="headeranzeigen">
         <v-stepper-step
           :complete="e1 > 1"
           step="1"
@@ -225,18 +225,22 @@
               required
             ></v-text-field>
           </v-card>
-  
+          <template c-slot:activator="{ on, attrs}">
           <v-btn
             color="primary"
-            @click= "einloggen"
+            @click = "test = 'betätigt'"
+            
           >
             Login
           </v-btn>
+          </template>
   
           <v-btn text
           @click= "e1 = 1">
             Registrieren
           </v-btn>
+          <v-divider></v-divider>
+          Ergebnisse: {{ test }}
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -257,9 +261,13 @@
     data(){
       return {
       e1: 3,
+      headeranzeigen: false,
       checkbox: true,
       dialog: false,
+      test: 'nicht betätigt',
     }
+    
+    
   
 
     }
