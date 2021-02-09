@@ -23,6 +23,7 @@
     <v-main>
      
       <ChatListe/>
+      <Chat/>
       <Registrieren/>
     </v-main>
   </v-app>
@@ -31,19 +32,19 @@
 <script>
 
 import ChatListe from './components/ChatListe';
-import Registrieren from './components/Registrieren'
+import Registrieren from './components/Registrieren';
+import Chat from './components/Chat';
 
 export default {
   name: 'App',
 
   components: {
-    
     ChatListe,
     Registrieren,
+    Chat,
   },
 
   data: () => ({
-  
   }),
   
 };
