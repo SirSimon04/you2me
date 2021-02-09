@@ -1,7 +1,7 @@
 
 <template>
     <v-container>
-        <v-stepper v-model="e1">
+     <v-stepper v-model="e1">
       <v-stepper-header v-model="headeranzeigen">
         <v-stepper-step
           :complete="e1 > 1"
@@ -273,13 +273,12 @@
     </v-container>
 </template>
 <style>
-
-</style>
   .group {
-  display: flex;
-  flex: 1;
-  justify-content: space-around;
-  }
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    }
+</style>
 <script>
   export default {
     name: 'Registrieren',
