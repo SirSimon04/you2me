@@ -64,6 +64,22 @@ public class NutzerWS {
         return parser.toJson(nutzerEJB.getByUsername(benutzername));
     }
     
+    @GET
+    @Path("/getUsernameById/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getUsernameById(@PathParam("id") int id){
+        Gson parser = new Gson();
+        Nutzer n = new Nutzer();
+        n = nutzerEJB.getCopy(id);
+        
+        Nutzer nutzer = new Nutzer();
+        nutzer.setBenutzername(n.getBenutzername());
+        
+        return parser.toJson(nutzer);
+        
+    }
+    
+            
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)

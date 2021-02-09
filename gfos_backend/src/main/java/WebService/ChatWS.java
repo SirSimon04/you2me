@@ -8,7 +8,7 @@ import EJB.ChatEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Nutzer;
-import Entity.NimmtteilPK;
+import Entity.Nimmtteil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.List;
@@ -80,8 +80,8 @@ public class ChatWS {
             Nutzer loginNutzer = nutzerEJB.getByUsername(username);
             int userid = loginNutzer.getId();
             
-            NimmtteilPK nt;
-            nt = new NimmtteilPK();
+            Nimmtteil nt;
+            nt = new Nimmtteil();
             nt.setChatid(chatid);
             nt.setNutzerid(userid);
             
