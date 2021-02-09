@@ -200,7 +200,8 @@
           <v-btn text
            @click="e1 = 1">
             Zurück
-          </v-btn>
+          </v-btn><br><br>
+          <divider>Mit dem Click auf "Weiter" erklären Sie sich mit unseren <a>Nutzungsbedingungen</a> und unserer <a>Datenschutzuerklärung</a> einverstanden.</divider>
         </v-stepper-content>
   
         <v-stepper-content step="3">
@@ -225,22 +226,47 @@
               required
             ></v-text-field>
           </v-card>
-          <template c-slot:activator="{ on, attrs}">
-          <v-btn
-            color="primary"
-            @click = "test = 'betätigt'"
-            
-          >
-            Login
-          </v-btn>
+         
+        <v-dialog
+          transition="dialog-bottom-transition"
+          max-width="600"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn 
+              color="primary"
+              v-bind="attrs"
+              v-on="on"
+            >Login</v-btn>
           </template>
+          <template v-slot:default="dialog">
+            <v-card>
+              <v-toolbar
+                color="primary"
+                dark
+              >Herzlichen Glückwunsch!</v-toolbar>
+              <v-card-text>
+                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br> {{test}}<br></div>
+              </v-card-text>
+              <v-card-actions class="justify-end">
+                <v-btn
+                  text
+                  @click="dialog.value = false"
+                >Zum Messenger</v-btn>
+              </v-card-actions>
+            </v-card>
+          </template>
+        </v-dialog>
+      
+          
+          
   
+          
+          <v-divider></v-divider>
           <v-btn text
+          position = "right"
           @click= "e1 = 1">
             Registrieren
           </v-btn>
-          <v-divider></v-divider>
-          Ergebnisse: {{ test }}
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
