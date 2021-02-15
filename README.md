@@ -54,4 +54,46 @@ evtl: Nachricht löschen <br />
 
 ### Ideen
 E-Mail Verifikation
+
+## Datenbank
+CREATE TABLE Nutzer
+(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    Benutzername VARCHAR(50) NOT NULL UNIQUE,
+    vorname VARCHAR(50),
+    nachname VARCHAR(50),
+    email VARCHAR(50) NOT NULL UNIQUE,
+    passwort VARCHAR(50) NOT NULL,
+    handynummer VARCHAR(50),
+    profilbild VARCHAR(10000),
+    info VARCHAR(256)
+);
+
+CREATE TABLE Nachricht 
+(
+    nachrichtId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    senderId INT NOT NULL,
+    chatId INT NOT NULL,
+    datumUhrzeit VARCHAR(30) NOT NULL,
+    inhalt VARCHAR(1024) NOT NULL
+);
+
+CREATE TABLE Chat 
+(
+    chatIid INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    erstelldatum VARCHAR(30),
+    name VARCHAR(50),
+    beschreibung VARCHAR(100)
+);
+
+CREATE TABLE nimmtTeil 
+(
+    nimmtTeilId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    nutzerId INT NOT NULL,
+    chatId INT NOT NULL
+);
  
