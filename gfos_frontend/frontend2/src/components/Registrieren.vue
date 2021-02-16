@@ -126,6 +126,11 @@
         </v-icon>
         
       </v-btn>
+      <v-checkbox
+            v-model="settings_checkbox"
+            label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden (Doppelklick)."
+            @click="settings_checkbox = !settings_checkbox"
+          ></v-checkbox>
         </template>
   
         <v-card>
@@ -165,7 +170,7 @@
           </v-card-text>
   
           <v-divider></v-divider>
-  
+          
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
@@ -190,18 +195,18 @@
       </v-dialog>
           </v-card>
   
-          <v-btn
+         <div v-if="settings_checkbox=== true"><v-btn
             color="primary"
             @click="e1 = 3"
           >
             Weiter
           </v-btn>
-  
+          </div>
           <v-btn text
            @click="e1 = 1">
             Zurück
           </v-btn><br><br>
-          <divider>Mit dem Click auf "Weiter" erklären Sie sich mit unseren <a>Nutzungsbedingungen</a> und unserer <a>Datenschutzuerklärung</a> einverstanden.</divider>
+          
         </v-stepper-content>
   
         <v-stepper-content step="3">
@@ -295,7 +300,9 @@
       checkbox: true,
       dialog: false,
       test: 'nicht betätigt',
+      settings_checkbox: false,
     }
+    
     
     
   

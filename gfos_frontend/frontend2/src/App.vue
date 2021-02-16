@@ -21,13 +21,55 @@
     </v-app-bar>
 
     <v-main>
-            <v-btn
+            
+            <v-card
+      class="mx-auto"
+      max-width="344"
+    >
+      <v-img
+        src=""
+        height="200px"
+      ></v-img>
+  
+      <v-card-title>
+        Warnung!
+      </v-card-title>
+  
+      <v-card-subtitle>
+        Funktionalität gefährdert
+      </v-card-subtitle>
+  
+      <v-card-actions>
+       <v-btn
               icon
               @click="app_vue_registrieren_zeigen = !app_vue_registrieren_zeigen"
               
             >
               <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
             </v-btn>
+           
+            <v-btn
+              icon
+              @click="app_vue_settings_zeigen = !app_vue_settings_zeigen"
+              
+            >
+              <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+  
+        <v-spacer></v-spacer>
+  
+    
+      </v-card-actions>
+  
+      
+          <v-divider></v-divider>
+  
+          <v-card-text>
+            Der "Mäßenger" ist momentan in einer nicht funktionsfähigen Alpha-Version. Kommen Sie später wieder, um gravierende Fortschritte erleben zu können!
+          </v-card-text>
+        
+    </v-card>
+
       <ChatListe/>
       <Chat/>
       <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
