@@ -65,6 +65,16 @@ public class NutzerWS {
     }
     
     @GET
+    @Path("/chatteilnehmer/id/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getByChatId(@PathParam("id") int id) {
+        Gson parser = new Gson();
+        return parser.toJson(nutzerEJB.getByChatId(id));
+    }
+    
+    
+    
+    @GET
     @Path("/getUsernameById/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getUsernameById(@PathParam("id") int id){

@@ -5,6 +5,7 @@
  */
 package EJB;
 
+import Entity.Chat;
 import Entity.Nutzer;
 import java.util.List;
 import javax.ejb.LocalBean;
@@ -41,7 +42,12 @@ public class NutzerEJB {
         return n;
         
     }
-    
+    //SELECT n FROM Nutzer n JOIN NimmtTeil t WHERE n.Id = t.NutzerId AND t.ChatId = 1
+    public List<Nutzer> getByChatId(int chatId){
+        Chat c = em.find(Chat.class, chatId);
+        return c.getNutzerList();
+    }
+  
     public Nutzer getByUsername(String username){
         
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");

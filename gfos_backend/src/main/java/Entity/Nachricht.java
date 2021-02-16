@@ -9,6 +9,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -29,14 +31,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Nachricht.findByNachrichtid", query = "SELECT n FROM Nachricht n WHERE n.nachrichtid = :nachrichtid"),
     @NamedQuery(name = "Nachricht.findBySenderid", query = "SELECT n FROM Nachricht n WHERE n.senderid = :senderid"),
     @NamedQuery(name = "Nachricht.findByChatid", query = "SELECT n FROM Nachricht n WHERE n.chatid = :chatid"),
-    @NamedQuery(name = "Nachricht.findByUhrzeit", query = "SELECT n FROM Nachricht n WHERE n.uhrzeit = :uhrzeit"),
+    @NamedQuery(name = "Nachricht.findByDatumuhrzeit", query = "SELECT n FROM Nachricht n WHERE n.datumuhrzeit = :datumuhrzeit"),
     @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt")})
 public class Nachricht implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "NACHRICHTID")
     private Integer nachrichtid;
     @Basic(optional = false)
@@ -50,8 +52,8 @@ public class Nachricht implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 30)
-    @Column(name = "UHRZEIT")
-    private String uhrzeit;
+    @Column(name = "DATUMUHRZEIT")
+    private String datumuhrzeit;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1024)
@@ -65,11 +67,11 @@ public class Nachricht implements Serializable {
         this.nachrichtid = nachrichtid;
     }
 
-    public Nachricht(Integer nachrichtid, int senderid, int chatid, String uhrzeit, String inhalt) {
+    public Nachricht(Integer nachrichtid, int senderid, int chatid, String datumuhrzeit, String inhalt) {
         this.nachrichtid = nachrichtid;
         this.senderid = senderid;
         this.chatid = chatid;
-        this.uhrzeit = uhrzeit;
+        this.datumuhrzeit = datumuhrzeit;
         this.inhalt = inhalt;
     }
 
@@ -97,12 +99,12 @@ public class Nachricht implements Serializable {
         this.chatid = chatid;
     }
 
-    public String getUhrzeit() {
-        return uhrzeit;
+    public String getDatumuhrzeit() {
+        return datumuhrzeit;
     }
 
-    public void setUhrzeit(String uhrzeit) {
-        this.uhrzeit = uhrzeit;
+    public void setDatumuhrzeit(String datumuhrzeit) {
+        this.datumuhrzeit = datumuhrzeit;
     }
 
     public String getInhalt() {

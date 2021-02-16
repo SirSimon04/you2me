@@ -8,7 +8,7 @@ package EJB;
 import javax.ejb.Stateless;
 import javax.ejb.Stateless;
 import Entity.Chat;
-import Entity.Nimmtteil;
+import Entity.Nutzer;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
@@ -23,13 +23,28 @@ public class ChatEJB {
     
     @PersistenceContext
     private EntityManager em;
-
-    public void addChat(Chat neuerChat) {
-        em.persist(neuerChat);
+    
+    public Chat getById(int id) {
+        return em.find(Chat.class, id);
     }
     
+    public List<Chat> getAll() {
+        return em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
+    }
+    
+
+    public void createChat(Chat neuerChat) {
+        em.persist(neuerChat);
+    }
+    /*s
     public void takePart(Nimmtteil nimmtteil) {
         em.persist(nimmtteil);
+    }
+    */
+    
+    public void fuegeHinzu(Chat chat, Nutzer nutzer){
+        List<Nutzer> nutzerList = chat.getNutzerList();
+        nutzerList.add(nutzer);
     }
             
 }

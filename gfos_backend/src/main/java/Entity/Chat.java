@@ -6,16 +6,22 @@
 package Entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -34,13 +40,11 @@ public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "CHATID")
     private Integer chatid;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 30)
+    @Size(max = 30)
     @Column(name = "ERSTELLDATUM")
     private String erstelldatum;
     @Size(max = 50)
@@ -49,17 +53,17 @@ public class Chat implements Serializable {
     @Size(max = 100)
     @Column(name = "BESCHREIBUNG")
     private String beschreibung;
+    @JoinTable(name = "NIMMTTEIL", joinColumns = {
+        @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<Nutzer> nutzerList;
 
     public Chat() {
     }
 
     public Chat(Integer chatid) {
         this.chatid = chatid;
-    }
-
-    public Chat(Integer chatid, String erstelldatum) {
-        this.chatid = chatid;
-        this.erstelldatum = erstelldatum;
     }
 
     public Integer getChatid() {
@@ -92,6 +96,15 @@ public class Chat implements Serializable {
 
     public void setBeschreibung(String beschreibung) {
         this.beschreibung = beschreibung;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getNutzerList() {
+        return nutzerList;
+    }
+
+    public void setNutzerList(List<Nutzer> nutzerList) {
+        this.nutzerList = nutzerList;
     }
 
     @Override

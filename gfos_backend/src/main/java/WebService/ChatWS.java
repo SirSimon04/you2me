@@ -8,7 +8,6 @@ import EJB.ChatEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Nutzer;
-import Entity.Nimmtteil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.List;
@@ -41,6 +40,15 @@ public class ChatWS {
     @EJB
     private ChatEJB chatEJB;
     
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAll() {
+        Gson parser = new Gson();
+        List<Chat> alleNachrichten = chatEJB.getAll();
+        return parser.toJson(alleNachrichten);
+    }
+    
+    
     
     
     @POST
@@ -53,7 +61,7 @@ public class ChatWS {
         try {
             System.out.println("entered try");
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
-            chatEJB.addChat(neuerChat);
+            chatEJB.createChat(neuerChat);
             return true;
         }
             catch(JsonSyntaxException e) {
@@ -67,6 +75,32 @@ public class ChatWS {
         "benutzername": "NoSkiller"
     }
     */
+    @POST
+    @Path("/takepart")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public boolean takePart(String jsonStr){
+        Gson parser = new Gson();
+        
+        try{
+            JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
+            
+            int chatid = parser.fromJson((jsonTP.get("chatid")), Integer.class);
+            Chat c = chatEJB.getById(chatid);
+            
+            String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
+            Nutzer addedUser = nutzerEJB.getByUsername(username);
+            
+            chatEJB.fuegeHinzu(c, addedUser);
+            
+            return true;
+        }
+        catch(JsonSyntaxException e) {
+            return false;
+        }
+    }
+    
+    /*
     @POST
     @Path("/takepart")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -100,6 +134,7 @@ public class ChatWS {
             
             
     }
+    */
     
     
     

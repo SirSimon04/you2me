@@ -5,10 +5,8 @@ WebService/NutzerWS.class
 WebService/NachrichtWS.class
 Entity/Nutzer.class
 Entity/Chat.class
-Entity/NimmtteilPK.class
 Application/App.class
 EJB/NachrichtEJB.class
 EJB/ChatEJB.class
 EJB/NutzerEJB.class
-Entity/Nimmtteil.class
 Entity/Nachricht.class

@@ -6,16 +6,21 @@
 package Entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,8 +44,8 @@ public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "ID")
     private Integer id;
     @Basic(optional = false)
@@ -74,6 +79,8 @@ public class Nutzer implements Serializable {
     @Size(max = 256)
     @Column(name = "INFO")
     private String info;
+    @ManyToMany(mappedBy = "nutzerList")
+    private List<Chat> chatList;
 
     public Nutzer() {
     }
@@ -159,6 +166,15 @@ public class Nutzer implements Serializable {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    @XmlTransient
+    public List<Chat> getChatList() {
+        return chatList;
+    }
+
+    public void setChatList(List<Chat> chatList) {
+        this.chatList = chatList;
     }
 
     @Override

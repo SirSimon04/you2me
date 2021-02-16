@@ -7,5 +7,8 @@
     <class>Entity.Nimmtteil</class>
     <class>Entity.Nachricht</class>
     <class>Entity.Chat</class>
+    <class>Application.Nutzer</class>
+    <class>Application.Chat</class>
+    <class>Application.Nachricht</class>
   </persistence-unit>
 </persistence>
