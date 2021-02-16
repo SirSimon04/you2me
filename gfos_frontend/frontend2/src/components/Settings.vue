@@ -11,7 +11,7 @@
             <v-btn
               icon
               dark
-              @click="dialog = false"
+              @click="settings_dialog = false"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -21,7 +21,7 @@
               <v-btn
                 dark
                 text
-                @click="dialog = false"
+                @click="settings_dialog = false"
               >
                 Speichern
               </v-btn>
@@ -59,14 +59,14 @@
                       
                             <v-btn
                               icon
-                              @click="show = !show"
+                              @click="settings_show = !settings_show"
                             >
                               <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                             </v-btn>
                           </v-card-actions>
                       
                           <v-expand-transition>
-                            <div v-show="show">
+                            <div v-show="settings_show">
                               <v-divider></v-divider>
                       
                               <v-card-text>
@@ -268,8 +268,8 @@
     
                 data(){
                 return {
-                    dialog: false,
-                    show: false,
+                    settings_dialog: false,
+                    settings_show: false,
                     benutzername: "SirSimon",
                     nachname: "Engel",
                     vorname: "Simon",
