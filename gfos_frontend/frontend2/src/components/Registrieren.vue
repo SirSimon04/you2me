@@ -128,8 +128,8 @@
       </v-btn>
       <v-checkbox
             v-model="settings_checkbox"
-            label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden (Doppelklick)."
-            @click="settings_checkbox = !settings_checkbox"
+            label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."
+            
           ></v-checkbox>
         </template>
   
@@ -194,10 +194,11 @@
         </v-card>
       </v-dialog>
           </v-card>
-  
-         <div v-if="settings_checkbox=== true"><v-btn
+        <div v-if="settings_checkbox=== true">  
+         <v-btn
             color="primary"
             @click="e1 = 3"
+            
           >
             Weiter
           </v-btn>
