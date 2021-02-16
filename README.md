@@ -82,7 +82,7 @@ CREATE TABLE Nachricht
 
 CREATE TABLE Chat 
 (
-    chatIid INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    chatId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
     (START WITH 1, INCREMENT BY 1),
     erstelldatum VARCHAR(30),
     name VARCHAR(50),
@@ -97,3 +97,13 @@ CREATE TABLE nimmtTeil
     chatId INT NOT NULL
 );
  
+create table NimmtTeil (
+    chatId integer not null,
+    nutzerId integer not null,
+
+    primary Key(chatId, nutzerId),
+
+    foreign key(chatId) references Chat(ChatId) on delete cascade,
+    
+    foreign key(nutzerId) references Nutzer(id) on delete cascade
+);
