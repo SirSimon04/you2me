@@ -250,7 +250,7 @@
               <v-card-actions class="justify-end">
                 <v-btn
                   text
-                  @click="settings_dialog = !settings_dialog"
+                  @click="app_vue_settings_zeigen = !app_vue_settings_zeigen"
                 >Einstellungen</v-btn>
                 <v-btn
                   text

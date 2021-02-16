@@ -15,17 +15,23 @@
           width="40"
         />
 
-        <h1>GFOS Messenger-Projekt</h1>
+        <h1>Mäßenjer</h1>
       </div>
     
     </v-app-bar>
 
     <v-main>
-     
+            <v-btn
+              icon
+              @click="app_vue_registrieren_zeigen = !app_vue_registrieren_zeigen"
+              
+            >
+              <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
       <ChatListe/>
       <Chat/>
-      <Registrieren/>
-      <Settings/>
+      <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
+      <Settings v-show ="app_vue_settings_zeigen"></Settings>
     </v-main>
   </v-app>
 </template>
@@ -48,6 +54,8 @@ export default {
   },
 
   data: () => ({
+    app_vue_settings_zeigen: false,
+    app_vue_registrieren_zeigen: false,
   }),
   
 };
