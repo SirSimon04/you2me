@@ -90,7 +90,7 @@
             <v-text-field
               v-model="email"
               :rules="emailRules"
-              :counter="15"
+              :counter="45"
               label="E-Mail eingeben"
               
             ></v-text-field>
@@ -250,8 +250,13 @@
               <v-card-actions class="justify-end">
                 <v-btn
                   text
+                  @click="app_vue_settings_zeigen = !app_vue_settings_zeigen"
+                >Einstellungen</v-btn>
+                <v-btn
+                  text
                   @click="dialog.value = false"
                 >Zum Messenger</v-btn>
+                
               </v-card-actions>
             </v-card>
           </template>
