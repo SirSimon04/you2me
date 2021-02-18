@@ -54,6 +54,13 @@ evtl: Nachricht löschen <br />
 
 ### Ideen
 E-Mail Verifikation
+Ideen für Einstellungen im frontend:
+    -Dark/bright-Mode
+    -Lesebenachrichtigungen einstellen/austellen
+    -Speicher verwalten (gesendete Daten)
+    - Sicherheit verwalten --> SIcherheitsbestätigung per E-Mail anfordern.
+    - Account anpassen
+    
 
 ## Datenbank
 CREATE TABLE Nutzer
@@ -104,6 +111,9 @@ create table NimmtTeil (
     primary Key(chatId, nutzerId),
 
     foreign key(chatId) references Chat(ChatId) on delete cascade,
+    
+    
+    
     
     foreign key(nutzerId) references Nutzer(id) on delete cascade
 );
