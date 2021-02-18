@@ -256,7 +256,7 @@
               <v-card-actions class="justify-end">
                 <v-btn
                   text
-                  @click="app_vue_settings_zeigen = !app_vue_settings_zeigen"
+                  v-on:click="test()"
                 >Einstellungen</v-btn>
                 <v-btn
                   text
@@ -303,11 +303,13 @@
       test: 'nicht betätigt',
       settings_checkbox: false,
     }
-    
-    
-    
-  
-
+    }
+    methods:{
+      test(){
+        return{
+          anzeige: 'Settings werden angezeigt'
+        }
+      }
     }
   }
   
