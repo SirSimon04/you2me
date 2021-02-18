@@ -63,6 +63,14 @@ public class NutzerEJB {
         em.persist(neuerNutzer);
     }
     
+    public void fuegeChatHinzu(Chat chat, Nutzer nutzer){
+            System.out.println("NutzerEJB fuegeChatHinzu");
+            List<Chat> chatList = nutzer.getChatList();
+            chatList.add(chat);
+            nutzer.setChatList(chatList);
+            em.persist(nutzer);
+    }
+    
         // DELETE
     public boolean delete(int id) {
         try {

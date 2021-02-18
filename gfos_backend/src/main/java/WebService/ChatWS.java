@@ -43,9 +43,14 @@ public class ChatWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll() {
+        List<Chat> liste = chatEJB.getAll();
+        for(Chat c : liste) {
+            for(Nutzer n : c.getNutzerList()) {
+                n.setChatList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+        }
         Gson parser = new Gson();
-        List<Chat> alleNachrichten = chatEJB.getAll();
-        return parser.toJson(alleNachrichten);
+        return parser.toJson(liste);
     }
     
     
@@ -75,6 +80,7 @@ public class ChatWS {
         "benutzername": "NoSkiller"
     }
     */
+    
     @POST
     @Path("/takepart")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,7 +97,14 @@ public class ChatWS {
             String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
             Nutzer addedUser = nutzerEJB.getByUsername(username);
             
+            System.out.println("ChatWs fuegeChatHinzu");
+            nutzerEJB.fuegeChatHinzu(c, addedUser);
+            
+            System.out.println("Chatws fuegeNutzerhinzu");
             chatEJB.fuegeHinzu(c, addedUser);
+            
+            
+            
             
             return true;
         }

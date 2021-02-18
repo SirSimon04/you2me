@@ -6,6 +6,7 @@
 package WebService;
 
 import EJB.NutzerEJB;
+import Entity.Chat;
 import Entity.Nutzer;
 import com.google.gson.Gson;
 import java.util.List;
@@ -43,9 +44,14 @@ public class NutzerWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll(){
+         List<Nutzer> liste = nutzerEJB.getAll();
+        for(Nutzer c : liste) {
+            for(Chat n : c.getChatList()) {
+                n.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+        }
         Gson parser = new Gson();
-        List<Nutzer> alleNutzer = nutzerEJB.getAll();
-        return parser.toJson(alleNutzer);
+        return parser.toJson(liste);
     }
     
     @GET

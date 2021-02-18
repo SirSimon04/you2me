@@ -43,8 +43,11 @@ public class ChatEJB {
     */
     
     public void fuegeHinzu(Chat chat, Nutzer nutzer){
+        System.out.println("Chatejb fuegue Nutzer hinzu");
         List<Nutzer> nutzerList = chat.getNutzerList();
         nutzerList.add(nutzer);
+        chat.setNutzerList(nutzerList);
+        em.persist(chat);
     }
             
 }
