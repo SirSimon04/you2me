@@ -31,6 +31,18 @@ public class NutzerEJB {
         return em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
     }
     
+    public List<Nutzer> getAllCopy(){
+        List<Nutzer> nutzerList;
+        nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
+        for(Nutzer n : nutzerList){
+           em.detach(n); 
+           for(Chat c : n.getChatList()){
+            em.detach(c);
+        }
+        }
+        return nutzerList;
+    }
+    
     // READ
     public Nutzer getById(int id) {
         return em.find(Nutzer.class, id);
@@ -39,10 +51,13 @@ public class NutzerEJB {
     public Nutzer getCopy(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
+        for(Chat c : n.getChatList()){
+            em.detach(c);
+        }
         return n;
         
     }
-    //SELECT n FROM Nutzer n JOIN NimmtTeil t WHERE n.Id = t.NutzerId AND t.ChatId = 1
+    
     public List<Nutzer> getByChatId(int chatId){
         Chat c = em.find(Chat.class, chatId);
         return c.getNutzerList();
@@ -63,13 +78,10 @@ public class NutzerEJB {
         em.persist(neuerNutzer);
     }
     
-    public void fuegeChatHinzu(Chat chat, Nutzer nutzer){
-            System.out.println("NutzerEJB fuegeChatHinzu");
-            List<Chat> chatList = nutzer.getChatList();
-            chatList.add(chat);
-            nutzer.setChatList(chatList);
-            em.persist(nutzer);
-    }
+    public void fuegeChatHinzu(Chat chat, Nutzer nutzer) {
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
+        nutzerInDB.getChatList().add(chat);
+}
     
         // DELETE
     public boolean delete(int id) {

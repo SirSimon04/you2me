@@ -44,10 +44,10 @@ public class NutzerWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll(){
-         List<Nutzer> liste = nutzerEJB.getAll();
-        for(Nutzer c : liste) {
-            for(Chat n : c.getChatList()) {
-                n.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+         List<Nutzer> liste = nutzerEJB.getAllCopy();
+        for(Nutzer n : liste) {
+            for(Chat c : n.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
             }
         }
         Gson parser = new Gson();
@@ -58,8 +58,12 @@ public class NutzerWS {
     @Path("/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getById(@PathParam("id") int id) {
+        Nutzer n =  nutzerEJB.getCopy(id);
+        for(Chat c : n.getChatList()){
+            c.setNutzerList(null);
+        }
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.getById(id));
+        return parser.toJson(n);
     }
     
     @GET

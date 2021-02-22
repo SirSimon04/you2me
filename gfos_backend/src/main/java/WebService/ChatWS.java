@@ -41,9 +41,21 @@ public class ChatWS {
     private ChatEJB chatEJB;
     
     @GET
+    @Path("/id/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getById(@PathParam("id") int id) {
+        Chat c =  chatEJB.getCopy(id);
+        for(Nutzer n : c.getNutzerList()){
+            n.setChatList(null);
+        }
+        Gson parser = new Gson();
+        return parser.toJson(c);
+    }
+    
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll() {
-        List<Chat> liste = chatEJB.getAll();
+        List<Chat> liste = chatEJB.getAllCopy();
         for(Chat c : liste) {
             for(Nutzer n : c.getNutzerList()) {
                 n.setChatList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
