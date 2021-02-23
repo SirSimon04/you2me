@@ -7,6 +7,7 @@ package EJB;
 
 import Entity.Chat;
 import Entity.Nutzer;
+import java.util.HashSet;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -60,7 +61,14 @@ public class NutzerEJB {
     
     public List<Nutzer> getByChatId(int chatId){
         Chat c = em.find(Chat.class, chatId);
-        return c.getNutzerList();
+        List<Nutzer> nutzerList = c.getNutzerList();
+        for(Nutzer n : nutzerList){
+           em.detach(n); 
+           for(Chat chat : n.getChatList()){
+            em.detach(chat);
+        }
+        }
+        return nutzerList;
     }
   
     public Nutzer getByUsername(String username){
@@ -69,6 +77,10 @@ public class NutzerEJB {
         query.setParameter("benutzername", username);
         
         Nutzer user = (Nutzer) query.getSingleResult();
+        em.detach(user);
+        for(Chat c : user.getChatList()){
+            em.detach(c);
+        }
         
         return user;
     }
@@ -100,6 +112,13 @@ public class NutzerEJB {
         try {
             Nutzer aktuellInDatenbank = this.getById(gesuchteId);
             aktuellInDatenbank.setVorname(aktualisierterNutzer.getVorname());
+            aktuellInDatenbank.setNachname(aktualisierterNutzer.getNachname());
+            aktuellInDatenbank.setBenutzername(aktualisierterNutzer.getBenutzername());
+            aktuellInDatenbank.setEmail(aktualisierterNutzer.getEmail());
+            aktuellInDatenbank.setHandynummer(aktualisierterNutzer.getHandynummer());
+            aktuellInDatenbank.setInfo(aktualisierterNutzer.getInfo());
+            aktuellInDatenbank.setProfilbild(aktualisierterNutzer.getProfilbild());
+            em.merge(aktuellInDatenbank);
             return true;
         }
             catch(Exception e) {

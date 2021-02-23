@@ -70,16 +70,26 @@ public class NutzerWS {
     @Path("/benutzername/{benutzername}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByUsername(@PathParam("benutzername") String benutzername){
+        Nutzer n = nutzerEJB.getByUsername(benutzername);
+        for(Chat c : n.getChatList()){
+            c.setNutzerList(null);
+        }
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.getByUsername(benutzername));
+        return parser.toJson(n);
     }
     
     @GET
     @Path("/chatteilnehmer/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByChatId(@PathParam("id") int id) {
+        List<Nutzer> liste = nutzerEJB.getByChatId(id);
+        for(Nutzer n : liste) {
+            for(Chat c : n.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+        }
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.getByChatId(id));
+        return parser.toJson(liste);
     }
     
     

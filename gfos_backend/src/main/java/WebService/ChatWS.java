@@ -125,42 +125,4 @@ public class ChatWS {
         }
     }
     
-    /*
-    @POST
-    @Path("/takepart")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public boolean takePart(String jsonStr){
-        Gson parser = new Gson();
-        
-        try{    
-        
-            JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
-            
-            int chatid = parser.fromJson((jsonTP.get("chatid")), Integer.class);
-            
-            String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
-            Nutzer loginNutzer = nutzerEJB.getByUsername(username);
-            int userid = loginNutzer.getId();
-            
-            Nimmtteil nt;
-            nt = new Nimmtteil();
-            nt.setChatid(chatid);
-            nt.setNutzerid(userid);
-            
-            chatEJB.takePart(nt);
-            
-            return true; 
-           
-        }
-            catch(JsonSyntaxException e) {
-            return false;
-        }
-            
-            
-    }
-    */
-    
-    
-    
 }
