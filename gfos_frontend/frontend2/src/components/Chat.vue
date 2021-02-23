@@ -58,7 +58,7 @@
 
     mounted() {
         function loadMessages() {
-            fetch('http://10.132.177.86:8080/GFOS/daten/nachricht/chat/1').then(response => {
+            fetch('http://localhost:8080/GFOS/daten/nachricht/chat/1').then(response => {
                 if (response.status !== 200) {console.error('Code !== 200:' + response);
                 console.warn('error!');
                     return

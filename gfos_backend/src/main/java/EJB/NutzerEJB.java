@@ -118,6 +118,7 @@ public class NutzerEJB {
             aktuellInDatenbank.setHandynummer(aktualisierterNutzer.getHandynummer());
             aktuellInDatenbank.setInfo(aktualisierterNutzer.getInfo());
             aktuellInDatenbank.setProfilbild(aktualisierterNutzer.getProfilbild());
+            em.merge(aktuellInDatenbank);
             return true;
         }
             catch(Exception e) {
