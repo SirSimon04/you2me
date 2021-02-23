@@ -57,6 +57,20 @@
     }),
 
     mounted() {
+        function getNewest() {
+            fetch('http://10.132.177.86:8080/GFOS/daten/nachricht/chat/1/newest').then(response => {
+                if (response.status !== 200) {console.error('Code !== 200:' + response);
+                console.warn('error!');
+                    return
+                }
+                response.clone();
+                response.json().then(data => {
+                    return data;
+                }).catch(error => {
+                    console.error('An error occured while parsing the string:' + error);
+                });
+            });
+        }
         function loadMessages() {
             fetch('http://10.132.177.86:8080/GFOS/daten/nachricht/chat/1').then(response => {
                 if (response.status !== 200) {console.error('Code !== 200:' + response);
@@ -75,6 +89,11 @@
             });
         }
         loadMessages();
+        setTimeout(function() {
+            if (this.messages[-1] !== getNewest()) {
+                loadMessages();
+            }
+        }, 1000);
     },
 
     methods() {
