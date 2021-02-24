@@ -58,7 +58,7 @@ public class NutzerWS {
     @Path("/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getById(@PathParam("id") int id) {
-        Nutzer n =  nutzerEJB.getCopy(id);
+        Nutzer n =  nutzerEJB.getCopyById(id);
         for(Chat c : n.getChatList()){
             c.setNutzerList(null);
         }
@@ -70,7 +70,7 @@ public class NutzerWS {
     @Path("/benutzername/{benutzername}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByUsername(@PathParam("benutzername") String benutzername){
-        Nutzer n = nutzerEJB.getByUsername(benutzername);
+        Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
         for(Chat c : n.getChatList()){
             c.setNutzerList(null);
         }
@@ -82,7 +82,7 @@ public class NutzerWS {
     @Path("/chatteilnehmer/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByChatId(@PathParam("id") int id) {
-        List<Nutzer> liste = nutzerEJB.getByChatId(id);
+        List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
         for(Nutzer n : liste) {
             for(Chat c : n.getChatList()) {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
@@ -100,7 +100,7 @@ public class NutzerWS {
     public String getUsernameById(@PathParam("id") int id){
         Gson parser = new Gson();
         Nutzer n = new Nutzer();
-        n = nutzerEJB.getCopy(id);
+        n = nutzerEJB.getCopyById(id);
         
         Nutzer nutzer = new Nutzer();
         nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
@@ -114,27 +114,29 @@ public class NutzerWS {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean login(String jsonStr) {
+    public String login(String jsonStr) {
        
         Gson parser = new Gson();
         try {
             //getting the name of the body
             JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
-            String username = parser.fromJson((loginUser.get("benutzername")), String.class);
-            String passwort = parser.fromJson((loginUser.get("passwort")), String.class);
-            System.out.println(username);
-            System.out.println(passwort);
+            String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
+            String jsonPasswort = parser.fromJson((loginUser.get("passwort")), String.class);
             
             //getting the Nutzer with the name gotten before
-            Nutzer loginNutzer = nutzerEJB.getByUsername(username);
+            Nutzer dbNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
             
-            if(loginNutzer.getPasswort().equals(passwort))
+            for(Chat c : dbNutzer.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+            
+            if(dbNutzer.getPasswort().equals(jsonPasswort))
             {
-                return true;
+                return parser.toJson(dbNutzer);
             }
             else 
             {
-                return false;
+                return "PW falsch";
             }
             
             
@@ -142,7 +144,7 @@ public class NutzerWS {
         }
             catch(JsonSyntaxException e) {
                 System.out.println("catch");
-                return false;
+                return "Json falsch";
             }
 
         

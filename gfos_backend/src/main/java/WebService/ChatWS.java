@@ -107,7 +107,7 @@ public class ChatWS {
             Chat c = chatEJB.getById(chatid);
             
             String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
-            Nutzer addedUser = nutzerEJB.getByUsername(username);
+            Nutzer addedUser = nutzerEJB.getCopyByUsername(username);
             
             System.out.println("ChatWs fuegeChatHinzu");
             nutzerEJB.fuegeChatHinzu(c, addedUser);

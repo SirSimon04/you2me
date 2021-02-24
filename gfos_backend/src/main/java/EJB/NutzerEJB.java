@@ -49,7 +49,7 @@ public class NutzerEJB {
         return em.find(Nutzer.class, id);
     }
     
-    public Nutzer getCopy(int id){
+    public Nutzer getCopyById(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
         for(Chat c : n.getChatList()){
@@ -59,7 +59,7 @@ public class NutzerEJB {
         
     }
     
-    public List<Nutzer> getByChatId(int chatId){
+    public List<Nutzer> getCopyByChatId(int chatId){
         Chat c = em.find(Chat.class, chatId);
         List<Nutzer> nutzerList = c.getNutzerList();
         for(Nutzer n : nutzerList){
@@ -71,7 +71,7 @@ public class NutzerEJB {
         return nutzerList;
     }
   
-    public Nutzer getByUsername(String username){
+    public Nutzer getCopyByUsername(String username){
         
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
