@@ -53,7 +53,7 @@ public class NachrichtWS {
             return true;
         }
             catch(JsonSyntaxException e) {
-            return false;
+                return false;
         }
     }
     
@@ -66,7 +66,7 @@ public class NachrichtWS {
     }
     
     
-    //Inhalt, uhrzeit, username
+    
     @GET
     @Path("/chat/{id}")
     @Produces(MediaType.APPLICATION_JSON)

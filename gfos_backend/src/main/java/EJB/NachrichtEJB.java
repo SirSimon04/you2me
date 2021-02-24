@@ -33,7 +33,9 @@ public class NachrichtEJB {
     }
     
     public List<Nachricht> getByChat(int id){   
-        return em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
+        List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
+        em.detach(nachrichtList);
+        return nachrichtList;
     }
     
     //TODO: Implementierung der Methode, die alle Nachrichten einer chatId zurückgibt

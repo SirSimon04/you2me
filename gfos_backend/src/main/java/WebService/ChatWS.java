@@ -41,18 +41,6 @@ public class ChatWS {
     private ChatEJB chatEJB;
     
     @GET
-    @Path("/id/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getById(@PathParam("id") int id) {
-        Chat c =  chatEJB.getCopy(id);
-        for(Nutzer n : c.getNutzerList()){
-            n.setChatList(null);
-        }
-        Gson parser = new Gson();
-        return parser.toJson(c);
-    }
-    
-    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll() {
         List<Chat> liste = chatEJB.getAllCopy();
@@ -65,8 +53,37 @@ public class ChatWS {
         return parser.toJson(liste);
     }
     
-    
-    
+    @GET
+    @Path("/id/{chatid}/{nutzerid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getById(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid) {
+        
+        Chat c =  chatEJB.getCopy(chatid);
+        int length = 0;
+        
+        for(Nutzer n : c.getNutzerList()){
+            n.setChatList(null);
+            length +=1;
+        }
+        
+        System.out.println(length);
+        if(length == 2)
+        {
+        List<Nutzer> nutzerList = c.getNutzerList();
+        Nutzer n = nutzerEJB.getCopyById(nutzerid);
+        nutzerList.remove(n);
+        
+        Nutzer andererNutzer = nutzerList.get(0);
+        
+        c.setName(andererNutzer.getBenutzername());
+        c.setNutzerList(null);
+        System.out.println(nutzerList);
+        }
+        
+        
+        Gson parser = new Gson();
+        return parser.toJson(c);
+    }
     
     @POST
     @Path("/add")
@@ -114,9 +131,6 @@ public class ChatWS {
             
             System.out.println("Chatws fuegeNutzerhinzu");
             chatEJB.fuegeHinzu(c, addedUser);
-            
-            
-            
             
             return true;
         }
