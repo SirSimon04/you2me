@@ -107,14 +107,12 @@ public class ChatWS {
         }
         
         
-        
-        
         for(Chat c : returnList){
                 int length = 0;
                 for(Nutzer n : c.getNutzerList()){
                     length +=1;
                 }
-
+                        
                 if(length == 2)
                 {
                     List<Nutzer> nutzerList = c.getNutzerList();
@@ -177,6 +175,8 @@ public class ChatWS {
             String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
             Nutzer addedUser = nutzerEJB.getCopyByUsername(username);
             
+            if(!c.getNutzerList().contains(addedUser))
+            {
             System.out.println("ChatWs fuegeChatHinzu");
             nutzerEJB.fuegeChatHinzu(c, addedUser);
             
@@ -184,6 +184,10 @@ public class ChatWS {
             chatEJB.fuegeHinzu(c, addedUser);
             
             return true;
+            }
+            else{
+                return false;
+            }
         }
         catch(JsonSyntaxException e) {
             return false;
