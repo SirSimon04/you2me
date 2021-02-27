@@ -85,6 +85,20 @@ public class NutzerEJB {
         return user;
     }
     
+    public Nutzer getCopyByEmail(String email){
+        
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByEmail");
+        query.setParameter("email", email);
+        
+        Nutzer user = (Nutzer) query.getSingleResult();
+        em.detach(user);
+        for(Chat c : user.getChatList()){
+            em.detach(c);
+        }
+        
+        return user;
+    }
+    
     // CREATE
     public void add(Nutzer neuerNutzer) {
         em.persist(neuerNutzer);

@@ -163,7 +163,7 @@ public class ChatWS {
     @Path("/takepart")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean takePart(String jsonStr){
+    public String takePart(String jsonStr){
         Gson parser = new Gson();
         
         try{
@@ -183,14 +183,14 @@ public class ChatWS {
             System.out.println("Chatws fuegeNutzerhinzu");
             chatEJB.fuegeHinzu(c, addedUser);
             
-            return true;
+            return "true";
             }
             else{
-                return false;
+                return "Nutzer schon hinzugefügt";
             }
         }
         catch(JsonSyntaxException e) {
-            return false;
+            return "JsonSyntaxException" + e;
         }
     }
     

@@ -24,6 +24,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
+import javax.ejb.EJBException;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.TransactionRolledbackLocalException;
+import javax.persistence.NoResultException;
+import javax.servlet.ServletException;
+
 
 /**
  *
@@ -155,17 +161,87 @@ public class NutzerWS {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean create(String jsonStr) {
+    public String create(String jsonStr) {
         System.out.println(jsonStr);
         Gson parser = new Gson();
+        
         try {
+            
+            
+            
             Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
             nutzerEJB.add(neuerNutzer);
-            return true;
+            return "true";
+            
+            //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
+            /*
+            
+            System.out.println("1. try");
+            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
+            String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
+            
+            try {
+                System.out.println("2. try");
+                Nutzer usernameNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
+                
+                if(usernameNutzer.getBenutzername().equals(jsonUsername)){
+                    return "Benutzername bereits vergeben";
+                }
+                }
+                catch(NoResultException e) {
+                    System.out.println("4. exception");
+                    //return "4";
+                }
+                catch(EJBTransactionRolledbackException e){
+                    System.out.println("5. exception");
+                    //return "5";
+                }
+                catch(TransactionRolledbackLocalException e){
+                    System.out.println("6. exception");
+                    //return "6";
+                }
+                catch(EJBException e){
+                    System.out.println("6.5 exception");
+                    //return "7";
+                }
+            
+            try {
+                Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
+                nutzerEJB.add(neuerNutzer);
+                return "true";
+                
+            }
+                catch(NoResultException e) {
+                    System.out.println("1. exception");
+                    return "1";
+                }
+                catch(EJBTransactionRolledbackException e){
+                    System.out.println("2. exception");
+                    return "2";
+                }
+                catch(TransactionRolledbackLocalException e){
+                    System.out.println("3. exception");
+                    return "3";
+                }
+                catch(EJBException e){
+                    System.out.println("3.5 exception");
+                    return "3.5";
+                }
+                
+            
+            */
+            
+                
+            
+            
+            //return "wtf";
+            
         }
             catch(JsonSyntaxException e) {
-            return false;
+            return "false";
         }
+        //return "";
+        
     }
     
     @DELETE
