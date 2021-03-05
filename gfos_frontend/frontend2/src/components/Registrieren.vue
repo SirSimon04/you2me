@@ -304,13 +304,13 @@
       settings_checkbox: false,
     }
     }
-    methods:{
-      test(){
-        return{
-          anzeige: 'Settings werden angezeigt'
-        }
-      }
-    }
+    //methods:{
+    //  test(){
+    //    return{
+    //      anzeige: 'Settings werden angezeigt'
+    //    }
+    //  }
+    //}
   }
   
  
