@@ -28,10 +28,30 @@ public class ChatEJB {
         return em.find(Chat.class, id);
     }
     
+    public Chat getCopy(int id) {
+        Chat c = em.find(Chat.class, id);
+        em.detach(c);
+        for(Nutzer n : c.getNutzerList()){
+            em.detach(n);
+        }
+        return c;
+    }
+    
     public List<Chat> getAll() {
         return em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
     }
     
+    public List<Chat> getAllCopy(){
+        List<Chat> chatList;
+        chatList = em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
+        for(Chat c : chatList) {
+            em.detach(c);
+            for(Nutzer n : c.getNutzerList()){
+            em.detach(n);
+        }
+        }
+        return chatList;
+    }
 
     public void createChat(Chat neuerChat) {
         em.persist(neuerChat);
@@ -43,11 +63,8 @@ public class ChatEJB {
     */
     
     public void fuegeHinzu(Chat chat, Nutzer nutzer){
-        System.out.println("Chatejb fuegue Nutzer hinzu");
-        List<Nutzer> nutzerList = chat.getNutzerList();
-        nutzerList.add(nutzer);
-        chat.setNutzerList(nutzerList);
-        em.persist(chat);
+        Chat chatInDB = em.find(Chat.class, chat.getChatid());
+        chatInDB.getNutzerList().add(nutzer);
     }
             
 }

@@ -24,6 +24,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
+import javax.ejb.EJBException;
+import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.TransactionRolledbackLocalException;
+import javax.persistence.NoResultException;
+import javax.servlet.ServletException;
+
 
 /**
  *
@@ -44,10 +50,10 @@ public class NutzerWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll(){
-         List<Nutzer> liste = nutzerEJB.getAll();
-        for(Nutzer c : liste) {
-            for(Chat n : c.getChatList()) {
-                n.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+         List<Nutzer> liste = nutzerEJB.getAllCopy();
+        for(Nutzer n : liste) {
+            for(Chat c : n.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
             }
         }
         Gson parser = new Gson();
@@ -58,24 +64,38 @@ public class NutzerWS {
     @Path("/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getById(@PathParam("id") int id) {
+        Nutzer n =  nutzerEJB.getCopyById(id);
+        for(Chat c : n.getChatList()){
+            c.setNutzerList(null);
+        }
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.getById(id));
+        return parser.toJson(n);
     }
     
     @GET
     @Path("/benutzername/{benutzername}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByUsername(@PathParam("benutzername") String benutzername){
+        Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
+        for(Chat c : n.getChatList()){
+            c.setNutzerList(null);
+        }
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.getByUsername(benutzername));
+        return parser.toJson(n);
     }
     
     @GET
     @Path("/chatteilnehmer/id/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByChatId(@PathParam("id") int id) {
+        List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
+        for(Nutzer n : liste) {
+            for(Chat c : n.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+        }
         Gson parser = new Gson();
-        return parser.toJson(nutzerEJB.getByChatId(id));
+        return parser.toJson(liste);
     }
     
     
@@ -86,7 +106,7 @@ public class NutzerWS {
     public String getUsernameById(@PathParam("id") int id){
         Gson parser = new Gson();
         Nutzer n = new Nutzer();
-        n = nutzerEJB.getCopy(id);
+        n = nutzerEJB.getCopyById(id);
         
         Nutzer nutzer = new Nutzer();
         nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
@@ -100,27 +120,29 @@ public class NutzerWS {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean login(String jsonStr) {
+    public String login(String jsonStr) {
        
         Gson parser = new Gson();
         try {
             //getting the name of the body
             JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
-            String username = parser.fromJson((loginUser.get("benutzername")), String.class);
-            String passwort = parser.fromJson((loginUser.get("passwort")), String.class);
-            System.out.println(username);
-            System.out.println(passwort);
+            String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
+            String jsonPasswort = parser.fromJson((loginUser.get("passwort")), String.class);
             
             //getting the Nutzer with the name gotten before
-            Nutzer loginNutzer = nutzerEJB.getByUsername(username);
+            Nutzer dbNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
             
-            if(loginNutzer.getPasswort().equals(passwort))
+            for(Chat c : dbNutzer.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+            
+            if(dbNutzer.getPasswort().equals(jsonPasswort))
             {
-                return true;
+                return parser.toJson(dbNutzer);
             }
             else 
             {
-                return false;
+                return "PW falsch";
             }
             
             
@@ -128,7 +150,7 @@ public class NutzerWS {
         }
             catch(JsonSyntaxException e) {
                 System.out.println("catch");
-                return false;
+                return "Json falsch";
             }
 
         
@@ -139,17 +161,87 @@ public class NutzerWS {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean create(String jsonStr) {
+    public String create(String jsonStr) {
         System.out.println(jsonStr);
         Gson parser = new Gson();
+        
         try {
+            
+            
+            
             Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
             nutzerEJB.add(neuerNutzer);
-            return true;
+            return "true";
+            
+            //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
+            /*
+            
+            System.out.println("1. try");
+            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
+            String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
+            
+            try {
+                System.out.println("2. try");
+                Nutzer usernameNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
+                
+                if(usernameNutzer.getBenutzername().equals(jsonUsername)){
+                    return "Benutzername bereits vergeben";
+                }
+                }
+                catch(NoResultException e) {
+                    System.out.println("4. exception");
+                    //return "4";
+                }
+                catch(EJBTransactionRolledbackException e){
+                    System.out.println("5. exception");
+                    //return "5";
+                }
+                catch(TransactionRolledbackLocalException e){
+                    System.out.println("6. exception");
+                    //return "6";
+                }
+                catch(EJBException e){
+                    System.out.println("6.5 exception");
+                    //return "7";
+                }
+            
+            try {
+                Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
+                nutzerEJB.add(neuerNutzer);
+                return "true";
+                
+            }
+                catch(NoResultException e) {
+                    System.out.println("1. exception");
+                    return "1";
+                }
+                catch(EJBTransactionRolledbackException e){
+                    System.out.println("2. exception");
+                    return "2";
+                }
+                catch(TransactionRolledbackLocalException e){
+                    System.out.println("3. exception");
+                    return "3";
+                }
+                catch(EJBException e){
+                    System.out.println("3.5 exception");
+                    return "3.5";
+                }
+                
+            
+            */
+            
+                
+            
+            
+            //return "wtf";
+            
         }
             catch(JsonSyntaxException e) {
-            return false;
+            return "false";
         }
+        //return "";
+        
     }
     
     @DELETE

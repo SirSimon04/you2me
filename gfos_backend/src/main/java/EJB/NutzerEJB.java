@@ -7,6 +7,7 @@ package EJB;
 
 import Entity.Chat;
 import Entity.Nutzer;
+import java.util.HashSet;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -31,29 +32,69 @@ public class NutzerEJB {
         return em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
     }
     
+    public List<Nutzer> getAllCopy(){
+        List<Nutzer> nutzerList;
+        nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
+        for(Nutzer n : nutzerList){
+           em.detach(n); 
+           for(Chat c : n.getChatList()){
+            em.detach(c);
+        }
+        }
+        return nutzerList;
+    }
+    
     // READ
     public Nutzer getById(int id) {
         return em.find(Nutzer.class, id);
     }
     
-    public Nutzer getCopy(int id){
+    public Nutzer getCopyById(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
+        for(Chat c : n.getChatList()){
+            em.detach(c);
+        }
         return n;
         
     }
-    //SELECT n FROM Nutzer n JOIN NimmtTeil t WHERE n.Id = t.NutzerId AND t.ChatId = 1
-    public List<Nutzer> getByChatId(int chatId){
+    
+    public List<Nutzer> getCopyByChatId(int chatId){
         Chat c = em.find(Chat.class, chatId);
-        return c.getNutzerList();
+        List<Nutzer> nutzerList = c.getNutzerList();
+        for(Nutzer n : nutzerList){
+           em.detach(n); 
+           for(Chat chat : n.getChatList()){
+            em.detach(chat);
+        }
+        }
+        return nutzerList;
     }
   
-    public Nutzer getByUsername(String username){
+    public Nutzer getCopyByUsername(String username){
         
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
         
         Nutzer user = (Nutzer) query.getSingleResult();
+        em.detach(user);
+        for(Chat c : user.getChatList()){
+            em.detach(c);
+        }
+        
+        return user;
+    }
+    
+    public Nutzer getCopyByEmail(String email){
+        
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByEmail");
+        query.setParameter("email", email);
+        
+        Nutzer user = (Nutzer) query.getSingleResult();
+        em.detach(user);
+        for(Chat c : user.getChatList()){
+            em.detach(c);
+        }
         
         return user;
     }
@@ -63,13 +104,10 @@ public class NutzerEJB {
         em.persist(neuerNutzer);
     }
     
-    public void fuegeChatHinzu(Chat chat, Nutzer nutzer){
-            System.out.println("NutzerEJB fuegeChatHinzu");
-            List<Chat> chatList = nutzer.getChatList();
-            chatList.add(chat);
-            nutzer.setChatList(chatList);
-            em.persist(nutzer);
-    }
+    public void fuegeChatHinzu(Chat chat, Nutzer nutzer) {
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
+        nutzerInDB.getChatList().add(chat);
+}
     
         // DELETE
     public boolean delete(int id) {
@@ -88,6 +126,13 @@ public class NutzerEJB {
         try {
             Nutzer aktuellInDatenbank = this.getById(gesuchteId);
             aktuellInDatenbank.setVorname(aktualisierterNutzer.getVorname());
+            aktuellInDatenbank.setNachname(aktualisierterNutzer.getNachname());
+            aktuellInDatenbank.setBenutzername(aktualisierterNutzer.getBenutzername());
+            aktuellInDatenbank.setEmail(aktualisierterNutzer.getEmail());
+            aktuellInDatenbank.setHandynummer(aktualisierterNutzer.getHandynummer());
+            aktuellInDatenbank.setInfo(aktualisierterNutzer.getInfo());
+            aktuellInDatenbank.setProfilbild(aktualisierterNutzer.getProfilbild());
+            em.merge(aktuellInDatenbank);
             return true;
         }
             catch(Exception e) {
