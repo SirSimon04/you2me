@@ -54,7 +54,7 @@ public class NutzerEJB {
                 nutzer.setChatList(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
-                nutzer.setPasswort(null);
+                nutzer.setPasswordhash(null);
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                  nu.setChatList(null);
@@ -86,14 +86,14 @@ public class NutzerEJB {
             nutzer.setChatList(null);
             nutzer.setOwnFriendList(null);
             nutzer.setOtherFriendList(null);
-            nutzer.setPasswort(null);
+            nutzer.setPasswordhash(null);
         }
         for(Nutzer nu : n.getOtherFriendList()) {
             em.detach(nu);
             nu.setChatList(null);
             nu.setOwnFriendList(null);
             nu.setOtherFriendList(null);
-            nu.setPasswort(null);
+            nu.setPasswordhash(null);
         }
         return n;
         
@@ -204,4 +204,13 @@ public class NutzerEJB {
             return false;
         }
     }
+    
+    public void create(String name, String pwHash) {
+        Nutzer nutzer = new Nutzer();
+        nutzer.setBenutzername(name);
+        nutzer.setPasswordhash(pwHash);
+        nutzer.setEmail("abc@gmail.com");
+        em.persist(nutzer);
+        
+    } 
 }
