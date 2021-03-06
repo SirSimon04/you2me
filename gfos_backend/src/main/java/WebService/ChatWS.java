@@ -8,6 +8,7 @@ import EJB.ChatEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Nutzer;
+import Utilities.Tokenizer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.List;
@@ -41,115 +42,158 @@ public class ChatWS {
     @EJB
     private ChatEJB chatEJB;
     
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAll() {
-        List<Chat> liste = chatEJB.getAllCopy();
-        for(Chat c : liste) {
-            for(Nutzer n : c.getNutzerList()) {
-                n.setChatList(null); 
-            }
-        }
-        Gson parser = new Gson();
-        return parser.toJson(liste);
-    }
+    @EJB
+    private Tokenizer tokenizer;
     
-    @GET
-    @Path("/id/{chatid}/{nutzerid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid) {
-        
-        Chat c =  chatEJB.getCopy(chatid);
-        int length = 0;
-        
-        for(Nutzer n : c.getNutzerList()){
-            n.setChatList(null);
-            length +=1;
-        }
-        
-        System.out.println(length);
-        if(length == 2)
-        {
-        List<Nutzer> nutzerList = c.getNutzerList();
-        Nutzer n = nutzerEJB.getCopyById(nutzerid);
-        nutzerList.remove(n);
-        
-        Nutzer andererNutzer = nutzerList.get(0);
-        
-        c.setName(andererNutzer.getBenutzername());
-        c.setNutzerList(null);
-        System.out.println(nutzerList);
-        }
-        
-        
-        Gson parser = new Gson();
-        return parser.toJson(c);
-    }
-    
-    @GET
-    @Path("/nutzerid/{nutzerid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid) {
-        
-        List<Chat> returnList = new ArrayList<Chat>();
-        
-        Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
-        
-        List<Chat> liste = chatEJB.getAllCopy();
-        for(Chat c : liste) {
-            if(c.getNutzerList().contains(nutzer))
+    public boolean verify(String token){
+        if(tokenizer.isOn()){
+            if(tokenizer.verifyToken(token).equals(""))
             {
-                returnList.add(c);
+                return false;
             }
-            for(Nutzer n : c.getNutzerList()) {
-                n.setChatList(null); 
+            else
+            {
+                return true;
             }
         }
+        else {
+            return true;
+        }
         
-        
-        for(Chat c : returnList){
-                int length = 0;
-                for(Nutzer n : c.getNutzerList()){
-                    length +=1;
+    }
+    
+    @GET
+    @Path("/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getAll(@PathParam("token") String token) {
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+           List<Chat> liste = chatEJB.getAllCopy();
+            for(Chat c : liste) {
+                for(Nutzer n : c.getNutzerList()) {
+                    n.setChatList(null); 
                 }
-                        
-                if(length == 2)
+            }
+            Gson parser = new Gson();
+            return parser.toJson(liste); 
+        }
+        
+    }
+    
+    
+    @GET
+    @Path("/id/{chatid}/{nutzerid}/{tokenizer}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            Chat c =  chatEJB.getCopy(chatid);
+            int length = 0;
+
+            for(Nutzer n : c.getNutzerList()){
+                n.setChatList(null);
+                length +=1;
+            }
+
+            System.out.println(length);
+            if(length == 2)
+            {
+                List<Nutzer> nutzerList = c.getNutzerList();
+                Nutzer n = nutzerEJB.getCopyById(nutzerid);
+                nutzerList.remove(n);
+
+                Nutzer andererNutzer = nutzerList.get(0);
+
+                c.setName(andererNutzer.getBenutzername());
+                c.setNutzerList(null);
+                System.out.println(nutzerList);
+            }
+
+
+            Gson parser = new Gson();
+            return parser.toJson(c);
+        }
+        
+    }
+    
+    @GET
+    @Path("/nutzerid/{nutzerid}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid, @PathParam("token") String token) {
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            List<Chat> returnList = new ArrayList<Chat>();
+
+            Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
+
+            List<Chat> liste = chatEJB.getAllCopy();
+            for(Chat c : liste) {
+                if(c.getNutzerList().contains(nutzer))
                 {
-                    List<Nutzer> nutzerList = c.getNutzerList();
-                    Nutzer n = nutzerEJB.getCopyById(nutzerid);
-                    nutzerList.remove(n);
-
-                    Nutzer andererNutzer = nutzerList.get(0);
-
-                    c.setName(andererNutzer.getBenutzername());
-                    c.setNutzerList(null);
-                    System.out.println(nutzerList);
+                    returnList.add(c);
                 }
+                for(Nutzer n : c.getNutzerList()) {
+                    n.setChatList(null); 
+                }
+            }
+
+
+            for(Chat c : returnList){
+                    int length = 0;
+                    for(Nutzer n : c.getNutzerList()){
+                        length +=1;
+                    }
+
+                    if(length == 2)
+                    {
+                        List<Nutzer> nutzerList = c.getNutzerList();
+                        Nutzer n = nutzerEJB.getCopyById(nutzerid);
+                        nutzerList.remove(n);
+
+                        Nutzer andererNutzer = nutzerList.get(0);
+
+                        c.setName(andererNutzer.getBenutzername());
+                        c.setNutzerList(null);
+                        System.out.println(nutzerList);
+                    }
+            }
+
+            Gson parser = new Gson();
+            return parser.toJson(returnList);
         }
         
         
-        
-        Gson parser = new Gson();
-        return parser.toJson(returnList);
     }
     
     
     @POST
-    @Path("/add")
+    @Path("/add/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public boolean create(String jsonStr) {
-        System.out.println(jsonStr);
+    public String create(String jsonStr, @PathParam("token") String token) {
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            System.out.println(jsonStr);
         Gson parser = new Gson();
         try {
             System.out.println("entered try");
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
             chatEJB.createChat(neuerChat);
-            return true;
+            return "true";
         }
             catch(JsonSyntaxException e) {
-            return false;
+            return "false";
         }
+        }
+        
     }
     /*
     Als erstes wird die Id des Chats angegeben, danach der Benutzername des Benutzers, der hinzugefügt wird
@@ -160,38 +204,45 @@ public class ChatWS {
     */
     
     @POST
-    @Path("/takepart")
+    @Path("/takepart/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String takePart(String jsonStr){
-        Gson parser = new Gson();
+    public String takePart(String jsonStr, @PathParam("token") String token){
         
-        try{
-            JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
-            
-            int chatid = parser.fromJson((jsonTP.get("chatid")), Integer.class);
-            Chat c = chatEJB.getById(chatid);
-            
-            String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
-            Nutzer addedUser = nutzerEJB.getCopyByUsername(username);
-            
-            if(!c.getNutzerList().contains(addedUser))
-            {
-            System.out.println("ChatWs fuegeChatHinzu");
-            nutzerEJB.fuegeChatHinzu(c, addedUser);
-            
-            System.out.println("Chatws fuegeNutzerhinzu");
-            chatEJB.fuegeHinzu(c, addedUser);
-            
-            return "true";
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            Gson parser = new Gson();
+        
+            try{
+                JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
+
+                int chatid = parser.fromJson((jsonTP.get("chatid")), Integer.class);
+                Chat c = chatEJB.getById(chatid);
+
+                String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
+                Nutzer addedUser = nutzerEJB.getCopyByUsername(username);
+
+                if(!c.getNutzerList().contains(addedUser))
+                {
+                System.out.println("ChatWs fuegeChatHinzu");
+                nutzerEJB.fuegeChatHinzu(c, addedUser);
+
+                System.out.println("Chatws fuegeNutzerhinzu");
+                chatEJB.fuegeHinzu(c, addedUser);
+
+                return "true";
+                }
+                else{
+                    return "Nutzer schon hinzugefügt";
+                }
             }
-            else{
-                return "Nutzer schon hinzugefügt";
+            catch(JsonSyntaxException e) {
+                return "JsonSyntaxException" + e;
             }
         }
-        catch(JsonSyntaxException e) {
-            return "JsonSyntaxException" + e;
-        }
+        
     }
     
 }
