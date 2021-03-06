@@ -26,6 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
+import javax.ejb.EJBTransactionRolledbackException;
 
 /**
  *
@@ -173,16 +174,16 @@ public class ChatWS {
     
     
     @POST
-    @Path("/add/{token}")
+    @Path("/createAsGroup/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String create(String jsonStr, @PathParam("token") String token) {
+    public String createAsGroup(String jsonStr, @PathParam("token") String token) {
         if(!verify(token)){
             return "Kein gültiges Token";
         }
         else {
             System.out.println(jsonStr);
-        Gson parser = new Gson();
+            Gson parser = new Gson();
         try {
             System.out.println("entered try");
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
@@ -195,6 +196,77 @@ public class ChatWS {
         }
         
     }
+    /*
+        
+        1. Chat erstellen
+        2. eigenen Nutzer aus der DB ziehen
+        3. anderen Nutzer aus der DB ziehen
+        4. beide Nutzer zum Chat hinzufügen
+    
+    */
+    @POST
+    @Path("/createAsChat/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createAsChat(String jsonStr, @PathParam("token") String token) {
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            System.out.println(jsonStr);
+            Gson parser = new Gson();
+            try {
+                
+                JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
+                String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
+                String date = parser.fromJson((jsonTP.get("erstelldatum")), String.class);
+                int eigeneId = parser.fromJson((jsonTP.get("eigeneId")), Integer.class);
+                
+                Chat neuerChat = new Chat();
+                neuerChat.setErstelldatum(date);
+                
+                
+                Nutzer self = nutzerEJB.getCopyById(eigeneId);
+                Nutzer other = nutzerEJB.getCopyByUsername(username);
+                chatEJB.createChat(neuerChat);
+                
+                nutzerEJB.fuegeChatHinzu(neuerChat, self);
+                nutzerEJB.fuegeChatHinzu(neuerChat, other);
+                
+                boolean test = true;
+                
+                for(Chat c : chatEJB.getAll()){
+                    List<Nutzer> nutzerList = new ArrayList();
+                    for(Nutzer n : c.getNutzerList()){
+                        nutzerList.add(n);
+                    }
+                    if(nutzerList.size() == 2 && nutzerList.contains(self) && nutzerList.contains(other)){
+                        test = false;
+                    }
+                }
+                
+                if(test){
+                    chatEJB.fuegeHinzu(neuerChat, self);
+                    chatEJB.fuegeHinzu(neuerChat, other);
+                    
+                    return "true";
+                }
+                else{
+                    chatEJB.delete(neuerChat);
+                    return "schon vorhanden";
+                }
+            }
+            catch(JsonSyntaxException e) {
+                 return "Json falsch";
+                }
+            catch(EJBTransactionRolledbackException e){
+                return "ID oder Benutzername nicht vorhanden";
+            }
+        }
+        
+    }
+    
+    
     /*
     Als erstes wird die Id des Chats angegeben, danach der Benutzername des Benutzers, der hinzugefügt wird
     {
@@ -240,6 +312,9 @@ public class ChatWS {
             }
             catch(JsonSyntaxException e) {
                 return "JsonSyntaxException" + e;
+            }
+            catch(EJBTransactionRolledbackException e){
+                return "ID oder Benutzername nicht vorhanden";
             }
         }
         

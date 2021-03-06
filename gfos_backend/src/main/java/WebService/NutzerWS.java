@@ -96,9 +96,15 @@ public class NutzerWS {
             return "Kein gültiges Token.";
         }
         else{
-            Nutzer n =  nutzerEJB.getCopyById(id);
-            Gson parser = new Gson();
-            return parser.toJson(n);
+            try{
+                Nutzer n =  nutzerEJB.getCopyById(id);
+                Gson parser = new Gson();
+                return parser.toJson(n);
+            }
+            catch(EJBTransactionRolledbackException e) {
+                return "Id nicht vorhanden";
+            }
+            
         }
         
     }
@@ -132,26 +138,15 @@ public class NutzerWS {
             return "Kein gültiges Token";
         }
         else{
-            List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
-        for(Nutzer n : liste) {
-            for(Chat c : n.getChatList()) {
-                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            try{
+                List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
+                Gson parser = new Gson();
+                return parser.toJson(liste);
             }
-            for(Nutzer nutzer : n.getOwnFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
+            catch(EJBTransactionRolledbackException e) {
+                return "Id nicht vorhanden";
             }
-            for(Nutzer nutzer : n.getOtherFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
-            }
-        }
-        Gson parser = new Gson();
-        return parser.toJson(liste);
+            
         }
     }
     
@@ -165,14 +160,19 @@ public class NutzerWS {
             return "Kein gültiges Token";
         }
         else{
-            Gson parser = new Gson();
-            Nutzer n = new Nutzer();
-            n = nutzerEJB.getCopyById(id);
+            try{
+                Gson parser = new Gson();
+                Nutzer n = new Nutzer();
+                n = nutzerEJB.getCopyById(id);
 
-            Nutzer nutzer = new Nutzer();
-            nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
+                Nutzer nutzer = new Nutzer();
+                nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
 
-            return parser.toJson(nutzer);
+                return parser.toJson(nutzer);
+            }
+            catch(EJBTransactionRolledbackException e) {
+                return "ID nicht vorhanden";
+            }
         }
         
         
@@ -191,7 +191,41 @@ public class NutzerWS {
         }
     }
     
-            
+    
+    @POST
+    @Path("/fuegeFreundHinzu/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String takePart(@PathParam("token") String token, String jsonStr){
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            Gson parser = new Gson();
+        
+            try{
+                JsonObject jsonO = parser.fromJson(jsonStr, JsonObject.class);
+
+                int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
+                Nutzer self = nutzerEJB.getCopyById(eigeneId);
+
+                String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
+                Nutzer other = nutzerEJB.getCopyByUsername(andererName);
+
+                if(!self.getOwnFriendList().contains(other)) {
+                    nutzerEJB.fuegeFreundHinzu(self, other);
+                    return "true";
+                }
+                else {
+                    return "Bereits befreundet";
+                }
+            }
+            catch(JsonSyntaxException e) {
+                return "JsonSyntaxException";
+            }
+        }
+    }
+    
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -232,47 +266,12 @@ public class NutzerWS {
             catch(JsonSyntaxException e) {
                 return "Json falsch";
             }
+            catch(EJBTransactionRolledbackException e) {
+                return "Benutzername nicht vorhanden";
+            }
 
         
     }
-    
-    @POST
-    @Path("/fuegeFreundHinzu/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String takePart(@PathParam("token") String token, String jsonStr){
-        if(!verify(token)){
-            return "Kein gültiges Token";
-        }
-        else {
-            Gson parser = new Gson();
-        
-            try{
-                JsonObject jsonO = parser.fromJson(jsonStr, JsonObject.class);
-
-                int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyById(eigeneId);
-
-                String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getCopyByUsername(andererName);
-
-                if(!self.getOwnFriendList().contains(other)) {
-                    nutzerEJB.fuegeFreundHinzu(self, other);
-                    return "true";
-                }
-                else {
-                    return "Bereits befreundet";
-                }
-            }
-            catch(JsonSyntaxException e) {
-                return "JsonSyntaxException" + e;
-            }
-        }
-        
-        
-        
-    }
-    
     
     @POST
     @Path("/add")
@@ -288,7 +287,13 @@ public class NutzerWS {
                 neuerNutzer.setPasswordhash(hasher.convertStringToHash(neuerNutzer.getPasswordhash()));
 
                 nutzerEJB.add(neuerNutzer);
-                return "{\"token\": \"" + tokenizer.createNewToken(neuerNutzer.getBenutzername()) + "\"}";
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", neuerNutzer.getId());
+                jsonObject.addProperty("benutzername", neuerNutzer.getBenutzername());
+                jsonObject.addProperty("email", neuerNutzer.getEmail());
+                jsonObject.addProperty("token", tokenizer.createNewToken(neuerNutzer.getBenutzername()));
+                
+                return parser.toJson(jsonObject);
 
                 //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
                 /*

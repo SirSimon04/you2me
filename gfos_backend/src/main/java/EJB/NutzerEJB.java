@@ -106,12 +106,21 @@ public class NutzerEJB {
            em.detach(n); 
            for(Chat chat : n.getChatList()){
             em.detach(chat);
+            c.setNutzerList(null);
             }
            for(Nutzer nutzer : n.getOwnFriendList()) {
                em.detach(nutzer);
+               nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswordhash(null);
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
+               nu.setChatList(null);
+                nu.setOwnFriendList(null);
+                nu.setOtherFriendList(null);
+                nu.setPasswordhash(null);
            }
         }
         return nutzerList;
