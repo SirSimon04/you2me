@@ -1,6 +1,8 @@
 testgfos2021/gfostest/resources/JavaEE8Resource.class
 testgfos2021/gfostest/JAXRSConfiguration.class
+Utilities/Tokenizer.class
 WebService/ChatWS.class
+Utilities/Hasher.class
 WebService/NutzerWS.class
 WebService/NachrichtWS.class
 Entity/Nutzer.class

@@ -8,6 +8,8 @@ package WebService;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Nutzer;
+import Utilities.Hasher;
+import Utilities.Tokenizer;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -43,6 +45,10 @@ public class NutzerWS {
     
     @EJB
     private NutzerEJB nutzerEJB;
+    @EJB
+    private Hasher hasher;
+    @EJB
+    private Tokenizer tokenizer;
     
     /*
     Es folgen alle Methoden, die sich auf die Klasse Nutzer beziehen
@@ -78,13 +84,13 @@ public class NutzerWS {
                 nutzer.setChatList(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
-                nutzer.setPasswort(null);
+                nutzer.setPasswordhash(null);
             }
             for(Nutzer nutzer : n.getOtherFriendList()) {
                 nutzer.setChatList(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
-                nutzer.setPasswort(null);
+                nutzer.setPasswordhash(null);
             }
             Gson parser = new Gson();
             return parser.toJson(n);
@@ -107,13 +113,13 @@ public class NutzerWS {
                 nutzer.setChatList(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
-                nutzer.setPasswort(null);
+                nutzer.setPasswordhash(null);
             }
             for(Nutzer nutzer : n.getOtherFriendList()) {
                 nutzer.setChatList(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
-                nutzer.setPasswort(null);
+                nutzer.setPasswordhash(null);
             }
         }
         Gson parser = new Gson();
@@ -158,7 +164,7 @@ public class NutzerWS {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
             }
             
-            if(dbNutzer.getPasswort().equals(jsonPasswort))
+            if(dbNutzer.getPasswordhash().equals(jsonPasswort))
             {
                 return parser.toJson(dbNutzer);
             }
@@ -314,6 +320,54 @@ public class NutzerWS {
         return nutzerEJB.update(aktNutzer);
     }
     
+    @GET
+    @Path("/createTest")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createTest(){
+        String NAME = "Mustermann";
+        String PASSWORD = "geheim";
+        Nutzer nutzer = new Nutzer();
+        nutzer.setBenutzername(NAME);
+        nutzer.setPasswordhash(hasher.convertStringToHash(PASSWORD));
+        nutzer.setEmail("abc@gmail.com");
+        nutzerEJB.add(nutzer);
+        // Überprüfen, ob es funktioniert hat:
+        Gson parser = new Gson();
+        Nutzer ergebnisAusDB = nutzerEJB.getCopyByUsername("Mustermann");
+        return parser.toJson(ergebnisAusDB);
+        
+    }
     
+    
+    
+    @GET
+    @Path("/loginTest/{pw}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String loginTest(@PathParam("pw") String pw) {
+        String NAME ="Mustermann";
+        String PASSWORD = pw;
+        Nutzer acc = nutzerEJB.getCopyByUsername(NAME);
+        System.out.println(acc.getPasswordhash());
+        System.out.println(hasher.convertStringToHash(PASSWORD));
+        if(hasher.convertStringToHash(PASSWORD).equals(acc.getPasswordhash())) {
+            return "{\"token\": \"" + tokenizer.createNewToken(NAME) + "\"}";
+        }
+        else {
+            return "Benutzername oder Passwort falsch";
+        }
+    }
+    
+    @GET
+    @Path("/topsecret/{token}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String testToken(@PathParam("token") String token) {
+        if(tokenizer.verifyToken(token).equals("")) {
+            return "Kein gültiges Token.";
+        }
+        else {
+            String name = tokenizer.getUser(token);
+            return "Herzlich willkommen " + name +". Dein Token ist noch gültig.";
+        }
+    }
      
 }
