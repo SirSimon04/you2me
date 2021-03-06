@@ -113,21 +113,7 @@ public class NutzerWS {
         else{
             try{
             Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
-            for(Chat c : n.getChatList()){
-                c.setNutzerList(null);
-            }
-            for(Nutzer nutzer : n.getOwnFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
-            }
-            for(Nutzer nutzer : n.getOtherFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
-            }
+            
             Gson parser = new Gson();
             return parser.toJson(n);
             }
@@ -196,7 +182,7 @@ public class NutzerWS {
     @Path("/testtoken/{token}")
     @Produces(MediaType.TEXT_PLAIN)
     public String testToken(@PathParam("token") String token) {
-        if(tokenizer.verifyToken(token).equals("")) {
+        if(!verify(token)) {
             return "Kein gültiges Token.";
         }
         else {
@@ -227,7 +213,13 @@ public class NutzerWS {
             
             if(hasher.convertStringToHash(jsonPasswort).equals(dbNutzer.getPasswordhash()))
             {
-                return "{\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\"}";
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", dbNutzer.getId());
+                jsonObject.addProperty("benutzername", dbNutzer.getBenutzername());
+                jsonObject.addProperty("email", dbNutzer.getEmail());
+                jsonObject.addProperty("token", tokenizer.createNewToken(dbNutzer.getBenutzername()));
+                return parser.toJson(jsonObject);
+                //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
             }
             else 
             {
