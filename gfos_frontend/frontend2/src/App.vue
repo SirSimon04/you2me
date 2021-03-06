@@ -15,7 +15,7 @@
           width="40"
         />
 
-        <h1>Mäßenjer</h1>
+        <h1>Messengerprojekt</h1>
       </div>
     
     </v-app-bar>
