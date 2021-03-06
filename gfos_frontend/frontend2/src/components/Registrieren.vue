@@ -1,10 +1,12 @@
 
-<template>
+<template >
+
     <v-container>
      <v-stepper v-model="e1">
-      <v-stepper-header v-model="headeranzeigen">
+      <v-stepper-header v-model="headeranzeigen" color="#5c7d9d">
         <v-stepper-step
           :complete="e1 > 1"
+          color ="#5c7d9d"
           step="1"
         >
           Benutzernamen erstellen
@@ -13,6 +15,8 @@
         <v-divider></v-divider>
   
         <v-stepper-step
+        color ="#5c7d9d"
+        
           :complete="e1 > 2"
           step="2"
         >
@@ -21,22 +25,22 @@
   
         <v-divider></v-divider>
   
-        <v-stepper-step step="3">
+        <v-stepper-step step="3" color ="#5c7d9d" >
           Login
         </v-stepper-step>
       </v-stepper-header>
   
-      <v-stepper-items>
+      <v-stepper-items color ="#5c7d9d">
         <v-stepper-content step="1">
           <v-card
             class="mb-12"
-            color="white"
+            
             height="200px"
           >
           <subheading>Schritt 1:</subheading>
           <h4>Benuzternamen erstellen</h4>
           <v-text-field
-              v-model="Benuztername"
+              v-model="benutzername"
               :rules="nameRules"
               :counter="20"
               label="Benutzernamen erstellen"
@@ -67,7 +71,7 @@
         <v-stepper-content step="2">
           <v-card
             class="mb-12"
-            color="white"
+            
             height="500px"
           >
           <subheading>Schritt 2:</subheading>
@@ -104,6 +108,7 @@
             <v-file-input
                truncate-length="15"
                label="Profilbild hinzufügen"
+               v-model="profilbild"
             ></v-file-input>
             <v-dialog
         v-model="dialog"
@@ -213,20 +218,20 @@
         <v-stepper-content step="3">
           <v-card
             class="mb-12"
-            color="white"
+            
             height="200px"
           >
           
           <h4>Login</h4>
           <v-text-field
-              v-model="Benuztername"
+              v-model="benutzername"
               :rules="nameRules"
               :counter="20"
               label="Benutzername"
               required
             ></v-text-field>
             <v-text-field
-              v-model="password"
+              v-model="passwort"
               :rules="nameRules"
               label="Passwort"
               required
@@ -239,19 +244,59 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn 
-              color="primary"
+              
               v-bind="attrs"
               v-on="on"
+              color= "#5c7d9d"
             >Login</v-btn>
           </template>
           <template v-slot:default="dialog">
-            <v-card>
-              <v-toolbar
-                color="primary"
-                dark
-              >Herzlichen Glückwunsch!</v-toolbar>
-              <v-card-text>
-                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br> {{test}}<br></div>
+                            <v-card>
+                              <v-toolbar
+                                color="#5c7d9d"
+                                dark
+                              >Herzlichen Glückwunsch!</v-toolbar>
+                              <v-card-text>
+                                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br> 
+                                <v-card
+                      class="mx-auto"
+                      max-width="344"
+                    >
+                      <v-img
+                        
+                        height="200px"
+                      >{{profilbild}}</v-img>
+                  
+                      <v-card-title>
+                        {{benutzername}}
+                      </v-card-title>
+                  
+                      <v-card-subtitle>
+                        Vorname: {{vorname}}<br>
+                        Nachname: {{nachname}}<br>
+                        E-Mail: {{email}}
+                      </v-card-subtitle>
+                  
+                      <v-card-actions>
+                        
+                  
+                        <v-spacer></v-spacer>
+                  
+                        
+                      </v-card-actions>
+                  
+                      
+                        
+                          <v-divider></v-divider>
+                  
+                          <v-card-text>
+                           {{info}}
+                          </v-card-text>
+                        
+                      
+                    </v-card>
+             
+                </div>
               </v-card-text>
               <v-card-actions class="justify-end">
                 <v-btn
@@ -282,6 +327,7 @@
       </v-stepper-items>
     </v-stepper>
     </v-container>
+
 </template>
 <style>
   .group {
@@ -302,17 +348,10 @@
       dialog: false,
       test: 'nicht betätigt',
       settings_checkbox: false,
+      
+
     }
     }
-    //methods:{
-    //  test(){
-    //    return{
-    //      anzeige: 'Settings werden angezeigt'
-    //    }
-    //  }
-    //}
+    
   }
-  
- 
-  
 </script>

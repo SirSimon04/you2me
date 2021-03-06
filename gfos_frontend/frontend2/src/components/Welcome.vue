@@ -8,20 +8,22 @@
       
       <v-card-title
       style="color: white;"
+      
       >
         Willkommen
       </v-card-title>
   
-      <v-card-subtitle
+      <!--<v-card-subtitle
       style="color: white;"
       >
         Funktionalität gefährdert
-      </v-card-subtitle>
+      </v-card-subtitle>-->
   
       <v-card-actions>
        
             <v-btn
-            center>
+            center
+            >
               Mäßenjer starten
             </v-btn>
   

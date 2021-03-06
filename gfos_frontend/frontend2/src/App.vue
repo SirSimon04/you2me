@@ -1,23 +1,22 @@
-<template>
-  <v-app>
+<template
+
+>
+  <v-app
+    style = "background-color: #252d30;"  
+  >
     <v-app-bar
       app
       style="background-color: #202b36;"
       dark
-      
-      
     >
       <div class="d-flex align-center" >
-        <v-img
-          alt="GFOS-Logo"
-          class="shrink mr-2"
-          contain
-          src="https://www.google.com/search?q=GFOS&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjR6MHw4MruAhURr6QKHZTRDQMQ_AUoAXoECA4QAw&biw=1280&bih=881#imgrc=3yx9PflhUfMLgM"
-          transition="scale-transition"
-          width="40"
-          
-        />
-
+      <v-btn
+              icon
+              dark
+              @click= "console.log(user)"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
         <h1>Messengerprojekt</h1>
       </div>
     
@@ -57,9 +56,10 @@ export default {
 
   data: () => ({
     app_vue_settings_zeigen: false,
-    app_vue_registrieren_zeigen: false,
+    app_vue_registrieren_zeigen: true,
     app_vue_chat_zeigen: false,
-    welcome_vue_zeigen_: true,
+    welcome_vue_zeigen_: false,
+    user: Registrieren.benutzername,
     
   }),
   
