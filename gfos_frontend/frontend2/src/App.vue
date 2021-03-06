@@ -10,13 +10,10 @@
       dark
     >
       <div class="d-flex align-center" >
-      <v-btn
-              icon
-              dark
-              @click= "console.log(user)"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+      <v-img
+        
+        src=""
+      ></v-img>
         <h1>Messengerprojekt</h1>
       </div>
     
