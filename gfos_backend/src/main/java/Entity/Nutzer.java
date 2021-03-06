@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -79,6 +81,13 @@ public class Nutzer implements Serializable {
     @Size(max = 256)
     @Column(name = "INFO")
     private String info;
+    @JoinTable(name = "BEFREUNDETMIT", joinColumns = {
+        @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<Nutzer> ownFriendList;
+    @ManyToMany(mappedBy = "ownFriendList")
+    private List<Nutzer> otherFriendList;
     @ManyToMany(mappedBy = "nutzerList")
     private List<Chat> chatList;
 
@@ -166,6 +175,24 @@ public class Nutzer implements Serializable {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getOwnFriendList() {
+        return ownFriendList;
+    }
+
+    public void setOwnFriendList(List<Nutzer> nutzerList) {
+        this.ownFriendList = nutzerList;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getOtherFriendList() {
+        return otherFriendList;
+    }
+
+    public void setOtherFriendList(List<Nutzer> nutzerList1) {
+        this.otherFriendList = nutzerList1;
     }
 
     @XmlTransient
