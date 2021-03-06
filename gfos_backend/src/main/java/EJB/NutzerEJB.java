@@ -37,14 +37,38 @@ public class NutzerEJB {
         nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
         for(Nutzer n : nutzerList){
            em.detach(n); 
+           
            for(Chat c : n.getChatList()){
             em.detach(c);
+            }
+            for(Nutzer nutzer : n.getOwnFriendList()) {
+                em.detach(nutzer);
+           }
+           for(Nutzer nu : n.getOtherFriendList()) {
+                 em.detach(nu);
+           }
+           for(Chat c : n.getChatList()){
+            c.setNutzerList(null);
+            }
+            for(Nutzer nutzer : n.getOwnFriendList()) {
+                nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswort(null);
+           }
+           for(Nutzer nu : n.getOtherFriendList()) {
+                 nu.setChatList(null);
+                 nu.setOwnFriendList(null);
+                 nu.setOtherFriendList(null);
+           
         }
         }
         return nutzerList;
+    
     }
     
     // READ
+    
     public Nutzer getById(int id) {
         return em.find(Nutzer.class, id);
     }
@@ -54,6 +78,22 @@ public class NutzerEJB {
         em.detach(n);
         for(Chat c : n.getChatList()){
             em.detach(c);
+            c.setNutzerList(null);
+            
+        }
+        for(Nutzer nutzer : n.getOwnFriendList()) {
+            em.detach(nutzer);
+            nutzer.setChatList(null);
+            nutzer.setOwnFriendList(null);
+            nutzer.setOtherFriendList(null);
+            nutzer.setPasswort(null);
+        }
+        for(Nutzer nu : n.getOtherFriendList()) {
+            em.detach(nu);
+            nu.setChatList(null);
+            nu.setOwnFriendList(null);
+            nu.setOtherFriendList(null);
+            nu.setPasswort(null);
         }
         return n;
         
@@ -66,7 +106,13 @@ public class NutzerEJB {
            em.detach(n); 
            for(Chat chat : n.getChatList()){
             em.detach(chat);
-        }
+            }
+           for(Nutzer nutzer : n.getOwnFriendList()) {
+               em.detach(nutzer);
+           }
+           for(Nutzer nu : n.getOtherFriendList()) {
+               em.detach(nu);
+           }
         }
         return nutzerList;
     }
@@ -76,13 +122,19 @@ public class NutzerEJB {
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
         
-        Nutzer user = (Nutzer) query.getSingleResult();
-        em.detach(user);
-        for(Chat c : user.getChatList()){
+        Nutzer n = (Nutzer) query.getSingleResult();
+        em.detach(n);
+        for(Chat c : n.getChatList()){
             em.detach(c);
         }
+        for(Nutzer nutzer : n.getOwnFriendList()) {
+            em.detach(nutzer);
+        }
+        for(Nutzer nu : n.getOtherFriendList()) {
+            em.detach(nu);
+        }
         
-        return user;
+        return n;
     }
     
     public Nutzer getCopyByEmail(String email){
@@ -90,13 +142,19 @@ public class NutzerEJB {
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByEmail");
         query.setParameter("email", email);
         
-        Nutzer user = (Nutzer) query.getSingleResult();
-        em.detach(user);
-        for(Chat c : user.getChatList()){
+        Nutzer n = (Nutzer) query.getSingleResult();
+        em.detach(n);
+        for(Chat c : n.getChatList()){
             em.detach(c);
         }
+        for(Nutzer nutzer : n.getOwnFriendList()) {
+            em.detach(nutzer);
+        }
+        for(Nutzer nu : n.getOtherFriendList()) {
+            em.detach(nu);
+        }
         
-        return user;
+        return n;
     }
     
     // CREATE
@@ -107,7 +165,14 @@ public class NutzerEJB {
     public void fuegeChatHinzu(Chat chat, Nutzer nutzer) {
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
         nutzerInDB.getChatList().add(chat);
-}
+    }
+    
+    public void fuegeFreundHinzu(Nutzer self, Nutzer other) {
+        Nutzer selfInDB = em.find(Nutzer.class, self.getId());
+        Nutzer otherInDB = em.find(Nutzer.class, other.getId());
+        selfInDB.getOwnFriendList().add(other);
+        otherInDB.getOtherFriendList().add(self);
+    }
     
         // DELETE
     public boolean delete(int id) {

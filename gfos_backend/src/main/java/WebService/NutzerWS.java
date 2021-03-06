@@ -24,6 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
+import java.util.HashSet;
 import javax.ejb.EJBException;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
@@ -51,11 +52,6 @@ public class NutzerWS {
     @Produces(MediaType.APPLICATION_JSON)
     public String getAll(){
          List<Nutzer> liste = nutzerEJB.getAllCopy();
-        for(Nutzer n : liste) {
-            for(Chat c : n.getChatList()) {
-                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
-            }
-        }
         Gson parser = new Gson();
         return parser.toJson(liste);
     }
@@ -65,9 +61,6 @@ public class NutzerWS {
     @Produces(MediaType.APPLICATION_JSON)
     public String getById(@PathParam("id") int id) {
         Nutzer n =  nutzerEJB.getCopyById(id);
-        for(Chat c : n.getChatList()){
-            c.setNutzerList(null);
-        }
         Gson parser = new Gson();
         return parser.toJson(n);
     }
@@ -76,12 +69,29 @@ public class NutzerWS {
     @Path("/benutzername/{benutzername}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getByUsername(@PathParam("benutzername") String benutzername){
-        Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
-        for(Chat c : n.getChatList()){
-            c.setNutzerList(null);
+        try{
+            Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
+            for(Chat c : n.getChatList()){
+                c.setNutzerList(null);
+            }
+            for(Nutzer nutzer : n.getOwnFriendList()) {
+                nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswort(null);
+            }
+            for(Nutzer nutzer : n.getOtherFriendList()) {
+                nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswort(null);
+            }
+            Gson parser = new Gson();
+            return parser.toJson(n);
         }
-        Gson parser = new Gson();
-        return parser.toJson(n);
+        catch(EJBTransactionRolledbackException e) {
+            return "Benutzername nicht vorhanden";
+        }
     }
     
     @GET
@@ -92,6 +102,18 @@ public class NutzerWS {
         for(Nutzer n : liste) {
             for(Chat c : n.getChatList()) {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+            for(Nutzer nutzer : n.getOwnFriendList()) {
+                nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswort(null);
+            }
+            for(Nutzer nutzer : n.getOtherFriendList()) {
+                nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswort(null);
             }
         }
         Gson parser = new Gson();
@@ -153,6 +175,37 @@ public class NutzerWS {
                 return "Json falsch";
             }
 
+        
+    }
+    
+    @POST
+    @Path("/fuegeFreundHinzu")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String takePart(String jsonStr){
+        Gson parser = new Gson();
+        
+        try{
+            JsonObject jsonO = parser.fromJson(jsonStr, JsonObject.class);
+            
+            int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
+            Nutzer self = nutzerEJB.getCopyById(eigeneId);
+            
+            String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
+            Nutzer other = nutzerEJB.getCopyByUsername(andererName);
+            
+            if(!self.getOwnFriendList().contains(other)) {
+                nutzerEJB.fuegeFreundHinzu(self, other);
+                return "true";
+            }
+            else {
+                return "Bereits befreundet";
+            }
+        }
+        catch(JsonSyntaxException e) {
+            return "JsonSyntaxException" + e;
+        }
+        
         
     }
     
