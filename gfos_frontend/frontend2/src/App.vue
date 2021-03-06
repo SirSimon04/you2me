@@ -2,10 +2,12 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
+      style="background-color: #202b36;"
       dark
+      
+      
     >
-      <div class="d-flex align-center">
+      <div class="d-flex align-center" >
         <v-img
           alt="GFOS-Logo"
           class="shrink mr-2"
@@ -13,6 +15,7 @@
           src="https://www.google.com/search?q=GFOS&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjR6MHw4MruAhURr6QKHZTRDQMQ_AUoAXoECA4QAw&biw=1280&bih=881#imgrc=3yx9PflhUfMLgM"
           transition="scale-transition"
           width="40"
+          
         />
 
         <h1>Messengerprojekt</h1>
@@ -22,82 +25,42 @@
 
     <v-main>
             
-            <v-card
-      class="mx-auto"
-      max-width="344"
-    >
-      <v-img
-        src=""
-        height="200px"
-      ></v-img>
-  
-      <v-card-title>
-        Warnung!
-      </v-card-title>
-  
-      <v-card-subtitle>
-        Funktionalität gefährdert
-      </v-card-subtitle>
-  
-      <v-card-actions>
-       <v-btn
-              icon
-              @click="app_vue_registrieren_zeigen = !app_vue_registrieren_zeigen"
-              
-            >
-              <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-            </v-btn>
-           
-            <v-btn
-              icon
-              @click="app_vue_settings_zeigen = !app_vue_settings_zeigen"
-              
-            >
-              <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-            </v-btn>
-  
-        <v-spacer></v-spacer>
-  
-    
-      </v-card-actions>
-  
-      
-          <v-divider></v-divider>
-  
-          <v-card-text>
-            Der "Mäßenger" ist momentan in einer nicht funktionsfähigen Alpha-Version. Kommen Sie später wieder, um gravierende Fortschritte erleben zu können!
-          </v-card-text>
-        
-    </v-card>
+            
 
-      <ChatListe/>
-      <Chat/>
+      <!--<ChatListe/>-->
+      <Chat v-show="app_vue_chat_zeigen"></Chat>
       <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
       <Settings v-show ="app_vue_settings_zeigen"></Settings>
+      <Welcome v-show="welcome_vue_zeigen_"></Welcome>
     </v-main>
   </v-app>
 </template>
 
 <script>
 
-import ChatListe from './components/ChatListe';
+//import ChatListe from './components/ChatListe';
 import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
 import Settings from './components/Settings';
+import Welcome from './components/Welcome';
 
 export default {
   name: 'App',
 
   components: {
-    ChatListe,
+    //ChatListe,
     Registrieren,
     Chat,
     Settings,
+    Welcome,
   },
 
   data: () => ({
     app_vue_settings_zeigen: false,
     app_vue_registrieren_zeigen: false,
+    app_vue_chat_zeigen: false,
+    welcome_vue_zeigen_: true,
+    
   }),
   
 };
