@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -59,6 +61,9 @@ public class Nachricht implements Serializable {
     @Size(min = 1, max = 1024)
     @Column(name = "INHALT")
     private String inhalt;
+    @JoinColumn(name = "FOTO", referencedColumnName = "ID")
+    @ManyToOne
+    private Foto foto;
 
     public Nachricht() {
     }
@@ -113,6 +118,14 @@ public class Nachricht implements Serializable {
 
     public void setInhalt(String inhalt) {
         this.inhalt = inhalt;
+    }
+
+    public Foto getFoto() {
+        return foto;
+    }
+
+    public void setFoto(Foto foto) {
+        this.foto = foto;
     }
 
     @Override

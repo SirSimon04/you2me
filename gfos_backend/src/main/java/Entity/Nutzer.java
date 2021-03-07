@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -40,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nutzer.findByEmail", query = "SELECT n FROM Nutzer n WHERE n.email = :email"),
     @NamedQuery(name = "Nutzer.findByPasswordhash", query = "SELECT n FROM Nutzer n WHERE n.passwordhash = :passwordhash"),
     @NamedQuery(name = "Nutzer.findByHandynummer", query = "SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
-    @NamedQuery(name = "Nutzer.findByProfilbild", query = "SELECT n FROM Nutzer n WHERE n.profilbild = :profilbild"),
     @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info")})
 public class Nutzer implements Serializable {
 
@@ -75,9 +75,6 @@ public class Nutzer implements Serializable {
     @Size(max = 50)
     @Column(name = "HANDYNUMMER")
     private String handynummer;
-    @Size(max = 10000)
-    @Column(name = "PROFILBILD")
-    private String profilbild;
     @Size(max = 256)
     @Column(name = "INFO")
     private String info;
@@ -90,6 +87,9 @@ public class Nutzer implements Serializable {
     private List<Nutzer> otherFriendList;
     @ManyToMany(mappedBy = "nutzerList")
     private List<Chat> chatList;
+    @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
+    @ManyToOne
+    private Foto profilbild;
 
     public Nutzer() {
     }
@@ -161,14 +161,6 @@ public class Nutzer implements Serializable {
         this.handynummer = handynummer;
     }
 
-    public String getProfilbild() {
-        return profilbild;
-    }
-
-    public void setProfilbild(String profilbild) {
-        this.profilbild = profilbild;
-    }
-
     public String getInfo() {
         return info;
     }
@@ -202,6 +194,14 @@ public class Nutzer implements Serializable {
 
     public void setChatList(List<Chat> chatList) {
         this.chatList = chatList;
+    }
+
+    public Foto getProfilbild() {
+        return profilbild;
+    }
+
+    public void setProfilbild(Foto profilbild) {
+        this.profilbild = profilbild;
     }
 
     @Override

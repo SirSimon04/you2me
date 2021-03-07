@@ -7,6 +7,7 @@ WebService/NutzerWS.class
 WebService/NachrichtWS.class
 Entity/Nutzer.class
 Entity/Chat.class
+Entity/Foto.class
 Application/App.class
 EJB/NachrichtEJB.class
 EJB/ChatEJB.class

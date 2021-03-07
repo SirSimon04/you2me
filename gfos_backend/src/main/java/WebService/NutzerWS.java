@@ -5,8 +5,10 @@
  */
 package WebService;
 
+import EJB.FotoEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
+import Entity.Foto;
 import Entity.Nutzer;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
@@ -51,6 +53,8 @@ public class NutzerWS {
     private Hasher hasher;
     @EJB
     private Tokenizer tokenizer;
+    @EJB
+    private FotoEJB fotoEJB;
     
     private Antwort response = new Antwort();
     
@@ -369,8 +373,68 @@ public class NutzerWS {
             }
             //return "";
         
+    }
+    
+    @POST
+    @Path("/setzeProfilbild/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("id")), Integer.class);
+            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+            
+            Foto f = new Foto();
+            f.setBase64(jsonPic);
+            fotoEJB.add(f);
+            
+            Nutzer self = nutzerEJB.getById(jsonId);
+            
+            Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+            
+            self.setProfilbild(fotoInDB);
+            
+            return "true";
+        }
         
         
+    }
+    // ein anfänglicher Test, um ein Foto in die Datenbank hinzuzufügen
+    @POST
+    @Path("/testSendFoto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String testSendFoto(String jsonStr){
+        Gson parser = new Gson();
+        try{
+            Foto f = new Foto();
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+            f.setBase64(jsonPic);
+            
+            fotoEJB.add(f);
+            
+            return "true";
+        }
+        catch(JsonSyntaxException e){
+            return "false";
+        }
+        
+        
+    }
+    
+    @GET
+    @Path("/testFoto")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String testFoto(){
+        Gson parser = new Gson();
+        return parser.toJson(fotoEJB.getAll());
     }
     
     @DELETE
