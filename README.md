@@ -71,10 +71,12 @@ CREATE TABLE Nutzer
     vorname VARCHAR(50),
     nachname VARCHAR(50),
     email VARCHAR(50) NOT NULL UNIQUE,
-    passwort VARCHAR(50) NOT NULL,
+    passwordhash VARCHAR(255) NOT NULL,
     handynummer VARCHAR(50),
-    profilbild VARCHAR(10000),
-    info VARCHAR(256)
+    profilbild int,
+    info VARCHAR(256),
+    
+    foreign key(profilbild) references Foto(id) on delete cascade
 );
 
 CREATE TABLE Nachricht 
@@ -84,7 +86,10 @@ CREATE TABLE Nachricht
     senderId INT NOT NULL,
     chatId INT NOT NULL,
     datumUhrzeit VARCHAR(30) NOT NULL,
-    inhalt VARCHAR(1024) NOT NULL
+    inhalt VARCHAR(1024) NOT NULL,
+    foto int,
+    
+    foreign key(foto) references Foto(id)
 );
 
 CREATE TABLE Chat 
@@ -93,17 +98,12 @@ CREATE TABLE Chat
     (START WITH 1, INCREMENT BY 1),
     erstelldatum VARCHAR(30),
     name VARCHAR(50),
-    beschreibung VARCHAR(100)
+    beschreibung VARCHAR(100),
+    profilbild int,
+    
+    foreign key(profilbild) references Foto(id)
 );
 
-CREATE TABLE nimmtTeil 
-(
-    nimmtTeilId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
-    (START WITH 1, INCREMENT BY 1),
-    nutzerId INT NOT NULL,
-    chatId INT NOT NULL
-);
- 
 create table NimmtTeil (
     chatId integer not null,
     nutzerId integer not null,
@@ -112,17 +112,20 @@ create table NimmtTeil (
 
     foreign key(chatId) references Chat(ChatId) on delete cascade,
     
-    
-    
-    
     foreign key(nutzerId) references Nutzer(id) on delete cascade
 );
 
 Create Table BefreundetMit( 
     nutzer1Id integer not null,
-    nutzer2Id integer not null;
+    nutzer2Id integer not null,
    
     foreign Key(nutzer1Id) references Nutzer(id) on delete cascade,
     foreign Key(nutzer2Id) references Nutzer(id) on delete cascade
     
+);
+
+Create Table Foto(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    base64 VARCHAR(max)
 );
