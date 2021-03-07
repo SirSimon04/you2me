@@ -31,7 +31,7 @@ public class NutzerEJB {
     public List<Nutzer> getAll(){
         return em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
     }
-    
+    //TODO: das ganze Freundeslisten null zeug machen
     public List<Nutzer> getAllCopy(){
         List<Nutzer> nutzerList;
         nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
@@ -106,12 +106,21 @@ public class NutzerEJB {
            em.detach(n); 
            for(Chat chat : n.getChatList()){
             em.detach(chat);
+            c.setNutzerList(null);
             }
            for(Nutzer nutzer : n.getOwnFriendList()) {
                em.detach(nutzer);
+               nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswordhash(null);
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
+               nu.setChatList(null);
+                nu.setOwnFriendList(null);
+                nu.setOtherFriendList(null);
+                nu.setPasswordhash(null);
            }
         }
         return nutzerList;
@@ -126,14 +135,23 @@ public class NutzerEJB {
         em.detach(n);
         for(Chat c : n.getChatList()){
             em.detach(c);
+            c.setNutzerList(null);
+            
         }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
+            nutzer.setChatList(null);
+            nutzer.setOwnFriendList(null);
+            nutzer.setOtherFriendList(null);
+            nutzer.setPasswordhash(null);
         }
-        for(Nutzer nu : n.getOtherFriendList()) {
-            em.detach(nu);
+        for(Nutzer nutzer : n.getOtherFriendList()) {
+            em.detach(nutzer);
+            nutzer.setChatList(null);
+            nutzer.setOwnFriendList(null);
+            nutzer.setOtherFriendList(null);
+            nutzer.setPasswordhash(null);
         }
-        
         return n;
     }
     
@@ -149,9 +167,18 @@ public class NutzerEJB {
         }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
+            nutzer.setChatList(null);
+            nutzer.setOwnFriendList(null);
+            nutzer.setOtherFriendList(null);
+            nutzer.setPasswordhash(null);
         }
-        for(Nutzer nu : n.getOtherFriendList()) {
-            em.detach(nu);
+        for(Nutzer nutzer : n.getOtherFriendList()) {
+            em.detach(nutzer);
+            em.detach(nutzer);
+            nutzer.setChatList(null);
+            nutzer.setOwnFriendList(null);
+            nutzer.setOtherFriendList(null);
+            nutzer.setPasswordhash(null);
         }
         
         return n;
@@ -205,12 +232,5 @@ public class NutzerEJB {
         }
     }
     
-    public void create(String name, String pwHash) {
-        Nutzer nutzer = new Nutzer();
-        nutzer.setBenutzername(name);
-        nutzer.setPasswordhash(pwHash);
-        nutzer.setEmail("abc@gmail.com");
-        em.persist(nutzer);
-        
-    } 
+    
 }

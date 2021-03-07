@@ -10,5 +10,6 @@
     <class>Application.Nutzer</class>
     <class>Application.Chat</class>
     <class>Application.Nachricht</class>
+    <class>Entity.Foto</class>
   </persistence-unit>
 </persistence>

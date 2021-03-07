@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -58,6 +59,9 @@ public class Chat implements Serializable {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Nutzer> nutzerList;
+    @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
+    @ManyToOne
+    private Foto profilbild;
 
     public Chat() {
     }
@@ -105,6 +109,14 @@ public class Chat implements Serializable {
 
     public void setNutzerList(List<Nutzer> nutzerList) {
         this.nutzerList = nutzerList;
+    }
+
+    public Foto getProfilbild() {
+        return profilbild;
+    }
+
+    public void setProfilbild(Foto profilbild) {
+        this.profilbild = profilbild;
     }
 
     @Override

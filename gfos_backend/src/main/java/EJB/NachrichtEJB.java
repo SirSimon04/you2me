@@ -38,5 +38,5 @@ public class NachrichtEJB {
         return nachrichtList;
     }
     
-    //TODO: Implementierung der Methode, die alle Nachrichten einer chatId zurückgibt
+    
 }

@@ -5,11 +5,14 @@
  */
 package WebService;
 
+import EJB.FotoEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
+import Entity.Foto;
 import Entity.Nutzer;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
+import Utilities.Antwort;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -32,6 +35,7 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
+import javax.ws.rs.core.Response;
 
 
 /**
@@ -49,6 +53,10 @@ public class NutzerWS {
     private Hasher hasher;
     @EJB
     private Tokenizer tokenizer;
+    @EJB
+    private FotoEJB fotoEJB;
+    
+    private Antwort response = new Antwort();
     
     public boolean verify(String token){
         if(tokenizer.isOn()){
@@ -74,16 +82,18 @@ public class NutzerWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{token}")
-    public String getAll(@PathParam("token") String token){
+    public Response getAll(@PathParam("token") String token){
         if(!verify(token))
         {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else 
         {
            List<Nutzer> liste = nutzerEJB.getAllCopy();
             Gson parser = new Gson();
-            return parser.toJson(liste);
+            return response.generiereAntwort(parser.toJson(liste));
+            
+            
         }
          
     }
@@ -91,14 +101,20 @@ public class NutzerWS {
     @GET
     @Path("/id/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getById(@PathParam("id") int id, @PathParam("token") String token) {
+    public Response getById(@PathParam("id") int id, @PathParam("token") String token) {
         if(!verify(token)) {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
-            Nutzer n =  nutzerEJB.getCopyById(id);
-            Gson parser = new Gson();
-            return parser.toJson(n);
+            try{
+                Nutzer n =  nutzerEJB.getCopyById(id);
+                Gson parser = new Gson();
+                return response.generiereAntwort(parser.toJson(n));
+            }
+            catch(EJBTransactionRolledbackException e) {
+                return response.generiereFehler406("Id nicht vorhanden");
+            }
+            
         }
         
     }
@@ -106,33 +122,18 @@ public class NutzerWS {
     @GET
     @Path("/benutzername/{benutzername}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByUsername(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
+    public Response getByUsername(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
         if(!verify(token)){
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
             try{
-            Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
-            for(Chat c : n.getChatList()){
-                c.setNutzerList(null);
-            }
-            for(Nutzer nutzer : n.getOwnFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
-            }
-            for(Nutzer nutzer : n.getOtherFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
-            }
-            Gson parser = new Gson();
-            return parser.toJson(n);
+                Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
+                Gson parser = new Gson();
+                return response.generiereAntwort(parser.toJson(n));
             }
             catch(EJBTransactionRolledbackException e) {
-                return "Benutzername nicht vorhanden";
+                return response.generiereFehler406("Benutzername nicht vorhanden");
             }
         }
         
@@ -141,31 +142,20 @@ public class NutzerWS {
     @GET
     @Path("/chatteilnehmer/id/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByChatId(@PathParam("id") int id, @PathParam("token") String token) {
+    public Response getByChatId(@PathParam("id") int id, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
-            List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
-        for(Nutzer n : liste) {
-            for(Chat c : n.getChatList()) {
-                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            try{
+                List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
+                Gson parser = new Gson();
+                return response.generiereAntwort(parser.toJson(liste));
             }
-            for(Nutzer nutzer : n.getOwnFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
+            catch(EJBTransactionRolledbackException e) {
+                return response.generiereFehler406("Id nicht vorhanden");
             }
-            for(Nutzer nutzer : n.getOtherFriendList()) {
-                nutzer.setChatList(null);
-                nutzer.setOwnFriendList(null);
-                nutzer.setOtherFriendList(null);
-                nutzer.setPasswordhash(null);
-            }
-        }
-        Gson parser = new Gson();
-        return parser.toJson(liste);
+            
         }
     }
     
@@ -174,19 +164,24 @@ public class NutzerWS {
     @GET
     @Path("/getUsernameById/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUsernameById(@PathParam("id") int id, @PathParam("token") String token){
+    public Response getUsernameById(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
-            Gson parser = new Gson();
-            Nutzer n = new Nutzer();
-            n = nutzerEJB.getCopyById(id);
+            try{
+                Gson parser = new Gson();
+                Nutzer n = new Nutzer();
+                n = nutzerEJB.getCopyById(id);
 
-            Nutzer nutzer = new Nutzer();
-            nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
+                Nutzer nutzer = new Nutzer();
+                nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
 
-            return parser.toJson(nutzer);
+                return response.generiereAntwort(parser.toJson(nutzer));
+            }
+            catch(EJBTransactionRolledbackException e) {
+                return response.generiereFehler406("Id nicht vorhanden");
+            }
         }
         
         
@@ -195,54 +190,16 @@ public class NutzerWS {
     @GET
     @Path("/testtoken/{token}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String testToken(@PathParam("token") String token) {
-        if(tokenizer.verifyToken(token).equals("")) {
-            return "Kein gültiges Token.";
+    public Response testToken(@PathParam("token") String token) {
+        if(!verify(token)) {
+            return response.generiereFehler401("Ungültiges Token");
         }
         else {
             String name = tokenizer.getUser(token);
-            return "Herzlich willkommen " + name +". Dein Token ist noch gültig.";
+            return response.generiereAntwort("Herzlich willkommen " + name +". Dein Token ist noch gültig.");
         }
     }
     
-            
-    @POST
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String login(String jsonStr) {
-       
-        Gson parser = new Gson();
-        try {
-            //getting the name of the body
-            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
-            String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
-            String jsonPasswort = parser.fromJson((loginUser.get("passwort")), String.class);
-            
-            Nutzer dbNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
-            
-            for(Chat c : dbNutzer.getChatList()) {
-                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
-            }
-            
-            if(hasher.convertStringToHash(jsonPasswort).equals(dbNutzer.getPasswordhash()))
-            {
-                return "{\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\"}";
-            }
-            else 
-            {
-                return "PW falsch";
-            }
-            
-            
-            
-        }
-            catch(JsonSyntaxException e) {
-                return "Json falsch";
-            }
-
-        
-    }
     
     @POST
     @Path("/fuegeFreundHinzu/{token}")
@@ -273,14 +230,57 @@ public class NutzerWS {
                 }
             }
             catch(JsonSyntaxException e) {
-                return "JsonSyntaxException" + e;
+                return "JsonSyntaxException";
             }
         }
-        
-        
-        
     }
     
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String login(String jsonStr) {
+       
+        Gson parser = new Gson();
+        try {
+            //getting the name of the body
+            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
+            String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
+            String jsonPasswort = parser.fromJson((loginUser.get("passwort")), String.class);
+            
+            Nutzer dbNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
+            
+            for(Chat c : dbNutzer.getChatList()) {
+                c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
+            }
+            
+            if(hasher.convertStringToHash(jsonPasswort).equals(dbNutzer.getPasswordhash()))
+            {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", dbNutzer.getId());
+                jsonObject.addProperty("benutzername", dbNutzer.getBenutzername());
+                jsonObject.addProperty("email", dbNutzer.getEmail());
+                jsonObject.addProperty("token", tokenizer.createNewToken(dbNutzer.getBenutzername()));
+                return parser.toJson(jsonObject);
+                //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
+            }
+            else 
+            {
+                return "PW falsch";
+            }
+            
+            
+            
+        }
+            catch(JsonSyntaxException e) {
+                return "Json falsch";
+            }
+            catch(EJBTransactionRolledbackException e) {
+                return "Benutzername nicht vorhanden";
+            }
+
+        
+    }
     
     @POST
     @Path("/add")
@@ -296,7 +296,13 @@ public class NutzerWS {
                 neuerNutzer.setPasswordhash(hasher.convertStringToHash(neuerNutzer.getPasswordhash()));
 
                 nutzerEJB.add(neuerNutzer);
-                return "{\"token\": \"" + tokenizer.createNewToken(neuerNutzer.getBenutzername()) + "\"}";
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", neuerNutzer.getId());
+                jsonObject.addProperty("benutzername", neuerNutzer.getBenutzername());
+                jsonObject.addProperty("email", neuerNutzer.getEmail());
+                jsonObject.addProperty("token", tokenizer.createNewToken(neuerNutzer.getBenutzername()));
+                
+                return parser.toJson(jsonObject);
 
                 //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
                 /*
@@ -367,8 +373,68 @@ public class NutzerWS {
             }
             //return "";
         
+    }
+    
+    @POST
+    @Path("/setzeProfilbild/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+        if(!verify(token)){
+            return "Kein gültiges Token";
+        }
+        else {
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("id")), Integer.class);
+            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+            
+            Foto f = new Foto();
+            f.setBase64(jsonPic);
+            fotoEJB.add(f);
+            
+            Nutzer self = nutzerEJB.getById(jsonId);
+            
+            Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+            
+            self.setProfilbild(fotoInDB);
+            
+            return "true";
+        }
         
         
+    }
+    // ein anfänglicher Test, um ein Foto in die Datenbank hinzuzufügen
+    @POST
+    @Path("/testSendFoto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String testSendFoto(String jsonStr){
+        Gson parser = new Gson();
+        try{
+            Foto f = new Foto();
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+            f.setBase64(jsonPic);
+            
+            fotoEJB.add(f);
+            
+            return "true";
+        }
+        catch(JsonSyntaxException e){
+            return "false";
+        }
+        
+        
+    }
+    
+    @GET
+    @Path("/testFoto")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String testFoto(){
+        Gson parser = new Gson();
+        return parser.toJson(fotoEJB.getAll());
     }
     
     @DELETE
@@ -434,30 +500,30 @@ public class NutzerWS {
     @GET
     @Path("/loginTest/{pw}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String loginTest(@PathParam("pw") String pw) {
+    public Response loginTest(@PathParam("pw") String pw) {
         String NAME ="Mustermann";
         String PASSWORD = pw;
         Nutzer acc = nutzerEJB.getCopyByUsername(NAME);
         System.out.println(acc.getPasswordhash());
         System.out.println(hasher.convertStringToHash(PASSWORD));
         if(hasher.convertStringToHash(PASSWORD).equals(acc.getPasswordhash())) {
-            return "{\"token\": \"" + tokenizer.createNewToken(NAME) + "\"}";
+            return response.generiereAntwort("{\"token\": \"" + tokenizer.createNewToken(NAME) + "\"}");
         }
         else {
-            return "Benutzername oder Passwort falsch";
+            return response.generiereFehler406("Benutzername oder Passwort falsch");
         }
     }
     
     @GET
     @Path("/topsecret/{token}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String testToken2(@PathParam("token") String token) {
+    public Response testToken2(@PathParam("token") String token) {
         if(tokenizer.verifyToken(token).equals("")) {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Kein gültiges Token.");
         }
         else {
             String name = tokenizer.getUser(token);
-            return "Herzlich willkommen " + name +". Dein Token ist noch gültig.";
+            return response.generiereAntwort("Herzlich willkommen " + name +". Dein Token ist noch gültig.");
         }
     }
      

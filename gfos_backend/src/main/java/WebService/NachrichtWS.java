@@ -7,6 +7,7 @@ package WebService;
 
 import EJB.NachrichtEJB;
 import Entity.Nachricht;
+import Utilities.Antwort;
 import Utilities.Tokenizer;
 import com.google.gson.Gson;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -40,6 +42,9 @@ public class NachrichtWS {
     
     @EJB
     private Tokenizer tokenizer;
+    
+    private Antwort response = new Antwort();
+    
     public boolean verify(String token){
         if(tokenizer.isOn()){
             if(tokenizer.verifyToken(token).equals(""))
@@ -61,14 +66,14 @@ public class NachrichtWS {
     @GET
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAll(@PathParam("token") String token) {
+    public Response getAll(@PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             Gson parser = new Gson();
             List<Nachricht> alleNachrichten = nachrichtEJB.getAll();
-            return parser.toJson(alleNachrichten);
+            return response.generiereAntwort(parser.toJson(alleNachrichten));
         }
         
     }
@@ -76,13 +81,13 @@ public class NachrichtWS {
     @GET
     @Path("/chat/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByChat(@PathParam("id") int id, @PathParam("token") String token) {
+    public Response getByChat(@PathParam("id") int id, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             Gson parser = new Gson();
-            return parser.toJson(nachrichtEJB.getByChat(id));
+            return response.generiereAntwort(parser.toJson(nachrichtEJB.getByChat(id)));
         }
         
     }
