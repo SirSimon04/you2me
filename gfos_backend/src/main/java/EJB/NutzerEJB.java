@@ -31,7 +31,7 @@ public class NutzerEJB {
     public List<Nutzer> getAll(){
         return em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
     }
-    
+    //TODO: das ganze Freundeslisten null zeug machen
     public List<Nutzer> getAllCopy(){
         List<Nutzer> nutzerList;
         nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();

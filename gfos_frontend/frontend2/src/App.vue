@@ -57,7 +57,7 @@ export default {
   data: () => ({
     app_vue_settings_zeigen: false,
     app_vue_registrieren_zeigen: true,
-    app_vue_chat_zeigen: false,
+    app_vue_chat_zeigen: true,
     welcome_vue_zeigen_: false,
     user: Registrieren.benutzername,
     

@@ -8,6 +8,7 @@ import EJB.ChatEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Nutzer;
+import Utilities.Antwort;
 import Utilities.Tokenizer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import javax.ejb.EJBTransactionRolledbackException;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -45,6 +47,8 @@ public class ChatWS {
     
     @EJB
     private Tokenizer tokenizer;
+    
+    private Antwort response = new Antwort();
     
     public boolean verify(String token){
         if(tokenizer.isOn()){
@@ -66,9 +70,9 @@ public class ChatWS {
     @GET
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAll(@PathParam("token") String token) {
+    public Response getAll(@PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
            List<Chat> liste = chatEJB.getAllCopy();
@@ -78,45 +82,51 @@ public class ChatWS {
                 }
             }
             Gson parser = new Gson();
-            return parser.toJson(liste); 
+            return response.generiereAntwort(parser.toJson(liste)); 
         }
         
     }
     
     
     @GET
-    @Path("/id/{chatid}/{nutzerid}/{tokenizer}")
+    @Path("/id/{chatid}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
+    public Response getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
-            Chat c =  chatEJB.getCopy(chatid);
-            int length = 0;
+            try{
+                Chat c =  chatEJB.getCopy(chatid);
+                int length = 0;
 
-            for(Nutzer n : c.getNutzerList()){
-                n.setChatList(null);
-                length +=1;
+                for(Nutzer n : c.getNutzerList()){
+                    n.setChatList(null);
+                    length +=1;
+                }
+
+                System.out.println(length);
+                if(length == 2)
+                {
+                    List<Nutzer> nutzerList = c.getNutzerList();
+                    Nutzer n = nutzerEJB.getCopyById(nutzerid);
+                    nutzerList.remove(n);
+
+                    Nutzer andererNutzer = nutzerList.get(0);
+
+                    c.setName(andererNutzer.getBenutzername());
+                    c.setNutzerList(null);
+                    System.out.println(nutzerList);
+                }
+
+
+                Gson parser = new Gson();
+                return response.generiereAntwort(parser.toJson(c));
             }
-
-            System.out.println(length);
-            if(length == 2)
-            {
-                List<Nutzer> nutzerList = c.getNutzerList();
-                Nutzer n = nutzerEJB.getCopyById(nutzerid);
-                nutzerList.remove(n);
-
-                Nutzer andererNutzer = nutzerList.get(0);
-
-                c.setName(andererNutzer.getBenutzername());
-                c.setNutzerList(null);
-                System.out.println(nutzerList);
+            catch(EJBTransactionRolledbackException e){
+                return response.generiereFehler401("Id nicht vorhanden");
             }
-
-
-            Gson parser = new Gson();
-            return parser.toJson(c);
+             
         }
         
     }
@@ -124,49 +134,54 @@ public class ChatWS {
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid, @PathParam("token") String token) {
+    public Response getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
-            List<Chat> returnList = new ArrayList<Chat>();
+            try{
+                List<Chat> returnList = new ArrayList<Chat>();
 
-            Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
+                Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
 
-            List<Chat> liste = chatEJB.getAllCopy();
-            for(Chat c : liste) {
-                if(c.getNutzerList().contains(nutzer))
-                {
-                    returnList.add(c);
-                }
-                for(Nutzer n : c.getNutzerList()) {
-                    n.setChatList(null); 
-                }
-            }
-
-
-            for(Chat c : returnList){
-                    int length = 0;
-                    for(Nutzer n : c.getNutzerList()){
-                        length +=1;
-                    }
-
-                    if(length == 2)
+                List<Chat> liste = chatEJB.getAllCopy();
+                for(Chat c : liste) {
+                    if(c.getNutzerList().contains(nutzer))
                     {
-                        List<Nutzer> nutzerList = c.getNutzerList();
-                        Nutzer n = nutzerEJB.getCopyById(nutzerid);
-                        nutzerList.remove(n);
-
-                        Nutzer andererNutzer = nutzerList.get(0);
-
-                        c.setName(andererNutzer.getBenutzername());
-                        c.setNutzerList(null);
-                        System.out.println(nutzerList);
+                        returnList.add(c);
                     }
-            }
+                    for(Nutzer n : c.getNutzerList()) {
+                        n.setChatList(null); 
+                    }
+                }
 
-            Gson parser = new Gson();
-            return parser.toJson(returnList);
+
+                for(Chat c : returnList){
+                        int length = 0;
+                        for(Nutzer n : c.getNutzerList()){
+                            length +=1;
+                        }
+
+                        if(length == 2)
+                        {
+                            List<Nutzer> nutzerList = c.getNutzerList();
+                            Nutzer n = nutzerEJB.getCopyById(nutzerid);
+                            nutzerList.remove(n);
+
+                            Nutzer andererNutzer = nutzerList.get(0);
+
+                            c.setName(andererNutzer.getBenutzername());
+                            c.setNutzerList(null);
+                            System.out.println(nutzerList);
+                        }
+                }
+
+                Gson parser = new Gson();
+                return response.generiereAntwort(parser.toJson(returnList)); 
+            }
+            catch(EJBTransactionRolledbackException e){
+                return response.generiereFehler401("Id nicht vorhanden");
+            }
         }
         
         

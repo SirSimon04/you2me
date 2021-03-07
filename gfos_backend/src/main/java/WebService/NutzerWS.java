@@ -10,6 +10,7 @@ import Entity.Chat;
 import Entity.Nutzer;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
+import Utilities.Antwort;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -32,6 +33,7 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
 import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
+import javax.ws.rs.core.Response;
 
 
 /**
@@ -49,6 +51,8 @@ public class NutzerWS {
     private Hasher hasher;
     @EJB
     private Tokenizer tokenizer;
+    
+    private Antwort response = new Antwort();
     
     public boolean verify(String token){
         if(tokenizer.isOn()){
@@ -74,16 +78,18 @@ public class NutzerWS {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{token}")
-    public String getAll(@PathParam("token") String token){
+    public Response getAll(@PathParam("token") String token){
         if(!verify(token))
         {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else 
         {
            List<Nutzer> liste = nutzerEJB.getAllCopy();
             Gson parser = new Gson();
-            return parser.toJson(liste);
+            return response.generiereAntwort(parser.toJson(liste));
+            
+            
         }
          
     }
@@ -91,18 +97,18 @@ public class NutzerWS {
     @GET
     @Path("/id/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getById(@PathParam("id") int id, @PathParam("token") String token) {
+    public Response getById(@PathParam("id") int id, @PathParam("token") String token) {
         if(!verify(token)) {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
             try{
                 Nutzer n =  nutzerEJB.getCopyById(id);
                 Gson parser = new Gson();
-                return parser.toJson(n);
+                return response.generiereAntwort(parser.toJson(n));
             }
             catch(EJBTransactionRolledbackException e) {
-                return "Id nicht vorhanden";
+                return response.generiereFehler406("Id nicht vorhanden");
             }
             
         }
@@ -112,19 +118,18 @@ public class NutzerWS {
     @GET
     @Path("/benutzername/{benutzername}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByUsername(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
+    public Response getByUsername(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
         if(!verify(token)){
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
             try{
-            Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
-            
-            Gson parser = new Gson();
-            return parser.toJson(n);
+                Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
+                Gson parser = new Gson();
+                return response.generiereAntwort(parser.toJson(n));
             }
             catch(EJBTransactionRolledbackException e) {
-                return "Benutzername nicht vorhanden";
+                return response.generiereFehler406("Benutzername nicht vorhanden");
             }
         }
         
@@ -133,18 +138,18 @@ public class NutzerWS {
     @GET
     @Path("/chatteilnehmer/id/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getByChatId(@PathParam("id") int id, @PathParam("token") String token) {
+    public Response getByChatId(@PathParam("id") int id, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
             try{
                 List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
                 Gson parser = new Gson();
-                return parser.toJson(liste);
+                return response.generiereAntwort(parser.toJson(liste));
             }
             catch(EJBTransactionRolledbackException e) {
-                return "Id nicht vorhanden";
+                return response.generiereFehler406("Id nicht vorhanden");
             }
             
         }
@@ -155,9 +160,9 @@ public class NutzerWS {
     @GET
     @Path("/getUsernameById/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getUsernameById(@PathParam("id") int id, @PathParam("token") String token){
+    public Response getUsernameById(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else{
             try{
@@ -168,10 +173,10 @@ public class NutzerWS {
                 Nutzer nutzer = new Nutzer();
                 nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
 
-                return parser.toJson(nutzer);
+                return response.generiereAntwort(parser.toJson(nutzer));
             }
             catch(EJBTransactionRolledbackException e) {
-                return "ID nicht vorhanden";
+                return response.generiereFehler406("Id nicht vorhanden");
             }
         }
         
@@ -181,13 +186,13 @@ public class NutzerWS {
     @GET
     @Path("/testtoken/{token}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String testToken(@PathParam("token") String token) {
+    public Response testToken(@PathParam("token") String token) {
         if(!verify(token)) {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else {
             String name = tokenizer.getUser(token);
-            return "Herzlich willkommen " + name +". Dein Token ist noch gültig.";
+            return response.generiereAntwort("Herzlich willkommen " + name +". Dein Token ist noch gültig.");
         }
     }
     
@@ -431,30 +436,30 @@ public class NutzerWS {
     @GET
     @Path("/loginTest/{pw}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String loginTest(@PathParam("pw") String pw) {
+    public Response loginTest(@PathParam("pw") String pw) {
         String NAME ="Mustermann";
         String PASSWORD = pw;
         Nutzer acc = nutzerEJB.getCopyByUsername(NAME);
         System.out.println(acc.getPasswordhash());
         System.out.println(hasher.convertStringToHash(PASSWORD));
         if(hasher.convertStringToHash(PASSWORD).equals(acc.getPasswordhash())) {
-            return "{\"token\": \"" + tokenizer.createNewToken(NAME) + "\"}";
+            return response.generiereAntwort("{\"token\": \"" + tokenizer.createNewToken(NAME) + "\"}");
         }
         else {
-            return "Benutzername oder Passwort falsch";
+            return response.generiereFehler406("Benutzername oder Passwort falsch");
         }
     }
     
     @GET
     @Path("/topsecret/{token}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String testToken2(@PathParam("token") String token) {
+    public Response testToken2(@PathParam("token") String token) {
         if(tokenizer.verifyToken(token).equals("")) {
-            return "Kein gültiges Token.";
+            return response.generiereFehler401("Kein gültiges Token.");
         }
         else {
             String name = tokenizer.getUser(token);
-            return "Herzlich willkommen " + name +". Dein Token ist noch gültig.";
+            return response.generiereAntwort("Herzlich willkommen " + name +". Dein Token ist noch gültig.");
         }
     }
      
