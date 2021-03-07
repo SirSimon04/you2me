@@ -1,6 +1,7 @@
 <template
 
 >
+<head><title>Disputatio</title></head>
   <v-app
     style = "background-color: #252d30;"  
   >
@@ -23,7 +24,7 @@
             
             
 
-      <!--<ChatListe/>-->
+ 
       <Chat v-show="app_vue_chat_zeigen"></Chat>
       <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
       <Settings v-show ="app_vue_settings_zeigen"></Settings>
@@ -54,7 +55,7 @@ export default {
   data: () => ({
     app_vue_settings_zeigen: false,
     app_vue_registrieren_zeigen: true,
-    app_vue_chat_zeigen: true,
+    app_vue_chat_zeigen: false,
     welcome_vue_zeigen_: false,
     user: Registrieren.benutzername,
     
