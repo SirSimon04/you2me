@@ -119,6 +119,7 @@ public class ChatWS {
                     Nutzer andererNutzer = nutzerList.get(0);
 
                     c.setName(andererNutzer.getBenutzername());
+                    c.setProfilbild(andererNutzer.getProfilbild());
                     c.setNutzerList(null);
                     System.out.println(nutzerList);
                 }

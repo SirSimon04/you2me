@@ -34,8 +34,10 @@ import javax.ejb.EJBException;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.ws.rs.core.Response;
+
 
 
 /**
@@ -277,7 +279,7 @@ public class NutzerWS {
                 return response.generiereFehler406("Json wrong");
             }
             catch(EJBTransactionRolledbackException e) {
-                return response.generiereFehler406("Benutzername oder ID nicht vorhanden");
+                return response.generiereFehler406("Benutzername nicht vorhanden");
             }
 
         
@@ -439,7 +441,9 @@ public class NutzerWS {
                 }
             }
     }
+     
         
+    //funktioniert nur bei eingeschaltetem Tokenizer
     @PUT
     @Path("/update/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -450,13 +454,69 @@ public class NutzerWS {
         }
         else {
             Gson parser = new Gson();
-            Nutzer aktNutzer = parser.fromJson(jsonStr, Nutzer.class);
-            if(nutzerEJB.update(aktNutzer)){
-                return response.generiereAntwort("true");
+            
+            String name = tokenizer.getUser(token); //get the Name of the User from the Token
+            
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            String neuerNutzername = parser.fromJson((jsonObject.get("benutzername")), String.class);
+            String neuerVorname = parser.fromJson((jsonObject.get("vorname")), String.class);
+            String neuerNachname = parser.fromJson((jsonObject.get("nachname")), String.class);
+            String neuesPasswort = parser.fromJson((jsonObject.get("passwort")), String.class);
+            String neueHandynummer = parser.fromJson((jsonObject.get("handynummer")), String.class);
+            String neueInfo = parser.fromJson((jsonObject.get("info")), String.class);
+            
+            Nutzer nutzerInDB = nutzerEJB.getByUsername(name);
+            
+            if(nutzerInDB != null){
+                
+                if(neuerVorname != null){
+                    nutzerInDB.setVorname(neuerVorname);    
+                }
+
+                if(neuerVorname != null){    
+                    nutzerInDB.setNachname(neuerNachname);    
+                }
+                
+                if(neuesPasswort != null){
+                    nutzerInDB.setPasswordhash(hasher.convertStringToHash(neuesPasswort));
+                }
+                
+                if(neueHandynummer != null){
+                    nutzerInDB.setHandynummer(neueHandynummer);
+                }
+                
+                if(neueInfo != null){
+                    nutzerInDB.setInfo(neueInfo);
+                }
+
+                if(neuerNutzername != null){
+                    Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername); 
+
+                    if(UserNameIsFree == null){ 
+                        nutzerInDB.setBenutzername(neuerNutzername);    
+                    }
+                    else{
+                        return response.generiereFehler500("Benutzername bereits vergeben");
+                    }
+                }
+
+
+
+                if(name.equals(neuerNutzername) || neuerNutzername == null){
+                    return response.generiereAntwort("true");
+                }
+                else{
+                    return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));
+                }
             }
             else{
-                return response.generiereFehler500("Fehler beim Verändern");
+                return response.generiereFehler401("Token abgelaufen oder Benutzername veraltet");
             }
+            
+            
+            
+            
         }
         
     }
