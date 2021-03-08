@@ -5,8 +5,10 @@
  */
 package WebService;
 import EJB.ChatEJB;
+import EJB.FotoEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
+import Entity.Foto;
 import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
@@ -44,6 +46,8 @@ public class ChatWS {
     
     @EJB
     private ChatEJB chatEJB;
+    
+    @EJB FotoEJB fotoEJB;
     
     @EJB
     private Tokenizer tokenizer;
@@ -115,6 +119,7 @@ public class ChatWS {
                     Nutzer andererNutzer = nutzerList.get(0);
 
                     c.setName(andererNutzer.getBenutzername());
+                    c.setProfilbild(andererNutzer.getProfilbild());
                     c.setNutzerList(null);
                     System.out.println(nutzerList);
                 }
@@ -130,7 +135,7 @@ public class ChatWS {
         }
         
     }
-    
+    //eigene Chatliste
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -171,6 +176,7 @@ public class ChatWS {
                             Nutzer andererNutzer = nutzerList.get(0);
 
                             c.setName(andererNutzer.getBenutzername());
+                            c.setProfilbild(andererNutzer.getProfilbild());
                             c.setNutzerList(null);
                             System.out.println(nutzerList);
                         }
@@ -192,40 +198,32 @@ public class ChatWS {
     @Path("/createAsGroup/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createAsGroup(String jsonStr, @PathParam("token") String token) {
+    public Response createAsGroup(String jsonStr, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             System.out.println(jsonStr);
             Gson parser = new Gson();
         try {
-            System.out.println("entered try");
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
             chatEJB.createChat(neuerChat);
-            return "true";
+            return response.generiereAntwort("true");
         }
             catch(JsonSyntaxException e) {
-            return "false";
+                return response.generiereFehler406("Json falsch");
         }
         }
         
     }
-    /*
-        
-        1. Chat erstellen
-        2. eigenen Nutzer aus der DB ziehen
-        3. anderen Nutzer aus der DB ziehen
-        4. beide Nutzer zum Chat hinzufügen
     
-    */
     @POST
     @Path("/createAsChat/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createAsChat(String jsonStr, @PathParam("token") String token) {
+    public Response createAsChat(String jsonStr, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             System.out.println(jsonStr);
@@ -264,18 +262,18 @@ public class ChatWS {
                     chatEJB.fuegeHinzu(neuerChat, self);
                     chatEJB.fuegeHinzu(neuerChat, other);
                     
-                    return "true";
+                    return response.generiereAntwort("true");
                 }
                 else{
                     chatEJB.delete(neuerChat);
-                    return "schon vorhanden";
+                    return response.generiereFehler406("schon vorhanden");
                 }
             }
             catch(JsonSyntaxException e) {
-                 return "Json falsch";
+                 return response.generiereFehler401("Json falsch");
                 }
             catch(EJBTransactionRolledbackException e){
-                return "ID oder Benutzername nicht vorhanden";
+                return response.generiereFehler401("ID oder Benutzername nicht vorhanden");
             }
         }
         
@@ -294,10 +292,10 @@ public class ChatWS {
     @Path("/takepart/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String takePart(String jsonStr, @PathParam("token") String token){
+    public Response takePart(String jsonStr, @PathParam("token") String token){
         
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             Gson parser = new Gson();
@@ -319,19 +317,50 @@ public class ChatWS {
                 System.out.println("Chatws fuegeNutzerhinzu");
                 chatEJB.fuegeHinzu(c, addedUser);
 
-                return "true";
+                return response.generiereAntwort("true");
                 }
                 else{
-                    return "Nutzer schon hinzugefügt";
+                    return response.generiereFehler406("Nutzer schon hinzugefügt");
                 }
             }
             catch(JsonSyntaxException e) {
-                return "JsonSyntaxException" + e;
+                return response.generiereFehler406("JsonSyntaxException" + e);
             }
             catch(EJBTransactionRolledbackException e){
-                return "ID oder Benutzername nicht vorhanden";
+                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
+        
+    }
+    
+    @POST
+    @Path("/setzeProfilbild/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("id")), Integer.class);
+            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+            
+            Foto f = new Foto();
+            f.setBase64(jsonPic);
+            fotoEJB.add(f);
+            
+            Chat chat = chatEJB.getById(jsonId);
+            
+            Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+            
+            chat.setProfilbild(fotoInDB);
+            
+            return response.generiereAntwort("true");
+        }
+        
         
     }
     

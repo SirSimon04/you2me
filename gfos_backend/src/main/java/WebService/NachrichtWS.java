@@ -5,11 +5,15 @@
  */
 package WebService;
 
+import EJB.FotoEJB;
 import EJB.NachrichtEJB;
+import Entity.Foto;
 import Entity.Nachricht;
+import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -39,6 +43,8 @@ public class NachrichtWS {
     
     @EJB
     private NachrichtEJB nachrichtEJB;
+    @EJB
+    private FotoEJB fotoEJB;
     
     @EJB
     private Tokenizer tokenizer;
@@ -69,11 +75,13 @@ public class NachrichtWS {
     public Response getAll(@PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
+            //return "false";
         }
         else {
             Gson parser = new Gson();
             List<Nachricht> alleNachrichten = nachrichtEJB.getAll();
             return response.generiereAntwort(parser.toJson(alleNachrichten));
+            //return "true";  
         }
         
     }
@@ -97,26 +105,37 @@ public class NachrichtWS {
     @Path("/add/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String create(String jsonStr, @PathParam("token") String token) {
+    public Response create(String jsonStr, @PathParam("token") String token) {
         
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("dentifrisse");
         }
         else {
             System.out.println(jsonStr);
             Gson parser = new Gson();
             try {
-                System.out.println("entered try");
+                JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
                 Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
+                String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+                if(jsonPic != null){
+                    Foto f = new Foto();
+                    f.setBase64(jsonPic);
+                    fotoEJB.add(f);
+                    
+                    Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+                    neueNachricht.setFoto(fotoInDB);
+                }
                 nachrichtEJB.add(neueNachricht);
-                return "true";
+                return response.generiereAntwort("validé");
             }
                 catch(JsonSyntaxException e) {
-                    return "false";
+                    return response.generiereFehler406("cacahuète");
             }
         }
         
     }
+    
+    
    
     
     

@@ -34,7 +34,10 @@ public class FotoEJB {
         Query query = em.createNamedQuery(Foto.class.getSimpleName() + ".findByBase64");
         query.setParameter("base64", base64);
         
-        Foto f = (Foto) query.getSingleResult();
+        List<Foto> fotoList = query.getResultList();
+        
+        Foto f = fotoList.get(0);
+        
         return f;
     }
 }

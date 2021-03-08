@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 /**
@@ -37,7 +38,7 @@ public class NutzerEJB {
         nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
         for(Nutzer n : nutzerList){
            em.detach(n); 
-           
+           n.setPasswordhash(null);
            for(Chat c : n.getChatList()){
             em.detach(c);
             }
@@ -126,6 +127,19 @@ public class NutzerEJB {
         return nutzerList;
     }
   
+    public Nutzer getByUsername(String username){
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
+        query.setParameter("benutzername", username);
+        try{
+            Nutzer n = (Nutzer) query.getSingleResult();
+            return n;
+        }
+        catch(NoResultException e){
+            return null;
+        }
+        
+    }
+    
     public Nutzer getCopyByUsername(String username){
         
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");

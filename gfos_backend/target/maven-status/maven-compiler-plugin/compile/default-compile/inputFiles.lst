@@ -4,6 +4,7 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/WebService/ChatWS.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/NutzerEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Chat.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/FotoEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Nachricht.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Foto.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/testgfos2021/gfostest/JAXRSConfiguration.java
