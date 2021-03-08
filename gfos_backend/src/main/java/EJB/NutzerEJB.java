@@ -37,7 +37,7 @@ public class NutzerEJB {
         nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
         for(Nutzer n : nutzerList){
            em.detach(n); 
-           
+           n.setPasswordhash(null);
            for(Chat c : n.getChatList()){
             em.detach(c);
             }

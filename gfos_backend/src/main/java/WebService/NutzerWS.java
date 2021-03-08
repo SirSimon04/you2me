@@ -239,7 +239,7 @@ public class NutzerWS {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String login(String jsonStr) {
+    public Response login(String jsonStr) {
        
         Gson parser = new Gson();
         try {
@@ -261,22 +261,23 @@ public class NutzerWS {
                 jsonObject.addProperty("benutzername", dbNutzer.getBenutzername());
                 jsonObject.addProperty("email", dbNutzer.getEmail());
                 jsonObject.addProperty("token", tokenizer.createNewToken(dbNutzer.getBenutzername()));
-                return parser.toJson(jsonObject);
+                //return parser.toJson(jsonObject);
+                return response.generiereAntwort(parser.toJson(jsonObject));
                 //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
             }
             else 
             {
-                return "PW falsch";
+                return response.generiereFehler406("PW falsch");
             }
             
             
             
         }
             catch(JsonSyntaxException e) {
-                return "Json falsch";
+                return response.generiereFehler406("Json wrong");
             }
             catch(EJBTransactionRolledbackException e) {
-                return "Benutzername nicht vorhanden";
+                return response.generiereFehler406("Benutzername oder ID nicht vorhanden");
             }
 
         
@@ -396,11 +397,17 @@ public class NutzerWS {
             
             Nutzer self = nutzerEJB.getById(jsonId);
             
-            Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+            if(self != null){
+                Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
             
-            self.setProfilbild(fotoInDB);
+                self.setProfilbild(fotoInDB);
+
+                return response.generiereAntwort("true");
+            }
+            else {
+                return response.generiereFehler406("ID nicht vorhanden");
+            }
             
-            return response.generiereAntwort("true");
         }
         
         

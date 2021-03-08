@@ -5,8 +5,10 @@
  */
 package WebService;
 import EJB.ChatEJB;
+import EJB.FotoEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
+import Entity.Foto;
 import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
@@ -44,6 +46,8 @@ public class ChatWS {
     
     @EJB
     private ChatEJB chatEJB;
+    
+    @EJB FotoEJB fotoEJB;
     
     @EJB
     private Tokenizer tokenizer;
@@ -130,7 +134,7 @@ public class ChatWS {
         }
         
     }
-    
+    //eigene Chatliste
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -171,6 +175,7 @@ public class ChatWS {
                             Nutzer andererNutzer = nutzerList.get(0);
 
                             c.setName(andererNutzer.getBenutzername());
+                            c.setProfilbild(andererNutzer.getProfilbild());
                             c.setNutzerList(null);
                             System.out.println(nutzerList);
                         }
@@ -200,7 +205,6 @@ public class ChatWS {
             System.out.println(jsonStr);
             Gson parser = new Gson();
         try {
-            System.out.println("entered try");
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
             chatEJB.createChat(neuerChat);
             return response.generiereAntwort("true");
@@ -325,6 +329,37 @@ public class ChatWS {
                 return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
+        
+    }
+    
+    @POST
+    @Path("/setzeProfilbild/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("id")), Integer.class);
+            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+            
+            Foto f = new Foto();
+            f.setBase64(jsonPic);
+            fotoEJB.add(f);
+            
+            Chat chat = chatEJB.getById(jsonId);
+            
+            Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+            
+            chat.setProfilbild(fotoInDB);
+            
+            return response.generiereAntwort("true");
+        }
+        
         
     }
     
