@@ -97,10 +97,10 @@ public class NachrichtWS {
     @Path("/add/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String create(String jsonStr, @PathParam("token") String token) {
+    public Response create(String jsonStr, @PathParam("token") String token) {
         
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             System.out.println(jsonStr);
@@ -109,10 +109,10 @@ public class NachrichtWS {
                 System.out.println("entered try");
                 Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
                 nachrichtEJB.add(neueNachricht);
-                return "true";
+                return response.generiereAntwort("true");
             }
                 catch(JsonSyntaxException e) {
-                    return "false";
+                    return response.generiereFehler406("Json falsch");
             }
         }
         

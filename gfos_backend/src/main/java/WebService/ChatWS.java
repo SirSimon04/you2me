@@ -192,9 +192,9 @@ public class ChatWS {
     @Path("/createAsGroup/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createAsGroup(String jsonStr, @PathParam("token") String token) {
+    public Response createAsGroup(String jsonStr, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             System.out.println(jsonStr);
@@ -203,29 +203,22 @@ public class ChatWS {
             System.out.println("entered try");
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
             chatEJB.createChat(neuerChat);
-            return "true";
+            return response.generiereAntwort("true");
         }
             catch(JsonSyntaxException e) {
-            return "false";
+                return response.generiereFehler406("Json falsch");
         }
         }
         
     }
-    /*
-        
-        1. Chat erstellen
-        2. eigenen Nutzer aus der DB ziehen
-        3. anderen Nutzer aus der DB ziehen
-        4. beide Nutzer zum Chat hinzufügen
     
-    */
     @POST
     @Path("/createAsChat/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String createAsChat(String jsonStr, @PathParam("token") String token) {
+    public Response createAsChat(String jsonStr, @PathParam("token") String token) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             System.out.println(jsonStr);
@@ -264,18 +257,18 @@ public class ChatWS {
                     chatEJB.fuegeHinzu(neuerChat, self);
                     chatEJB.fuegeHinzu(neuerChat, other);
                     
-                    return "true";
+                    return response.generiereAntwort("true");
                 }
                 else{
                     chatEJB.delete(neuerChat);
-                    return "schon vorhanden";
+                    return response.generiereFehler406("schon vorhanden");
                 }
             }
             catch(JsonSyntaxException e) {
-                 return "Json falsch";
+                 return response.generiereFehler401("Json falsch");
                 }
             catch(EJBTransactionRolledbackException e){
-                return "ID oder Benutzername nicht vorhanden";
+                return response.generiereFehler401("ID oder Benutzername nicht vorhanden");
             }
         }
         
@@ -294,10 +287,10 @@ public class ChatWS {
     @Path("/takepart/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String takePart(String jsonStr, @PathParam("token") String token){
+    public Response takePart(String jsonStr, @PathParam("token") String token){
         
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Kein gültiges Token");
         }
         else {
             Gson parser = new Gson();
@@ -319,17 +312,17 @@ public class ChatWS {
                 System.out.println("Chatws fuegeNutzerhinzu");
                 chatEJB.fuegeHinzu(c, addedUser);
 
-                return "true";
+                return response.generiereAntwort("true");
                 }
                 else{
-                    return "Nutzer schon hinzugefügt";
+                    return response.generiereFehler406("Nutzer schon hinzugefügt");
                 }
             }
             catch(JsonSyntaxException e) {
-                return "JsonSyntaxException" + e;
+                return response.generiereFehler406("JsonSyntaxException" + e);
             }
             catch(EJBTransactionRolledbackException e){
-                return "ID oder Benutzername nicht vorhanden";
+                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
         

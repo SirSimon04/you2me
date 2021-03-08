@@ -205,9 +205,9 @@ public class NutzerWS {
     @Path("/fuegeFreundHinzu/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String takePart(@PathParam("token") String token, String jsonStr){
+    public Response takePart(@PathParam("token") String token, String jsonStr){
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else {
             Gson parser = new Gson();
@@ -223,14 +223,14 @@ public class NutzerWS {
 
                 if(!self.getOwnFriendList().contains(other)) {
                     nutzerEJB.fuegeFreundHinzu(self, other);
-                    return "true";
+                    return response.generiereAntwort("true");
                 }
                 else {
-                    return "Bereits befreundet";
+                    return response.generiereFehler406("Bereits befreundet");
                 }
             }
             catch(JsonSyntaxException e) {
-                return "JsonSyntaxException";
+                return response.generiereFehler406("Json wrong");
             }
         }
     }
@@ -286,7 +286,7 @@ public class NutzerWS {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String create(String jsonStr) {
+    public Response create(String jsonStr) {
         
             System.out.println(jsonStr);
             Gson parser = new Gson();
@@ -302,7 +302,7 @@ public class NutzerWS {
                 jsonObject.addProperty("email", neuerNutzer.getEmail());
                 jsonObject.addProperty("token", tokenizer.createNewToken(neuerNutzer.getBenutzername()));
                 
-                return parser.toJson(jsonObject);
+                return response.generiereAntwort(jsonStr);
 
                 //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
                 /*
@@ -369,7 +369,7 @@ public class NutzerWS {
 
             }
                 catch(JsonSyntaxException e) {
-                return "false";
+                return response.generiereFehler406("Json falsch");
             }
             //return "";
         
@@ -379,9 +379,9 @@ public class NutzerWS {
     @Path("/setzeProfilbild/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+    public Response setzeProfilbild(@PathParam("token") String token, String jsonStr) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else {
             Gson parser = new Gson();
@@ -400,39 +400,17 @@ public class NutzerWS {
             
             self.setProfilbild(fotoInDB);
             
-            return "true";
-        }
-        
-        
-    }
-    // ein anfänglicher Test, um ein Foto in die Datenbank hinzuzufügen
-    @POST
-    @Path("/testSendFoto")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String testSendFoto(String jsonStr){
-        Gson parser = new Gson();
-        try{
-            Foto f = new Foto();
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
-            String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
-            f.setBase64(jsonPic);
-            
-            fotoEJB.add(f);
-            
-            return "true";
-        }
-        catch(JsonSyntaxException e){
-            return "false";
+            return response.generiereAntwort("true");
         }
         
         
     }
     
+    
     @GET
-    @Path("/testFoto")
+    @Path("/allFotos")
     @Produces(MediaType.APPLICATION_JSON)
-    public String testFoto(){
+    public String getAllFotos(){
         Gson parser = new Gson();
         return parser.toJson(fotoEJB.getAll());
     }
@@ -440,16 +418,16 @@ public class NutzerWS {
     @DELETE
     @Path("/delete/{id}/{token}")
     @Produces(MediaType.TEXT_PLAIN)
-        public String delete(@PathParam("id") int id, @PathParam("token") String token) {
+        public Response delete(@PathParam("id") int id, @PathParam("token") String token) {
             if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
             else {
                 if(nutzerEJB.delete(id)){
-                    return "true";
+                    return response.generiereAntwort("true");
                 }
                 else{
-                    return "false";
+                    return response.generiereFehler500("Fehler beim Hinzufügen");
                
                 }
             }
@@ -459,43 +437,22 @@ public class NutzerWS {
     @Path("/update/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String update(@PathParam("token") String token, String jsonStr) {
+    public Response update(@PathParam("token") String token, String jsonStr) {
         if(!verify(token)){
-            return "Kein gültiges Token";
+            return response.generiereFehler401("Ungültiges Token");
         }
         else {
             Gson parser = new Gson();
             Nutzer aktNutzer = parser.fromJson(jsonStr, Nutzer.class);
             if(nutzerEJB.update(aktNutzer)){
-                return "true";
+                return response.generiereAntwort("true");
             }
             else{
-                return "false";
+                return response.generiereFehler500("Fehler beim Verändern");
             }
         }
         
     }
-    
-    //Folgende Methoden waren nur ein Token/Hash test
-    @GET
-    @Path("/createTest")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String createTest(){
-        String NAME = "Mustermann";
-        String PASSWORD = "geheim";
-        Nutzer nutzer = new Nutzer();
-        nutzer.setBenutzername(NAME);
-        nutzer.setPasswordhash(hasher.convertStringToHash(PASSWORD));
-        nutzer.setEmail("abc@gmail.com");
-        nutzerEJB.add(nutzer);
-        // Überprüfen, ob es funktioniert hat:
-        Gson parser = new Gson();
-        Nutzer ergebnisAusDB = nutzerEJB.getCopyByUsername("Mustermann");
-        return parser.toJson(ergebnisAusDB);
-        
-    }
-    
-    
     
     @GET
     @Path("/loginTest/{pw}")
