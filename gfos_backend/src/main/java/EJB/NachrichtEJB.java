@@ -7,7 +7,9 @@ package EJB;
 
 import javax.ejb.Stateless;
 import Entity.Nachricht;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -29,7 +31,12 @@ public class NachrichtEJB {
     
     
     public List<Nachricht> getAll() {
-    return em.createNamedQuery(Nachricht.class.getSimpleName()+".findAll").getResultList();
+        List<Nachricht> nachrichtList  = em.createNamedQuery(Nachricht.class.getSimpleName()+".findAll").getResultList();
+        for(Nachricht n : nachrichtList){
+            em.detach(n);
+            n.setNachrichtList(null);
+        }
+        return nachrichtList;
     }
     
     public Nachricht getByID(int id){
