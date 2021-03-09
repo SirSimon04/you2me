@@ -95,7 +95,7 @@ public class NachrichtWS {
         }
         else {
             Gson parser = new Gson();
-            return response.generiereAntwort(parser.toJson(nachrichtEJB.getByChat(id)));
+            return response.generiereAntwort(parser.toJson(nachrichtEJB.getByChatId(id)));
         }
         
     }
@@ -114,9 +114,11 @@ public class NachrichtWS {
             System.out.println(jsonStr);
             Gson parser = new Gson();
             try {
+                int jsonAnswerId = 0;
                 JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
                 Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
                 String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+                jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
                 if(jsonPic != null){
                     Foto f = new Foto();
                     f.setBase64(jsonPic);
@@ -124,6 +126,10 @@ public class NachrichtWS {
                     
                     Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
                     neueNachricht.setFoto(fotoInDB);
+                }
+                if(jsonAnswerId != 0){
+                    Nachricht nachrichtInDB = nachrichtEJB.getByID(jsonAnswerId);
+                    neueNachricht.setAntwortauf(nachrichtInDB);
                 }
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
