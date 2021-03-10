@@ -228,6 +228,13 @@ public class NutzerEJB {
         em.remove(em.createNamedQuery(Blacklist.class.getSimpleName() + ".findByToken").setParameter("token", token).getSingleResult());
     }
     
+    public void clearBlacklist(){
+        List<Blacklist> bl = em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
+        for(Blacklist b : bl){
+            em.remove(b);
+        }
+    }
+    
         // DELETE
     public boolean delete(int id) {
         try {

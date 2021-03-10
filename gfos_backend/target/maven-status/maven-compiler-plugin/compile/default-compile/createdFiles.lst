@@ -8,10 +8,12 @@ WebService/NutzerWS.class
 WebService/NachrichtWS.class
 Entity/Nutzer.class
 Entity/Chat.class
+Utilities/Timer.class
 Entity/Foto.class
 Application/App.class
 EJB/NachrichtEJB.class
 EJB/ChatEJB.class
 EJB/NutzerEJB.class
 Entity/Nachricht.class
+Entity/Blacklist.class
 Utilities/Antwort.class

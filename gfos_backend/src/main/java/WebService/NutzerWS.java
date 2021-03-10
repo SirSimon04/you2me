@@ -338,6 +338,15 @@ public class NutzerWS {
             
     }
     
+    @GET
+    @Path("/clearbl")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String clearBlacklist(){
+        nutzerEJB.clearBlacklist();
+        Gson parser = new Gson();
+        return parser.toJson("true"); 
+    }
+    
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
