@@ -11,5 +11,6 @@
     <class>Application.Chat</class>
     <class>Application.Nachricht</class>
     <class>Entity.Foto</class>
+    <class>Entity.Blacklist</class>
   </persistence-unit>
 </persistence>

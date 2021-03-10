@@ -5,6 +5,7 @@
  */
 package EJB;
 
+import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Nutzer;
 import java.util.HashSet;
@@ -213,6 +214,18 @@ public class NutzerEJB {
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getOwnFriendList().add(other);
         otherInDB.getOtherFriendList().add(self);
+    }
+    
+    public void logOut(Blacklist bl){
+        em.persist(bl);
+    }
+    
+    public List<Blacklist> getAllBlacklisted(){
+        return em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
+    }
+    
+    public void deleteToken(String token){
+        em.remove(em.createNamedQuery(Blacklist.class.getSimpleName() + ".findByToken").setParameter("token", token).getSingleResult());
     }
     
         // DELETE

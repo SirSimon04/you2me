@@ -7,6 +7,7 @@ package WebService;
 
 import EJB.FotoEJB;
 import EJB.NutzerEJB;
+import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Foto;
 import Entity.Nutzer;
@@ -29,6 +30,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import javax.ejb.EJBException;
 import javax.ejb.EJBTransactionRolledbackException;
@@ -66,10 +69,20 @@ public class NutzerWS {
             {
                 return false;
             }
-            else
+            else if(true)
             {
-                return true;
+                List<Blacklist> bl = nutzerEJB.getAllBlacklisted();
+                for(Blacklist b : bl)
+                {
+                    if(b.getToken().equals(token))
+                    {
+                        return false;   
+                    }
+                }
             }
+            
+            return true;
+            
         }
         else {
             return true;
@@ -262,7 +275,16 @@ public class NutzerWS {
                 jsonObject.addProperty("id", dbNutzer.getId());
                 jsonObject.addProperty("benutzername", dbNutzer.getBenutzername());
                 jsonObject.addProperty("email", dbNutzer.getEmail());
-                jsonObject.addProperty("token", tokenizer.createNewToken(dbNutzer.getBenutzername()));
+                String token = tokenizer.createNewToken(dbNutzer.getBenutzername());
+                
+                List<Blacklist> bl = nutzerEJB.getAllBlacklisted();
+                for(Blacklist b : bl){
+                    if(b.getToken().equals(token)){
+                        nutzerEJB.deleteToken(token);
+                    }
+                }
+                jsonObject.addProperty("token", token);
+                
                 //return parser.toJson(jsonObject);
                 return response.generiereAntwort(parser.toJson(jsonObject));
                 //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
@@ -279,10 +301,41 @@ public class NutzerWS {
                 return response.generiereFehler406("Json wrong");
             }
             catch(EJBTransactionRolledbackException e) {
-                return response.generiereFehler406("Benutzername nicht vorhanden");
+                return response.generiereFehler406(e.toString());
+            }
+    }
+    
+    @POST
+    @Path("/logout/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response logout(String jsonStr, @PathParam("token") String token) {
+           if(!verify(token)){
+            return response.generiereAntwort("Bereits ausgeloggt");
+        }
+        else {
+            Gson parser = new Gson();
+            try{
+                Blacklist bl = new Blacklist();
+                bl.setToken(token);
+
+                Date date = new Date();
+                bl.setTimestamp(date);
+
+                nutzerEJB.logOut(bl);
+                
+                return response.generiereAntwort("true");
+
+            }
+            catch(JsonSyntaxException e) {
+                return response.generiereFehler406("Json wrong");
+            }
+            catch(EJBTransactionRolledbackException e) {
+                return response.generiereFehler406("kp");
             }
 
-        
+        }
+            
     }
     
     @POST
