@@ -13,11 +13,7 @@
         Willkommen
       </v-card-title>
   
-      <!--<v-card-subtitle
-      style="color: white;"
-      >
-        Funktionalität gefährdert
-      </v-card-subtitle>-->
+     
   
       <v-card-actions>
        

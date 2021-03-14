@@ -242,16 +242,30 @@
           transition="dialog-bottom-transition"
           max-width="600"
         >
+        
+        
           <template v-slot:activator="{ on, attrs }">
-            <v-btn 
-              
-              v-bind="attrs"
-              v-on="on"
-              color= "#5c7d9d"
-            >Login</v-btn>
+            
+            
+                <v-btn 
+                  
+                  v-bind="attrs"
+                  v-on="on"
+                  color= "#5c7d9d"
+                >Login</v-btn>
+          
           </template>
+        
           <template v-slot:default="dialog">
                             <v-card>
+                            <!--<div v-if="vorname === '' && nachname === '' && passwort ===''">
+                            <v-toolbar color ="#5c7d9d" dark>Warnung!</toolbar>
+                            <v-card-text>
+                              <div class="text-p2 pa-12">Einige Ihrer Anmeldedaten sind leer. Bitte überprüfen Sie die korrekte Anmeldung.</div>
+                            </v-card-text>
+                            <v-card-text><
+                            </div>-->
+                            <!--<div v-else>-->
                               <v-toolbar
                                 color="#5c7d9d"
                                 dark
@@ -277,38 +291,39 @@
                         E-Mail: {{email}}
                       </v-card-subtitle>
                   
-                      <v-card-actions>
-                        
-                  
-                        <v-spacer></v-spacer>
-                  
-                        
-                      </v-card-actions>
-                  
-                      
-                        
                           <v-divider></v-divider>
-                  
                           <v-card-text>
+                          <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
+                          <div v-else-if="benutzername === 'SirSimon04'">Salute, Simon!</div>
+                          <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas!</div>
+                          <div v-if="benutzername !== 'JET3141'">Herzlich Willkommen, {{benutzername}}</div>
                            {{info}}
                           </v-card-text>
                         
                       
-                    </v-card>
+                            </v-card>
              
-                </div>
-              </v-card-text>
-              <v-card-actions class="justify-end">
-                <v-btn
-                  text
-                  v-on:click="test()"
-                >Einstellungen</v-btn>
-                <v-btn
-                  text
-                  @click="dialog.value = false"
-                >Zum Messenger</v-btn>
+                            </div>
                 
-              </v-card-actions>
+                  </v-card-text>
+                        <v-card-actions class="justify-end">
+                          <div v-if="benutzername ==='%'">
+                            <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
+                          </div>
+                          <div v-else>
+                            <v-btn
+                              text
+                              v-on:click="test()"
+                            >Einstellungen</v-btn>
+                            <v-btn
+                              text
+                              @click="dialog.value = false"
+                            >Zum Messenger</v-btn>
+                          </div>
+                        </v-card-actions>
+                    
+                  
+              
             </v-card>
           </template>
         </v-dialog>

@@ -1,7 +1,7 @@
 <template
 
 >
-<head><title>Disputatio</title></head>
+
   <v-app
     style = "background-color: #252d30;"  
   >
@@ -15,7 +15,7 @@
         
         src=""
       ></v-img>
-        <h1>Messengerprojekt</h1>
+        <h1>{{user}}</h1>
       </div>
     
     </v-app-bar>
