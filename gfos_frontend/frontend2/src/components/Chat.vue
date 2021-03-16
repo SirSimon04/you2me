@@ -57,6 +57,7 @@
     }),
 
     mounted() {
+        var messages = [];
         function getNewest() {
             fetch('http://10.132.177.86:8080/GFOS/daten/nachricht/chat/1/newest').then(response => {
                 if (response.status !== 200) {console.error('Code !== 200:' + response);
@@ -72,14 +73,17 @@
             });
         }
         function loadMessages() {
-            fetch('http://localhost:8080/GFOS/daten/nachricht/1').then(response => {
-                if (response.status !== 200) {console.error('Code !== 200:' + response);
-                console.warn('error!');
+            fetch('http://10.132.177.86:8080/GFOS/daten/nachricht/1').then(response => {
+                if (response.status !== 200) {
+                    console.error('Code !== 200:' + response);
+                    console.warn('error!');
                     return
                 }
                 response.clone();
                 response.json().then(data => {
-                    this.messages = data;
+                    messages = data;
+                    console.warn('data');
+                    console.log(data);
                     //begin
                     var elem = '<div style="height: 100%;"><div style="background-color: rgb(43, 82, 120); border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; left: 50%;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
                     document.getElementById('chatcontainer').innerHTML += elem;
@@ -88,9 +92,26 @@
                 });
             });
         }
+        const options = {
+            method: 'POST',
+            body: JSON.stringify({'benutzername': 'SirSimon', 'passwort': 'Test1234'}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
         loadMessages();
+
+        fetch('http://10.132.177.86:8080/GFOS/daten/nutzer/login', options)
+            .then(res => res.json())
+            .then(res => {
+                console.log('HIER BIN ICH');
+                console.log(res);
+            });
+
         setTimeout(function() {
-            if (this.messages[-1] !== getNewest()) {
+            console.log(messages);
+            if (messages[messages.length - 1] !== getNewest()) {
                 loadMessages();
             }
         }, 1000);
