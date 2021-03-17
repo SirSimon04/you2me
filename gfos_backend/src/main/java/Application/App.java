@@ -6,8 +6,6 @@
 package Application;
 
 import EJB.NutzerEJB;
-import Utilities.Timer;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -22,21 +20,15 @@ public class App extends Application{
     
     @EJB
     private NutzerEJB nutzerEJB;
-    /*
-    public App() throws IOException{
-        exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleWithFixedDelay(new Timer(), 0, 20, TimeUnit.SECONDS);
-    }
-    */
     
     public App(){
+        System.out.println("App constructed");
         ScheduledExecutorService execService
                         =   Executors.newScheduledThreadPool(5);
-        execService.scheduleAtFixedRate(()->{
-            //The repetitive task, say to update Database
+        execService.scheduleAtFixedRate(() -> {
             nutzerEJB.clearBlacklist();
             System.out.println("bl cleared");
-        }, 30, 3600, TimeUnit.SECONDS);
+        }, 5, 5, TimeUnit.SECONDS);
         
     }
 }
