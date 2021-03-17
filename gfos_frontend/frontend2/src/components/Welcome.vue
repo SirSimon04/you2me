@@ -10,17 +10,22 @@
       style="color: white;"
       
       >
-        Willkommen
+      <v-container>
+        <v-row align="center">
+          <img src ="../assets/disputatio_huge.png" style="position: relative; left: 330px"/>
+        </v-row>
+      </v-container>
       </v-card-title>
   
      
   
-      <v-card-actions>
+      <v-card-actions center>
        
             <v-btn
             center
+            style="position: relative; left: 385px"
             >
-              Mäßenjer starten
+              Disputatio starten
             </v-btn>
   
         <v-spacer></v-spacer>
@@ -33,9 +38,10 @@
   
           <v-card-text
           center
-          style="color: white;"
+          style="color: white; text-align: center"
+          
           >
-            Herzlich willkommen beim Mäßenjer. Melden Sie sich an, um alle Funktionen nutzen zu können.
+            Herzlich Willkommen bei Disputatio. <br>Fangen Sie direkt an, indem Sie sich anmelden!
           </v-card-text>
         
     </v-card>
