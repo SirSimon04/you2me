@@ -88,8 +88,10 @@ CREATE TABLE Nachricht
     datumUhrzeit VARCHAR(30) NOT NULL,
     inhalt VARCHAR(1024) NOT NULL,
     foto int,
+    antwortauf int,
     
-    foreign key(foto) references Foto(id)
+    foreign key(foto) references Foto(id),
+    foreign key(antwortauf) references Nachricht(nachrichtId)
 );
 
 CREATE TABLE Chat 
@@ -128,4 +130,11 @@ Create Table Foto(
     id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
     (START WITH 1, INCREMENT BY 1),
     base64 VARCHAR(max)
+);
+
+Create Table blacklist(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    token VARCHAR(200),
+    timestamp Timestamp
 );
