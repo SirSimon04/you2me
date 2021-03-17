@@ -11,10 +11,10 @@
       dark
     >
       <div class="d-flex align-center" >
-      <v-img
-        
-        src=""
-      ></v-img>
+      <template lang="html">
+        <img src= "./assets/disputio_medium.png" />
+        <!--<img src="./assets/disputio_sign.png" />-->
+      </template>
         <h1>{{user}}</h1>
       </div>
     
@@ -40,6 +40,7 @@ import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
 import Settings from './components/Settings';
 import Welcome from './components/Welcome';
+
 
 export default {
   name: 'App',
