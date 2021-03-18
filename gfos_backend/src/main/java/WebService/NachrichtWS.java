@@ -164,7 +164,7 @@ public class NachrichtWS {
         
     }
     
-    //TODO: wenn ein nachricht beim löschen die letzeNachricht in ihrem Chat ist, auf die vorletzte setzen
+    
     @POST
     @Path("/delete/{token}")
     @Consumes(MediaType.APPLICATION_JSON)

@@ -12,6 +12,7 @@ import Entity.Foto;
 import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
+import Utilities.DateSorter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.List;
@@ -136,6 +137,7 @@ public class ChatWS {
         
     }
     //eigene Chatliste
+    //TODO: nach letzter Nachricht sortieren
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -181,7 +183,17 @@ public class ChatWS {
                             System.out.println(nutzerList);
                         }
                 }
-
+                
+                //TODO: returnList nach letzter Nachricht sortieren
+                List<Chat> zwischenSpeicher = new ArrayList<>();
+                for(Chat c : returnList){
+                    if(c.getLetztenachricht() == null){
+                        zwischenSpeicher.add(c);
+                        returnList.remove(c);
+                    }
+                }
+                returnList.sort(new DateSorter());
+                returnList.addAll(zwischenSpeicher);
                 Gson parser = new Gson();
                 return response.generiereAntwort(parser.toJson(returnList)); 
             }
