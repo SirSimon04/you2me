@@ -64,6 +64,6 @@ export default {
 window.openChat = function(chatid) {
     console.log(chatid);
     // Open chat with given chatId
-    EventBus.$emit('OPENCHAT', {'chatid': chatid});
+    EventBus.$emit('OPENCHAT', {'chatid': chatid, 'userid': CURRENT_USER_ID});
 }
 </script>
