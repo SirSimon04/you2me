@@ -15,12 +15,15 @@ Letzte Chats <br />
 Chats <br />
 
 ### Colors:
-Chatbackground #131C21 <br />
-Selected-Chatbackground #32373A <br />
-DateBackground #1F2932 <br />
-Notification #085373 <br />
-Message-Background #252D30 <br />
-Navigationbars #1F2428 <br />
+#### App-Background:
+App #17212B <br />
+#### Chatlist-Background:
+Chatlist #17212B <br />
+Chatlist-Selected #202B36 <br />
+#### Chat-Background:
+Chat #0E1621 <br />
+Chat-Message #2B5278 <br />
+Chat-Message-Other #182533 <br />
 
 ### Links
 Colors: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmspoweruser.com%2Fwp-content%2Fuploads%2F2020%2F07%2Fdark-mode-whatsapp-web-2.jpg&f=1&nofb=1 <br />
@@ -89,6 +92,7 @@ CREATE TABLE Nachricht
     inhalt VARCHAR(1024) NOT NULL,
     foto int,
     antwortauf int,
+    sender varchar(50),
     
     foreign key(foto) references Foto(id),
     foreign key(antwortauf) references Nachricht(nachrichtId)
@@ -102,8 +106,10 @@ CREATE TABLE Chat
     name VARCHAR(50),
     beschreibung VARCHAR(100),
     profilbild int,
+    letzteNachricht int,
     
-    foreign key(profilbild) references Foto(id)
+    foreign key(profilbild) references Foto(id),
+    foreign key(letzteNachricht) references Nachricht(nachrichtId)
 );
 
 create table NimmtTeil (
