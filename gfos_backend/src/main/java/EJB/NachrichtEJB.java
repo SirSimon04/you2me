@@ -14,6 +14,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import Entity.Nutzer;
+import javax.ejb.EJB;
 
 /**
  *
@@ -25,6 +27,9 @@ public class NachrichtEJB {
     @PersistenceContext
     private EntityManager em;
     
+    @EJB
+    private NutzerEJB nutzerEJB;
+    
     public void add(Nachricht neueNachricht) {
         em.persist(neueNachricht);
     }
@@ -35,6 +40,12 @@ public class NachrichtEJB {
         for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
+            try{
+                n.setSender(nutzerEJB.getCopyById(n.getSenderid()).getBenutzername());
+            }
+            catch(Exception e){
+                n.setSender("gelöschter Nutzer");
+            }
         }
         return nachrichtList;
     }
@@ -45,8 +56,45 @@ public class NachrichtEJB {
     
     public List<Nachricht> getByChatId(int id){   
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
-        em.detach(nachrichtList);
+        for(Nachricht n : nachrichtList){
+            em.detach(n);
+            n.setNachrichtList(null);
+            try{
+                n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
+            }
+            catch(Exception e){
+                n.setSender("gelöschter Nutzer");
+            }
+            
+        }
         return nachrichtList;
+    }
+    
+    public Nachricht getNewest(int id){
+        List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
+        if(nachrichtList.size() == 0){
+            Nachricht na = new Nachricht();
+            return na;
+        }
+        else{
+            for(Nachricht n : nachrichtList){
+                em.detach(n);
+                n.setNachrichtList(null);
+            }
+            Nachricht n = nachrichtList.get(nachrichtList.size() - 1);
+            em.detach(n);
+            n.setNachrichtList(null);
+            try{
+                n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
+                
+            }
+            catch(Exception e){
+                n.setSender("gelöschter Nutezr");
+            }
+            
+            return n;
+        }
+        
     }
     
     

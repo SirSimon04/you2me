@@ -14,6 +14,8 @@ import Entity.Nutzer;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
 import Utilities.Antwort;
+import Utilities.Mail;
+import Utilities.Emailservice;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -36,6 +38,8 @@ import java.util.HashSet;
 import javax.ejb.EJBException;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
@@ -61,7 +65,12 @@ public class NutzerWS {
     @EJB
     private FotoEJB fotoEJB;
     
+    @EJB
+    private Emailservice email;
+    
     private Antwort response = new Antwort();
+    
+    private Mail mail = new Mail();
     
     public boolean verify(String token){
         if(tokenizer.isOn()){
@@ -250,12 +259,39 @@ public class NutzerWS {
         }
     }
     
+    
+    @GET
+    @Path("/sendMail")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String sendMail() {
+        
+        String emailMsgTxt      = "Body";
+        String emailSubjectTxt  = "Subject";
+        String emailFromAddress = "simi@engelnetz.de";
+        String[] emailList = {"simiquatsch1@gmail.com"};
+        try{
+            mail.postMail( emailList, emailSubjectTxt, emailMsgTxt, emailFromAddress);
+            System.out.println("Sucessfully Sent mail to All Users");
+        return "true";
+        }
+        catch(MessagingException e){
+            return "1";
+        }
+        
+        
+        
+    }
+    
+    
     @POST
     @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(String jsonStr) {
-       
+        Response r = response.generiereAntwort(jsonStr);
+        for(int i = 0; i < 1000; i++){
+            System.out.println(r.getStatus());
+        }
         Gson parser = new Gson();
         try {
             //getting the name of the body

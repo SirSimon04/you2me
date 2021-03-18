@@ -34,15 +34,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Foto.findByBase64", query = "SELECT f FROM Foto f WHERE f.base64 = :base64")})
 public class Foto implements Serializable {
 
+    @Size(max = 8000)
+    @Column(name = "BASE64")
+    private String base64;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Size(max = 8000)
-    @Column(name = "BASE64")
-    private String base64;
     @OneToMany(mappedBy = "profilbild")
     private List<Nutzer> nutzerList;
     @OneToMany(mappedBy = "profilbild")
@@ -65,13 +66,6 @@ public class Foto implements Serializable {
         this.id = id;
     }
 
-    public String getBase64() {
-        return base64;
-    }
-
-    public void setBase64(String base64) {
-        this.base64 = base64;
-    }
 
     @XmlTransient
     public List<Nutzer> getNutzerList() {
@@ -123,6 +117,14 @@ public class Foto implements Serializable {
     @Override
     public String toString() {
         return "Entity.Foto[ id=" + id + " ]";
+    }
+
+    public String getBase64() {
+        return base64;
+    }
+
+    public void setBase64(String base64) {
+        this.base64 = base64;
     }
     
 }
