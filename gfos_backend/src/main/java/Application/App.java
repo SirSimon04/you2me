@@ -28,7 +28,7 @@ public class App extends Application{
         execService.scheduleAtFixedRate(() -> {
             nutzerEJB.clearBlacklist();
             System.out.println("bl cleared");
-        }, 5, 5, TimeUnit.SECONDS);
+        }, 30, 3600, TimeUnit.SECONDS);
         
     }
 }

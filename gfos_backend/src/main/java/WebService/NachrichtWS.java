@@ -95,11 +95,25 @@ public class NachrichtWS {
         }
         else {
             Gson parser = new Gson();
-            return response.generiereAntwort(parser.toJson(nachrichtEJB.getByChatId(id)));
+            List<Nachricht> nList = nachrichtEJB.getByChatId(id);
+            return response.generiereAntwort(parser.toJson(nList));
         }
         
     }
     
+    @GET
+    @Path("/chat/getNewest/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getNewest(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            Nachricht n = nachrichtEJB.getNewest(id);
+            return response.generiereAntwort(parser.toJson(n));
+        }
+    }
     
     @POST
     @Path("/add/{token}")
@@ -118,7 +132,15 @@ public class NachrichtWS {
                 JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
                 Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
                 String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
-                jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
+                try{
+                    jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
+                    Nachricht nachrichtInDB = nachrichtEJB.getByID(jsonAnswerId);
+                    neueNachricht.setAntwortauf(nachrichtInDB);
+                }
+                catch(NullPointerException e){
+                    
+                }
+                
                 if(jsonPic != null){
                     Foto f = new Foto();
                     f.setBase64(jsonPic);
@@ -126,10 +148,6 @@ public class NachrichtWS {
                     
                     Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
                     neueNachricht.setFoto(fotoInDB);
-                }
-                if(jsonAnswerId != 0){
-                    Nachricht nachrichtInDB = nachrichtEJB.getByID(jsonAnswerId);
-                    neueNachricht.setAntwortauf(nachrichtInDB);
                 }
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");

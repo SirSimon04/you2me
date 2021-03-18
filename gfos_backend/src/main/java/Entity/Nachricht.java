@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nachricht.findBySenderid", query = "SELECT n FROM Nachricht n WHERE n.senderid = :senderid"),
     @NamedQuery(name = "Nachricht.findByChatid", query = "SELECT n FROM Nachricht n WHERE n.chatid = :chatid"),
     @NamedQuery(name = "Nachricht.findByDatumuhrzeit", query = "SELECT n FROM Nachricht n WHERE n.datumuhrzeit = :datumuhrzeit"),
-    @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt")})
+    @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt"),
+    @NamedQuery(name = "Nachricht.findBySender", query = "SELECT n FROM Nachricht n WHERE n.sender = :sender")})
 public class Nachricht implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,6 +65,9 @@ public class Nachricht implements Serializable {
     @Size(min = 1, max = 1024)
     @Column(name = "INHALT")
     private String inhalt;
+    @Size(max = 50)
+    @Column(name = "SENDER")
+    private String sender;
     @JoinColumn(name = "FOTO", referencedColumnName = "ID")
     @ManyToOne
     private Foto foto;
@@ -126,6 +130,14 @@ public class Nachricht implements Serializable {
 
     public void setInhalt(String inhalt) {
         this.inhalt = inhalt;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public Foto getFoto() {

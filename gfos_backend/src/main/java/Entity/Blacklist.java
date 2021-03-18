@@ -6,7 +6,7 @@
 package Entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,28 +15,25 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author simon
  */
 @Entity
-@Table(name = "FOTO")
+@Table(name = "BLACKLIST")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Foto.findAll", query = "SELECT f FROM Foto f"),
-    @NamedQuery(name = "Foto.findById", query = "SELECT f FROM Foto f WHERE f.id = :id"),
-    @NamedQuery(name = "Foto.findByBase64", query = "SELECT f FROM Foto f WHERE f.base64 = :base64")})
-public class Foto implements Serializable {
-
-    @Size(max = 8000)
-    @Column(name = "BASE64")
-    private String base64;
+    @NamedQuery(name = "Blacklist.findAll", query = "SELECT b FROM Blacklist b"),
+    @NamedQuery(name = "Blacklist.findById", query = "SELECT b FROM Blacklist b WHERE b.id = :id"),
+    @NamedQuery(name = "Blacklist.findByToken", query = "SELECT b FROM Blacklist b WHERE b.token = :token"),
+    @NamedQuery(name = "Blacklist.findByTimestamp", query = "SELECT b FROM Blacklist b WHERE b.timestamp = :timestamp")})
+public class Blacklist implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,17 +41,17 @@ public class Foto implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @OneToMany(mappedBy = "profilbild")
-    private List<Nutzer> nutzerList;
-    @OneToMany(mappedBy = "profilbild")
-    private List<Chat> chatList;
-    @OneToMany(mappedBy = "foto")
-    private List<Nachricht> nachrichtList;
+    @Size(max = 200)
+    @Column(name = "TOKEN")
+    private String token;
+    @Column(name = "TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
 
-    public Foto() {
+    public Blacklist() {
     }
 
-    public Foto(Integer id) {
+    public Blacklist(Integer id) {
         this.id = id;
     }
 
@@ -66,32 +63,20 @@ public class Foto implements Serializable {
         this.id = id;
     }
 
-
-    @XmlTransient
-    public List<Nutzer> getNutzerList() {
-        return nutzerList;
+    public String getToken() {
+        return token;
     }
 
-    public void setNutzerList(List<Nutzer> nutzerList) {
-        this.nutzerList = nutzerList;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    @XmlTransient
-    public List<Chat> getChatList() {
-        return chatList;
+    public Date getTimestamp() {
+        return timestamp;
     }
 
-    public void setChatList(List<Chat> chatList) {
-        this.chatList = chatList;
-    }
-
-    @XmlTransient
-    public List<Nachricht> getNachrichtList() {
-        return nachrichtList;
-    }
-
-    public void setNachrichtList(List<Nachricht> nachrichtList) {
-        this.nachrichtList = nachrichtList;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -104,10 +89,10 @@ public class Foto implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Foto)) {
+        if (!(object instanceof Blacklist)) {
             return false;
         }
-        Foto other = (Foto) object;
+        Blacklist other = (Blacklist) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -116,15 +101,7 @@ public class Foto implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Foto[ id=" + id + " ]";
-    }
-
-    public String getBase64() {
-        return base64;
-    }
-
-    public void setBase64(String base64) {
-        this.base64 = base64;
+        return "Entity.Blacklist[ id=" + id + " ]";
     }
     
 }

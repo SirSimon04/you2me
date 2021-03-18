@@ -3,8 +3,8 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/WebService/NutzerWS.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/WebService/ChatWS.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/NutzerEJB.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Emailservice.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Chat.java
-/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Timer.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Blacklist.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/FotoEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Nachricht.java
@@ -12,6 +12,7 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/testgfos2021/gfostest/JAXRSConfiguration.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Antwort.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Nutzer.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Mail.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/NachrichtEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/ChatEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/testgfos2021/gfostest/resources/JavaEE8Resource.java
