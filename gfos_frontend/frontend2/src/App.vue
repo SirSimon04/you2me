@@ -21,7 +21,7 @@
 </template>
 
 <script>
-
+//import EventBus from './EventBus';
 import ChatListe from './components/ChatListe';
 import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
