@@ -34,6 +34,11 @@ public class NachrichtEJB {
         em.persist(neueNachricht);
     }
     
+    public void delete(int id){
+        Nachricht n = getByID(id);
+        em.remove(n);
+    }
+    
     
     public List<Nachricht> getAll() {
         List<Nachricht> nachrichtList  = em.createNamedQuery(Nachricht.class.getSimpleName()+".findAll").getResultList();

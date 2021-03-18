@@ -5,6 +5,7 @@
  */
 package WebService;
 
+import EJB.ChatEJB;
 import EJB.FotoEJB;
 import EJB.NachrichtEJB;
 import Entity.Foto;
@@ -45,6 +46,8 @@ public class NachrichtWS {
     private NachrichtEJB nachrichtEJB;
     @EJB
     private FotoEJB fotoEJB;
+    @EJB
+    private ChatEJB chatEJB;
     
     @EJB
     private Tokenizer tokenizer;
@@ -132,6 +135,7 @@ public class NachrichtWS {
                 JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
                 Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
                 String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
                 try{
                     jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
                     Nachricht nachrichtInDB = nachrichtEJB.getByID(jsonAnswerId);
@@ -149,6 +153,7 @@ public class NachrichtWS {
                     Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
                     neueNachricht.setFoto(fotoInDB);
                 }
+                chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
             }
@@ -159,10 +164,54 @@ public class NachrichtWS {
         
     }
     
+    //TODO: wenn ein nachricht beim löschen die letzeNachricht in ihrem Chat ist, auf die vorletzte setzen
+    @POST
+    @Path("/delete/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response delete(String jsonStr, @PathParam("token") String token) {
+        
+        if(!verify(token)){
+            return response.generiereFehler401("dentifrisse");
+        }
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int lNachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
+            Nachricht n = nachrichtEJB.getByID(lNachrichtId);
+            
+            if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
+                
+                chatEJB.getById(n.getChatid()).setLetztenachricht(null);
+                
+                nachrichtEJB.delete(lNachrichtId);
+                
+                List<Nachricht> nList = nachrichtEJB.getByChatId(n.getChatid());
+                System.out.println(nList);
+                if(nList.size() != 0){
+                    chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
+                }
+                
+                return response.generiereAntwort("true");
+                
+
+                
+            }
+            else{
+                    
+                nachrichtEJB.delete(lNachrichtId);
+                return response.generiereAntwort("true");
+            }
+            
+            
+        }
+        
+    }
     
+}
    
     
     
     
  
-}
+

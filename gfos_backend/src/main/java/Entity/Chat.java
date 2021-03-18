@@ -62,6 +62,9 @@ public class Chat implements Serializable {
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
+    @JoinColumn(name = "LETZTENACHRICHT", referencedColumnName = "NACHRICHTID")
+    @ManyToOne
+    private Nachricht letztenachricht;
 
     public Chat() {
     }
@@ -117,6 +120,14 @@ public class Chat implements Serializable {
 
     public void setProfilbild(Foto profilbild) {
         this.profilbild = profilbild;
+    }
+
+    public Nachricht getLetztenachricht() {
+        return letztenachricht;
+    }
+
+    public void setLetztenachricht(Nachricht letztenachricht) {
+        this.letztenachricht = letztenachricht;
     }
 
     @Override
