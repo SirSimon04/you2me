@@ -8,7 +8,7 @@ public class Mail
 {
   private static final String SMTP_HOST_NAME = "smtp.ionos.de"; //or simply "localhost"
   private static final String SMTP_AUTH_USER = "simi@engelnetz.de";
-  private static final String SMTP_AUTH_PWD  = "Simoneng2S";
+  private static final String SMTP_AUTH_PWD  = "Simoneng";
 
   
 
