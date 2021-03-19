@@ -27,7 +27,7 @@ public class Emailservice {
     public void setdaten() {  //args[] to,subjekt,body
         //setzte Daten
         String from = "simi@engelnetz.de";
-        String pass = "Simoneng2S"; 
+        String pass = "Simoneng"; 
         String to = "simi@engelnetz.de";
         String subject = "Test";
         String body = "";
