@@ -6,6 +6,7 @@
 package WebService;
 import EJB.ChatEJB;
 import EJB.FotoEJB;
+import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Foto;
@@ -52,6 +53,9 @@ public class ChatWS {
     private ChatEJB chatEJB;
     
     @EJB FotoEJB fotoEJB;
+    
+    @EJB
+    private NachrichtEJB nachrichtEJB;
     
     @EJB
     private Tokenizer tokenizer;
@@ -166,6 +170,13 @@ public class ChatWS {
 
 
                 for(Chat c : returnList){
+                    try{
+                       c.getLetztenachricht().setSender(nachrichtEJB.getNewest(c.getChatid()).getSender());
+                    }
+                    catch(NullPointerException e){
+                        
+                    }
+                    
                     for(Nutzer n : c.getNutzerList()){
                         n.setPasswordhash(null);
                         n.setOtherFriendList(null);

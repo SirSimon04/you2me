@@ -157,15 +157,18 @@ public class NachrichtWS {
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
             }
-                catch(JsonSyntaxException e) {
-                    return response.generiereFehler406("cacahuète");
+            catch(JsonSyntaxException e) {
+                return response.generiereFehler406("cacahuète");
             }
-        }
+            catch(NullPointerException e){
+                return response.generiereFehler500("Chatid oder Senderid nicht vorhanden");
+            }
+        }   
         
     }
     
     
-    @POST
+    @DELETE
     @Path("/delete/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
