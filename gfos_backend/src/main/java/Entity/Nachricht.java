@@ -68,6 +68,8 @@ public class Nachricht implements Serializable {
     @Size(max = 50)
     @Column(name = "SENDER")
     private String sender;
+    @OneToMany(mappedBy = "letztenachricht")
+    private List<Chat> chatList;
     @JoinColumn(name = "FOTO", referencedColumnName = "ID")
     @ManyToOne
     private Foto foto;
@@ -138,6 +140,15 @@ public class Nachricht implements Serializable {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    @XmlTransient
+    public List<Chat> getChatList() {
+        return chatList;
+    }
+
+    public void setChatList(List<Chat> chatList) {
+        this.chatList = chatList;
     }
 
     public Foto getFoto() {

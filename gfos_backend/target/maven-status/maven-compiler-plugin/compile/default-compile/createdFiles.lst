@@ -6,6 +6,7 @@ WebService/ChatWS.class
 Utilities/Mail$SMTPAuthenticator.class
 Utilities/Emailservice.class
 EJB/FotoEJB.class
+Utilities/DateSorter.class
 Utilities/Hasher.class
 WebService/NutzerWS.class
 WebService/NachrichtWS.class

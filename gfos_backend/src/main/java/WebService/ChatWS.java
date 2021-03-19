@@ -30,6 +30,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ws.rs.core.Response;
 
@@ -137,7 +140,6 @@ public class ChatWS {
         
     }
     //eigene Chatliste
-    //TODO: nach letzter Nachricht sortieren
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -164,6 +166,11 @@ public class ChatWS {
 
 
                 for(Chat c : returnList){
+                    for(Nutzer n : c.getNutzerList()){
+                        n.setPasswordhash(null);
+                        n.setOtherFriendList(null);
+                        n.setOwnFriendList(null);
+                    }
                         int length = 0;
                         for(Nutzer n : c.getNutzerList()){
                             length +=1;
@@ -183,17 +190,15 @@ public class ChatWS {
                             System.out.println(nutzerList);
                         }
                 }
-                
-                //TODO: returnList nach letzter Nachricht sortieren
-                List<Chat> zwischenSpeicher = new ArrayList<>();
+                List<Chat> toRemove = new ArrayList<>();
                 for(Chat c : returnList){
                     if(c.getLetztenachricht() == null){
-                        zwischenSpeicher.add(c);
-                        returnList.remove(c);
+                        toRemove.add(c);
                     }
                 }
+                returnList.removeAll(toRemove);
                 returnList.sort(new DateSorter());
-                returnList.addAll(zwischenSpeicher);
+                returnList.addAll(toRemove);
                 Gson parser = new Gson();
                 return response.generiereAntwort(parser.toJson(returnList)); 
             }
@@ -219,6 +224,8 @@ public class ChatWS {
             Gson parser = new Gson();
         try {
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
+            
+            neuerChat.setIsGroup(true);
             chatEJB.createChat(neuerChat);
             return response.generiereAntwort("true");
         }
@@ -248,6 +255,7 @@ public class ChatWS {
                 int eigeneId = parser.fromJson((jsonTP.get("eigeneId")), Integer.class);
                 
                 Chat neuerChat = new Chat();
+                neuerChat.setIsGroup(false);
                 neuerChat.setErstelldatum(date);
                 
                 

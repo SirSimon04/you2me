@@ -54,6 +54,8 @@ public class Chat implements Serializable {
     @Size(max = 100)
     @Column(name = "BESCHREIBUNG")
     private String beschreibung;
+    @Column(name = "ISCHAT")
+    private Boolean isGroup;
     @JoinTable(name = "NIMMTTEIL", joinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -103,6 +105,14 @@ public class Chat implements Serializable {
 
     public void setBeschreibung(String beschreibung) {
         this.beschreibung = beschreibung;
+    }
+
+    public Boolean getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(Boolean isGroup) {
+        this.isGroup = isGroup;
     }
 
     @XmlTransient
