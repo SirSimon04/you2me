@@ -107,6 +107,7 @@ CREATE TABLE Chat
     beschreibung VARCHAR(100),
     profilbild int,
     letzteNachricht int,
+    isGroup boolean,
     
     foreign key(profilbild) references Foto(id),
     foreign key(letzteNachricht) references Nachricht(nachrichtId)
