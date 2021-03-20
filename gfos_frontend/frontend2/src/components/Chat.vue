@@ -14,7 +14,7 @@
                 <div v-else style="background-color: #252d30; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;">
                     <v-list-item three-line>
                         <v-list-item-content>
-                            <div class="overline mb-4" style="color: white;">
+                            <div class="overline mb-2" style="color: white;">
                                 {{item.author}}
                             </div>
                             <p style="color: white; white-space: pre-line;">{{item.inhalt}}</p>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import EventBus from './EventBus';
+import { EventBus } from './EventBus.js';
 
 export default {
     name: 'Chat',
@@ -39,10 +39,15 @@ export default {
     }),
 
     mounted() {
+        EventBus.$on('MYEVENT', (payload) => {
+            console.log('THIS IS MY EVENT');
+            console.log(payload);
+        });
         EventBus.$on('OPENCHAT', (payload) => {
             var CURRENT_USER_ID = payload['userid']; //set in cookie?
             var CURRENT_CHAT_ID = payload['chatid'];
             var IP_ADDRESS = '84.191.205.25';
+
             var messages = [];
 
             function loadMessages() {
@@ -57,8 +62,8 @@ export default {
                         for (var i=0; i<msgs.length; i++) {
                             var data = msgs[i];
                             var elem = '';
-                            if (data['senderid'] === CURRENT_USER_ID) elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
-                            else elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-4" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                            if (data['senderid'] === CURRENT_USER_ID) elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                            else elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
                             document.getElementById('chatcontainer').innerHTML += elem;
                         }
 

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-//import EventBus from './EventBus';
+//import { EventBus } from './components/EventBus.js';
 import ChatListe from './components/ChatListe';
 import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
@@ -41,11 +41,11 @@ export default {
     },
     
     data: () => ({
-        app_vue_chatliste_zeigen: true,
-        app_vue_settings_zeigen: false,
-        app_vue_registrieren_zeigen: false,
-        app_vue_chat_zeigen: true,
         welcome_vue_zeigen: false,
+        app_vue_registrieren_zeigen: false,
+        app_vue_settings_zeigen: false,
+        app_vue_chatliste_zeigen: true,
+        app_vue_chat_zeigen: true,
         user: Registrieren.benutzername,
     }),    
 };

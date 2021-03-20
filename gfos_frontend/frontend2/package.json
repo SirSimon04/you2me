@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "eventbus": "0.0.3",
     "vue": "^2.6.11",
+    "vue-types": "^2.0.3",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {
@@ -38,7 +39,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+        "no-unused-vars": "off"
+    }
   },
   "browserslist": [
     "> 1%",
