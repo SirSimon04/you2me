@@ -307,7 +307,7 @@
                 
                   </v-card-text>
                         <v-card-actions class="justify-end">
-                          <div v-if="benutzername ==='%'">
+                          <div v-if="benutzername === null">
                             <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
                           </div>
                           <div v-else>
