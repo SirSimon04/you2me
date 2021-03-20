@@ -89,13 +89,53 @@ public class ChatWS {
         }
         else {
            List<Chat> liste = chatEJB.getAllCopy();
-            for(Chat c : liste) {
-                for(Nutzer n : c.getNutzerList()) {
-                    n.setChatList(null); 
-                }
-            }
+            
             Gson parser = new Gson();
             return response.generiereAntwort(parser.toJson(liste)); 
+        }
+        
+    }
+    
+    @GET
+    @Path("/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getById(@PathParam("token") String token, @PathParam("id") int id) {
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+           Chat c = chatEJB.getCopy(id);
+            
+            Gson parser = new Gson();
+            return response.generiereAntwort(parser.toJson(c)); 
+        }
+        
+    }
+    //Anzahl von Nachrichten etc.
+    @GET
+    @Path("/info/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id) {
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+           Gson parser = new Gson();
+            
+           Chat c = chatEJB.getCopy(id);
+           List<Nutzer> nutzerListe = c.getNutzerList();
+           List<Nutzer> adminListe = c.getAdminList();
+           for(Nutzer nutzer : nutzerListe){
+               if(adminListe.contains(nutzer)){
+                   nutzer.setIsadmin(true);
+               }
+           }
+           
+           JsonObject jsonObject = new JsonObject();
+           jsonObject.add("test", parser.toJsonTree(nutzerListe));
+           
+           
+            return response.generiereAntwort(parser.toJson(jsonObject)); 
         }
         
     }
@@ -164,9 +204,6 @@ public class ChatWS {
                     {
                         returnList.add(c);
                     }
-                    for(Nutzer n : c.getNutzerList()) {
-                        n.setChatList(null); 
-                    }
                 }
 
 
@@ -186,6 +223,8 @@ public class ChatWS {
 
                         if(!c.getIsgroup())
                         {
+                            System.out.println(c.getIsgroup());
+                           // c.setAdminList(null);
                             List<Nutzer> nutzerList = c.getNutzerList();
                             Nutzer n = nutzerEJB.getCopyById(nutzerid);
                             nutzerList.remove(n);
@@ -194,10 +233,11 @@ public class ChatWS {
 
                             c.setName(andererNutzer.getBenutzername());
                             c.setProfilbild(andererNutzer.getProfilbild());
-                            c.setNutzerList(null);
+                            //c.setNutzerList(null);
                             System.out.println(nutzerList);
                         }
                 }
+                
                 List<Chat> toRemove = new ArrayList<>();
                 for(Chat c : returnList){
                     if(c.getLetztenachricht() == null){
@@ -231,23 +271,29 @@ public class ChatWS {
             System.out.println(jsonStr);
             Gson parser = new Gson();
         try {
+            JsonObject json = parser.fromJson(jsonStr, JsonObject.class);
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
-            System.out.println(neuerChat.getName());
             neuerChat.setIsgroup(true);
             chatEJB.createChat(neuerChat);
-            JsonObject json = parser.fromJson(jsonStr, JsonObject.class);
+            int eigeneId = parser.fromJson((json.get("eigeneId")), Integer.class);
+            System.out.println(eigeneId);
+            
+            try {
+            Thread.sleep(200);
+            } catch (Exception e) {}
+            
             JsonArray arr = json.getAsJsonArray("benutzernamen");
             for(int i = 0; i < arr.size() ; i++){
                 System.out.println(arr.get(i).getAsString());
                 Nutzer addedUser = nutzerEJB.getByUsername(arr.get(i).getAsString());
                 nutzerEJB.fuegeChatHinzu(neuerChat, addedUser);
-
-                System.out.println("Chatws fuegeNutzerhinzu");
-                chatEJB.fuegeHinzu(neuerChat, addedUser);
+                chatEJB.fuegeNutzerHinzu(neuerChat, addedUser);
                 
             }
-            
-            //
+            Nutzer self = nutzerEJB.getById(eigeneId);
+            nutzerEJB.fuegeChatHinzu(neuerChat, self);
+            chatEJB.fuegeNutzerHinzu(neuerChat, self);
+            chatEJB.addAdmin(neuerChat, self);
             return response.generiereAntwort("true");
         }
             catch(JsonSyntaxException e) {
@@ -300,8 +346,8 @@ public class ChatWS {
                 }
                 
                 if(test){
-                    chatEJB.fuegeHinzu(neuerChat, self);
-                    chatEJB.fuegeHinzu(neuerChat, other);
+                    chatEJB.fuegeNutzerHinzu(neuerChat, self);
+                    chatEJB.fuegeNutzerHinzu(neuerChat, other);
                     
                     return response.generiereAntwort("true");
                 }
@@ -356,7 +402,7 @@ public class ChatWS {
                 nutzerEJB.fuegeChatHinzu(c, addedUser);
 
                 System.out.println("Chatws fuegeNutzerhinzu");
-                chatEJB.fuegeHinzu(c, addedUser);
+                chatEJB.fuegeNutzerHinzu(c, addedUser);
 
                 return response.generiereAntwort("true");
                 }

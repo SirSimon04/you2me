@@ -24,6 +24,9 @@ Chatlist-Selected #202B36 <br />
 Chat #0E1621 <br />
 Chat-Message #2B5278 <br />
 Chat-Message-Other #182533 <br />
+#### Font-Colors
+Sent-By-Color #48A1F4 <br />
+Message-Color #7F91A4 <br />
 
 ### Links
 Colors: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmspoweruser.com%2Fwp-content%2Fuploads%2F2020%2F07%2Fdark-mode-whatsapp-web-2.jpg&f=1&nofb=1 <br />
@@ -78,6 +81,7 @@ CREATE TABLE Nutzer
     handynummer VARCHAR(50),
     profilbild int,
     info VARCHAR(256),
+    isAdmin boolean,
     
     foreign key(profilbild) references Foto(id) on delete cascade
 );

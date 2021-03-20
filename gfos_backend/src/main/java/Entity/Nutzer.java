@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nutzer.findByEmail", query = "SELECT n FROM Nutzer n WHERE n.email = :email"),
     @NamedQuery(name = "Nutzer.findByPasswordhash", query = "SELECT n FROM Nutzer n WHERE n.passwordhash = :passwordhash"),
     @NamedQuery(name = "Nutzer.findByHandynummer", query = "SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
-    @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info")})
+    @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info"),
+    @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin")})
 public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -78,6 +79,8 @@ public class Nutzer implements Serializable {
     @Size(max = 256)
     @Column(name = "INFO")
     private String info;
+    @Column(name = "ISADMIN")
+    private Boolean isadmin;
     @JoinTable(name = "BEFREUNDETMIT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -91,7 +94,7 @@ public class Nutzer implements Serializable {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
     @ManyToMany
-    private List<Chat> chatList1;
+    private List<Chat> adminInGroups;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -174,6 +177,14 @@ public class Nutzer implements Serializable {
         this.info = info;
     }
 
+    public Boolean getIsadmin() {
+        return isadmin;
+    }
+
+    public void setIsadmin(Boolean isadmin) {
+        this.isadmin = isadmin;
+    }
+
     @XmlTransient
     public List<Nutzer> getOwnFriendList() {
         return ownFriendList;
@@ -202,12 +213,12 @@ public class Nutzer implements Serializable {
     }
 
     @XmlTransient
-    public List<Chat> getChatList1() {
-        return chatList1;
+    public List<Chat> getAdminInGroups() {
+        return adminInGroups;
     }
 
-    public void setChatList1(List<Chat> chatList1) {
-        this.chatList1 = chatList1;
+    public void setAdminInGroups(List<Chat> adminInGroups) {
+        this.adminInGroups = adminInGroups;
     }
 
     public Foto getProfilbild() {

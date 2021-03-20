@@ -1,7 +1,10 @@
 <template>
     <v-container>
-        <div id="chatcontainer" style="background-color: #0E1621; border-radius: 15px; padding: 16px;">
-            <!-- Colors are not corrent. See in JS (current colors as seen in README)
+        <div id="chatcontainer">
+            <!--
+                Colors are not corrent. See in JS (current colors as seen in README)
+                This is outdated. Don't use this as a reference
+            
             <div v-for="item in messages" :key="item" style="height: 100%;">
                 <div v-if="item.senderid === '3'" style="background-color: #2b5278; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative; left: 50%;">
                     <v-list-item three-line>
@@ -43,38 +46,124 @@ export default {
             console.log('THIS IS MY EVENT');
             console.log(payload);
         });
+        EventBus.$on('CHANGEHEIGHT', (payload) => {
+            document.getElementById('chatcontainer').style = 'overflow: auto; min-height: 400px; height: "' + payload["height"] + 'px"; max-height: ' + payload["height"] + 'px; background-color: #0E1621; border-radius: 15px; padding: 16px;';
+        });
         EventBus.$on('OPENCHAT', (payload) => {
             var CURRENT_USER_ID = payload['userid']; //set in cookie?
             var CURRENT_CHAT_ID = payload['chatid'];
             var IP_ADDRESS = '84.191.205.25';
 
-            var messages = [{
-                "nachrichtid": 139,
-                "senderid": 206,
-                "chatid": 11,
-                "datumuhrzeit": "2021-02-02 10:10:10",
-                "inhalt": "22",
-                "sender": "Simon",
-                "chatList": []
-            },
-            {
-                "nachrichtid": 140,
-                "senderid": 206,
-                "chatid": 11,
-                "datumuhrzeit": "2021-02-02 10:10:10",
-                "inhalt": "23",
-                "sender": "Simon",
-                "chatList": []
-            },
-            {
-                "nachrichtid": 141,
-                "senderid": 206,
-                "chatid": 11,
-                "datumuhrzeit": "2021-02-02 10:10:10",
-                "inhalt": "25",
-                "sender": "Simon",
-                "chatList": []
-            }];
+            var messages = [
+                {
+                    "nachrichtid": 139,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "22",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 140,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "23",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 141,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "25",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 139,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "22",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 140,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "23",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 141,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "25",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 139,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "22",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 140,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "23",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 141,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "25",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 139,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "22",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 140,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "23",
+                    "sender": "Simon",
+                    "chatList": []
+                },
+                {
+                    "nachrichtid": 141,
+                    "senderid": 206,
+                    "chatid": 11,
+                    "datumuhrzeit": "2021-02-02 10:10:10",
+                    "inhalt": "25",
+                    "sender": "Simon",
+                    "chatList": []
+                }
+            ];
 
             document.getElementById('chatcontainer').innerHTML = '';
             for (var i=0; i<messages.length; i++) {

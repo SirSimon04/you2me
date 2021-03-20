@@ -62,8 +62,8 @@ public class Chat implements Serializable {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Nutzer> nutzerList;
-    @ManyToMany(mappedBy = "chatList1")
-    private List<Nutzer> nutzerList1;
+    @ManyToMany(mappedBy = "adminInGroups")
+    private List<Nutzer> adminList;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -128,12 +128,12 @@ public class Chat implements Serializable {
     }
 
     @XmlTransient
-    public List<Nutzer> getNutzerList1() {
-        return nutzerList1;
+    public List<Nutzer> getAdminList() {
+        return adminList;
     }
 
-    public void setNutzerList1(List<Nutzer> nutzerList1) {
-        this.nutzerList1 = nutzerList1;
+    public void setAdminList(List<Nutzer> adminList) {
+        this.adminList = adminList;
     }
 
     public Foto getProfilbild() {
