@@ -168,7 +168,7 @@ public class NachrichtWS {
     }
     
     
-    @DELETE
+    @POST
     @Path("/delete/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)

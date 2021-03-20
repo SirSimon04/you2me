@@ -15,6 +15,7 @@ import Utilities.Antwort;
 import Utilities.Tokenizer;
 import Utilities.DateSorter;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.List;
 import javax.ejb.EJB;
@@ -182,12 +183,8 @@ public class ChatWS {
                         n.setOtherFriendList(null);
                         n.setOwnFriendList(null);
                     }
-                        int length = 0;
-                        for(Nutzer n : c.getNutzerList()){
-                            length +=1;
-                        }
 
-                        if(length == 2)
+                        if(!c.getIsGroup())
                         {
                             List<Nutzer> nutzerList = c.getNutzerList();
                             Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -235,9 +232,22 @@ public class ChatWS {
             Gson parser = new Gson();
         try {
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
-            
+            System.out.println(neuerChat.getName());
             neuerChat.setIsGroup(true);
             chatEJB.createChat(neuerChat);
+            JsonObject json = parser.fromJson(jsonStr, JsonObject.class);
+            JsonArray arr = json.getAsJsonArray("benutzernamen");
+            for(int i = 0; i < arr.size() ; i++){
+                System.out.println(arr.get(i).getAsString());
+                Nutzer addedUser = nutzerEJB.getByUsername(arr.get(i).getAsString());
+                nutzerEJB.fuegeChatHinzu(neuerChat, addedUser);
+
+                System.out.println("Chatws fuegeNutzerhinzu");
+                chatEJB.fuegeHinzu(neuerChat, addedUser);
+                
+            }
+            
+            //
             return response.generiereAntwort("true");
         }
             catch(JsonSyntaxException e) {
