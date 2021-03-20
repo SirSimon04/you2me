@@ -48,7 +48,7 @@ public class NutzerEJB {
             c.setAdminList(null);
             }
            for(Chat c : n.getAdminInGroups()){
-               em.detach(n);
+               em.detach(c);
                c.setAdminList(null);
                c.setAdminList(null);
            }
@@ -93,7 +93,7 @@ public class NutzerEJB {
             c.setAdminList(null);
             }
            for(Chat c : n.getAdminInGroups()){
-               em.detach(n);
+               em.detach(c);
                c.setAdminList(null);
                c.setAdminList(null);
            }

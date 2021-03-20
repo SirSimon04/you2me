@@ -32,6 +32,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -113,32 +115,79 @@ public class ChatWS {
     }
     //Anzahl von Nachrichten etc.
     @GET
-    @Path("/info/{id}/{token}")
+    @Path("/info/{chatid}/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id) {
+    public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id, @PathParam("chatid") int chatId) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
            Gson parser = new Gson();
             
-           Chat c = chatEJB.getCopy(id);
+            Chat c = chatEJB.getCopy(chatId);
            List<Nutzer> nutzerListe = c.getNutzerList();
+           
            List<Nutzer> adminListe = c.getAdminList();
+           
+           Nutzer self = nutzerEJB.getCopyById(id); //Diese Zeile zerstört alles
+           
+           System.out.println("nutzerliste" + nutzerListe);
+           System.out.println("adminListe" + adminListe);
+           
+           nutzerListe.remove(self);
+ 
+           List<Nutzer> isAdmin = new ArrayList<>();
+           List<Nutzer> isNotAdmin = new ArrayList<>();
+
+           
            for(Nutzer nutzer : nutzerListe){
-               if(adminListe.contains(nutzer)){
-                   nutzer.setIsadmin(true);
-               }
+               nutzer.setAdminInGroups(null);
+               nutzer.setPasswordhash(null);
+               nutzer.setOtherFriendList(null);
+               nutzer.setOwnFriendList(null);
+               
+              if(adminListe.contains(nutzer)){
+                  isAdmin.add(nutzer); 
+              }
+              else{
+                  isNotAdmin.add(nutzer);
+              }
            }
            
+           System.out.println("isAdmin" + isAdmin);
+           System.out.println("isNotAdmin" + isNotAdmin);
+           
+           
+            self.setAdminInGroups(null);
+            self.setPasswordhash(null);
+            self.setOtherFriendList(null);
+            self.setOwnFriendList(null);
+            self.setChatList(null);
+            if(adminListe.contains(self)){
+                self.setIsadmin(true);
+            }
+           
+            for(Nutzer n : isAdmin){
+                n.setIsadmin(true);
+            }
+            
+            List<Nutzer> returnList = new ArrayList<>();
+            returnList.add(self);
+            returnList.addAll(isAdmin);
+            returnList.addAll(isNotAdmin);
+            System.out.println("returnListe" + returnList);
            JsonObject jsonObject = new JsonObject();
-           jsonObject.add("Nutzerliste", parser.toJsonTree(nutzerListe));
+           jsonObject.add("nutzerliste", parser.toJsonTree(returnList));
            
            
             return response.generiereAntwort(parser.toJson(jsonObject)); 
+           
+           
+//           return response.generiereAntwort("true");
         }
         
     }
+    
     
     //wie die eigene Chatliste, aber nur für einen Chat
     @GET
