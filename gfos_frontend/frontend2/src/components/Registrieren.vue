@@ -55,15 +55,16 @@
             
           </v-card>
   
-          <v-btn
-            color="primary"
-            @click="e1 = 2"
-          >
+          <v-btn color="primary" @click="e1 = 2">
             Weiter
           </v-btn>
   
           <v-btn text>
             Impressum
+          </v-btn>
+
+          <v-btn  @click="e1 = 3">
+            Zum Login
           </v-btn>
           
         </v-stepper-content>
@@ -78,7 +79,7 @@
           <v-text-field
               v-model="vorname"
               :rules="nameRules"
-              :counter="15"
+              :counter="25"
               label="Vornamen eingeben*"
               required
               
@@ -86,7 +87,7 @@
             <v-text-field
               v-model="nachname"
               :rules="nameRules"
-              :counter="15"
+              :counter="25"
               label="Nachnamen eingeben*"
               required
               
@@ -152,11 +153,6 @@
             Nachname:
             <br>
             Bitte geben Sie in diesem Feld Ihren Nachnamen an. Das Feld ergänzt das oben stehende Feld "Vorname". Dieses Feld ist Pflicht.
-            <br>
-            <br>
-            Handynummer:
-            <br>
-            Die Handynummer macht es für Sie bei der Nutzung der App leicht, Kontakte zu finden und von Ihren Kontakten gefunden zu werden. Dieses Feld ist nicht Pflicht.
             <br>
             <br>
             E-Mail:
@@ -267,19 +263,25 @@
                             <v-card-text><
                             </div>-->
                             <!--<div v-else>-->
-                              <div v-if="benutzername === undefined"><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
-                              <div v-else>Fehler!</div>
+                              <div v-if="benutzername === undefined || passwort === undefined"><v-toolbar color="#5c7d9d" dark>Fehler aufgetreten.</v-toolbar></div>
+                              <div v-else><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
                               <v-card-text>
+                              <div v-if="benutzername === undefined || passwort === undefined">
+                                <div class="text-p2 pa-12">Bitte tragen Sie zunächst alle erforderlichen Daten ein.</div>
+                              </div>
+                              <div v-else>
                                 <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br>
-                              <div v-if="benutzername === undefined">
+                              </div>
+                              <div v-if="benutzername === undefined || passwort === undefined">
                               </div>
                               <div v-else>
                                 <v-card class="mx-auto" max-width="344">
                                   <v-img height="200px">{{profilbild}}</v-img>
                                         <v-card-title>
-                                          {{benutzername}}
+                                          {{benutzername}} 
                                         </v-card-title>
-                                    
+                                        <v-card-subtitle>{{info}}</v-card-subtitle>
+                                        
                                         <v-card-subtitle>
                                           Vorname: {{vorname}}<br>
                                           Nachname: {{nachname}}<br>
@@ -291,8 +293,8 @@
                                             <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
                                             <div v-else-if="benutzername === 'SirSimon04'">Salute, Simon!</div>
                                             <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas!</div>
-                                            <div v-if="benutzername !== 'JET3141'">Herzlich Willkommen, {{benutzername}}</div>
-                                            {{info}}
+                                            <div v-if="benutzername !== 'JET3141'">Hallo, {{benutzername}}. Danke, dass Sie sich angemeldet haben!</div>
+                                            
                                             </v-card-text>
                                 </v-card>
                               </div>
@@ -301,7 +303,7 @@
                 
                   </v-card-text>
                         <v-card-actions class="justify-end">
-                          <div v-if="benutzername === undefined">
+                          <div v-if="benutzername === undefined || passwort === undefined">
                             <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
                           </div>
                           <div v-else>
@@ -309,10 +311,7 @@
                               text
                               v-on:click="test()"
                             >Einstellungen</v-btn>
-                            <v-btn
-                              text
-                              @click="dialog.value = false"
-                            >Zum Messenger</v-btn>
+                            <v-btn text @click="dialog.value = false">Zum Messenger</v-btn>
                           </div>
                         </v-card-actions>
                     
