@@ -40,18 +40,20 @@ public class NutzerEJB {
         for(Nutzer n : nutzerList){
            em.detach(n); 
            n.setPasswordhash(null);
+           
+           
            for(Chat c : n.getChatList()){
             em.detach(c);
-            }
-            for(Nutzer nutzer : n.getOwnFriendList()) {
-                em.detach(nutzer);
-           }
-           for(Nutzer nu : n.getOtherFriendList()) {
-                 em.detach(nu);
-           }
-           for(Chat c : n.getChatList()){
             c.setNutzerList(null);
+            c.setAdminList(null);
             }
+           for(Chat c : n.getAdminInGroups()){
+               em.detach(n);
+               c.setAdminList(null);
+               c.setAdminList(null);
+           }
+           
+           /*
             for(Nutzer nutzer : n.getOwnFriendList()) {
                 nutzer.setChatList(null);
                 nutzer.setOwnFriendList(null);
@@ -62,8 +64,15 @@ public class NutzerEJB {
                  nu.setChatList(null);
                  nu.setOwnFriendList(null);
                  nu.setOtherFriendList(null);
-           
-        }
+                }
+            for(Nutzer nutzer : n.getOwnFriendList()) {
+                 em.detach(nutzer);
+            }
+            for(Nutzer nu : n.getOtherFriendList()) {
+                  em.detach(nu);
+            }
+            */
+          
         }
         return nutzerList;
     
@@ -81,8 +90,13 @@ public class NutzerEJB {
         for(Chat c : n.getChatList()){
             em.detach(c);
             c.setNutzerList(null);
-            
-        }
+            c.setAdminList(null);
+            }
+           for(Chat c : n.getAdminInGroups()){
+               em.detach(n);
+               c.setAdminList(null);
+               c.setAdminList(null);
+           }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
             nutzer.setChatList(null);
@@ -109,7 +123,14 @@ public class NutzerEJB {
            for(Chat chat : n.getChatList()){
             em.detach(chat);
             c.setNutzerList(null);
+            c.setAdminList(null);
             }
+            for(Chat chat : n.getAdminInGroups()){
+            em.detach(chat);
+            c.setNutzerList(null);
+            c.setAdminList(null);
+            }
+           
            for(Nutzer nutzer : n.getOwnFriendList()) {
                em.detach(nutzer);
                nutzer.setChatList(null);
@@ -151,7 +172,12 @@ public class NutzerEJB {
         for(Chat c : n.getChatList()){
             em.detach(c);
             c.setNutzerList(null);
-            
+            c.setAdminList(null);
+        }
+        for(Chat c : n.getAdminInGroups()){
+            em.detach(c);
+            c.setNutzerList(null);
+            c.setAdminList(null);
         }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
@@ -179,6 +205,13 @@ public class NutzerEJB {
         em.detach(n);
         for(Chat c : n.getChatList()){
             em.detach(c);
+            c.setNutzerList(null);
+            c.setAdminList(null);
+        }
+        for(Chat c : n.getAdminInGroups()){
+            em.detach(c);
+            c.setNutzerList(null);
+            c.setAdminList(null);
         }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
@@ -205,6 +238,7 @@ public class NutzerEJB {
     }
     
     public void fuegeChatHinzu(Chat chat, Nutzer nutzer) {
+        System.out.println("nEJB fch");
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
         nutzerInDB.getChatList().add(chat);
     }

@@ -47,8 +47,15 @@ public class ChatEJB {
         for(Chat c : chatList) {
             em.detach(c);
             for(Nutzer n : c.getNutzerList()){
-            em.detach(n);
-        }
+                em.detach(n);
+                n.setChatList(null);
+                n.setAdminInGroups(null);
+            }
+            for(Nutzer n : c.getAdminList()){
+                em.detach(n);
+                n.setChatList(null);
+                n.setAdminInGroups(null);
+            }
         }
         return chatList;
     }
@@ -62,13 +69,22 @@ public class ChatEJB {
     }
     */
     
-    public void fuegeHinzu(Chat chat, Nutzer nutzer){
+    public void fuegeNutzerHinzu(Chat chat, Nutzer nutzer){
+        System.out.println("cEJB fnh");
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().add(nutzer);
     }
     
     public void delete(Chat c){
         em.remove(c);
+    }
+    
+    public void addAdmin(Chat c, Nutzer n){
+        System.out.println("addAdmin");
+        Chat chatInDB = em.find(Chat.class, c.getChatid());
+        Nutzer nutzerInDB = em.find(Nutzer.class, n.getId());
+        chatInDB.getAdminList().add(n);
+        nutzerInDB.getAdminInGroups().add(c);
     }
             
 }

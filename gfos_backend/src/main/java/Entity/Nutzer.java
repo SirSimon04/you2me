@@ -91,7 +91,7 @@ public class Nutzer implements Serializable {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
     @ManyToMany
-    private List<Chat> chatList1;
+    private List<Chat> adminInGroups;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -202,12 +202,12 @@ public class Nutzer implements Serializable {
     }
 
     @XmlTransient
-    public List<Chat> getChatList1() {
-        return chatList1;
+    public List<Chat> getAdminInGroups() {
+        return adminInGroups;
     }
 
-    public void setChatList1(List<Chat> chatList1) {
-        this.chatList1 = chatList1;
+    public void setAdminInGroups(List<Chat> adminInGroups) {
+        this.adminInGroups = adminInGroups;
     }
 
     public Foto getProfilbild() {
