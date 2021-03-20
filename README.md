@@ -133,6 +133,14 @@ Create Table BefreundetMit(
     
 );
 
+Create Table isAdmin(
+    nutzerId integer not null,
+    chatid integer not null,
+    
+    foreign Key(nutzerId) references Nutzer(id) on delete cascade,
+    foreign Key(chatId) refrences Chat(chatid) on delete cascade
+);
+
 Create Table Foto(
     id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
     (START WITH 1, INCREMENT BY 1),

@@ -100,7 +100,7 @@ public class ChatWS {
         
     }
     
-    
+    //wie die eigene Chatliste, aber nur für einen Chat
     @GET
     @Path("/id/{chatid}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -184,7 +184,7 @@ public class ChatWS {
                         n.setOwnFriendList(null);
                     }
 
-                        if(!c.getIsGroup())
+                        if(!c.getIsgroup())
                         {
                             List<Nutzer> nutzerList = c.getNutzerList();
                             Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -233,7 +233,7 @@ public class ChatWS {
         try {
             Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
             System.out.println(neuerChat.getName());
-            neuerChat.setIsGroup(true);
+            neuerChat.setIsgroup(true);
             chatEJB.createChat(neuerChat);
             JsonObject json = parser.fromJson(jsonStr, JsonObject.class);
             JsonArray arr = json.getAsJsonArray("benutzernamen");
@@ -276,7 +276,7 @@ public class ChatWS {
                 int eigeneId = parser.fromJson((jsonTP.get("eigeneId")), Integer.class);
                 
                 Chat neuerChat = new Chat();
-                neuerChat.setIsGroup(false);
+                neuerChat.setIsgroup(false);
                 neuerChat.setErstelldatum(date);
                 
                 
@@ -314,7 +314,7 @@ public class ChatWS {
                  return response.generiereFehler401("Json falsch");
                 }
             catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler401("ID oder Benutzername nicht vorhanden");
+                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
         
