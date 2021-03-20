@@ -81,6 +81,7 @@ CREATE TABLE Nutzer
     handynummer VARCHAR(50),
     profilbild int,
     info VARCHAR(256),
+    isAdmin boolean,
     
     foreign key(profilbild) references Foto(id) on delete cascade
 );
