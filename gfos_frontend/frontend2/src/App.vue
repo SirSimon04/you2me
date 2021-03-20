@@ -11,8 +11,14 @@
         </v-app-bar>
         
         <v-main>
-            <ChatListe v-show="app_vue_chatliste_zeigen"></ChatListe>
-            <Chat v-show="app_vue_chat_zeigen"></Chat>
+            <v-layout row wrap >
+                <v-flex xs4>
+                    <ChatListe style="position: relative; float: left; left: 0; top: 0;" v-show="app_vue_chatliste_zeigen"></ChatListe>
+                </v-flex>
+                <v-flex>
+                    <Chat style="position: relative; float: right; right: 0; top: 0;" v-show="app_vue_chat_zeigen"></Chat>
+                </v-flex>
+            </v-layout>
             <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
             <Settings v-show ="app_vue_settings_zeigen"></Settings>
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
