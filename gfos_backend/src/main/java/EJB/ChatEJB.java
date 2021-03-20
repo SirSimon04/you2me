@@ -93,5 +93,13 @@ public class ChatEJB {
         chatInDB.getAdminList().add(n);
         nutzerInDB.getAdminInGroups().add(c);
     }
+    
+    public void deleteAdmin(Chat c, Nutzer n){
+        System.out.println("addAdmin");
+        Chat chatInDB = em.find(Chat.class, c.getChatid());
+        Nutzer nutzerInDB = em.find(Nutzer.class, n.getId());
+        chatInDB.getAdminList().remove(n);
+        nutzerInDB.getAdminInGroups().remove(c);
+    }
             
 }

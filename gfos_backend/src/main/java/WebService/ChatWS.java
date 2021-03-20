@@ -132,7 +132,7 @@ public class ChatWS {
            }
            
            JsonObject jsonObject = new JsonObject();
-           jsonObject.add("test", parser.toJsonTree(nutzerListe));
+           jsonObject.add("Nutzerliste", parser.toJsonTree(nutzerListe));
            
            
             return response.generiereAntwort(parser.toJson(jsonObject)); 
@@ -418,6 +418,90 @@ public class ChatWS {
             }
         }
         
+    }
+    
+    @POST
+    @Path("/zuAdmin/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response macheZuAdmin(@PathParam("token") String token, String jsonStr) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+            int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
+            String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
+            
+            Nutzer self = nutzerEJB.getById(jsonId);
+            Nutzer other = nutzerEJB.getByUsername(jsonUsername);
+            Chat c = chatEJB.getById(jsonChatId);
+            
+            if(c.getAdminList().contains(self)){
+                if(c.getAdminList().contains(other)){
+                    return response.generiereFehler406("Bereits Admin");
+                }
+                else{
+                    chatEJB.addAdmin(c, other);
+                    return response.generiereAntwort("true");
+                }
+                
+            }
+            else {
+               return response.generiereFehler406("Kein Admin");
+            }
+            
+            
+            
+        }
+    
+    }
+    
+    @POST
+    @Path("/entferneAdmin/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response entferneAdmin(@PathParam("token") String token, String jsonStr) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+            int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
+            String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
+            
+            Nutzer self = nutzerEJB.getById(jsonId);
+            Nutzer other = nutzerEJB.getByUsername(jsonUsername);
+            Chat c = chatEJB.getById(jsonChatId);
+            if(c.getAdminList().contains(self)){
+                if(c.getAdminList().size() == 1){
+                    return response.generiereFehler406("Einziger Admin");
+                }
+                if(!c.getAdminList().contains(other)){
+                    return response.generiereFehler406("Bereits kein Admin");
+                }
+                else{
+                    chatEJB.deleteAdmin(c, other);
+                    return response.generiereAntwort("true");
+                }
+                
+            }
+            else {
+               return response.generiereFehler406("Kein Admin");
+            }
+            
+            
+            
+        }
+    
     }
     
     @POST
