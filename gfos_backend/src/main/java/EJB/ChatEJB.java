@@ -33,6 +33,13 @@ public class ChatEJB {
         em.detach(c);
         for(Nutzer n : c.getNutzerList()){
             em.detach(n);
+            n.setChatList(null);
+            n.setAdminInGroups(null);
+        }
+        for(Nutzer n : c.getAdminList()){
+            em.detach(n);
+            n.setChatList(null);
+            n.setAdminInGroups(null);
         }
         return c;
     }

@@ -96,6 +96,50 @@ public class ChatWS {
         
     }
     
+    @GET
+    @Path("/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getById(@PathParam("token") String token, @PathParam("id") int id) {
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+           Chat c = chatEJB.getCopy(id);
+            
+            Gson parser = new Gson();
+            return response.generiereAntwort(parser.toJson(c)); 
+        }
+        
+    }
+    //Anzahl von Nachrichten etc.
+    @GET
+    @Path("/info/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id) {
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+           Gson parser = new Gson();
+            
+           Chat c = chatEJB.getCopy(id);
+           List<Nutzer> nutzerListe = c.getNutzerList();
+           List<Nutzer> adminListe = c.getAdminList();
+           for(Nutzer nutzer : nutzerListe){
+               if(adminListe.contains(nutzer)){
+                   nutzer.setIsadmin(true);
+               }
+           }
+           
+           JsonObject jsonObject = new JsonObject();
+           jsonObject.add("test", parser.toJsonTree(nutzerListe));
+           
+           
+            return response.generiereAntwort(parser.toJson(jsonObject)); 
+        }
+        
+    }
+    
     //wie die eigene Chatliste, aber nur für einen Chat
     @GET
     @Path("/id/{chatid}/{nutzerid}/{token}")
@@ -189,10 +233,11 @@ public class ChatWS {
 
                             c.setName(andererNutzer.getBenutzername());
                             c.setProfilbild(andererNutzer.getProfilbild());
-                            c.setNutzerList(null);
+                            //c.setNutzerList(null);
                             System.out.println(nutzerList);
                         }
                 }
+                
                 List<Chat> toRemove = new ArrayList<>();
                 for(Chat c : returnList){
                     if(c.getLetztenachricht() == null){
