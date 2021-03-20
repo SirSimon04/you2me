@@ -73,10 +73,32 @@
           <v-card
             class="mb-12"
             
-            height="500px"
+            max-height="2000px"
           >
-          <subheading>Schritt 2:</subheading>
-          <v-text-field
+          <div v-if="companyaccount_checkbox === true">
+            <subheading>Persönliche Daten</subheading>
+            <v-card-subtitle>Bitte loggen Sie sich hier mit Ihren persönlichen Daten ein.</v-card-subtitle>
+          </div>
+          <div v-else>
+            <subheading>Schritt 2:</subheading>
+          </div>
+          <div v-if="companyaccount_checkbox === true">
+            <v-text-field
+              v-model="benutzername"
+              :rules="nameRules"
+              :counter="20"
+              label="Benutzernamen erstellen"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="passwort"
+              :rules="passwordRules"
+              label="Passwort erstellen"
+              required
+            ></v-text-field>
+          </div>
+          <div v-else>  
+            <v-text-field
               v-model="vorname"
               :rules="nameRules"
               :counter="25"
@@ -84,6 +106,7 @@
               required
               
             ></v-text-field>
+            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Vornamen ein.</v-card-text></div>
             <v-text-field
               v-model="nachname"
               :rules="nameRules"
@@ -92,6 +115,7 @@
               required
               
             ></v-text-field>
+            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Nachnamen ein.</v-card-text></div>
             <v-text-field
               v-model="email"
               :rules="emailRules"
@@ -99,6 +123,7 @@
               label="E-Mail eingeben"
               
             ></v-text-field>
+            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie hier Ihre E-Mail-Adresse ein. Diese benötigen wir für die 2-Faktor-Authentifizierung</v-card-text></div>
             <v-text-field
               v-model="info"
               :rules="nameRules"
@@ -106,104 +131,117 @@
               label="Info eingeben"
               
             ></v-text-field>
+            <div v-if="hilfe_checkbox === true"><v-card-text>In der Info können Sie sich selbst in kurzen Worten beschreiben.</v-card-text></div>
             <v-file-input
                truncate-length="15"
                label="Profilbild hinzufügen"
                v-model="profilbild"
             ></v-file-input>
-            <v-dialog
-        v-model="dialog"
-        width="500"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          
-          <v-btn
-        class="mx-2"
-        
-        dark
-        small
-        color="primary"
-        v-bind="attrs"
-            v-on="on"
-      >
-      
-        <v-icon dark>
-          Hilfe
-        </v-icon>
-        
-      </v-btn>
-      <v-checkbox
-            v-model="settings_checkbox"
-            label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."
+            <div v-if="hilfe_checkbox === true"><v-card-text>Fügen Sie zur Ergänzung der Info ein Profilbild hinzu! Dieses Foto wird für alle Ihre Kontakte sichtbar sein.</v-card-text></div>
+            </div>
+            <div v-if="companyaccount_checkbox === true">
+              <br>
+              <subheading>Firmendaten</subheading>
+            </div>
+            <div v-else>
+              <subheading></subheading>
+            </div>
+            <div v-if="companyaccount_checkbox === true">  
+            <v-text-field
+              v-model="firmenname"
+              :rules="nameRules"
+              :counter="25"
+              label="Firmenname*"
+              required
+              
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier den Namen der Firma ein.</v-card-text></div>
+            <v-text-field
+              v-model="inhabervorname"
+              :rules="nameRules"
+              :counter="25"
+              label="Vorname des Inhabers*"
+              required
+              
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Ihre Firma braucht einen Inhaber! Geben Sie hier bitte den Vornamen des Inhabers ein. Die Sichtbarkeit können Sie später in den Einstellungen anpassen.</v-card-text></div>
+            <v-text-field
+              v-model="inhabernachname"
+              :rules="nameRules"
+              :counter="25"
+              label="Nachname des Inhabers*"
+              required
+              
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier den Nachnamen des Inhabers ein.</v-card-text></div>
+            <v-text-field
+              v-model="firmenpasswort"
+              :rules="passwordRules"
+              label="Passwort erstellen*"
+              required
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie ein Passwort für den Account</v-card-text></div>
+            <v-text-field
+              v-model="firma_sicherungsnummer_5"
+              :rules="numberRules"
+              :counter="5"
+              label="Sicherungsnummer erstellen*"
+              ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie eine 5-Stellige Sicherheitsnummer. Diese Nummer ergänzt das Passwort und sollte nicht öffentlich bekannt sein.</v-card-text></div>
+            <v-text-field
+              v-model="firmen_sicherungsnummer_10"
+              :rules="numberRules"
+              :counter="10"
+              label="Rückversicherungsnummer erstellen*"
+              ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie eine 10-Stellige Rückversicherungsnummer. Diese wird gebraucht, wenn bei Registrierungsvorgängen die Anmeldedaten 3-Mal falsch eingeben werden.</v-card-text></div>
             
-          ></v-checkbox>
-        </template>
-  
-        <v-card>
-          <v-card-title class="headline grey lighten-2">
-            Informationen: "Info"
-          </v-card-title>
-  
-          <v-card-text>
-            Vorname:
-            <br>
-            Bitte geben Sie Ihren Vornamen an. Ihr Name wird für keinen Nutzer der App ersichtlich sein, kann aber - im Falle einer strafrechtlichen Verfolgung oder anderen rechtlichen Maßnahmen- an Hoheitsgewalten weitergegeben werden. Dieses Feld ist Pflicht.
-            <br>
-            <br>
-            Nachname:
-            <br>
-            Bitte geben Sie in diesem Feld Ihren Nachnamen an. Das Feld ergänzt das oben stehende Feld "Vorname". Dieses Feld ist Pflicht.
-            <br>
-            <br>
-            E-Mail:
-            <br>
-            Bitte geben Sie in diesem Feld eine E-Mail-Adresse ein, unter der wir Sie im Ernstfall erreichen können und die Zwei-Faktor-Authentifizierung nach der Registrierung durchführbar ist. Dieses Feld ist Pflicht.
-            <br>
-            <br>
-            Info:
-            <br>
-            Die Info (Bio, Status) beschreibt Sie in kurzen Worten. Die Info kann von allen Nutzern der App gesehen werden, sofern diese Ihr Profil aufrufen. Geben Sie bitte keine Personenbezogenen Daten wie Handy- oder Kreditkartennummer an und vermeiden Sie die Nennung Ihres genauen Wohnortes.
-            <br>
-            <br>
-            Profilbild:
-            <br>
-            Das Profilbild ist Ihr Gestaltungsbereich. Hier können Sie sich oder ein schönes Motiv für Ihre Kontakte anzeigen lassen. Die Datenschutzbedingungen zum Profilbild lassen sich ändern. Es ist keine Pflicht, ein Profilbild anzugeben.
-          </v-card-text>
-  
-          <v-divider></v-divider>
+            <v-text-field
+              v-model="firmenort"
+              :rules="nameRules"
+              :counter="45"
+              label="Ort*"
+              
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier ein, in welcher Stadt Ihre Firma beheimatet ist. Wenn Sie mehrere Aussenstellen, Filialien, etc. haben, geben Sie bitte die Stadt des Hauptsitzes an.</v-card-text></div>
+            <v-text-field
+              v-model="plz"
+              :rules="numberRules"
+              :counter="5"
+              label="PLZ*"
+              
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte ergänzen Sie die Ortsangabe durch die Postleitzahl.</v-card-text></div>
+            <v-text-field
+              v-model="slogan"
+              :rules="nameRules"
+              :counter="256"
+              label="Slogan"
+              
+            ></v-text-field>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Wenn Sie möchten, können Sie der Firma hier einen Slogan geben.</v-card-text></div>
+            <v-file-input
+               truncate-length="15"
+               label="Firmenlogo"
+               v-model="firmenlogo"
+            ></v-file-input>
+            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Hier können Sie ein Firmenlogo ergänzen.</v-card-text></div>
+            <div v-if="companyaccount_checkbox === false">
+              
+          </div>
+          </div>
           
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              text
-              @click="dialog = false"
-            >
-              Verstanden 
-              <v-icon dark>
-              mdi-checkbox-marked-circle
-            </v-icon>
-            </v-btn>
-            <v-btn
-              color="primary"
-              text
-              @click="dialog = false"
-               > <!-- Allgemein wäre der zweite Knopf als "Link" zu einer Anleitungs-Website, die hilflose Angestellte im Zweifel nutzen können.-->
-              Nähere Informationen
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+          <v-checkbox v-model="companyaccount_checkbox" label ="Ich möchte ein Firmenkonto erstellen."></v-checkbox>
+          <v-checkbox v-model="hilfe_checkbox" label ="Ich benötige Hilfe."></v-checkbox>
+          <v-checkbox v-model="settings_checkbox" label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."></v-checkbox>
+            
           </v-card>
         <div v-if="settings_checkbox=== true">  
-         <v-btn
-            color="primary"
-            @click="e1 = 3"
-            
-          >
+         <v-btn color="primary" @click="e1 = 3">
             Weiter
           </v-btn>
           </div>
+          
           <v-btn text
            @click="e1 = 1">
             Zurück
@@ -215,23 +253,53 @@
           <v-card
             class="mb-12"
             
-            height="200px"
+            max-height="500px"
           >
           
           <h4>Login</h4>
-          <v-text-field
-              v-model="benutzername"
+          <div v-if="companyaccount_checkbox === true">
+            <v-text-field
+              v-model="firmenname"
               :rules="nameRules"
-              :counter="20"
-              label="Benutzername"
-              required
+              :counter="25"
+              label="Firmenname"
+              required  
             ></v-text-field>
             <v-text-field
-              v-model="passwort"
-              :rules="nameRules"
+              v-model="plz"
+              :rules="numberRules"
+              :counter="5"
+              label="Postleitzahl"
+            ></v-text-field>
+            <v-text-field
+              v-model="firmenpasswort"
+              :rules="passwordRules"
               label="Passwort"
               required
             ></v-text-field>
+            
+            <v-text-field
+              v-model="firma_sicherungsnummer_5"
+              :rules="numberRules"
+              :counter="5"
+              label="Sicherungsnummer"
+              ></v-text-field>
+          </div>
+          <div v-else>
+            <v-text-field
+                v-model="benutzername"
+                :rules="nameRules"
+                :counter="20"
+                label="Benutzername"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="passwort"
+                :rules="nameRules"
+                label="Passwort"
+                required
+              ></v-text-field>
+          </div>
           </v-card>
          
         <v-dialog
@@ -241,28 +309,48 @@
         
         
           <template v-slot:activator="{ on, attrs }">
-            
-            
-                <v-btn 
-                  
-                  v-bind="attrs"
-                  v-on="on"
-                  color= "#5c7d9d"
-                >Login</v-btn>
-          
+            <v-btn v-bind="attrs" v-on="on" color= "#5c7d9d">Login</v-btn>
           </template>
         
           <template v-slot:default="dialog">
+            <div v-if="companyaccount_checkbox === true">
+            <div v-if="benutzername === undefined || passwort === undefined">
+              <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
+            </div>
+            <div v-else>
+              <v-card :loading="loading" class="mx-auto my-12" max-width="374">
+                <template slot="progress">
+                  <v-progress-linear
+                    color="deep-purple"
+                    height="10"
+                    indeterminate
+                  ></v-progress-linear>
+                </template>
+              
+              
+                <v-img
+                  height="250"
+                  src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                ></v-img>
             
-                            <v-card>
-                            <!--<div v-if="vorname === '' && nachname === '' && passwort ===''">
-                            <v-toolbar color ="#5c7d9d" dark>Warnung!</toolbar>
-                            <v-card-text>
-                              <div class="text-p2 pa-12">Einige Ihrer Anmeldedaten sind leer. Bitte überprüfen Sie die korrekte Anmeldung.</div>
-                            </v-card-text>
-                            <v-card-text><
-                            </div>-->
-                            <!--<div v-else>-->
+                <v-card-title>{{firmenname}}</v-card-title>
+                <v-card-text> Inh. {{inhabervorname}} {{inhabernachname}}</v-card-text>
+                
+            
+                <v-divider class="mx-4"></v-divider>
+            
+                <v-card-title>Firmendaten</v-card-title>
+            
+                <v-card-text>{{plz}} {{firmenort}}</v-card-text>
+            
+                <v-card-actions>
+                  <v-card-text>{{slogan}}</v-card-text>
+                </v-card-actions>
+              </v-card>
+            </div>
+            </div>
+            <div v-else>
+                            
                               <div v-if="benutzername === undefined || passwort === undefined"><v-toolbar color="#5c7d9d" dark>Fehler aufgetreten.</v-toolbar></div>
                               <div v-else><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
                               <v-card-text>
@@ -294,12 +382,12 @@
                                             <div v-else-if="benutzername === 'SirSimon04'">Salute, Simon!</div>
                                             <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas!</div>
                                             <div v-if="benutzername !== 'JET3141'">Hallo, {{benutzername}}. Danke, dass Sie sich angemeldet haben!</div>
-                                            
                                             </v-card-text>
                                 </v-card>
+            
                               </div>
              
-                            </div>
+          </div>
                 
                   </v-card-text>
                         <v-card-actions class="justify-end">
@@ -317,7 +405,8 @@
                     
                   
               
-            </v-card>
+              
+            </div>
           </template>
         </v-dialog>
       
@@ -356,6 +445,8 @@
       dialog: false,
       test: 'nicht betätigt',
       settings_checkbox: false,
+      companyaccount_checkbox: false,
+      hilfe_checkbox: false,
       
 
     }
