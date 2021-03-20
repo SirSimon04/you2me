@@ -48,7 +48,42 @@ export default {
             var CURRENT_CHAT_ID = payload['chatid'];
             var IP_ADDRESS = '84.191.205.25';
 
-            var messages = [];
+            var messages = [{
+                "nachrichtid": 139,
+                "senderid": 206,
+                "chatid": 11,
+                "datumuhrzeit": "2021-02-02 10:10:10",
+                "inhalt": "22",
+                "sender": "Simon",
+                "chatList": []
+            },
+            {
+                "nachrichtid": 140,
+                "senderid": 206,
+                "chatid": 11,
+                "datumuhrzeit": "2021-02-02 10:10:10",
+                "inhalt": "23",
+                "sender": "Simon",
+                "chatList": []
+            },
+            {
+                "nachrichtid": 141,
+                "senderid": 206,
+                "chatid": 11,
+                "datumuhrzeit": "2021-02-02 10:10:10",
+                "inhalt": "25",
+                "sender": "Simon",
+                "chatList": []
+            }];
+
+            document.getElementById('chatcontainer').innerHTML = '';
+            for (var i=0; i<messages.length; i++) {
+                var data = messages[i];
+                var elem = '';
+                if (data['senderid'] === CURRENT_USER_ID) elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                else elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                document.getElementById('chatcontainer').innerHTML += elem;
+            }
 
             function loadMessages() {
                 fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/chat/' + CURRENT_CHAT_ID + '/1').then(response => {

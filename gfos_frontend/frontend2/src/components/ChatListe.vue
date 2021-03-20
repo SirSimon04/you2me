@@ -137,7 +137,7 @@ export default {
             if (lastMessage === undefined) lastMessage = '<i>Hier gibts keine Nachrichten</i>';
 
             var elem = `
-            <div onclick="` + chatid + ', ' + CURRENT_USER_ID + `" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
+            <div onclick="window.openChat(` + chatid + ', ' + CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
                 <img style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + image_data + `" width="64" height="64">
                 <div class="v-card__text font-weight-medium subtitle-1">
                     ` + groupIndicator + `
