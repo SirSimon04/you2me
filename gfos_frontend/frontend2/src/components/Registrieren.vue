@@ -257,6 +257,7 @@
           </template>
         
           <template v-slot:default="dialog">
+            
                             <v-card>
                             <!--<div v-if="vorname === '' && nachname === '' && passwort ===''">
                             <v-toolbar color ="#5c7d9d" dark>Warnung!</toolbar>
@@ -266,48 +267,41 @@
                             <v-card-text><
                             </div>-->
                             <!--<div v-else>-->
-                              <v-toolbar
-                                color="#5c7d9d"
-                                dark
-                              >Herzlichen Glückwunsch!</v-toolbar>
+                              <div v-if="benutzername === undefined"><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
+                              <div v-else>Fehler!</div>
                               <v-card-text>
-                                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br> 
-                                <v-card
-                      class="mx-auto"
-                      max-width="344"
-                    >
-                      <v-img
-                        
-                        height="200px"
-                      >{{profilbild}}</v-img>
-                  
-                      <v-card-title>
-                        {{benutzername}}
-                      </v-card-title>
-                  
-                      <v-card-subtitle>
-                        Vorname: {{vorname}}<br>
-                        Nachname: {{nachname}}<br>
-                        E-Mail: {{email}}
-                      </v-card-subtitle>
-                  
-                          <v-divider></v-divider>
-                          <v-card-text>
-                          <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
-                          <div v-else-if="benutzername === 'SirSimon04'">Salute, Simon!</div>
-                          <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas!</div>
-                          <div v-if="benutzername !== 'JET3141'">Herzlich Willkommen, {{benutzername}}</div>
-                           {{info}}
-                          </v-card-text>
-                        
-                      
-                            </v-card>
+                                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br>
+                              <div v-if="benutzername === undefined">
+                              </div>
+                              <div v-else>
+                                <v-card class="mx-auto" max-width="344">
+                                  <v-img height="200px">{{profilbild}}</v-img>
+                                        <v-card-title>
+                                          {{benutzername}}
+                                        </v-card-title>
+                                    
+                                        <v-card-subtitle>
+                                          Vorname: {{vorname}}<br>
+                                          Nachname: {{nachname}}<br>
+                                          E-Mail: {{email}}
+                                        </v-card-subtitle>
+                                    
+                                            <v-divider></v-divider>
+                                            <v-card-text>
+                                            <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
+                                            <div v-else-if="benutzername === 'SirSimon04'">Salute, Simon!</div>
+                                            <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas!</div>
+                                            <div v-if="benutzername !== 'JET3141'">Herzlich Willkommen, {{benutzername}}</div>
+                                            {{info}}
+                                            </v-card-text>
+                                </v-card>
+                              </div>
              
                             </div>
                 
                   </v-card-text>
                         <v-card-actions class="justify-end">
-                          <div v-if="benutzername === null">
+                          <div v-if="benutzername === undefined">
                             <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
                           </div>
                           <div v-else>
