@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Chat.findByChatid", query = "SELECT c FROM Chat c WHERE c.chatid = :chatid"),
     @NamedQuery(name = "Chat.findByErstelldatum", query = "SELECT c FROM Chat c WHERE c.erstelldatum = :erstelldatum"),
     @NamedQuery(name = "Chat.findByName", query = "SELECT c FROM Chat c WHERE c.name = :name"),
-    @NamedQuery(name = "Chat.findByBeschreibung", query = "SELECT c FROM Chat c WHERE c.beschreibung = :beschreibung")})
+    @NamedQuery(name = "Chat.findByBeschreibung", query = "SELECT c FROM Chat c WHERE c.beschreibung = :beschreibung"),
+    @NamedQuery(name = "Chat.findByIsgroup", query = "SELECT c FROM Chat c WHERE c.isgroup = :isgroup")})
 public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,13 +55,15 @@ public class Chat implements Serializable {
     @Size(max = 100)
     @Column(name = "BESCHREIBUNG")
     private String beschreibung;
-    @Column(name = "ISCHAT")
-    private Boolean isGroup;
+    @Column(name = "ISGROUP")
+    private Boolean isgroup;
     @JoinTable(name = "NIMMTTEIL", joinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Nutzer> nutzerList;
+    @ManyToMany(mappedBy = "chatList1")
+    private List<Nutzer> nutzerList1;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -107,12 +110,12 @@ public class Chat implements Serializable {
         this.beschreibung = beschreibung;
     }
 
-    public Boolean getIsGroup() {
-        return isGroup;
+    public Boolean getIsgroup() {
+        return isgroup;
     }
 
-    public void setIsGroup(Boolean isGroup) {
-        this.isGroup = isGroup;
+    public void setIsgroup(Boolean isgroup) {
+        this.isgroup = isgroup;
     }
 
     @XmlTransient
@@ -122,6 +125,15 @@ public class Chat implements Serializable {
 
     public void setNutzerList(List<Nutzer> nutzerList) {
         this.nutzerList = nutzerList;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getNutzerList1() {
+        return nutzerList1;
+    }
+
+    public void setNutzerList1(List<Nutzer> nutzerList1) {
+        this.nutzerList1 = nutzerList1;
     }
 
     public Foto getProfilbild() {

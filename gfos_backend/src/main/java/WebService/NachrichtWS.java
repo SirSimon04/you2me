@@ -215,6 +215,3 @@ public class NachrichtWS {
    
     
     
-    
- 
-
