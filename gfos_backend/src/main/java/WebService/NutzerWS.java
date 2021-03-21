@@ -339,7 +339,6 @@ public class NutzerWS {
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
                 Nutzer other = nutzerEJB.getCopyByUsername(andererName);
 
-                if(self.getOtherFriendList().contains(other) && self.getOwnFriendList().contains(other)){
                     nutzerEJB.loescheFreund(self, other);
                     nutzerEJB.loescheFreund(other, self);
                     self.getOwnFriendList().remove(other);
@@ -347,9 +346,10 @@ public class NutzerWS {
                     
                     other.getOwnFriendList().remove(self);
                     other.getOtherFriendList().remove(self);
-                }
+                    
+                    return response.generiereAntwort("true");
+//                
                 
-                return response.generiereAntwort("true");
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("Json wrong");

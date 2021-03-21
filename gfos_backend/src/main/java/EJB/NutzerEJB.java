@@ -275,6 +275,7 @@ public class NutzerEJB {
         otherInDB.getOtherFriendList().remove(self);
     }
     
+    
     public void logOut(Blacklist bl){
         em.persist(bl);
     }
