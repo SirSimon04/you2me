@@ -40,18 +40,12 @@ public class NutzerEJB {
         for(Nutzer n : nutzerList){
            em.detach(n); 
            n.setPasswordhash(null);
+           n.setAdminInGroups(null);
+           n.setOwnFriendList(null);
+           n.setOtherFriendList(null);
+           n.setChatList(null);
            
            
-           for(Chat c : n.getChatList()){
-            em.detach(c);
-            c.setNutzerList(null);
-            c.setAdminList(null);
-            }
-           for(Chat c : n.getAdminInGroups()){
-               em.detach(c);
-               c.setAdminList(null);
-               c.setAdminList(null);
-           }
            
            /*
             for(Nutzer nutzer : n.getOwnFriendList()) {
@@ -113,6 +107,12 @@ public class NutzerEJB {
         }
         return n;
         
+    }
+    
+    public Nutzer getCopyByIdListsNotNull(int id){
+        Nutzer n = em.find(Nutzer.class, id);
+        em.detach(n);
+        return n;
     }
     
     public List<Nutzer> getCopyByChatId(int chatId){
@@ -241,6 +241,11 @@ public class NutzerEJB {
         System.out.println("nEJB fch");
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
         nutzerInDB.getChatList().add(chat);
+    }
+    
+    public void entferneChat(Chat chat, Nutzer nutzer) {
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
+        nutzerInDB.getChatList().remove(chat);
     }
     
     public void fuegeFreundHinzu(Nutzer self, Nutzer other) {

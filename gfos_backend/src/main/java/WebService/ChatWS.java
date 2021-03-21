@@ -130,7 +130,7 @@ public class ChatWS {
            
            List<Nutzer> adminListe = c.getAdminList();
            
-           Nutzer self = nutzerEJB.getCopyById(id); //Diese Zeile zerstört alles
+           Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id); //Diese Zeile zerstört alles
            
            System.out.println("nutzerliste" + nutzerListe);
            System.out.println("adminListe" + adminListe);
@@ -188,10 +188,24 @@ public class ChatWS {
                    anzahlFotos += 1;
                }
            }
+           
            jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
            jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
-           jsonObject.add("beschreibung", parser.toJsonTree(chatEJB.getById(chatId).getBeschreibung()));;
-           jsonObject.add("profilbild", parser.toJsonTree(chatEJB.getById(chatId).getProfilbild().getBase64()));;
+           try{
+               jsonObject.add("beschreibung", parser.toJsonTree(chatEJB.getById(chatId).getBeschreibung()));
+           }
+           catch(NullPointerException e){
+               
+           }
+           try{
+               jsonObject.add("profilbild", parser.toJsonTree(chatEJB.getById(chatId).getProfilbild().getBase64()));
+           }
+           catch(NullPointerException e){
+               
+           }
+           
+           
+           
             return response.generiereAntwort(parser.toJson(jsonObject)); 
            
            
@@ -456,27 +470,108 @@ public class ChatWS {
             Gson parser = new Gson();
         
             try{
-                JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
+                JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
 
-                int chatid = parser.fromJson((jsonTP.get("chatid")), Integer.class);
+                int chatid = parser.fromJson((jsonObject.get("chatid")), Integer.class);
                 Chat c = chatEJB.getById(chatid);
-
-                String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
+                int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+                Nutzer self = nutzerEJB.getById(jsonId);
+                String username = parser.fromJson((jsonObject.get("benutzername")), String.class);
                 Nutzer addedUser = nutzerEJB.getCopyByUsername(username);
+                
+                if(c.getAdminList().contains(self)){
+                
+                    if(c.getIsgroup()){
+                        if(!c.getNutzerList().contains(addedUser))
+                        {
+                        System.out.println("ChatWs fuegeChatHinzu");
+                        nutzerEJB.fuegeChatHinzu(c, addedUser);
 
-                if(!c.getNutzerList().contains(addedUser))
-                {
-                System.out.println("ChatWs fuegeChatHinzu");
-                nutzerEJB.fuegeChatHinzu(c, addedUser);
+                        System.out.println("Chatws fuegeNutzerhinzu");
+                        chatEJB.fuegeNutzerHinzu(c, addedUser);
 
-                System.out.println("Chatws fuegeNutzerhinzu");
-                chatEJB.fuegeNutzerHinzu(c, addedUser);
-
-                return response.generiereAntwort("true");
+                        return response.generiereAntwort("true");
+                        }
+                        else{
+                            return response.generiereFehler406("Nutzer schon hinzugefügt");
+                        }
+                    }
+                    else{
+                        return response.generiereFehler406("Ist ein Chat, keine Gruppe");
+                    }
+                    
                 }
                 else{
-                    return response.generiereFehler406("Nutzer schon hinzugefügt");
+                    return response.generiereFehler406("Du bist kein Admin");
                 }
+                    
+                    
+            }
+            catch(JsonSyntaxException e) {
+                return response.generiereFehler406("JsonSyntaxException" + e);
+            }
+            catch(EJBTransactionRolledbackException e){
+                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+            }
+            catch(NullPointerException e){
+                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+            }
+        }
+        
+    }
+    
+    @POST
+    @Path("/entferneNutzer/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response entferneNutzer(String jsonStr, @PathParam("token") String token){
+        
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+        
+            try{
+                JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+                int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+                int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
+                String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
+
+                Nutzer self = nutzerEJB.getById(jsonId);
+                Nutzer other = nutzerEJB.getByUsername(jsonUsername);
+                Chat c = chatEJB.getById(jsonChatId);
+                
+                if(c.getAdminList().contains(self)){
+                    
+                
+                
+                    if(c.getIsgroup()){
+                    
+                        if(c.getNutzerList().contains(other)) //Hier tritt der Fehler auf
+                        {
+                            
+                            nutzerEJB.entferneChat(c, other);
+
+                            
+                            chatEJB.entferneNutzer(c, other);
+
+                            return response.generiereAntwort("true");
+                        }
+                        else{
+                            return response.generiereFehler406("Nutzer nicht in der Gruppe");
+                        }
+                    }
+                    else{
+                        return response.generiereFehler406("Ist ein Chat, keine Gruppe");
+                    }
+                
+                }
+                else{
+                    return response.generiereFehler406("Du bist kein Admin");
+                }
+//                 return response.generiereAntwort("true");
+                
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("JsonSyntaxException" + e);

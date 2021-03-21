@@ -162,7 +162,7 @@ public class NutzerWS {
         }
         
     }
-    
+    //eig unnötig
     @GET
     @Path("/chatteilnehmer/id/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -210,7 +210,7 @@ public class NutzerWS {
         
         
     }
-    
+    //acuh nicht von bedeutung
     @GET
     @Path("/testtoken/{token}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -259,7 +259,7 @@ public class NutzerWS {
         }
     }
     
-    
+    //nur ein Test
     @GET
     @Path("/sendMail")
     @Produces(MediaType.TEXT_PLAIN)
@@ -373,7 +373,7 @@ public class NutzerWS {
         }
             
     }
-    
+    //nur ein Test
     @GET
     @Path("/clearbl")
     @Produces(MediaType.APPLICATION_JSON)
@@ -513,7 +513,7 @@ public class NutzerWS {
         
     }
     
-    
+    //nur ein Test
     @GET
     @Path("/allFotos")
     @Produces(MediaType.APPLICATION_JSON)
@@ -618,7 +618,7 @@ public class NutzerWS {
         }
         
     }
-    
+    //beide folgenden Methoden nur ein test
     @GET
     @Path("/loginTest/{pw}")
     @Produces(MediaType.TEXT_PLAIN)

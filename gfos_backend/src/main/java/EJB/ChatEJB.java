@@ -89,6 +89,11 @@ public class ChatEJB {
         chatInDB.getNutzerList().add(nutzer);
     }
     
+    public void entferneNutzer(Chat chat, Nutzer nutzer){
+        Chat chatInDB = em.find(Chat.class, chat.getChatid());
+        chatInDB.getNutzerList().remove(nutzer);
+    }
+    
     public void delete(Chat c){
         em.remove(c);
     }
