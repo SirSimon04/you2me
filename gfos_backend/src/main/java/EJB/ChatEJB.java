@@ -42,9 +42,15 @@ public class ChatEJB {
             n.setChatList(null);
             n.setAdminInGroups(null);
         }
-        Nachricht letzteN = c.getLetztenachricht();
-        letzteN.setChatList(null);
-        letzteN.setNachrichtList(null);
+        try{
+            Nachricht letzteN = c.getLetztenachricht();
+            letzteN.setChatList(null);
+            letzteN.setNachrichtList(null);
+        }
+        catch(NullPointerException e){
+            
+        }
+        
         return c;
     }
     
@@ -67,9 +73,15 @@ public class ChatEJB {
                 n.setChatList(null);
                 n.setAdminInGroups(null);
             }
-            Nachricht letzteN = c.getLetztenachricht();
+            try{
+                Nachricht letzteN = c.getLetztenachricht();
             letzteN.setChatList(null);
             letzteN.setNachrichtList(null);
+            }
+            catch(NullPointerException e){
+                
+            }
+            
         }
         return chatList;
     }

@@ -32,6 +32,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -123,6 +125,7 @@ public class ChatWS {
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
+            
            Gson parser = new Gson();
             
             Chat c = chatEJB.getCopy(chatId);
@@ -130,83 +133,135 @@ public class ChatWS {
            
            List<Nutzer> adminListe = c.getAdminList();
            
-           Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id); //Diese Zeile zerstört alles
+           Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id); 
            
-           System.out.println("nutzerliste" + nutzerListe);
-           System.out.println("adminListe" + adminListe);
            
-           nutzerListe.remove(self);
- 
-           List<Nutzer> isAdmin = new ArrayList<>();
-           List<Nutzer> isNotAdmin = new ArrayList<>();
+           if(c.getIsgroup()){
 
-           
-           for(Nutzer nutzer : nutzerListe){
-               nutzer.setAdminInGroups(null);
-               nutzer.setPasswordhash(null);
-               nutzer.setOtherFriendList(null);
-               nutzer.setOwnFriendList(null);
-               
-              if(adminListe.contains(nutzer)){
-                  isAdmin.add(nutzer); 
-              }
-              else{
-                  isNotAdmin.add(nutzer);
-              }
+                nutzerListe.remove(self);
+
+                List<Nutzer> isAdmin = new ArrayList<>();
+                List<Nutzer> isNotAdmin = new ArrayList<>();
+
+
+                for(Nutzer nutzer : nutzerListe){
+                    nutzer.setAdminInGroups(null);
+                    nutzer.setPasswordhash(null);
+                    nutzer.setOtherFriendList(null);
+                    nutzer.setOwnFriendList(null);
+
+                   if(adminListe.contains(nutzer)){
+                       isAdmin.add(nutzer); 
+                   }
+                   else{
+                       isNotAdmin.add(nutzer);
+                   }
+                }
+
+                System.out.println("isAdmin" + isAdmin);
+                System.out.println("isNotAdmin" + isNotAdmin);
+
+
+                 self.setAdminInGroups(null);
+                 self.setPasswordhash(null);
+                 self.setOtherFriendList(null);
+                 self.setOwnFriendList(null);
+                 self.setChatList(null);
+                 if(adminListe.contains(self)){
+                     self.setIsadmin(true);
+                 }
+
+                 for(Nutzer n : isAdmin){
+                     n.setIsadmin(true);
+                 }
+
+                 List<Nutzer> returnList = new ArrayList<>();
+                 returnList.add(self);
+                 returnList.addAll(isAdmin);
+                 returnList.addAll(isNotAdmin);
+                 System.out.println("returnListe" + returnList);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.add("nutzerliste", parser.toJsonTree(returnList));
+
+                List<Nachricht> nList = nachrichtEJB.getByChatId(chatId);
+                int anzahlNachrichten = nList.size();
+                int anzahlFotos = 0;
+                for(Nachricht n : nList){
+                    if(n.getFoto() != null){
+                        anzahlFotos += 1;
+                    }
+                }
+
+                jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
+                jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
+                try{
+                    jsonObject.add("beschreibung", parser.toJsonTree(chatEJB.getById(chatId).getBeschreibung()));
+                }
+                catch(NullPointerException e){
+
+                }
+                try{
+                    jsonObject.add("profilbild", parser.toJsonTree(chatEJB.getById(chatId).getProfilbild().getBase64()));
+                }
+                catch(NullPointerException e){
+
+                }
+                
+                return response.generiereAntwort(parser.toJson(jsonObject)); 
+                
+           }
+           else{
+               nutzerListe.remove(self);
+               Nutzer other = nutzerListe.get(0);
+               JsonObject jsonObject = new JsonObject();
+               List<Nachricht> nList = nachrichtEJB.getByChatId(chatId);
+                int anzahlNachrichten = nList.size();
+                int anzahlFotos = 0;
+                for(Nachricht n : nList){
+                    if(n.getFoto() != null){
+                        anzahlFotos += 1;
+                    }
+                }
+                other.setPasswordhash(null);
+                other.setOwnFriendList(null);
+                other.setOtherFriendList(null);
+                jsonObject.add("nutzer", parser.toJsonTree(other));
+                jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
+                jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
+                
+                try{
+                    jsonObject.add("beschreibung", parser.toJsonTree(other.getInfo()));
+                }
+                catch(NullPointerException e){
+
+                }
+                try{
+                    jsonObject.add("profilbild", parser.toJsonTree(other.getProfilbild()));
+                }
+                catch(NullPointerException e){
+
+                }
+                //TODO: gemeinsame Chatliste überarbeiten
+                List<Chat> allChats = chatEJB.getAllCopy();
+                List<Chat> listTogether = new ArrayList<>();
+                for(Chat chat : allChats){
+                    if(chat.getNutzerList().contains(self) && chat.getNutzerList().contains(other)){
+                        listTogether.add(chat);
+                    }
+                }
+                
+                for(Chat chat : listTogether){
+                    chat.setAdminList(null);
+                    chat.setNutzerList(null);
+                    chat.setLetztenachricht(null);
+                }
+                
+                jsonObject.add("chatListe", parser.toJsonTree(listTogether));
+                
+                return response.generiereAntwort(parser.toJson(jsonObject)); 
            }
            
-           System.out.println("isAdmin" + isAdmin);
-           System.out.println("isNotAdmin" + isNotAdmin);
-           
-           
-            self.setAdminInGroups(null);
-            self.setPasswordhash(null);
-            self.setOtherFriendList(null);
-            self.setOwnFriendList(null);
-            self.setChatList(null);
-            if(adminListe.contains(self)){
-                self.setIsadmin(true);
-            }
-           
-            for(Nutzer n : isAdmin){
-                n.setIsadmin(true);
-            }
             
-            List<Nutzer> returnList = new ArrayList<>();
-            returnList.add(self);
-            returnList.addAll(isAdmin);
-            returnList.addAll(isNotAdmin);
-            System.out.println("returnListe" + returnList);
-           JsonObject jsonObject = new JsonObject();
-           jsonObject.add("nutzerliste", parser.toJsonTree(returnList));
-           
-           List<Nachricht> nList = nachrichtEJB.getByChatId(chatId);
-           int anzahlNachrichten = nList.size();
-           int anzahlFotos = 0;
-           for(Nachricht n : nList){
-               if(n.getFoto() != null){
-                   anzahlFotos += 1;
-               }
-           }
-           
-           jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
-           jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
-           try{
-               jsonObject.add("beschreibung", parser.toJsonTree(chatEJB.getById(chatId).getBeschreibung()));
-           }
-           catch(NullPointerException e){
-               
-           }
-           try{
-               jsonObject.add("profilbild", parser.toJsonTree(chatEJB.getById(chatId).getProfilbild().getBase64()));
-           }
-           catch(NullPointerException e){
-               
-           }
-           
-           
-           
-            return response.generiereAntwort(parser.toJson(jsonObject)); 
            
            
 //           return response.generiereAntwort("true");
@@ -339,6 +394,81 @@ public class ChatWS {
         
         
     }
+    
+
+
+    public List<Chat> getOwnChatlistByUserIdAsEntityList(int nutzerid) {
+        
+            try{
+                List<Chat> returnList = new ArrayList<Chat>();
+
+                Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
+
+                List<Chat> liste = chatEJB.getAll();
+                for(Chat c : liste) {
+                    if(c.getNutzerList().contains(nutzer))
+                    {
+                        returnList.add(c);
+                    }
+                }
+
+
+                for(Chat c : returnList){
+                    try{
+                        Nachricht n = nachrichtEJB.getNewest(c.getChatid());
+                        c.getLetztenachricht().setSender(n.getSender());
+                    }
+                    catch(Exception e){
+                        
+                    }
+                    
+                    for(Nutzer n : c.getNutzerList()){
+                        n.setPasswordhash(null);
+                        n.setOtherFriendList(null);
+                        n.setOwnFriendList(null);
+                    }
+                        
+                        if(!c.getIsgroup())
+                        {
+                            System.out.println(c);
+                           // c.setAdminList(null);
+                            List<Nutzer> nutzerList = c.getNutzerList();
+                            Nutzer n = nutzerEJB.getCopyById(nutzerid);
+                            nutzerList.remove(n);
+
+                            Nutzer andererNutzer = nutzerList.get(0);
+
+                            c.setName(andererNutzer.getBenutzername());
+                            c.setProfilbild(andererNutzer.getProfilbild());
+                            c.setBeschreibung(andererNutzer.getInfo());
+                            c.setNutzerList(null);
+                            System.out.println(nutzerList);
+                        }
+                        c.setAdminList(null);
+                        c.setNutzerList(null);
+                    
+                }
+                
+                
+                
+                List<Chat> toRemove = new ArrayList<>();
+                for(Chat c : returnList){
+                    if(c.getLetztenachricht() == null){
+                        toRemove.add(c);
+                    }
+                }
+                returnList.removeAll(toRemove);
+                returnList.sort(new DateSorter());
+                returnList.addAll(toRemove);
+                return returnList;
+            }
+            catch(EJBTransactionRolledbackException e){
+                return new ArrayList<>();
+            }
+        }
+        
+        
+    
     
     
     @POST
