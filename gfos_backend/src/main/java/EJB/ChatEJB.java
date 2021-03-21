@@ -8,6 +8,7 @@ package EJB;
 import javax.ejb.Stateless;
 import javax.ejb.Stateless;
 import Entity.Chat;
+import Entity.Nachricht;
 import Entity.Nutzer;
 import java.util.List;
 import javax.ejb.LocalBean;
@@ -63,6 +64,9 @@ public class ChatEJB {
                 n.setChatList(null);
                 n.setAdminInGroups(null);
             }
+            Nachricht letzteN = c.getLetztenachricht();
+            letzteN.setChatList(null);
+            letzteN.setNachrichtList(null);
         }
         return chatList;
     }

@@ -10,6 +10,7 @@ import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
 import Entity.Chat;
 import Entity.Foto;
+import Entity.Nachricht;
 import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
@@ -179,7 +180,18 @@ public class ChatWS {
            JsonObject jsonObject = new JsonObject();
            jsonObject.add("nutzerliste", parser.toJsonTree(returnList));
            
-           
+           List<Nachricht> nList = nachrichtEJB.getByChatId(chatId);
+           int anzahlNachrichten = nList.size();
+           int anzahlFotos = 0;
+           for(Nachricht n : nList){
+               if(n.getFoto() != null){
+                   anzahlFotos += 1;
+               }
+           }
+           jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
+           jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
+           jsonObject.add("beschreibung", parser.toJsonTree(chatEJB.getById(chatId).getBeschreibung()));;
+           jsonObject.add("profilbild", parser.toJsonTree(chatEJB.getById(chatId).getProfilbild().getBase64()));;
             return response.generiereAntwort(parser.toJson(jsonObject)); 
            
            
