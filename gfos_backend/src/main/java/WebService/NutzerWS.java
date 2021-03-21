@@ -33,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import javax.ejb.EJBException;
@@ -224,12 +225,71 @@ public class NutzerWS {
         }
     }
     
+    @GET
+    @Path("/getFriendList/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFriendList(@PathParam("id") int id, @PathParam("token") String token){
+        
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else{
+            Gson parser = new Gson();
+            
+            JsonObject jsonObject = new JsonObject();
+        
+            Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
+            
+            List<Nutzer> ownFriendListDB = self.getOwnFriendList();
+            for(Nutzer n : ownFriendListDB){
+                n.setAdminInGroups(null);
+                n.setChatList(null);
+                n.setOtherFriendList(null);
+                n.setOwnFriendList(null);
+            }
+            
+            List<Nutzer> otherFriendListDB = self.getOtherFriendList();
+            for(Nutzer n : otherFriendListDB){
+                n.setAdminInGroups(null);
+                n.setChatList(null);
+                n.setOtherFriendList(null);
+                n.setOwnFriendList(null);
+            }
+            List<Nutzer> friends = new ArrayList<>();
+            List<Nutzer> friendRequests = new ArrayList<>();
+            List<Nutzer> pendingRequests = new ArrayList<>();
+            
+            for(Nutzer n : ownFriendListDB){
+                if(otherFriendListDB.contains(n)){
+                    friends.add(n);
+                }
+                else{
+                    pendingRequests.add(n);
+                }
+            }
+            
+            for(Nutzer n : otherFriendListDB){
+                if(!ownFriendListDB.contains(n)){
+                    friendRequests.add(n);
+                }
+            }
+            
+            jsonObject.add("friendList", parser.toJsonTree(friends));
+            jsonObject.add("friendRequests", parser.toJsonTree(friendRequests));
+            jsonObject.add("pendingRequests", parser.toJsonTree(pendingRequests));
+            
+            
+            return response.generiereAntwort(parser.toJson(jsonObject)); 
+        }
+        
+    }
+    
     
     @POST
-    @Path("/fuegeFreundHinzu/{token}")
+    @Path("/freundesAnfrage/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response takePart(@PathParam("token") String token, String jsonStr){
+    public Response sendeFreundesAnfrage(@PathParam("token") String token, String jsonStr){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -252,6 +312,44 @@ public class NutzerWS {
                 else {
                     return response.generiereFehler406("Bereits befreundet");
                 }
+            }
+            catch(JsonSyntaxException e) {
+                return response.generiereFehler406("Json wrong");
+            }
+        }
+    }
+    
+    @POST
+    @Path("/loescheFreund/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response loescheFreund(@PathParam("token") String token, String jsonStr){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+        
+            try{
+                JsonObject jsonO = parser.fromJson(jsonStr, JsonObject.class);
+
+                int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
+                Nutzer self = nutzerEJB.getCopyById(eigeneId);
+
+                String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
+                Nutzer other = nutzerEJB.getCopyByUsername(andererName);
+
+                if(self.getOtherFriendList().contains(other) && self.getOwnFriendList().contains(other)){
+                    nutzerEJB.loescheFreund(self, other);
+                    nutzerEJB.loescheFreund(other, self);
+                    self.getOwnFriendList().remove(other);
+                    self.getOtherFriendList().remove(other);
+                    
+                    other.getOwnFriendList().remove(self);
+                    other.getOtherFriendList().remove(self);
+                }
+                
+                return response.generiereAntwort("true");
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("Json wrong");

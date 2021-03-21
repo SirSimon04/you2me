@@ -112,6 +112,19 @@ public class NutzerEJB {
     public Nutzer getCopyByIdListsNotNull(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
+        for(Chat chat : n.getChatList()){
+            em.detach(chat);
+            }
+            for(Chat chat : n.getAdminInGroups()){
+            em.detach(chat);
+            }
+           
+           for(Nutzer nutzer : n.getOwnFriendList()) {
+               em.detach(nutzer);
+           }
+           for(Nutzer nu : n.getOtherFriendList()) {
+               em.detach(nu);
+           }
         return n;
     }
     
@@ -253,6 +266,13 @@ public class NutzerEJB {
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getOwnFriendList().add(other);
         otherInDB.getOtherFriendList().add(self);
+    }
+    
+    public void loescheFreund(Nutzer self, Nutzer other) {
+        Nutzer selfInDB = em.find(Nutzer.class, self.getId());
+        Nutzer otherInDB = em.find(Nutzer.class, other.getId());
+        selfInDB.getOwnFriendList().remove(other);
+        otherInDB.getOtherFriendList().remove(self);
     }
     
     public void logOut(Blacklist bl){

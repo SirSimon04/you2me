@@ -67,11 +67,15 @@ public class ChatEJB {
                 em.detach(n);
                 n.setChatList(null);
                 n.setAdminInGroups(null);
+                n.setOwnFriendList(null);
+                n.setOtherFriendList(null);
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
                 n.setChatList(null);
                 n.setAdminInGroups(null);
+                n.setOwnFriendList(null);
+                n.setOtherFriendList(null);
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
