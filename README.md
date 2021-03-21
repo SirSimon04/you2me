@@ -157,3 +157,8 @@ Create Table blacklist(
     token VARCHAR(200),
     timestamp Timestamp
 );
+
+#### Things to do after Recreating of Entities
+alle Listen aus Foto löschen
+Listen in Nutzer hinzufügen
+
