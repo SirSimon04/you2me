@@ -270,9 +270,10 @@ public class ChatWS {
 
                 for(Chat c : returnList){
                     try{
-                       c.getLetztenachricht().setSender(nachrichtEJB.getNewest(c.getChatid()).getSender());
+                        Nachricht n = nachrichtEJB.getNewest(c.getChatid());
+                        c.getLetztenachricht().setSender(n.getSender());
                     }
-                    catch(NullPointerException e){
+                    catch(Exception e){
                         
                     }
                     
@@ -281,10 +282,10 @@ public class ChatWS {
                         n.setOtherFriendList(null);
                         n.setOwnFriendList(null);
                     }
-
+                        
                         if(!c.getIsgroup())
                         {
-                            System.out.println(c.getIsgroup());
+                            System.out.println(c);
                            // c.setAdminList(null);
                             List<Nutzer> nutzerList = c.getNutzerList();
                             Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -294,10 +295,16 @@ public class ChatWS {
 
                             c.setName(andererNutzer.getBenutzername());
                             c.setProfilbild(andererNutzer.getProfilbild());
-                            //c.setNutzerList(null);
+                            c.setBeschreibung(andererNutzer.getInfo());
+                            c.setNutzerList(null);
                             System.out.println(nutzerList);
                         }
+                        c.setAdminList(null);
+                        c.setNutzerList(null);
+                    
                 }
+                
+                
                 
                 List<Chat> toRemove = new ArrayList<>();
                 for(Chat c : returnList){

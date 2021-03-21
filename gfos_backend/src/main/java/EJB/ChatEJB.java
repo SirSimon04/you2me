@@ -42,6 +42,9 @@ public class ChatEJB {
             n.setChatList(null);
             n.setAdminInGroups(null);
         }
+        Nachricht letzteN = c.getLetztenachricht();
+        letzteN.setChatList(null);
+        letzteN.setNachrichtList(null);
         return c;
     }
     
