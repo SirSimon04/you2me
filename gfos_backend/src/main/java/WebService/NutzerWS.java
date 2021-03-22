@@ -306,7 +306,7 @@ public class NutzerWS {
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyById(eigeneId);
+                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
                 Nutzer other = nutzerEJB.getCopyByUsername(andererName);
@@ -346,10 +346,10 @@ public class NutzerWS {
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyById(eigeneId);
+                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getCopyByUsername(andererName);
+                Nutzer other = nutzerEJB.getCopyByUsernameListsNotNull(andererName);
 
                     nutzerEJB.loescheFreund(self, other);
                     nutzerEJB.loescheFreund(other, self);
@@ -379,10 +379,7 @@ public class NutzerWS {
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(String Daten) {
-        Response r = response.generiereAntwort(Daten);
-        for(int i = 0; i < 1000; i++){
-            System.out.println(r.getStatus());
-        }
+//        Response r = response.generiereAntwort(Daten);
         Gson parser = new Gson();
         try {
             //getting the name of the body
@@ -390,7 +387,7 @@ public class NutzerWS {
             String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
             String jsonPasswort = parser.fromJson((loginUser.get("passwort")), String.class);
             
-            Nutzer dbNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
+            Nutzer dbNutzer = nutzerEJB.getCopyByUsernameListsNotNull(jsonUsername);
             
             for(Chat c : dbNutzer.getChatList()) {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
@@ -486,80 +483,69 @@ public class NutzerWS {
             Gson parser = new Gson();
 
             try {
-                Nutzer neuerNutzer = parser.fromJson(Daten, Nutzer.class);
-                neuerNutzer.setPasswordhash(hasher.convertStringToHash(neuerNutzer.getPasswordhash()));
-
-                nutzerEJB.add(neuerNutzer);
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("id", neuerNutzer.getId());
-                jsonObject.addProperty("benutzername", neuerNutzer.getBenutzername());
-                jsonObject.addProperty("email", neuerNutzer.getEmail());
-                jsonObject.addProperty("token", tokenizer.createNewToken(neuerNutzer.getBenutzername()));
                 
-                return response.generiereAntwort(Daten);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            String neuerNutzername = parser.fromJson((jsonObject.get("benutzername")), String.class);
+            String neueEmail = parser.fromJson((jsonObject.get("email")), String.class);
+            String neuerVorname = parser.fromJson((jsonObject.get("vorname")), String.class);
+            String neuerNachname = parser.fromJson((jsonObject.get("nachname")), String.class);
+            String neuesPasswort = parser.fromJson((jsonObject.get("passwort")), String.class);
+            String neueHandynummer = parser.fromJson((jsonObject.get("handynummer")), String.class);
+            String neueInfo = parser.fromJson((jsonObject.get("info")), String.class);
+            
+            Hasher hasher = new Hasher();
+           
+            Nutzer neuerNutzer = new Nutzer();
+            
+            Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername); 
 
-                //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
-                /*
+            if(UserNameIsFree == null){ 
+//                System.out.println("Username free");
+                neuerNutzer.setBenutzername(neuerNutzername);    
+            }
+            else{
+//                System.out.println("Username not free");
+                return response.generiereFehler500("Benutzername bereits vergeben");
+            }
+            
+            Nutzer EmailIsFree = nutzerEJB.getByMail(neueEmail); 
+            
+            if(EmailIsFree == null){ 
+                neuerNutzer.setEmail(neueEmail);    
+            }
+            else{
+                return response.generiereFehler500("Email bereits vergeben");
+            }
+            
+            neuerNutzer.setPasswordhash(hasher.convertStringToHash(neuesPasswort));
+            
+            if(neuerVorname != null){
+                neuerNutzer.setVorname(neuerVorname);    
+            }
 
-                System.out.println("1. try");
-                JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
-                String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
+            if(neuerVorname != null){    
+                neuerNutzer.setNachname(neuerNachname);    
+            }
 
-                try {
-                    System.out.println("2. try");
-                    Nutzer usernameNutzer = nutzerEJB.getCopyByUsername(jsonUsername);
-
-                    if(usernameNutzer.getBenutzername().equals(jsonUsername)){
-                        return "Benutzername bereits vergeben";
-                    }
-                    }
-                    catch(NoResultException e) {
-                        System.out.println("4. exception");
-                        //return "4";
-                    }
-                    catch(EJBTransactionRolledbackException e){
-                        System.out.println("5. exception");
-                        //return "5";
-                    }
-                    catch(TransactionRolledbackLocalException e){
-                        System.out.println("6. exception");
-                        //return "6";
-                    }
-                    catch(EJBException e){
-                        System.out.println("6.5 exception");
-                        //return "7";
-                    }
-
-                try {
-                    Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
-                    nutzerEJB.add(neuerNutzer);
-                    return "true";
-
-                }
-                    catch(NoResultException e) {
-                        System.out.println("1. exception");
-                        return "1";
-                    }
-                    catch(EJBTransactionRolledbackException e){
-                        System.out.println("2. exception");
-                        return "2";
-                    }
-                    catch(TransactionRolledbackLocalException e){
-                        System.out.println("3. exception");
-                        return "3";
-                    }
-                    catch(EJBException e){
-                        System.out.println("3.5 exception");
-                        return "3.5";
-                    }
+            if(neueHandynummer != null){
+                neuerNutzer.setHandynummer(neueHandynummer);
+            }
+ 
+            if(neueInfo != null){
+                neuerNutzer.setInfo(neueInfo);
+            }
 
 
-                */
+            nutzerEJB.add(neuerNutzer);
+            Nutzer nutzerInDbB = nutzerEJB.getByUsername(neuerNutzername);
+            JsonObject returnObject = new JsonObject();
+            returnObject.addProperty("id", nutzerInDbB.getId());
+            returnObject.addProperty("benutzername", nutzerInDbB.getBenutzername());
+            returnObject.addProperty("email", nutzerInDbB.getEmail());
+            returnObject.addProperty("token", tokenizer.createNewToken(nutzerInDbB.getBenutzername()));
 
+            return response.generiereAntwort(parser.toJson(returnObject));
 
-
-
-                //return "wtf";
 
             }
                 catch(JsonSyntaxException e) {
@@ -627,12 +613,29 @@ public class NutzerWS {
             return response.generiereFehler401("Ungültiges Token");
         }
             else {
-                if(nutzerEJB.delete(id)){
-                    return response.generiereAntwort("true");
+                String name = tokenizer.getUser(token);
+                if(nutzerEJB.getByUsername(name).equals(nutzerEJB.getById(id))){
+                    
+                
+                
+                
+                    if(nutzerEJB.delete(id)){
+                        Blacklist bl = new Blacklist();
+                        bl.setToken(token);
+
+                        Date date = new Date();
+                        bl.setTimestamp(date);
+                        nutzerEJB.logOut(bl);
+                        return response.generiereAntwort("true");
+                    }
+                    else{
+                        return response.generiereFehler500("Fehler beim Löschen");
+
+                    }
+                    
                 }
                 else{
-                    return response.generiereFehler500("Fehler beim Hinzufügen");
-               
+                    return response.generiereFehler406("Du hast nicht die nötige Berechtigung");
                 }
             }
     }
@@ -660,62 +663,78 @@ public class NutzerWS {
             
             
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+            String altesPasswort = parser.fromJson((jsonObject.get("altesPasswort")), String.class);
             String neuerNutzername = parser.fromJson((jsonObject.get("benutzername")), String.class);
+            String neueEmail = parser.fromJson((jsonObject.get("email")), String.class);
             String neuerVorname = parser.fromJson((jsonObject.get("vorname")), String.class);
             String neuerNachname = parser.fromJson((jsonObject.get("nachname")), String.class);
             String neuesPasswort = parser.fromJson((jsonObject.get("passwort")), String.class);
             String neueHandynummer = parser.fromJson((jsonObject.get("handynummer")), String.class);
             String neueInfo = parser.fromJson((jsonObject.get("info")), String.class);
             
-            Nutzer nutzerInDB = nutzerEJB.getByUsername(name);
+            Nutzer nutzerInDB = nutzerEJB.getById(eigeneId);
+            Hasher hasher = new Hasher();
+            if(nutzerInDB.getPasswordhash().equals(hasher.convertStringToHash(altesPasswort))){
             
-            if(nutzerInDB != null){
-                
-                if(neuerVorname != null){
-                    nutzerInDB.setVorname(neuerVorname);    
-                }
+                if(nutzerInDB != null){
 
-                if(neuerVorname != null){    
-                    nutzerInDB.setNachname(neuerNachname);    
-                }
-                
-                if(neuesPasswort != null){
-                    nutzerInDB.setPasswordhash(hasher.convertStringToHash(neuesPasswort));
-                }
-                
-                if(neueHandynummer != null){
-                    nutzerInDB.setHandynummer(neueHandynummer);
-                }
-                
-                if(neueInfo != null){
-                    nutzerInDB.setInfo(neueInfo);
-                }
-
-                if(neuerNutzername != null){
-                    Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername); 
-
-                    if(UserNameIsFree == null){ 
-                        nutzerInDB.setBenutzername(neuerNutzername);    
+                    if(neuerVorname != null){
+                        nutzerInDB.setVorname(neuerVorname);    
                     }
-                    else{
-                        return response.generiereFehler500("Benutzername bereits vergeben");
+
+                    if(neuerVorname != null){    
+                        nutzerInDB.setNachname(neuerNachname);    
                     }
-                }
+
+                    if(neuesPasswort != null){
+                        nutzerInDB.setPasswordhash(hasher.convertStringToHash(neuesPasswort));
+                    }
+
+                    if(neueHandynummer != null){
+                        nutzerInDB.setHandynummer(neueHandynummer);
+                    }
+
+                    if(neueInfo != null){
+                        nutzerInDB.setInfo(neueInfo);
+                    }
+
+                    if(neuerNutzername != null){
+                        Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername); 
+
+                        if(UserNameIsFree == null){ 
+                            nutzerInDB.setBenutzername(neuerNutzername);    
+                        }
+                        else{
+                            return response.generiereFehler500("Benutzername bereits vergeben");
+                        }
+                    }
+
+                    if(neueEmail != null){
+                        Nutzer EmailIsFree = nutzerEJB.getByMail(neueEmail); 
+
+                        if(EmailIsFree == null){ 
+                            nutzerInDB.setEmail(neueEmail);    
+                        }
+                        else{
+                            return response.generiereFehler500("Benutzername bereits vergeben");
+                        }
+                    }
 
 
 
-                if(name.equals(neuerNutzername) || neuerNutzername == null){
-                    return response.generiereAntwort("true");
+
+                        return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));
+
                 }
                 else{
-                    return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));
+                    return response.generiereFehler401("Id nicht vorhanden");
                 }
+            
             }
             else{
-                return response.generiereFehler401("Token abgelaufen oder Benutzername veraltet");
+                return response.generiereFehler406("PW falsch");
             }
-            
-            
             
             
         }

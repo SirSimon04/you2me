@@ -32,14 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ws.rs.core.Response;
 
@@ -293,7 +286,7 @@ public class ChatWS {
         
     }
     
-    
+    // kann am Ende entfernt werden?
     //wie die eigene Chatliste, aber nur für einen Chat
     @GET
     @Path("/id/{chatid}/{nutzerid}/{token}")
@@ -338,7 +331,15 @@ public class ChatWS {
         }
         
     }
-    //eigene Chatliste
+    /**
+     * Diese Methode liefert die Liste mit den letzten Chats zurück. Falls es sich bei einem Chat um einen Einzelchat handelt,
+     * werden als Chatinformationen die Informationen des anderen Nutzers angegeben (Profilbild, Name und Info). Die ganze Liste wird 
+     * mit einem erstellten Comparator nach dem Versanddatum der letzten Nachricht sortiert, dabei sind die Neuesten am Anfang. Chats,
+     * die noch keine Nachricht beinhalten, sind am Ende
+     * @param nutzerid Die eigene Id
+     * @param token Das Webtoken
+     * @return Die eigene Chatliste
+     */
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -494,21 +495,26 @@ public class ChatWS {
         
     
     
-    
+    /**
+     * Die folgende Methode erstellt eine neue Gruppe mit den gegeben Daten.
+     * @param Daten Die Chatinformationen, die eigene Id und eine Liste aus Nutzern, die hinzugefügt werden soll.
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/createAsGroup/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response createAsGroup(String jsonStr, @PathParam("token") String token) {
+    public Response createAsGroup(String Daten, @PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
-            System.out.println(jsonStr);
+            System.out.println(Daten);
             Gson parser = new Gson();
         try {
-            JsonObject json = parser.fromJson(jsonStr, JsonObject.class);
-            Chat neuerChat = parser.fromJson(jsonStr, Chat.class);
+            JsonObject json = parser.fromJson(Daten, JsonObject.class);
+            Chat neuerChat = parser.fromJson(Daten, Chat.class);
             neuerChat.setIsgroup(true);
             chatEJB.createChat(neuerChat);
             int eigeneId = parser.fromJson((json.get("eigeneId")), Integer.class);
@@ -539,20 +545,26 @@ public class ChatWS {
         
     }
     
+    /**
+     * Diese Methode erstellt einen neuen Einzelchat zwsichen dem eigenen Nutzer und einem anderem Nutzer.
+     * @param Daten Die Informationen zur Identifizierung der beiden Nutzer.
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/createAsChat/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response createAsChat(String jsonStr, @PathParam("token") String token) {
+    public Response createAsChat(String Daten, @PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
-            System.out.println(jsonStr);
+            System.out.println(Daten);
             Gson parser = new Gson();
             try {
                 
-                JsonObject jsonTP = parser.fromJson(jsonStr, JsonObject.class);
+                JsonObject jsonTP = parser.fromJson(Daten, JsonObject.class);
                 String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
                 String date = parser.fromJson((jsonTP.get("erstelldatum")), String.class);
                 int eigeneId = parser.fromJson((jsonTP.get("eigeneId")), Integer.class);
@@ -610,12 +622,17 @@ public class ChatWS {
         "benutzername": "NoSkiller"
     }
     */
-    
+    /**
+     * Diese Methode fügt einen Nutzer zu einer Gruppe hinzu, dabei wird überprüft ob, man selbst ein Admin in der Gruppe ist.
+     * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum Chat. 
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/takepart/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response takePart(String jsonStr, @PathParam("token") String token){
+    public Response takePart(String Daten, @PathParam("token") String token){
         
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
@@ -624,7 +641,7 @@ public class ChatWS {
             Gson parser = new Gson();
         
             try{
-                JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
 
                 int chatid = parser.fromJson((jsonObject.get("chatid")), Integer.class);
                 Chat c = chatEJB.getById(chatid);
@@ -674,11 +691,17 @@ public class ChatWS {
         
     }
     
+    /**
+     * Diese Methode entfernt einen Nutzer aus einer Gruppe, dabei wird überprüft ob, man selbst ein Admin in der Gruppe ist.
+     * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum Chat. 
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/entferneNutzer/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response entferneNutzer(String jsonStr, @PathParam("token") String token){
+    public Response entferneNutzer(String Daten, @PathParam("token") String token){
         
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
@@ -687,7 +710,7 @@ public class ChatWS {
             Gson parser = new Gson();
         
             try{
-                JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
                 int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
                 int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
                 String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
@@ -695,6 +718,16 @@ public class ChatWS {
                 Nutzer self = nutzerEJB.getById(jsonId);
                 Nutzer other = nutzerEJB.getByUsername(jsonUsername);
                 Chat c = chatEJB.getById(jsonChatId);
+                
+                
+                if(self.equals(other)){
+                    nutzerEJB.entferneChat(c, self); 
+                    chatEJB.entferneNutzer(c, self);
+                    return response.generiereAntwort("true");
+                }
+                else{
+                    
+                
                 
                 if(c.getAdminList().contains(self)){
                     
@@ -724,6 +757,7 @@ public class ChatWS {
                 else{
                     return response.generiereFehler406("Du bist kein Admin");
                 }
+                }
 //                 return response.generiereAntwort("true");
                 
             }
@@ -737,11 +771,17 @@ public class ChatWS {
         
     }
     
+    /**
+     * Diese Methode macht einen anderen Nutzer zum Admin der Gruppe. Dabei wird überprüft, ob man selbst ein Admin ist.
+     * @param token Das Webtoken
+     * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum Chat.
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/zuAdmin/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response macheZuAdmin(@PathParam("token") String token, String jsonStr) {
+    public Response macheZuAdmin(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -749,7 +789,7 @@ public class ChatWS {
             
             Gson parser = new Gson();
             
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
             int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
             String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
@@ -778,11 +818,17 @@ public class ChatWS {
     
     }
     
+    /**
+     * Diese Methode entfernt den Adminstatus eines Nutzers. Dabei wird überprüft, ob man selbst ein Admin ist.
+     * @param token Das Webtoken
+     * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum Chat.
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
     @POST
     @Path("/entferneAdmin/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response entferneAdmin(@PathParam("token") String token, String jsonStr) {
+    public Response entferneAdmin(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -790,7 +836,7 @@ public class ChatWS {
             
             Gson parser = new Gson();
             
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
             int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
             String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
@@ -820,33 +866,50 @@ public class ChatWS {
         }
     
     }
-    
+    /**
+     * Diese Methode setzt das Profilbild einer Gruppe. Dabei wird überprüft, ob man selbst ein Admin ist.
+     * @param token Das Webtoken
+     * @param Daten Die Informationen zum Chat, eigenen Nutzer und das Profilbild.
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/setzeProfilbild/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+    public Response setzeProfilbild(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
         else {
             Gson parser = new Gson();
             
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
-            int jsonId = parser.fromJson((jsonObject.get("id")), Integer.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int chatId=  parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId=  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
             String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
             
-            Foto f = new Foto();
-            f.setBase64(jsonPic);
-            fotoEJB.add(f);
+            Nutzer self = nutzerEJB.getById(eigeneId);
+            Chat chat = chatEJB.getById(chatId);
+
+            if(chat.getAdminList().contains(self)){
+                
             
-            Chat chat = chatEJB.getById(jsonId);
+                Foto f = new Foto();
+                f.setBase64(jsonPic);
+                fotoEJB.add(f);
+
+                Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+
+                chat.setProfilbild(fotoInDB);
+                
+                return response.generiereAntwort("true");
             
-            Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
+            }
+            else{
+                return response.generiereFehler401("Du bist kein Admin");
+            }
+                
             
-            chat.setProfilbild(fotoInDB);
-            
-            return response.generiereAntwort("true");
         }
         
         
