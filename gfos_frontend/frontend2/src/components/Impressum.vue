@@ -11,19 +11,19 @@
           color ="#5c7d9d"
           step="1"
         >
-          Benutzernamen erstellen
+          Nutzungsbedingungen
         </v-stepper-step>
   
         <v-divider></v-divider>
   
         <v-stepper-step step="2" color ="#5c7d9d" :complete="e1 > 2">
-          Daten angeben
+          Datenschutzerklärung
         </v-stepper-step>
   
         <v-divider></v-divider>
   
         <v-stepper-step step="3" color ="#5c7d9d" >
-          Login
+          Hilfe/Sonstiges
         </v-stepper-step>
       </v-stepper-header>
       </div>
