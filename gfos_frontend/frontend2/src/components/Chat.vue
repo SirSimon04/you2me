@@ -42,139 +42,53 @@ export default {
     }),
 
     mounted() {
+        var IP_ADDRESS = '91.49.179.104';
+        var CURRENT_USER_ID = -1;
+        var CURRENT_CHAT_ID = -1;
+        var messages = [];
+
+        function fetchIfNewest(loadMsgs) {
+            // Check for newest message and reload all messages if there is a newer one
+            var newest = null;
+            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/chat/getNewest/' + CURRENT_CHAT_ID + '/1').then(response => {
+                if (response.status !== 200) {
+                    console.error('Code !== 200:' + response);
+                    return null;
+                }
+                response.clone();
+                response.json().then(data => {
+                    newest = data;
+                    if (messages.length === 0) loadMsgs();
+                    else if (messages[messages.length - 1]['nachrichtid'] !== newest['nachrichtid']) { // Trigger hier verändern bzw. hinzufügen, falls sich der Benutzer unbenennt / löscht
+                        loadMsgs();
+                    }
+                }).catch(error => {
+                    console.error('An error occured while parsing the string:' + error);
+                });
+            });
+        }
+
+        var interval = setInterval(function() {}, 1000);
+        
         EventBus.$on('MYEVENT', (payload) => {
             console.log('THIS IS MY EVENT');
             console.log(payload);
         });
+
         EventBus.$on('CHANGEHEIGHT', (payload) => {
             document.getElementById('chatcontainer').style = 'overflow: auto; min-height: 400px; height: "' + payload["height"] + 'px"; max-height: ' + payload["height"] + 'px; background-color: #0E1621; border-radius: 15px; padding: 16px;';
         });
+
         EventBus.$on('OPENCHAT', (payload) => {
-            var CURRENT_USER_ID = payload['userid']; //set in cookie?
-            var CURRENT_CHAT_ID = payload['chatid'];
-            var IP_ADDRESS = '91.49.179.104';
+            clearInterval(interval); // Stop current loading interval to not load multiple chats at the same time
 
-            var messages = [
-                {
-                    "nachrichtid": 139,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "22",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 140,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "23",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 141,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "25",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 139,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "22",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 140,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "23",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 141,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "25",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 139,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "22",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 140,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "23",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 141,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "25",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 139,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "22",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 140,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "23",
-                    "sender": "Simon",
-                    "chatList": []
-                },
-                {
-                    "nachrichtid": 141,
-                    "senderid": 206,
-                    "chatid": 11,
-                    "datumuhrzeit": "2021-02-02 10:10:10",
-                    "inhalt": "25",
-                    "sender": "Simon",
-                    "chatList": []
-                }
-            ];
+            CURRENT_USER_ID = payload['userid']; //set in cookie?
+            CURRENT_CHAT_ID = payload['chatid'];
+            messages = [];
 
-            /*document.getElementById('chatcontainer').innerHTML = '';
-            for (var i=0; i<messages.length; i++) {
-                var data = messages[i];
-                var elem = '';
-                if (data['senderid'] === CURRENT_USER_ID) elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
-                else elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
-                document.getElementById('chatcontainer').innerHTML += elem;
-            }*/
+            document.getElementById('chatcontainer').innerHTML = '';
 
-            function loadMessages() {
+            function loadMessages() { // Reload all messages (will be called if a newer message is available)
                 fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/chat/' + CURRENT_CHAT_ID + '/1').then(response => {
                     if (response.status !== 200) {
                         console.error('Code !== 200:' + response);
@@ -183,6 +97,7 @@ export default {
                     response.clone();
                     response.json().then(msgs => {
                         document.getElementById('chatcontainer').innerHTML = '';
+                        // Write all single messages into the chatcontainer
                         for (var i=0; i<msgs.length; i++) {
                             var data = msgs[i];
                             var elem = '';
@@ -191,6 +106,7 @@ export default {
                             document.getElementById('chatcontainer').innerHTML += elem;
                         }
 
+                        // Scroll down to newest message (if user is at the button)
                         var difference = msgs.length - messages.length;
                         var allSingles = document.getElementsByClassName('singlemsgcontainer');
                         var scrollValue = 0; // Funktioniert, scrollt aber ein paar Pixel weiter (das doppelte?)
@@ -211,49 +127,9 @@ export default {
                 });
             }
             
-            /*const options = {
-                method: 'POST',
-                body: JSON.stringify({'benutzername': 'Simon', 'passwort': 'Test1234'}),
-                headers: new Headers({
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Credentials': 'true',
-                    'Access-Control-Allow-Headers': 'origin, content-type, accept, authorization',
-                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
-                    'Content-Type': 'application/json'
-                })
-            }
+            interval = setInterval(fetchIfNewest(loadMessages), 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
 
-            console.warn('DAS IST DER START');
-            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/login', options)
-                .then(res => res.json())
-                .then(res => {
-                    console.log('HIER BIN ICH');
-                    console.log(res);
-
-                });*/
-
-            setInterval(function() {
-                // Neuste Nachricht checken
-                var newest = null;
-                fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/chat/getNewest/' + CURRENT_CHAT_ID + '/1').then(response => {
-                    if (response.status !== 200) {
-                        console.error('Code !== 200:' + response);
-                        return null;
-                    }
-                    response.clone();
-                    response.json().then(data => {
-                        newest = data;
-                        if (messages.length === 0) loadMessages();
-                        else if (messages[messages.length - 1]['nachrichtid'] !== newest['nachrichtid']) { // Trigger hier verändern bzw. hinzufügen, falls sich der Benutzer unbenennt / löscht
-                            loadMessages();
-                        }
-                    }).catch(error => {
-                        console.error('An error occured while parsing the string:' + error);
-                    });
-                });
-                // Ende neuste Nachricht checken
-            }, 1000);
-        }); //EventBus.$on()
+        }); //EventBus.$on('OPENCHAT')
     },
 
     methods() {

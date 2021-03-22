@@ -19,6 +19,7 @@
                     <Chat style="position: relative; float: right; right: 0; top: 0;" v-show="app_vue_chat_zeigen"></Chat>
                 </v-flex>
             </v-layout>
+            <ChatInfo v-show="app_vue_chatinfo_zeigen"></ChatInfo>
             <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
             <Settings v-show ="app_vue_settings_zeigen"></Settings>
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
@@ -27,7 +28,8 @@
 </template>
 
 <script>
-//import { EventBus } from './components/EventBus.js';
+import { EventBus } from './components/EventBus.js';
+import ChatInfo from './components/ChatInfo';
 import ChatListe from './components/ChatListe';
 import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
@@ -44,15 +46,28 @@ export default {
         Chat,
         Settings,
         Welcome,
+        ChatInfo,
     },
     
     data: () => ({
         welcome_vue_zeigen: false,
-        app_vue_registrieren_zeigen: true,
+        app_vue_registrieren_zeigen: false,
         app_vue_settings_zeigen: false,
-        app_vue_chatliste_zeigen: false,
-        app_vue_chat_zeigen: false,
+        app_vue_chatliste_zeigen: true,
+        app_vue_chat_zeigen: true,
+        app_vue_chatinfo_zeigen: false,
         user: Registrieren.benutzername,
-    }),    
+    }),
+
+    mounted() {
+        EventBus.$on('OPENCHATINFO', (payload) => {
+            this.app_vue_chatinfo_zeigen = true;
+            EventBus.$emit('LOADPROFILE', {'username': payload['username']});
+        }); // EventBus.$on('OPENCHATINFO')
+
+        EventBus.$on('CLOSECHATINFO', (payload) => {
+            this.app_vue_chatinfo_zeigen = false;
+        }); // EventBus.$on('CLOSECHATINFO')
+    }
 };
 </script>

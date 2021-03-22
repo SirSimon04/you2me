@@ -81,30 +81,11 @@ public class NutzerEJB {
     public Nutzer getCopyById(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
-        for(Chat c : n.getChatList()){
-            em.detach(c);
-            c.setNutzerList(null);
-            c.setAdminList(null);
-            }
-           for(Chat c : n.getAdminInGroups()){
-               em.detach(c);
-               c.setAdminList(null);
-               c.setAdminList(null);
-           }
-        for(Nutzer nutzer : n.getOwnFriendList()) {
-            em.detach(nutzer);
-            nutzer.setChatList(null);
-            nutzer.setOwnFriendList(null);
-            nutzer.setOtherFriendList(null);
-            nutzer.setPasswordhash(null);
-        }
-        for(Nutzer nu : n.getOtherFriendList()) {
-            em.detach(nu);
-            nu.setChatList(null);
-            nu.setOwnFriendList(null);
-            nu.setOtherFriendList(null);
-            nu.setPasswordhash(null);
-        }
+        n.setPasswordhash(null);
+        n.setAdminInGroups(null);
+        n.setOwnFriendList(null);
+        n.setOtherFriendList(null);
+        n.setChatList(null);
         return n;
         
     }
@@ -169,7 +150,7 @@ public class NutzerEJB {
             Nutzer n = (Nutzer) query.getSingleResult();
             return n;
         }
-        catch(NoResultException e){
+        catch(Exception e){
             return null;
         }
         
@@ -182,31 +163,50 @@ public class NutzerEJB {
         
         Nutzer n = (Nutzer) query.getSingleResult();
         em.detach(n);
-        for(Chat c : n.getChatList()){
-            em.detach(c);
-            c.setNutzerList(null);
-            c.setAdminList(null);
-        }
-        for(Chat c : n.getAdminInGroups()){
-            em.detach(c);
-            c.setNutzerList(null);
-            c.setAdminList(null);
-        }
-        for(Nutzer nutzer : n.getOwnFriendList()) {
-            em.detach(nutzer);
-            nutzer.setChatList(null);
-            nutzer.setOwnFriendList(null);
-            nutzer.setOtherFriendList(null);
-            nutzer.setPasswordhash(null);
-        }
-        for(Nutzer nutzer : n.getOtherFriendList()) {
-            em.detach(nutzer);
-            nutzer.setChatList(null);
-            nutzer.setOwnFriendList(null);
-            nutzer.setOtherFriendList(null);
-            nutzer.setPasswordhash(null);
-        }
+        n.setPasswordhash(null);
+           n.setAdminInGroups(null);
+           n.setOwnFriendList(null);
+           n.setOtherFriendList(null);
+           n.setChatList(null);
         return n;
+    }
+    
+    public Nutzer getCopyByUsernameListsNotNull(String username){
+        
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
+        query.setParameter("benutzername", username);
+        
+        Nutzer n = (Nutzer) query.getSingleResult();
+        
+        for(Chat chat : n.getChatList()){
+            em.detach(chat);
+            }
+            for(Chat chat : n.getAdminInGroups()){
+            em.detach(chat);
+            }
+           
+           for(Nutzer nutzer : n.getOwnFriendList()) {
+               em.detach(nutzer);
+           }
+           for(Nutzer nu : n.getOtherFriendList()) {
+               em.detach(nu);
+           }
+        
+        return n;
+    }
+    
+    public Nutzer getByMail(String mail){
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByEmail");
+        query.setParameter("email", mail);
+        try{
+            Nutzer n = (Nutzer) query.getSingleResult();
+            return n;
+        }
+        catch(Exception e){
+            return null;
+        }
+        
+        
     }
     
     public Nutzer getCopyByEmail(String email){
