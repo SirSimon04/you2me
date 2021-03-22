@@ -61,12 +61,12 @@ export default {
                     }
 
                     var contextMenu = `
-                    window.openInfo(` + chatid + ", '" + data["name"] + `');
+                    window.openInfo(` + chatid + `, '` + data["name"] + `');
                     `
 
                     var elem = `
                     <div onclick="window.openChat(` + chatid + ', ' + CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
-                        <img oncontextmenu="` + contextMenu + `" style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + image_data + `" width="64" height="64">
+                        <img oncontextmenu="` + contextMenu + `return false;" style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + image_data + `" width="64" height="64">
                         <div class="v-card__text font-weight-medium subtitle-1">
                             ` + groupIndicator + `
                             <span style="color: white;">` + data["name"] + `</span>
@@ -114,6 +114,6 @@ window.openChat = function(chatid, userid) {
 
 window.openInfo = function(chatid, username) { // user_id or chat_id ? REMOVE USERNAME!!!
     console.log('opening profile for ' + username);
-    EventBus.$emit('LOADPROFILE', {'username': username});
+    EventBus.$emit('OPENCHATINFO', {'username': username});
 }
 </script>

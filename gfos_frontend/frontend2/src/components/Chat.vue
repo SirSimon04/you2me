@@ -47,6 +47,26 @@ export default {
         var CURRENT_CHAT_ID = -1;
         var messages = [];
 
+        function testPost() {
+            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/testPost', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'text/plain',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    test: 'Hallo'
+                })
+            }).then(response => {
+                response.clone();
+                response.json().then(content => {
+                    console.warn(content);
+                }); 
+            });
+        }
+
+        testPost();
+
         function fetchIfNewest(loadMsgs) {
             // Check for newest message and reload all messages if there is a newer one
             var newest = null;
