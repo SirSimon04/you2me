@@ -44,8 +44,10 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.ws.rs.core.Response;
 
 /**
- *
- * @author simon
+ * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Chats</h1>
+ * <p>Diese Klasse beinhaltet alle Methoden des Webservers bezogen auf das Objekt des Chats
+ * für das Bearbeiten und Ausgeben der Daten und stellt damit die Schnittstelle mit dem Frontend dar</p>
+ * 
  */
 @Path("/chat")
 @Stateless
@@ -68,6 +70,11 @@ public class ChatWS {
     
     private Antwort response = new Antwort();
     
+    /**
+     * Diese Methode verifiziert einen Token.
+     * @param token Das Webtoken
+     * @return Boolean, ob der Token akzeptiert wurde
+     */
     public boolean verify(String token){
         if(tokenizer.isOn()){
             if(tokenizer.verifyToken(token).equals(""))
@@ -84,7 +91,11 @@ public class ChatWS {
         }
         
     }
-    
+    /**
+     * Diese Methode gibt alle Chats zurück.
+     * @param token Das Webtoken
+     * @return Liste mit allen Chats
+     */
     @GET
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -100,7 +111,12 @@ public class ChatWS {
         }
         
     }
-    
+    /**
+     * Diese Methode gibt einen Chat anhand seiner Id zurück-
+     * @param token Das Webtoken
+     * @param id Die id
+     * @return Der Chat
+     */
     @GET
     @Path("/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -116,7 +132,15 @@ public class ChatWS {
         }
         
     }
-    //Anzahl von Nachrichten etc.
+    /**
+     * Diese Methode gibt die Informationen eines Chats zurück. Das beinhaltet die Anzahl der Nachrichten, die Anzahl der Fotos,
+     * das Prfilbild und den Status oder die Gruppenbeschreibung. Wenn es sich um eine Gruppe handelt, wird die Nutzerliste nach folgendem Schema sortiert:
+     * Zuerst steht der eigene Nutzer, dann die Administratoren der Gruppe und zuletzt die restlichen Nutzer.
+     * @param token Das Webtoken
+     * @param id Die eigene Id
+     * @param chatId Die Chatid
+     * @return Die angefragten Chatinformationen
+     */
     @GET
     @Path("/info/{chatid}/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)

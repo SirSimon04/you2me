@@ -49,8 +49,9 @@ import javax.ws.rs.core.Response;
 
 
 /**
- *
- * @author Simon
+ *<h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nutzer</h1>
+ * <p>Diese Klasse beinhaltet alle Methoden des Webservers bezogen auf das Objekt des Nutzers
+ * für das Bearbeiten und Ausgeben der Daten und stellt damit die Schnittstelle mit dem Frontend dar</p>
  */
 @Path("/nutzer")
 @Stateless
@@ -73,6 +74,11 @@ public class NutzerWS {
     
     private Mail mail = new Mail();
     
+    /**
+     * Diese Methode verifiziert einen Token.
+     * @param token Das Webtoken
+     * @return Boolean, ob der Token akzeptiert wurde
+     */
     public boolean verify(String token){
         if(tokenizer.isOn()){
             if(tokenizer.verifyToken(token).equals(""))
@@ -104,6 +110,11 @@ public class NutzerWS {
     Es folgen alle Methoden, die sich auf die Klasse Nutzer beziehen
     */
     
+    /**
+     * Diese Methode gibt alle Nutzer zurück.
+     * @param token Das Webtoken
+     * @return Liste mit allen Nutzern
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{token}")
@@ -123,6 +134,12 @@ public class NutzerWS {
          
     }
     
+    /**
+     * Diese Methode gibt einen Nutzer anhand seiner Id zurück.
+     * @param id Die Id des Nutzers
+     * @param token Das Webtoken
+     * @return Der Nutzer
+     */
     @GET
     @Path("/id/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -143,7 +160,12 @@ public class NutzerWS {
         }
         
     }
-    
+    /**
+     * Diese Methode gibt einen Nutzer anhand seines Benutzernamens zurück.
+     * @param benutzername Der Benutzername
+     * @param token Das Webtoken
+     * @return Der Nutzer
+     */
     @GET
     @Path("/benutzername/{benutzername}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -163,29 +185,13 @@ public class NutzerWS {
         }
         
     }
-    //eig unnötig
-    @GET
-    @Path("/chatteilnehmer/id/{id}/{token}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getByChatId(@PathParam("id") int id, @PathParam("token") String token) {
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }
-        else{
-            try{
-                List<Nutzer> liste = nutzerEJB.getCopyByChatId(id);
-                Gson parser = new Gson();
-                return response.generiereAntwort(parser.toJson(liste));
-            }
-            catch(EJBTransactionRolledbackException e) {
-                return response.generiereFehler406("Id nicht vorhanden");
-            }
-            
-        }
-    }
     
-    
-    
+    /**
+     * Diese Methode gibt den Benutzernamen eines Nutzers anhand seiner Id zurück.
+     * @param id Die Id des Nutzers
+     * @param token Das Webtoken
+     * @return Der Benutzername
+     */
     @GET
     @Path("/getUsernameById/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -211,20 +217,15 @@ public class NutzerWS {
         
         
     }
-    //acuh nicht von bedeutung
-    @GET
-    @Path("/testtoken/{token}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response testToken(@PathParam("token") String token) {
-        if(!verify(token)) {
-            return response.generiereFehler401("Ungültiges Token");
-        }
-        else {
-            String name = tokenizer.getUser(token);
-            return response.generiereAntwort("Herzlich willkommen " + name +". Dein Token ist noch gültig.");
-        }
-    }
+   
     
+    /**
+     * Diese Methoden gibt die Listen eines Nutzers bezogen auf die Freunde zurück. Dabei gibt es jeweils eine für 
+     * Freunde, austehende Freundschaftanfragen und eingehende Freundschaftsanfragen.
+     * @param id Die Id des Nutzers
+     * @param token Das Webtoken
+     * @return Die drei Freundeslisten
+     */
     @GET
     @Path("/getFriendList/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -284,12 +285,17 @@ public class NutzerWS {
         
     }
     
-    
+    /**
+     * Diese Methode sendet eine Freundschaftsanfrage an einen anderen Nutzer und kann auch dafür genutzt werden, Freundschaftsanfragen anzunehmen.
+     * @param token Das Webtoken
+     * @param Daten Die Informationen für den eigenen und anderen Nutzer 
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
     @POST
     @Path("/freundesAnfrage/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response sendeFreundesAnfrage(@PathParam("token") String token, String jsonStr){
+    public Response sendeFreundesAnfrage(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -297,7 +303,7 @@ public class NutzerWS {
             Gson parser = new Gson();
         
             try{
-                JsonObject jsonO = parser.fromJson(jsonStr, JsonObject.class);
+                JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
                 Nutzer self = nutzerEJB.getCopyById(eigeneId);
@@ -319,11 +325,17 @@ public class NutzerWS {
         }
     }
     
+    /**
+     * Diese Methode löscht einen Freund und kann auch dafür genutzt werden, Freundschaftsanfragen abzulehnen.
+     * @param token Das Webtoken
+     * @param Daten Die Informationen für den eigenen und anderen Nutzer 
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
     @POST
     @Path("/loescheFreund/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response loescheFreund(@PathParam("token") String token, String jsonStr){
+    public Response loescheFreund(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -331,7 +343,7 @@ public class NutzerWS {
             Gson parser = new Gson();
         
             try{
-                JsonObject jsonO = parser.fromJson(jsonStr, JsonObject.class);
+                JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
                 Nutzer self = nutzerEJB.getCopyById(eigeneId);
@@ -347,9 +359,7 @@ public class NutzerWS {
                     other.getOwnFriendList().remove(self);
                     other.getOtherFriendList().remove(self);
                     
-                    return response.generiereAntwort("true");
-//                
-                
+                    return response.generiereAntwort("true");      
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("Json wrong");
@@ -357,43 +367,26 @@ public class NutzerWS {
         }
     }
     
-    //nur ein Test
-    @GET
-    @Path("/sendMail")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String sendMail() {
-        
-        String emailMsgTxt      = "Body";
-        String emailSubjectTxt  = "Subject";
-        String emailFromAddress = "simi@engelnetz.de";
-        String[] emailList = {"simiquatsch1@gmail.com"};
-        try{
-            mail.postMail( emailList, emailSubjectTxt, emailMsgTxt, emailFromAddress);
-            System.out.println("Sucessfully Sent mail to All Users");
-        return "true";
-        }
-        catch(MessagingException e){
-            return "1";
-        }
-        
-        
-        
-    }
+
     
-    
+    /**
+     * Diese Methode realisiert den Login in das System.
+     * @param Daten Die Anmeldedaten des Nutzers, bestehend aus Nutzername und Passwort
+     * @return Das Responseobjekt mit dem Webtoken und den eigenen Nutzerinformationen
+     */
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON) 
     @Produces(MediaType.TEXT_PLAIN)
-    public Response login(String jsonStr) {
-        Response r = response.generiereAntwort(jsonStr);
+    public Response login(String Daten) {
+        Response r = response.generiereAntwort(Daten);
         for(int i = 0; i < 1000; i++){
             System.out.println(r.getStatus());
         }
         Gson parser = new Gson();
         try {
             //getting the name of the body
-            JsonObject loginUser = parser.fromJson(jsonStr, JsonObject.class);
+            JsonObject loginUser = parser.fromJson(Daten, JsonObject.class);
             String jsonUsername = parser.fromJson((loginUser.get("benutzername")), String.class);
             String jsonPasswort = parser.fromJson((loginUser.get("passwort")), String.class);
             
@@ -439,11 +432,16 @@ public class NutzerWS {
             }
     }
     
+    /**
+     * Diese Methode realisiert den Logout aus dem System.
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
     @POST
     @Path("/logout/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response logout(String jsonStr, @PathParam("token") String token) {
+    public Response logout(@PathParam("token") String token) {
            if(!verify(token)){
             return response.generiereAntwort("Bereits ausgeloggt");
         }
@@ -471,27 +469,24 @@ public class NutzerWS {
         }
             
     }
-    //nur ein Test
-    @GET
-    @Path("/clearbl")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String clearBlacklist(){
-        nutzerEJB.clearBlacklist();
-        Gson parser = new Gson();
-        return parser.toJson("true"); 
-    }
     
+    
+    /**
+     * Diese Methode fügt einen Nutzer in das System ein.
+     * @param Daten
+     * @return Das Responseobjekt mit den Nutzerinformationen und dem Webtoken
+     */
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response create(String jsonStr) {
+    public Response create(String Daten) {
         
-            System.out.println(jsonStr);
+            System.out.println(Daten);
             Gson parser = new Gson();
 
             try {
-                Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
+                Nutzer neuerNutzer = parser.fromJson(Daten, Nutzer.class);
                 neuerNutzer.setPasswordhash(hasher.convertStringToHash(neuerNutzer.getPasswordhash()));
 
                 nutzerEJB.add(neuerNutzer);
@@ -501,7 +496,7 @@ public class NutzerWS {
                 jsonObject.addProperty("email", neuerNutzer.getEmail());
                 jsonObject.addProperty("token", tokenizer.createNewToken(neuerNutzer.getBenutzername()));
                 
-                return response.generiereAntwort(jsonStr);
+                return response.generiereAntwort(Daten);
 
                 //Nutzer neuerNutzer = parser.fromJson(jsonStr, Nutzer.class);
                 /*
@@ -574,18 +569,24 @@ public class NutzerWS {
         
     }
     
+    /**
+     * Diese Methode ändert das Profilbild des Nutzers.
+     * @param token Das Webtoken
+     * @param Daten Die eigene Id und das Foto
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/setzeProfilbild/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response setzeProfilbild(@PathParam("token") String token, String jsonStr) {
+    public Response setzeProfilbild(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
         else {
             Gson parser = new Gson();
             
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int jsonId = parser.fromJson((jsonObject.get("id")), Integer.class);
             String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
             
@@ -611,15 +612,13 @@ public class NutzerWS {
         
     }
     
-    //nur ein Test
-    @GET
-    @Path("/allFotos")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getAllFotos(){
-        Gson parser = new Gson();
-        return parser.toJson(fotoEJB.getAll());
-    }
-    
+    //TODO: s. Dok,
+    /**
+     * Diese Methode löscht den eigenen Nutzer, dabei wird überprüft, ob die Person, von der die Anfrage kam, gleich dem zu löschenden Nutzer ist.
+     * @param id Die eigene ID
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
     @DELETE
     @Path("/delete/{id}/{token}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -640,11 +639,17 @@ public class NutzerWS {
      
         
     //funktioniert nur bei eingeschaltetem Tokenizer
+    /**
+     * Diese Methode aktualisiert die Nutzerinformationen.
+     * @param token Das Webtoken
+     * @param Daten Die zu aktualisierenden Nutzerdaten
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
     @PUT
     @Path("/update/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response update(@PathParam("token") String token, String jsonStr) {
+    public Response update(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -654,7 +659,7 @@ public class NutzerWS {
             String name = tokenizer.getUser(token); //get the Name of the User from the Token
             
             
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             String neuerNutzername = parser.fromJson((jsonObject.get("benutzername")), String.class);
             String neuerVorname = parser.fromJson((jsonObject.get("vorname")), String.class);
             String neuerNachname = parser.fromJson((jsonObject.get("nachname")), String.class);
@@ -716,35 +721,6 @@ public class NutzerWS {
         }
         
     }
-    //beide folgenden Methoden nur ein test
-    @GET
-    @Path("/loginTest/{pw}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response loginTest(@PathParam("pw") String pw) {
-        String NAME ="Mustermann";
-        String PASSWORD = pw;
-        Nutzer acc = nutzerEJB.getCopyByUsername(NAME);
-        System.out.println(acc.getPasswordhash());
-        System.out.println(hasher.convertStringToHash(PASSWORD));
-        if(hasher.convertStringToHash(PASSWORD).equals(acc.getPasswordhash())) {
-            return response.generiereAntwort("{\"token\": \"" + tokenizer.createNewToken(NAME) + "\"}");
-        }
-        else {
-            return response.generiereFehler406("Benutzername oder Passwort falsch");
-        }
-    }
-    
-    @GET
-    @Path("/topsecret/{token}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response testToken2(@PathParam("token") String token) {
-        if(tokenizer.verifyToken(token).equals("")) {
-            return response.generiereFehler401("Kein gültiges Token.");
-        }
-        else {
-            String name = tokenizer.getUser(token);
-            return response.generiereAntwort("Herzlich willkommen " + name +". Dein Token ist noch gültig.");
-        }
-    }
+   
      
 }
