@@ -49,23 +49,67 @@ export default {
 
         function testPost() {
             fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/testPost', {
+                mode: 'cors',
                 method: 'POST',
                 headers: {
-                    'Accept': 'text/plain',
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'text/plain'
+                },
+                body: 'Hallo'/*JSON.stringify({
+                    test: 'Hallo'
+                })*/
+            }).then(response => {
+                response.clone();
+                console.warn(response);
+                response.text().then(content => {
+                    console.warn(content);
+                });
+            });
+        }
+
+        function testPost2() {
+            var current = new Date();
+            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/add/1', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'text/plain'
                 },
                 body: JSON.stringify({
-                    test: 'Hallo'
+                    senderid: 2,
+                    inhalt: 'Hallo Welt',
+                    datumuhrzeit: current.toLocaleString(),
+                    chatid: 1,
                 })
             }).then(response => {
                 response.clone();
-                response.json().then(content => {
+                response.text().then(content => {
                     console.warn(content);
                 }); 
             });
         }
 
-        testPost();
+        function testPost3() {
+            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/login', {
+                mode: 'cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json', // Antwort von Server
+                    'Content-Type': 'text/plain', // Wird an den Server gesendet
+                },
+                body: JSON.stringify({
+                    benutzername: 'Simon',
+                    passwort: 'Test1234'
+                })
+            }).then(response => {
+                response.clone();
+                response.text().then(content => {
+                    console.warn(content);
+                }); 
+            });
+        }
+
+        testPost3();
 
         function fetchIfNewest(loadMsgs) {
             // Check for newest message and reload all messages if there is a newer one
@@ -149,10 +193,7 @@ export default {
             
             interval = setInterval(fetchIfNewest(loadMessages), 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
 
-        }); //EventBus.$on('OPENCHAT')
-    },
-
-    methods() {
-    },
+        }); // EventBus.$on('OPENCHAT')
+    }, // mounted()
   }
 </script>
