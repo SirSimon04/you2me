@@ -25,6 +25,7 @@ public class Antwort {
             .header("Access-Control-Allow-Methods",
                     "GET, POST, PUT, DELETE, OPTIONS, HEAD")
             .entity(data)
+            .allow("OPTIONS")
             .build();
     }
     

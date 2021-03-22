@@ -285,6 +285,16 @@ public class NutzerWS {
         
     }
     
+    @POST
+    @Path("/testPost")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendeFreundesAnfrage(String Daten){
+    
+        System.out.println(Daten);
+        Gson parser = new Gson();
+        return response.generiereAntwort(parser.toJson("Success"));
+    }
     /**
      * Diese Methode sendet eine Freundschaftsanfrage an einen anderen Nutzer und kann auch dafür genutzt werden, Freundschaftsanfragen anzunehmen.
      * @param token Das Webtoken
@@ -376,8 +386,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON) 
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response login(String Daten) {
 //        Response r = response.generiereAntwort(Daten);
         Gson parser = new Gson();
@@ -412,6 +422,7 @@ public class NutzerWS {
                 //return parser.toJson(jsonObject);
                 return response.generiereAntwort(parser.toJson(jsonObject));
                 //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
+//                return response.generiereAntwort("test");
             }
             else 
             {
@@ -598,7 +609,6 @@ public class NutzerWS {
         
     }
     
-    //TODO: s. Dok,
     /**
      * Diese Methode löscht den eigenen Nutzer, dabei wird überprüft, ob die Person, von der die Anfrage kam, gleich dem zu löschenden Nutzer ist.
      * @param id Die eigene ID
