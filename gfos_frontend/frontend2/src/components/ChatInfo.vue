@@ -63,7 +63,7 @@ window.blockUser = function(username) {
 }
 
 window.closeWindow = function() {
-    EventBus.$emit('CLOSEINFO', {});
+    EventBus.$emit('CLOSECHATINFO', {});
 }
 
 </script>
