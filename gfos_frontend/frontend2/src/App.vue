@@ -47,11 +47,11 @@ export default {
     },
     
     data: () => ({
-        welcome_vue_zeigen: true,
-        app_vue_registrieren_zeigen: false,
+        welcome_vue_zeigen: false,
+        app_vue_registrieren_zeigen: true,
         app_vue_settings_zeigen: false,
         app_vue_chatliste_zeigen: false,
-        app_vue_chat_zeigen: true,
+        app_vue_chat_zeigen: false,
         user: Registrieren.benutzername,
     }),    
 };
