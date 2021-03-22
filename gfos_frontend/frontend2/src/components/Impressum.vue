@@ -3,414 +3,113 @@
 
     <v-container>
     <div style="width: 1000px; postion: relative; left: 100px;">
-     <v-stepper v-model="e1" style="margin: 20px; max-width: 700px;  ">
-     <div v-if="loginzeigen === true">
+     <v-stepper v-model="e1" style="margin: 20px; max-width: 1200px;  ">
+     
       <v-stepper-header v-model="headeranzeigen" color="#5c7d9d">
-        <v-stepper-step
-          :complete="e1 > 1"
-          color ="#5c7d9d"
-          step="1"
-        >
+        <v-stepper-step color ="#5c7d9d" :complete="e1 > 1"  step="I">
           Nutzungsbedingungen
         </v-stepper-step>
   
         <v-divider></v-divider>
   
-        <v-stepper-step step="2" color ="#5c7d9d" :complete="e1 > 2">
+        <v-stepper-step step="I" color ="#5c7d9d" :complete="e1 > 2">
           Datenschutzerklärung
         </v-stepper-step>
   
         <v-divider></v-divider>
   
-        <v-stepper-step step="3" color ="#5c7d9d" >
+        <v-stepper-step step="I" color ="#5c7d9d" >
           Hilfe/Sonstiges
         </v-stepper-step>
       </v-stepper-header>
-      </div>
+      
       <v-stepper-items color ="#5c7d9d">
         <v-stepper-content step="1">
-          <v-card
-            class="mb-12"
-            
-            height="200px"
-          >
-          <subheading>Schritt 1:</subheading>
-          <h4>Benuzternamen erstellen</h4>
-          <v-text-field
-              v-model="benutzername"
-              :rules="nameRules"
-              :counter="20"
-              label="Benutzernamen erstellen"
-              required
-            ></v-text-field>
-            <v-text-field
-              v-model="passwort"
-              :rules="passwordRules"
-              label="Passwort erstellen"
-              required
-            ></v-text-field>
+          <v-card class="mb-12" max-height="10000px">
+          <subheading>Impressum</subheading>
+          <h4>Nutzungsbedingungen</h4>
+                    <v-card-text>
+                        Die Folgenden Bedingungen sind bei der Benutzung des Messenger-Dienstes “Disputio” einzuhalten. Sollten diese Regelungen missachtet werden, kann es zum Ausschluss der Benutzerin oder des Benutzers von der Plattform kommen. Die Bedingungen sind:<br>
+                        <ol>
+                            <li>Jeder Nutzer muss sich auf dieser Plattform den Allgemeinen gesellschaftlichen Konventionen entsprechend verhalten. Es wird zu keinem Zeitpunkt zu einer Kontrolle seitens des Betreibers kommen, sollten Regelverstöße in dieser Hinsicht </li>
+                            <li>Tea</li>
+                            <li>Milk</li>
+                        </ol> 
+                    </v-card-text>
             
           </v-card>
   
           <v-btn color="primary" @click="e1 = 2">
-            Weiter
-          </v-btn>
-  
-          <v-btn text>
-            Impressum
+            Datenschutzerklärung
           </v-btn>
 
-          <v-btn  @click="e1 = 3">
-            Zum Login
-          </v-btn>
           
         </v-stepper-content>
   
         <v-stepper-content step="2">
-          <v-card
-            class="mb-12"
-            
-            max-height="2000px"
-          >
-          <div v-if="companyaccount_checkbox === true">
-            <subheading>Persönliche Daten</subheading>
-            <v-card-subtitle>Bitte loggen Sie sich hier mit Ihren persönlichen Daten ein.</v-card-subtitle>
-          </div>
-          <div v-else>
-            <subheading>Schritt 2:</subheading>
-          </div>
-          <div v-if="companyaccount_checkbox === true">
-            <v-text-field
-              v-model="benutzername"
-              :rules="nameRules"
-              :counter="20"
-              label="Benutzernamen erstellen"
-              required
-            ></v-text-field>
-            <v-text-field
-              v-model="passwort"
-              :rules="passwordRules"
-              label="Passwort erstellen"
-              required
-            ></v-text-field>
-          </div>
-          <div v-else>  
-            <v-text-field
-              v-model="vorname"
-              :rules="nameRules"
-              :counter="25"
-              label="Vornamen eingeben"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Vornamen ein. Dieses Feld ist kein Pflichtfeld.</v-card-text></div>
-            <v-text-field
-              v-model="nachname"
-              :rules="nameRules"
-              :counter="25"
-              label="Nachnamen eingeben"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Nachnamen ein. Wenn Sie möchten, brauchen Sie dieses Feld nicht auszufüllen. Generell kann eine Namensangabe aber dabei helfen, von Ihren Bekannten gefunden zu werden.</v-card-text></div>
-            <v-text-field
-              v-model="email"
-              :rules="emailRules"
-              :counter="45"
-              label="E-Mail eingeben"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie hier Ihre E-Mail-Adresse ein. Diese benötigen wir für die 2-Faktor-Authentifizierung, das Feld ist Pflicht.</v-card-text></div>
-            <v-text-field
-              v-model="info"
-              :rules="nameRules"
-              :counter="256"
-              label="Info eingeben"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>In der Info können Sie sich selbst in kurzen Worten beschreiben. Die Info wird für alle Ihre Kontakte sichtbar sein.</v-card-text></div>
-            <v-file-input
-               truncate-length="15"
-               label="Profilbild hinzufügen"
-               v-model="profilbild"
-            ></v-file-input>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Fügen Sie zur Ergänzung der Info ein Profilbild hinzu! Dieses Foto wird für alle Ihre Kontakte sichtbar sein.</v-card-text></div>
-            </div>
-            <div v-if="companyaccount_checkbox === true">
-              <br>
-              <subheading>Firmendaten</subheading>
-            </div>
-            <div v-else>
-              <subheading></subheading>
-            </div>
-            <div v-if="companyaccount_checkbox === true">  
-            <v-text-field
-              v-model="firmenname"
-              :rules="nameRules"
-              :counter="25"
-              label="Firmenname*"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier den Namen der Firma ein.</v-card-text></div>
-            <v-text-field
-              v-model="inhabervorname"
-              :rules="nameRules"
-              :counter="25"
-              label="Vorname des Inhabers*"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Ihre Firma braucht einen Inhaber! Geben Sie hier bitte den Vornamen des Inhabers ein. Die Sichtbarkeit können Sie später in den Einstellungen anpassen.</v-card-text></div>
-            <v-text-field
-              v-model="inhabernachname"
-              :rules="nameRules"
-              :counter="25"
-              label="Nachname des Inhabers*"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier den Nachnamen des Inhabers ein.</v-card-text></div>
-            <v-text-field
-              v-model="firmenpasswort"
-              :rules="passwordRules"
-              label="Passwort erstellen*"
-              required
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie ein Passwort für den Account</v-card-text></div>
-            <v-text-field
-              v-model="firma_sicherungsnummer_5"
-              :rules="numberRules"
-              :counter="5"
-              label="Sicherungsnummer erstellen*"
-              ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie eine 5-Stellige Sicherheitsnummer. Diese Nummer ergänzt das Passwort und sollte nicht öffentlich bekannt sein.</v-card-text></div>
-            <v-text-field
-              v-model="firmen_sicherungsnummer_10"
-              :rules="numberRules"
-              :counter="10"
-              label="Rückversicherungsnummer erstellen*"
-              ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie eine 10-Stellige Rückversicherungsnummer. Diese wird gebraucht, wenn bei Registrierungsvorgängen die Anmeldedaten 3-Mal falsch eingeben werden.</v-card-text></div>
-            
-            <v-text-field
-              v-model="firmenort"
-              :rules="nameRules"
-              :counter="45"
-              label="Ort*"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier ein, in welcher Stadt Ihre Firma beheimatet ist. Wenn Sie mehrere Aussenstellen, Filialien, etc. haben, geben Sie bitte die Stadt des Hauptsitzes an.</v-card-text></div>
-            <v-text-field
-              v-model="plz"
-              :rules="numberRules"
-              :counter="5"
-              label="PLZ*"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte ergänzen Sie die Ortsangabe durch die Postleitzahl.</v-card-text></div>
-            <v-text-field
-              v-model="slogan"
-              :rules="nameRules"
-              :counter="256"
-              label="Slogan"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Wenn Sie möchten, können Sie der Firma hier einen Slogan geben.</v-card-text></div>
-            <v-file-input
-               truncate-length="15"
-               label="Firmenlogo"
-               v-model="firmenlogo"
-            ></v-file-input>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Hier können Sie ein Firmenlogo ergänzen.</v-card-text></div>
-            <div v-if="companyaccount_checkbox === false">
-              
-          </div>
-          </div>
-          <div v-if="firmenkontenakzeptieren === true">
-            <v-checkbox v-model="companyaccount_checkbox" label ="Ich möchte ein Firmenkonto erstellen."></v-checkbox>
-          </div>
-          <v-checkbox v-model="hilfe_checkbox" label ="Ich benötige Hilfe."></v-checkbox>
-          <v-checkbox v-model="settings_checkbox" label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."></v-checkbox>
-            
+          <v-card class="mb-12" max-height="2000px">
+         
+          
+            <subheading>Impressum</subheading>
+                <h4>Datenschutzerklärung</h4>
+                    <v-card-text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.   
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.   
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.   
+
+Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.   
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo</v-card-text>
           </v-card>
-        <div v-if="settings_checkbox=== true">  
-         <v-btn color="primary" @click="e1 = 3">
-            Weiter
+          <v-btn color="primary" @click="e1 = 3">
+            Hilfe/Sonstiges
           </v-btn>
-          </div>
-          
-          <v-btn text
-           @click="e1 = 1">
-            Zurück
-          </v-btn><br><br>
-          
         </v-stepper-content>
   
         <v-stepper-content step="3">
-          <v-card
-            class="mb-12"
-            
-            max-height="500px"
-          >
+             <v-card class="mb-12" max-height="2000px">
+         
           
-          <h4>Login</h4>
-          <div v-if="companyaccount_checkbox === true">
-            <v-text-field
-              v-model="firmenname"
-              :rules="nameRules"
-              :counter="25"
-              label="Firmenname"
-              required  
-            ></v-text-field>
-            <v-text-field
-              v-model="plz"
-              :rules="numberRules"
-              :counter="5"
-              label="Postleitzahl"
-            ></v-text-field>
-            <v-text-field
-              v-model="firmenpasswort"
-              :rules="passwordRules"
-              label="Passwort"
-              required
-            ></v-text-field>
-            
-            <v-text-field
-              v-model="firma_sicherungsnummer_5"
-              :rules="numberRules"
-              :counter="5"
-              label="Sicherungsnummer"
-              ></v-text-field>
-          </div>
-          <div v-else>
-            <v-text-field
-                v-model="benutzername"
-                :rules="nameRules"
-                :counter="20"
-                label="Benutzername"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="passwort"
-                :rules="nameRules"
-                label="Passwort"
-                required
-              ></v-text-field>
-          </div>
+            <subheading>Impressum</subheading>
+                <h4>Hilfe/Sonstiges</h4>
+                    <v-card-text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.   
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.   
+
+At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.   
+
+Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.   
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
+
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+
+Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
+
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo</v-card-text>
           </v-card>
-          <v-card-subtitle>Noch nicht angemeldet?</v-card-subtitle>
-          <v-divider></v-divider>
-          <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
-        
-        
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" color= "#5c7d9d" style="position: relative; float: right; margin: 5px;">Login</v-btn>
-          </template>
-        
-          <template v-slot:default="dialog">
-            <div v-if="companyaccount_checkbox === true">
-            <div v-if="benutzername === undefined || passwort === undefined">
-              <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
-            </div>
-            <div v-else>
-              <v-card :loading="loading" class="mx-auto my-12" max-width="374">
-                <template slot="progress">
-                  <v-progress-linear
-                    color="deep-purple"
-                    height="10"
-                    indeterminate
-                  ></v-progress-linear>
-                </template>
-              
-              
-                <v-img
-                  height="250"
-                  src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                ></v-img>
-            
-                <v-card-title>{{firmenname}}</v-card-title>
-                <v-card-text> Inh. {{inhabervorname}} {{inhabernachname}}</v-card-text>
-                
-            
-                <v-divider class="mx-4"></v-divider>
-            
-                <v-card-title>Firmendaten</v-card-title>
-            
-                <v-card-text>{{plz}} {{firmenort}}</v-card-text>
-            
-                <v-card-actions>
-                  <v-card-text>{{slogan}}</v-card-text>
-                </v-card-actions>
-              </v-card>
-            </div>
-            </div>
-            <div v-else>
-                            
-                              <div v-if="benutzername === undefined || passwort === undefined"><v-toolbar color="#5c7d9d" dark>Fehler aufgetreten.</v-toolbar></div>
-                              <div v-else-if="loginzeigen === true"><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
-                              <div v-else><v-toolbar color="#5c7d9d" dark>Willkommen zurück!</v-toolbar></div>
-                              <v-card-text>
-                              <div v-if="benutzername === undefined || passwort === undefined">
-                                <div class="text-p2 pa-12">Bitte tragen Sie zunächst alle erforderlichen Daten ein.</div>
-                              </div>
-                              <div v-else>
-                                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br>
-                              </div>
-                              <div v-if="benutzername === undefined || passwort === undefined">
-                              </div>
-                              <div v-else>
-                                <v-card class="mx-auto" max-width="344">
-                                  <v-img height="200px">{{profilbild}}</v-img>
-                                        <v-card-title>
-                                          {{benutzername}} 
-                                        </v-card-title>
-                                        <v-card-subtitle>{{info}}</v-card-subtitle>
-                                        
-                                        <v-card-subtitle>
-                                          Vorname: {{vorname}}<br>
-                                          Nachname: {{nachname}}<br>
-                                          E-Mail: {{email}}
-                                        </v-card-subtitle>
-                                    
-                                            <v-divider></v-divider>
-                                            <v-card-text>
-                                            <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
-                                            <div v-else-if="benutzername === 'SirSimon04'">Salute, SirSimon!</div>
-                                            <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas aka SimpusMaximus! <br><br><p6>Was ich mich ja eigentlich schon immer mal gefragt habe: Steht das "Simpus" für "Simp"?</p6></div>
-                                            <div v-else>Hallo, {{benutzername}}. Danke, dass Sie sich angemeldet haben!</div>
-                                            </v-card-text>
-                                </v-card>
-            
-                              </div>
-             
-          </div>
-                
-                  </v-card-text>
-                        <v-card-actions class="justify-end">
-                          <div v-if="benutzername === undefined || passwort === undefined">
-                            <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
-                          </div>
-                          <div v-else>
-                            <v-btn
-                              text
-                              v-on:click="test()"
-                            >Einstellungen</v-btn>
-                            <v-btn text @click="dialog.value = false">Zum Messenger</v-btn>
-                          </div>
-                        </v-card-actions>
-                    
-                  
-              
-              
-            </div>
-          </template>
-        </v-dialog>
-          <v-btn text
-          position = "right"
-          @click= "e1 = 1, loginzeigen = true" style="margin: 5px">
-            Zur Anmeldung
-          </v-btn>
+          <v-btn color="primary" @click="e1 = 1">
+            Nutzungsbedingungen
+          </v-btn>        
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -431,15 +130,8 @@
     
     data(){
       return {
-      e1: 3,
-      headeranzeigen: false,
-      checkbox: true,
-      dialog: false,
-      test: 'nicht betätigt',
-      settings_checkbox: false,
-      companyaccount_checkbox: false,
-      hilfe_checkbox: false,
-      firmenkontenakzeptieren: false, 
+      e1: 1,
+      
       
 
     }

@@ -23,6 +23,7 @@
             <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
             <Settings v-show ="app_vue_settings_zeigen"></Settings>
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
+            <Impressum v-show="app_vue_impressum_zeigen"/>
         </v-main>
     </v-app>
 </template>
@@ -35,6 +36,7 @@ import Registrieren from './components/Registrieren';
 import Chat from './components/Chat';
 import Settings from './components/Settings';
 import Welcome from './components/Welcome';
+import Impressum from './components/Impressum';
 
 
 export default {
@@ -47,6 +49,7 @@ export default {
         Settings,
         Welcome,
         ChatInfo,
+        Impressum,
     },
     
     data: () => ({
@@ -56,6 +59,7 @@ export default {
         app_vue_chatliste_zeigen: true,
         app_vue_chat_zeigen: true,
         app_vue_chatinfo_zeigen: false,
+        app_vue_impressum_zeigen: true,
         user: Registrieren.benutzername,
     }),
 
