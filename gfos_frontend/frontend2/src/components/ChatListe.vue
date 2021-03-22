@@ -21,7 +21,7 @@ export default {
 
     mounted() {
         var IP_ADDRESS = '91.49.179.104';
-        var CURRENT_USER_ID = 102;
+        var CURRENT_USER_ID = 2;
 
         var image_data = '';
         var groupIndicator = '';
@@ -60,9 +60,13 @@ export default {
                         sender = sender + lastMessage['inhalt'];
                     }
 
+                    var contextMenu = `
+                    window.openInfo(` + chatid + ", '" + data["name"] + `');
+                    `
+
                     var elem = `
                     <div onclick="window.openChat(` + chatid + ', ' + CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
-                        <img style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + image_data + `" width="64" height="64">
+                        <img oncontextmenu="` + contextMenu + `" style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + image_data + `" width="64" height="64">
                         <div class="v-card__text font-weight-medium subtitle-1">
                             ` + groupIndicator + `
                             <span style="color: white;">` + data["name"] + `</span>
@@ -106,5 +110,10 @@ window.openChat = function(chatid, userid) {
     console.log(chatid);
     // Open chat with given chatId
     EventBus.$emit('OPENCHAT', {'chatid': chatid, 'userid': userid});
+}
+
+window.openInfo = function(chatid, username) { // user_id or chat_id ? REMOVE USERNAME!!!
+    console.log('opening profile for ' + username);
+    EventBus.$emit('LOADPROFILE', {'username': username});
 }
 </script>

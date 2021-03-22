@@ -62,7 +62,7 @@ export default {
     mounted() {
         EventBus.$on('OPENCHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = true;
-            EventBus.$emit('LOADPROFILE', {'username': this.user});
+            EventBus.$emit('LOADPROFILE', {'username': payload['username']});
         }); // EventBus.$on('OPENCHATINFO')
 
         EventBus.$on('CLOSECHATINFO', (payload) => {
