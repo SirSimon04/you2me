@@ -12,7 +12,7 @@
       >
       <v-container>
         <v-row align="center">
-          <img src ="../assets/disputatio_huge.png" style="position: relative; left: 330px"/>
+          <img src ="../assets/disputatio_huge.png" style="position: relative; left: calc(50%)"/>
         </v-row>
       </v-container>
       </v-card-title>

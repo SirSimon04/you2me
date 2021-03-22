@@ -2,7 +2,9 @@
 <template >
 
     <v-container>
-     <v-stepper v-model="e1">
+    <div style="width: 1000px; postion: relative; left: 100px;">
+     <v-stepper v-model="e1" style="margin: 20px; max-width: 700px;">
+     <div v-if="loginzeigen === true">
       <v-stepper-header v-model="headeranzeigen" color="#5c7d9d">
         <v-stepper-step
           :complete="e1 > 1"
@@ -14,12 +16,7 @@
   
         <v-divider></v-divider>
   
-        <v-stepper-step
-        color ="#5c7d9d"
-        
-          :complete="e1 > 2"
-          step="2"
-        >
+        <v-stepper-step step="2" color ="#5c7d9d" :complete="e1 > 2">
           Daten angeben
         </v-stepper-step>
   
@@ -29,7 +26,7 @@
           Login
         </v-stepper-step>
       </v-stepper-header>
-  
+      </div>
       <v-stepper-items color ="#5c7d9d">
         <v-stepper-content step="1">
           <v-card
@@ -230,8 +227,9 @@
               
           </div>
           </div>
-          
-          <v-checkbox v-model="companyaccount_checkbox" label ="Ich möchte ein Firmenkonto erstellen."></v-checkbox>
+          <div v-if="firmenkontenakzeptieren === true">
+            <v-checkbox v-model="companyaccount_checkbox" label ="Ich möchte ein Firmenkonto erstellen."></v-checkbox>
+          </div>
           <v-checkbox v-model="hilfe_checkbox" label ="Ich benötige Hilfe."></v-checkbox>
           <v-checkbox v-model="settings_checkbox" label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."></v-checkbox>
             
@@ -301,15 +299,13 @@
               ></v-text-field>
           </div>
           </v-card>
-         
-        <v-dialog
-          transition="dialog-bottom-transition"
-          max-width="600"
-        >
+          <v-card-subtitle>Noch nicht angemeldet?</v-card-subtitle>
+          <v-divider></v-divider>
+          <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
         
         
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" color= "#5c7d9d">Login</v-btn>
+            <v-btn v-bind="attrs" v-on="on" color= "#5c7d9d" style="position: relative; float: right; margin: 5px;">Login</v-btn>
           </template>
         
           <template v-slot:default="dialog">
@@ -409,20 +405,15 @@
             </div>
           </template>
         </v-dialog>
-      
-          
-          
-  
-          
-          <v-divider></v-divider>
           <v-btn text
           position = "right"
-          @click= "e1 = 1">
-            Registrieren
+          @click= "e1 = 1, loginzeigen = true" style="margin: 5px">
+            Zur Anmeldung
           </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
+    </div>
     </v-container>
 
 </template>
@@ -447,6 +438,7 @@
       settings_checkbox: false,
       companyaccount_checkbox: false,
       hilfe_checkbox: false,
+      firmenkontenakzeptieren: false, 
       
 
     }
