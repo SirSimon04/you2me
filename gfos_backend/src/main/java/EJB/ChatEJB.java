@@ -44,7 +44,6 @@ public class ChatEJB {
         }
         try{
             Nachricht letzteN = c.getLetztenachricht();
-            letzteN.setChatList(null);
             letzteN.setNachrichtList(null);
         }
         catch(NullPointerException e){
@@ -79,7 +78,6 @@ public class ChatEJB {
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
-            letzteN.setChatList(null);
             letzteN.setNachrichtList(null);
             }
             catch(NullPointerException e){

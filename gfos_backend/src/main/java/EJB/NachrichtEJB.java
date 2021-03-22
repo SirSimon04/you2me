@@ -45,7 +45,6 @@ public class NachrichtEJB {
         for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
-            n.setChatList(null);
             try{
                 n.setSender(nutzerEJB.getCopyById(n.getSenderid()).getBenutzername());
             }
@@ -65,7 +64,6 @@ public class NachrichtEJB {
         for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
-            n.setChatList(null);
             try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
             }
@@ -87,12 +85,10 @@ public class NachrichtEJB {
             for(Nachricht n : nachrichtList){
                 em.detach(n);
                 n.setNachrichtList(null);
-                n.setChatList(null);
             }
             Nachricht n = nachrichtList.get(nachrichtList.size() - 1);
             em.detach(n);
             n.setNachrichtList(null);
-            n.setChatList(null);
             try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
                 

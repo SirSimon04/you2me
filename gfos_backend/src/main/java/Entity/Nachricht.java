@@ -38,7 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nachricht.findByChatid", query = "SELECT n FROM Nachricht n WHERE n.chatid = :chatid"),
     @NamedQuery(name = "Nachricht.findByDatumuhrzeit", query = "SELECT n FROM Nachricht n WHERE n.datumuhrzeit = :datumuhrzeit"),
     @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt"),
-    @NamedQuery(name = "Nachricht.findBySender", query = "SELECT n FROM Nachricht n WHERE n.sender = :sender")})
+    @NamedQuery(name = "Nachricht.findBySender", query = "SELECT n FROM Nachricht n WHERE n.sender = :sender"),
+    @NamedQuery(name = "Nachricht.findByIsimportant", query = "SELECT n FROM Nachricht n WHERE n.isimportant = :isimportant")})
 public class Nachricht implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -68,8 +69,8 @@ public class Nachricht implements Serializable {
     @Size(max = 50)
     @Column(name = "SENDER")
     private String sender;
-    @OneToMany(mappedBy = "letztenachricht")
-    private List<Chat> chatList;
+    @Column(name = "ISIMPORTANT")
+    private Boolean isimportant;
     @JoinColumn(name = "FOTO", referencedColumnName = "ID")
     @ManyToOne
     private Foto foto;
@@ -142,13 +143,12 @@ public class Nachricht implements Serializable {
         this.sender = sender;
     }
 
-    @XmlTransient
-    public List<Chat> getChatList() {
-        return chatList;
+    public Boolean getIsimportant() {
+        return isimportant;
     }
 
-    public void setChatList(List<Chat> chatList) {
-        this.chatList = chatList;
+    public void setIsimportant(Boolean isimportant) {
+        this.isimportant = isimportant;
     }
 
     public Foto getFoto() {
