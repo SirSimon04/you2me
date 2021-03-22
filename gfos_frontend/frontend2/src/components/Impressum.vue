@@ -31,9 +31,10 @@
                     <v-card-text>
                         Die Folgenden Bedingungen sind bei der Benutzung des Messenger-Dienstes “Disputio” einzuhalten. Sollten diese Regelungen missachtet werden, kann es zum Ausschluss der Benutzerin oder des Benutzers von der Plattform kommen. Die Bedingungen sind:<br>
                         <ol>
-                            <li>Jeder Nutzer muss sich auf dieser Plattform den Allgemeinen gesellschaftlichen Konventionen entsprechend verhalten. Es wird zu keinem Zeitpunkt zu einer Kontrolle seitens des Betreibers kommen, sollten Regelverstöße in dieser Hinsicht </li>
-                            <li>Tea</li>
-                            <li>Milk</li>
+                            <li>Jeder Nutzer muss sich auf dieser Plattform den Allgemeinen gesellschaftlichen Konventionen entsprechend verhalten. Es wird zu keinem Zeitpunkt zu einer Kontrolle seitens des Betreibers kommen, sollten Regelverstöße in dieser Hinsicht allerdings durch strafrechtliche Maßnahmen auffällig werden, schützt die Umgebung der App nicht vor einer entsprechenden Verfolgung und distanziert sich von jegweligen Chatinhalten.
+                            Darüber hinaus wird darum gebeten, anstößige oder beleidigende Texte, Bilder, Memes und Sticker nicht zu verschicken.</li>
+                            <li>Jeder Nutzer muss zur Verwendung der Website angemeldet sein. Hierzu genügt die Ausfüllung aller angegebenen Pflichtfelder. Diese sind: Benutzername, Passwort, E-Mail-Adresse. Alle weiteren angegebenen Daten werden zur Verbesserung der Dienste nach der Datenschutzerklärung (siehe Datenschutzerklärung) verwendet, sind aber nicht verpflichtend.</li>
+                            <li>Es gibt keine definierte Grenze an Accounts pro Person. Jeder Bewohner der Erde hat das Recht, unbegrenzt viele Accounts in unserer App kostenlos anzulegen.</li>
                         </ol> 
                     </v-card-text>
             
