@@ -3,7 +3,7 @@
 
     <v-container>
     <div style="width: 1000px; postion: relative; left: 100px;">
-     <v-stepper v-model="e1" style="margin: 20px; max-width: 700px;">
+     <v-stepper v-model="e1" style="margin: 20px; max-width: 700px;  ">
      <div v-if="loginzeigen === true">
       <v-stepper-header v-model="headeranzeigen" color="#5c7d9d">
         <v-stepper-step
@@ -99,20 +99,20 @@
               v-model="vorname"
               :rules="nameRules"
               :counter="25"
-              label="Vornamen eingeben*"
+              label="Vornamen eingeben"
               required
               
             ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Vornamen ein.</v-card-text></div>
+            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Vornamen ein. Dieses Feld ist kein Pflichtfeld.</v-card-text></div>
             <v-text-field
               v-model="nachname"
               :rules="nameRules"
               :counter="25"
-              label="Nachnamen eingeben*"
+              label="Nachnamen eingeben"
               required
               
             ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Nachnamen ein.</v-card-text></div>
+            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Nachnamen ein. Wenn Sie möchten, brauchen Sie dieses Feld nicht auszufüllen. Generell kann eine Namensangabe aber dabei helfen, von Ihren Bekannten gefunden zu werden.</v-card-text></div>
             <v-text-field
               v-model="email"
               :rules="emailRules"
@@ -120,7 +120,7 @@
               label="E-Mail eingeben"
               
             ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie hier Ihre E-Mail-Adresse ein. Diese benötigen wir für die 2-Faktor-Authentifizierung</v-card-text></div>
+            <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie hier Ihre E-Mail-Adresse ein. Diese benötigen wir für die 2-Faktor-Authentifizierung, das Feld ist Pflicht.</v-card-text></div>
             <v-text-field
               v-model="info"
               :rules="nameRules"
@@ -128,7 +128,7 @@
               label="Info eingeben"
               
             ></v-text-field>
-            <div v-if="hilfe_checkbox === true"><v-card-text>In der Info können Sie sich selbst in kurzen Worten beschreiben.</v-card-text></div>
+            <div v-if="hilfe_checkbox === true"><v-card-text>In der Info können Sie sich selbst in kurzen Worten beschreiben. Die Info wird für alle Ihre Kontakte sichtbar sein.</v-card-text></div>
             <v-file-input
                truncate-length="15"
                label="Profilbild hinzufügen"
@@ -348,7 +348,8 @@
             <div v-else>
                             
                               <div v-if="benutzername === undefined || passwort === undefined"><v-toolbar color="#5c7d9d" dark>Fehler aufgetreten.</v-toolbar></div>
-                              <div v-else><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
+                              <div v-else-if="loginzeigen === true"><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
+                              <div v-else><v-toolbar color="#5c7d9d" dark>Willkommen zurück!</v-toolbar></div>
                               <v-card-text>
                               <div v-if="benutzername === undefined || passwort === undefined">
                                 <div class="text-p2 pa-12">Bitte tragen Sie zunächst alle erforderlichen Daten ein.</div>
@@ -375,9 +376,9 @@
                                             <v-divider></v-divider>
                                             <v-card-text>
                                             <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
-                                            <div v-else-if="benutzername === 'SirSimon04'">Salute, Simon!</div>
-                                            <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas!</div>
-                                            <div v-if="benutzername !== 'JET3141'">Hallo, {{benutzername}}. Danke, dass Sie sich angemeldet haben!</div>
+                                            <div v-else-if="benutzername === 'SirSimon04'">Salute, SirSimon!</div>
+                                            <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas aka SimpusMaximus! <br><br><p6>Was ich mich ja eigentlich schon immer mal gefragt habe: Steht das "Simpus" für "Simp"?</p6></div>
+                                            <div v-else>Hallo, {{benutzername}}. Danke, dass Sie sich angemeldet haben!</div>
                                             </v-card-text>
                                 </v-card>
             
