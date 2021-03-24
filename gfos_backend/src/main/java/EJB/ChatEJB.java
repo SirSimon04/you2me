@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package EJB;
 
 import javax.ejb.Stateless;
@@ -16,7 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- *
+ * <h1>Die Klasse zum Verwalten der Chats in der Datenbank</h1>
+ * <p>Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der Datenbank
+ * bezogen auf die Chats. Die Daten werden bei Anfrage des Webservers übergeben.</p>
  * @author simon
  */
 @Stateless
@@ -24,39 +21,19 @@ public class ChatEJB {
     
     @PersistenceContext
     private EntityManager em;
-    
-    public Chat getById(int id) {
-        return em.find(Chat.class, id);
-    }
-    
-    public Chat getCopy(int id) {
-        Chat c = em.find(Chat.class, id);
-        em.detach(c);
-        for(Nutzer n : c.getNutzerList()){
-            em.detach(n);
-            n.setChatList(null);
-            n.setAdminInGroups(null);
-        }
-        for(Nutzer n : c.getAdminList()){
-            em.detach(n);
-            n.setChatList(null);
-            n.setAdminInGroups(null);
-        }
-        try{
-            Nachricht letzteN = c.getLetztenachricht();
-            letzteN.setNachrichtList(null);
-        }
-        catch(NullPointerException e){
-            
-        }
-        
-        return c;
-    }
-    
+    /**
+     * Diese Methode gibt alle Chats zurück.
+     * @return Eine Liste mit allen Chats.
+     */
     public List<Chat> getAll() {
         return em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
     }
-    
+    /**
+     * Diese Methode gibt alle Chats zurück. Dabei wird die Verbindung jedes Chats
+     * zur Datenbank getrennt, das heißt die Chats können ohne Auswirkung auf die Datenbank
+     * verändert werden. 
+     * @return Der Chat
+     */
     public List<Chat> getAllCopy(){
         List<Chat> chatList;
         chatList = em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
@@ -87,45 +64,101 @@ public class ChatEJB {
         }
         return chatList;
     }
-
-    public void createChat(Chat neuerChat) {
-        em.persist(neuerChat);
+    /**
+     * Diese Methode gibt einen Chat anhand seiner Id zurück.
+     * @param id Die Id des gesuchten Chats
+     * @return Der gesuchte Chat
+     */
+    public Chat getById(int id) {
+        return em.find(Chat.class, id);
     }
-    /*s
-    public void takePart(Nimmtteil nimmtteil) {
-        em.persist(nimmtteil);
+    /**
+     * Diese Methode sucht einen Chat anhand seiner Id. Dabei wird die Verbindung des Nutzers
+     * zur Datenbank getrennt, das heißt der Chat kann ohne Auswirkung auf die Datenbank
+     * verändert werden. 
+     * @return Der Chat
+     */
+    public Chat getCopy(int id) {
+        Chat c = em.find(Chat.class, id);
+        em.detach(c);
+        for(Nutzer n : c.getNutzerList()){
+            em.detach(n);
+            n.setChatList(null);
+            n.setAdminInGroups(null);
+        }
+        for(Nutzer n : c.getAdminList()){
+            em.detach(n);
+            n.setChatList(null);
+            n.setAdminInGroups(null);
+        }
+        try{
+            Nachricht letzteN = c.getLetztenachricht();
+            letzteN.setNachrichtList(null);
+        }
+        catch(NullPointerException e){
+            
+        }
+        
+        return c;
     }
-    */
     
+    /**
+     * Diese Methode fügt einen Nutzer zu einem Chat hinzu.
+     * @param chat Der Chat, zu dem ein Nutzer hinzugefügt werden soll.
+     * @param nutzer Der Nutzer, der zu einem Chat hinzugefügt werden soll.
+     */
     public void fuegeNutzerHinzu(Chat chat, Nutzer nutzer){
         System.out.println("cEJB fnh");
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().add(nutzer);
     }
-    
+    /**
+     * Diese Methode entfernt einen Nutzer aus einem Chat.
+     * @param chat Der Chat, aus dem der Nutzer entfernt werden soll.
+     * @param nutzer Der Nutzer, der aus einem Chat entfernt werden soll.
+     */
     public void entferneNutzer(Chat chat, Nutzer nutzer){
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().remove(nutzer);
     }
+    /**
+     * Diese Methode fügt einem Chat einen Administrator hinzul
+     * @param chat Der Chat
+     * @param nutzer Der Nutzer
+     */
+    public void addAdmin(Chat chat, Nutzer nutzer){
+        System.out.println("addAdmin");
+        Chat chatInDB = em.find(Chat.class, chat.getChatid());
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
+        chatInDB.getAdminList().add(nutzer);
+        nutzerInDB.getAdminInGroups().add(chat);
+    }
+    /**
+     * Diese Methode entfernt den Nutzer als Administrator der Gruppe.
+     * @param chat Der Chat
+     * @param nutzer Der Nutzer
+     */
+    public void deleteAdmin(Chat chat, Nutzer nutzer){
+        System.out.println("addAdmin");
+        Chat chatInDB = em.find(Chat.class, chat.getChatid());
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
+        chatInDB.getAdminList().remove(nutzer);
+        nutzerInDB.getAdminInGroups().remove(chat);
+    }
     
+    /**
+     * Diese Methode fügt einen neuen Chat in die Datenbank ein.
+     * @param neuerChat 
+     */
+    public void createChat(Chat neuerChat) {
+        em.persist(neuerChat);
+    }
+    /**
+     * Diese Methode löscht einen Chat aus der Datenbank.
+     * @param c 
+     */
     public void delete(Chat c){
         em.remove(c);
-    }
-    
-    public void addAdmin(Chat c, Nutzer n){
-        System.out.println("addAdmin");
-        Chat chatInDB = em.find(Chat.class, c.getChatid());
-        Nutzer nutzerInDB = em.find(Nutzer.class, n.getId());
-        chatInDB.getAdminList().add(n);
-        nutzerInDB.getAdminInGroups().add(c);
-    }
-    
-    public void deleteAdmin(Chat c, Nutzer n){
-        System.out.println("addAdmin");
-        Chat chatInDB = em.find(Chat.class, c.getChatid());
-        Nutzer nutzerInDB = em.find(Nutzer.class, n.getId());
-        chatInDB.getAdminList().remove(n);
-        nutzerInDB.getAdminInGroups().remove(c);
     }
             
 }

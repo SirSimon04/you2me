@@ -5,6 +5,7 @@
  */
 package WebService;
 
+import EJB.BlacklistEJB;
 import EJB.FotoEJB;
 import EJB.NutzerEJB;
 import Entity.Blacklist;
@@ -66,6 +67,8 @@ public class NutzerWS {
     private Tokenizer tokenizer;
     @EJB
     private FotoEJB fotoEJB;
+    @EJB
+    private BlacklistEJB blacklistEJB;
     
     @EJB
     private Emailservice email;
@@ -87,7 +90,7 @@ public class NutzerWS {
             }
             else if(true)
             {
-                List<Blacklist> bl = nutzerEJB.getAllBlacklisted();
+                List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
                 for(Blacklist b : bl)
                 {
                     if(b.getToken().equals(token))
@@ -380,7 +383,7 @@ public class NutzerWS {
 
     
     /**
-     * Diese Methode realisiert den Login in das System.
+     * Diese Methode realisiert den Login in das System und erstellt einen Token.
      * @param Daten Die Anmeldedaten des Nutzers, bestehend aus Nutzername und Passwort
      * @return Das Responseobjekt mit dem Webtoken und den eigenen Nutzerinformationen
      */
@@ -403,7 +406,7 @@ public class NutzerWS {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
             }
             
-            if(hasher.convertStringToHash(jsonPasswort).equals(dbNutzer.getPasswordhash()))
+            if(hasher.checkPassword(jsonPasswort).equals(dbNutzer.getPasswordhash()))
             {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("id", dbNutzer.getId());
@@ -411,10 +414,10 @@ public class NutzerWS {
                 jsonObject.addProperty("email", dbNutzer.getEmail());
                 String token = tokenizer.createNewToken(dbNutzer.getBenutzername());
                 
-                List<Blacklist> bl = nutzerEJB.getAllBlacklisted();
+                List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
                 for(Blacklist b : bl){
                     if(b.getToken().equals(token)){
-                        nutzerEJB.deleteToken(token);
+                        blacklistEJB.deleteToken(token);
                     }
                 }
                 jsonObject.addProperty("token", token);
@@ -462,7 +465,7 @@ public class NutzerWS {
                 Date date = new Date();
                 bl.setTimestamp(date);
 
-                nutzerEJB.logOut(bl);
+                blacklistEJB.logOut(bl);
                 
                 return response.generiereAntwort("true");
 
@@ -528,7 +531,7 @@ public class NutzerWS {
                 return response.generiereFehler500("Email bereits vergeben");
             }
             
-            neuerNutzer.setPasswordhash(hasher.convertStringToHash(neuesPasswort));
+            neuerNutzer.setPasswordhash(hasher.checkPassword(neuesPasswort));
             
             if(neuerVorname != null){
                 neuerNutzer.setVorname(neuerVorname);    
@@ -635,7 +638,7 @@ public class NutzerWS {
 
                         Date date = new Date();
                         bl.setTimestamp(date);
-                        nutzerEJB.logOut(bl);
+                        blacklistEJB.logOut(bl);
                         return response.generiereAntwort("true");
                     }
                     else{
@@ -685,7 +688,7 @@ public class NutzerWS {
             
             Nutzer nutzerInDB = nutzerEJB.getById(eigeneId);
             Hasher hasher = new Hasher();
-            if(nutzerInDB.getPasswordhash().equals(hasher.convertStringToHash(altesPasswort))){
+            if(nutzerInDB.getPasswordhash().equals(hasher.checkPassword(altesPasswort))){
             
                 if(nutzerInDB != null){
 
@@ -698,7 +701,7 @@ public class NutzerWS {
                     }
 
                     if(neuesPasswort != null){
-                        nutzerInDB.setPasswordhash(hasher.convertStringToHash(neuesPasswort));
+                        nutzerInDB.setPasswordhash(hasher.checkPassword(neuesPasswort));
                     }
 
                     if(neueHandynummer != null){

@@ -14,7 +14,14 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-
+/**
+ * <h1>Die Java-Klassse zur Identifizierung und Authentifizierung der Nutzer</h1>
+ * <p>Diese Klasse erstellt ein neues Webtoken, welches die Identifizierung und Authentifizierung
+ * der einzelnen Nutzer ermöglicht. Die erstellten Token sind dabei nur begrenzt gültig und
+ * realisiert das automatische Beenden der Sitzung nach einem definierten Zeitpunkt.
+ * Das Token wird bei Anfrage des Webservers übergeben.</p>
+ * @author simon
+ */
 @Stateless
 @LocalBean
 public class Tokenizer {
@@ -22,20 +29,30 @@ public class Tokenizer {
     private final long DT = 1200000; // Token 120 Sekunden gültig
     private final boolean STATUS = false;
     
-    public String createNewToken(String user) {
+    /**
+     * Diese Methode erstellt ein neues Token.
+     * @param username Der Benutzername eines Nutzers
+     * @return Das neue Token
+     */
+    public String createNewToken(String username) {
         try {
             long t = (System.currentTimeMillis() / DT) * DT;
             Algorithm algorithm = Algorithm.HMAC256(SECRET + t);
             String token = JWT.create()
                 .withIssuer("GFOSProjekt")
-                .withSubject(user)
+                .withSubject(username)
                 .sign(algorithm);
             return token;
         } catch (JWTCreationException exception) {
             return "JWT-Creation failed.";
         }
     }        
-    
+    /**
+     * Diese Methode prüft ein Token auf seine Gültigkeit. Ist es gültig, wird sein Gültigkeitszeitraum
+     * verlängert.
+     * @param token Das Webtoken
+     * @return Neues Token oder Fehlermeldung
+     */
     public String verifyToken(String token) {
         try {
             long t = (System.currentTimeMillis() / DT) * DT;
@@ -61,7 +78,11 @@ public class Tokenizer {
             }
         }
     }
-    
+    /**
+     * Dise Methode gibt das zu einem Nutzer passende Token wieder. 
+     * @param token Das Token
+     * @return Der Benutzername
+     */
     public String getUser(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);

@@ -5,7 +5,12 @@ import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
 
  
-
+/**
+ * <h1>Die Klasse zum Erstellen von Response-Objekten</h1>
+ * <p>Diese Klasse erstellt mit den gegeben Daten ein Response-Objekt zur fehlerfreien
+ * Datenübertragung an das Frontend</p>
+ * @author simon
+ */
 @Stateless
 @LocalBean
 public class Antwort {  
@@ -48,7 +53,13 @@ public class Antwort {
             .entity(data)
             .build();
     }
-    
+    /**
+     * Diese Methode bildet mit dem gegebenem Wert ein Antwortobjekt für die Kommunikation mit dem Frontend.
+     * Hier wird zusätzlich CORS im Header des Objektes erlaubt und der Status 406 gesetzt.
+     * Dies ist für den Fall von falschen beziehungsweise nicht gültigen Nutzereingaben.
+     * @param data Die zu übermittelnden Daten.
+     * @return Reponseobjekt (406).
+     */
     public Response generiereFehler406(String data){
         return Response
             .status(406)
@@ -61,7 +72,13 @@ public class Antwort {
             .entity(data)
             .build();
     }
-    
+    /**
+     * Diese Methode bildet mit dem gegebenem Wert ein Antwortobjekt für die Kommunikation mit dem Frontend.
+     * Hier wird zusätzlich CORS im Header des Objektes erlaubt und der Status 500 gesetzt.
+     * Dies ist für den Fall eines unerwarteten Server-Fehlers.
+     * @param data Die zu übermittelnden Daten.
+     * @return Reponseobjekt (500).
+     */
     public Response generiereFehler500(String data){
         return Response
             .status(406)

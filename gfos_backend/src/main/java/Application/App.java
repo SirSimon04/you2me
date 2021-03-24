@@ -5,6 +5,7 @@
  */
 package Application;
 
+import EJB.BlacklistEJB;
 import EJB.NutzerEJB;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,14 +20,14 @@ public class App extends Application{
     ScheduledExecutorService exec;
     
     @EJB
-    private NutzerEJB nutzerEJB;
+    private BlacklistEJB blacklistEJB;
     
     public App(){
         System.out.println("App constructed");
         ScheduledExecutorService execService
                         =   Executors.newScheduledThreadPool(5);
         execService.scheduleAtFixedRate(() -> {
-            nutzerEJB.clearBlacklist();
+            blacklistEJB.clearBlacklist();
             System.out.println("bl cleared");
         }, 30, 3600, TimeUnit.SECONDS);
         

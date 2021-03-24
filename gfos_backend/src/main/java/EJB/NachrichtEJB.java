@@ -18,7 +18,9 @@ import Entity.Nutzer;
 import javax.ejb.EJB;
 
 /**
- *
+ * <h1>Die Klasse zum Verwalten der Nachrichten in der Datenbank</h1>
+ * <p>Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der Datenbank
+ * bezogen auf die Nachrichten. Die Daten werden bei Anfrage des Webservers übergeben.</p>
  * @author simon
  */
 @Stateless
@@ -29,17 +31,26 @@ public class NachrichtEJB {
     
     @EJB
     private NutzerEJB nutzerEJB;
-    
+    /**
+     * Diese Methode fügt eine Nachricht in die Datenbank ein.
+     * @param neueNachricht Die Nachricht
+     */
     public void add(Nachricht neueNachricht) {
         em.persist(neueNachricht);
     }
-    
+    /**
+     * Diese Methode löscht eine Nachricht aus der Datenbank.
+     * @param id Die id der zu löschenden Nachricht.
+     */
     public void delete(int id){
-        Nachricht n = getByID(id);
+        Nachricht n = getById(id);
         em.remove(n);
     }
     
-    
+    /**
+     * Diese Methode gibt alle Nachrichten zurück.
+     * @return Eine Liste mit allen Nachrichten.
+     */
     public List<Nachricht> getAll() {
         List<Nachricht> nachrichtList  = em.createNamedQuery(Nachricht.class.getSimpleName()+".findAll").getResultList();
         for(Nachricht n : nachrichtList){
@@ -54,11 +65,23 @@ public class NachrichtEJB {
         }
         return nachrichtList;
     }
-    
-    public Nachricht getByID(int id){
+    /**
+     * Diese Methode gibt eine Nachricht anhand ihrer Id zurück.
+     * @param id Die Id der Nachricht.
+     * @return Die Nachricht.
+     */
+    public Nachricht getById(int id){
         return em.find(Nachricht.class, id);
     }
-    
+    /**
+     * Diese Methode gibt alle Nachrichten eines Chats zurück. 
+     * Dabei wird der Benutzername des Senders aus der Id des Senders ermittelt. 
+     * Das geschieht aus dem Grund, dass der Benutzername des Senders nicht bei jeder
+     * Nachricht gespeichert werden soll und ein Nutzer seinen Benutzernamen ändern kann.
+     * Existiert der Nutzer nicht mehr in der Datenbank, wird das im Sender der Nachricht deutlich.
+     * @param id
+     * @return 
+     */
     public List<Nachricht> getByChatId(int id){   
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         for(Nachricht n : nachrichtList){
@@ -74,7 +97,15 @@ public class NachrichtEJB {
         }
         return nachrichtList;
     }
-    
+    /**
+     * Diese Methode gibt die neueste Nachricht aus einem Chat zurück. 
+     * Dabei wird der Benutzername des Senders aus der Id des Senders ermittelt. 
+     * Das geschieht aus dem Grund, dass der Benutzername des Senders nicht bei jeder
+     * Nachricht gespeichert werden soll und ein Nutzer seinen Benutzernamen ändern kann.
+     * Existiert der Nutzer nicht mehr in der Datenbank, wird das im Sender der Nachricht deutlich.
+     * @param id
+     * @return 
+     */
     public Nachricht getNewest(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         if(nachrichtList.size() == 0){

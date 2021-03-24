@@ -34,8 +34,9 @@ import java.util.Date;
 import javax.ws.rs.core.Response;
 
 /**
- *
- * @author simon
+ *<h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nachrichten</h1>
+ * <p>Diese Klasse beinhaltet alle Methoden des Webservers bezogen auf das Objekt der Nachrichten
+ * für das Bearbeiten und Ausgeben der Daten und stellt damit die Schnittstelle mit dem Frontend dar</p>
  */
 @Path("/nachricht")
 @Stateless
@@ -54,6 +55,11 @@ public class NachrichtWS {
     
     private Antwort response = new Antwort();
     
+    /**
+     * Diese Methode verifiziert einen Token.
+     * @param token Das Webtoken
+     * @return Boolean, ob der Token akzeptiert wurde
+     */
     public boolean verify(String token){
         if(tokenizer.isOn()){
             if(tokenizer.verifyToken(token).equals(""))
@@ -71,7 +77,11 @@ public class NachrichtWS {
         
     }
     
-     
+     /**
+      * Diese Methode gibt alle Nachrichten zurück.
+      * @param token Das Webtoken       
+      * @return Die Liste mit allen Nachrichten
+      */
     @GET
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -89,6 +99,12 @@ public class NachrichtWS {
         
     }
     
+    /**
+     * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück.
+     * @param id Die Id des Chats, aus dem die Nachrichten angezeigt werden solln
+     * @param token Das Webtoken    
+     * @return Die Liste mit den Nachrichten.
+     */
     @GET
     @Path("/chat/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,8 +118,13 @@ public class NachrichtWS {
             return response.generiereAntwort(parser.toJson(nList));
         }
         
-    }
-    
+    } 
+    /**
+     * Diese Methode liefert die neuste Nachricht aus einem Chat.
+     * @param id Die Id des Chats
+     * @param token Das Webtoken
+     * @return Die neueste Nachricht
+     */
     @GET
     @Path("/chat/getNewest/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -118,27 +139,33 @@ public class NachrichtWS {
         }
     }
     
+    /**
+     * Diese Methode sendet eine Nachricht in einen Chat.
+     * @param Datenn Die Daten zum Chat und der Nachricht.
+     * @param token Das Webtoken
+     * @return Das Responseobkjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/add/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response create(String jsonStr, @PathParam("token") String token) {
+    public Response create(String Datenn, @PathParam("token") String token) {
         
         if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
         }
         else {
-            System.out.println(jsonStr);
+            System.out.println(Datenn);
             Gson parser = new Gson();
             try {
                 int jsonAnswerId = 0;
-                JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
-                Nachricht neueNachricht = parser.fromJson(jsonStr, Nachricht.class);
+                JsonObject jsonObject = parser.fromJson(Datenn, JsonObject.class);
+                Nachricht neueNachricht = parser.fromJson(Datenn, Nachricht.class);
                 String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
                 int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
                 try{
                     jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
-                    Nachricht nachrichtInDB = nachrichtEJB.getByID(jsonAnswerId);
+                    Nachricht nachrichtInDB = nachrichtEJB.getById(jsonAnswerId);
                     neueNachricht.setAntwortauf(nachrichtInDB);
                 }
                 catch(NullPointerException e){
@@ -167,21 +194,26 @@ public class NachrichtWS {
         
     }
     
-    
+    /**
+     * Diese Methode löscht eine Nachricht aus einem Chat. Das gilt für alle Nutzer.
+     * @param Daten Die Daten zur Nachricht.
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/delete/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response delete(String jsonStr, @PathParam("token") String token) {
+    public Response delete(String Daten, @PathParam("token") String token) {
         
         if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
         }
         else {
             Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(jsonStr, JsonObject.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int lNachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
-            Nachricht n = nachrichtEJB.getByID(lNachrichtId);
+            Nachricht n = nachrichtEJB.getById(lNachrichtId);
             
             if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
                 
