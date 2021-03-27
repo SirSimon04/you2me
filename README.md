@@ -160,6 +160,14 @@ Create Table isAdmin(
     foreign Key(chatId) references Chat(chatid) on delete cascade
 );
 
+Create Table hatBlockiert(
+    nutzer1Id integer not null,
+    nutzer2Id integer not null,
+   
+    foreign Key(nutzer1Id) references Nutzer(id) on delete cascade,
+    foreign Key(nutzer2Id) references Nutzer(id) on delete cascade
+);
+
 
 
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
