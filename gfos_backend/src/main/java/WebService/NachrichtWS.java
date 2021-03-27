@@ -8,6 +8,8 @@ package WebService;
 import EJB.ChatEJB;
 import EJB.FotoEJB;
 import EJB.NachrichtEJB;
+import EJB.NutzerEJB;
+import Entity.Chat;
 import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
@@ -49,6 +51,8 @@ public class NachrichtWS {
     private FotoEJB fotoEJB;
     @EJB
     private ChatEJB chatEJB;
+    @EJB
+    private NutzerEJB nutzerEJB;
     
     @EJB
     private Tokenizer tokenizer;
@@ -141,7 +145,7 @@ public class NachrichtWS {
     
     /**
      * Diese Methode sendet eine Nachricht in einen Chat.
-     * @param Datenn Die Daten zum Chat und der Nachricht.
+     * @param Daten Die Daten zum Chat und der Nachricht.
      * @param token Das Webtoken
      * @return Das Responseobkjekt mit dem Status der Methode.
      */
@@ -149,20 +153,21 @@ public class NachrichtWS {
     @Path("/add/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response create(String Datenn, @PathParam("token") String token) {
+    public Response send(String Daten, @PathParam("token") String token) {
         
         if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
         }
         else {
-            System.out.println(Datenn);
+            System.out.println(Daten);
             Gson parser = new Gson();
             try {
                 int jsonAnswerId = 0;
-                JsonObject jsonObject = parser.fromJson(Datenn, JsonObject.class);
-                Nachricht neueNachricht = parser.fromJson(Datenn, Nachricht.class);
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
                 String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
                 int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
+                int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class);
                 try{
                     jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
                     Nachricht nachrichtInDB = nachrichtEJB.getById(jsonAnswerId);
@@ -180,6 +185,21 @@ public class NachrichtWS {
                     Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
                     neueNachricht.setFoto(fotoInDB);
                 }
+                //check if someone is blocked
+                Chat c = chatEJB.getById(chatId);
+                Chat copy = chatEJB.getCopyListsNotNull(chatId);
+                Nutzer self = nutzerEJB.getById(senderId);
+                copy.getNutzerList().remove(self);
+                Nutzer other = copy.getNutzerList().get(0);
+                if(!c.getIsgroup()){
+                    if(self.getHatBlockiert().contains(other)){
+                        return response.generiereFehler406("Du hast diesen Nutzer blockiert");
+                    }
+                    if(other.getHatBlockiert().contains(self)){
+                        return response.generiereFehler406("Du bist von diesem Nutzer blockiert");
+                    }
+                }
+                
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");

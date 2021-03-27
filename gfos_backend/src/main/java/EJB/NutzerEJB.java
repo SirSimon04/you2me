@@ -370,6 +370,13 @@ public class NutzerEJB {
         otherInDB.getBlockiertVon().add(self);
     }
     
+    public void unblock(Nutzer self, Nutzer other){
+        Nutzer selfInDB = em.find(Nutzer.class, self.getId());
+        Nutzer otherInDB = em.find(Nutzer.class, other.getId());
+        selfInDB.getHatBlockiert().remove(other);
+        otherInDB.getBlockiertVon().remove(self);
+    }
+    
     /**
      * Diese Methode löscht einen Nutzer anhand seiner Id aus der Datenbank.
      * @param id Die id des zu löschenden Nutzers

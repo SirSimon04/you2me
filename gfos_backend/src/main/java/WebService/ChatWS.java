@@ -121,6 +121,8 @@ public class ChatWS {
            Chat c = chatEJB.getCopy(id);
             
             Gson parser = new Gson();
+            System.out.println(c);
+//            System.out.println(c.getLetztenachricht());
             return response.generiereAntwort(parser.toJson(c)); 
         }
         
@@ -155,6 +157,9 @@ public class ChatWS {
            
            if(c.getIsgroup()){
 
+                self.setBlockiertVon(null);
+                self.setHatBlockiert(null);
+               
                 nutzerListe.remove(self);
 
                 List<Nutzer> isAdmin = new ArrayList<>();
@@ -166,7 +171,8 @@ public class ChatWS {
                     nutzer.setPasswordhash(null);
                     nutzer.setOtherFriendList(null);
                     nutzer.setOwnFriendList(null);
-
+                    nutzer.setHatBlockiert(null);
+                    nutzer.setBlockiertVon(null);
                    if(adminListe.contains(nutzer)){
                        isAdmin.add(nutzer); 
                    }
@@ -174,7 +180,7 @@ public class ChatWS {
                        isNotAdmin.add(nutzer);
                    }
                 }
-
+                
                 System.out.println("isAdmin" + isAdmin);
                 System.out.println("isNotAdmin" + isNotAdmin);
 
@@ -242,6 +248,8 @@ public class ChatWS {
                 other.setPasswordhash(null);
                 other.setOwnFriendList(null);
                 other.setOtherFriendList(null);
+                other.setHatBlockiert(null);
+                other.setBlockiertVon(null);
                 jsonObject.add("nutzer", parser.toJsonTree(other));
                 jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
                 jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
@@ -273,7 +281,17 @@ public class ChatWS {
                     chat.setLetztenachricht(null);
                 }
                 
-                jsonObject.add("chatListe", parser.toJsonTree(listTogether));
+                Chat chat = chatEJB.getById(chatId);
+                listTogether.remove(chat);
+                Nutzer o = nutzerEJB.getById(other.getId());
+                jsonObject.add("gemeinsameChatListe", parser.toJsonTree(listTogether));
+                
+                if(self.getHatBlockiert().contains(o)){
+                    jsonObject.add("isblocked", parser.toJsonTree(true));
+                }
+                if(o.getHatBlockiert().contains(self)){
+                    jsonObject.add("gotblocked", parser.toJsonTree(true));
+                }
                 
                 return response.generiereAntwort(parser.toJson(jsonObject)); 
            }
@@ -331,21 +349,13 @@ public class ChatWS {
         }
         
     }
-    
-//    @GET
-//    @Path("/testBlock")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response testBlock(){
-//        Gson parser = new Gson();
-//        self = nutzer
-//                
-//    }
+
     
     /**
      * Diese Methode liefert die Liste mit den letzten Chats zurück. Falls es sich bei einem Chat um einen Einzelchat handelt,
      * werden als Chatinformationen die Informationen des anderen Nutzers angegeben (Profilbild, Name und Info). Die ganze Liste wird 
      * mit einem erstellten Comparator nach dem Versanddatum der letzten Nachricht sortiert, dabei sind die Neuesten am Anfang. Chats,
-     * die noch keine Nachricht beinhalten, sind am Ende
+     * die noch keine Nachricht beinhalten, sind am Ende.
      * @param nutzerid Die eigene Id
      * @param token Das Webtoken
      * @return Die eigene Chatliste
@@ -363,7 +373,7 @@ public class ChatWS {
 
                 Nutzer self = nutzerEJB.getCopyByIdListsNotNull(nutzerid);
 
-                List<Chat> liste = chatEJB.getAllCopy();
+                List<Chat> liste = chatEJB.getAllCopyListsNotNull();
                 for(Chat c : liste) {
                     if(c.getNutzerList().contains(self))
                     {
@@ -404,9 +414,11 @@ public class ChatWS {
                             System.out.println(nutzerList);
                             
                             
-                            System.out.println(self.getHatBlockiert());
                             if(self.getHatBlockiert().contains(andererNutzer)){
                                 c.setIsblocked(Boolean.TRUE);
+                            }
+                            if(andererNutzer.getHatBlockiert().contains(self)){
+                                c.setGotblocked(Boolean.TRUE);
                             }
                         }
                         c.setAdminList(null);

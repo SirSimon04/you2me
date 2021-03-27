@@ -45,6 +45,8 @@ public class ChatEJB {
                 n.setAdminInGroups(null);
                 n.setOwnFriendList(null);
                 n.setOtherFriendList(null);
+                n.setHatBlockiert(null);
+                n.setBlockiertVon(null);
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
@@ -52,6 +54,8 @@ public class ChatEJB {
                 n.setAdminInGroups(null);
                 n.setOwnFriendList(null);
                 n.setOtherFriendList(null);
+                n.setHatBlockiert(null);
+                n.setBlockiertVon(null);
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
@@ -64,6 +68,31 @@ public class ChatEJB {
         }
         return chatList;
     }
+    
+    public List<Chat> getAllCopyListsNotNull(){
+        List<Chat> chatList;
+        chatList = em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
+        for(Chat c : chatList) {
+            em.detach(c);
+            for(Nutzer n : c.getNutzerList()){
+                em.detach(n);
+            }
+            for(Nutzer n : c.getAdminList()){
+                em.detach(n);
+                n.setBlockiertVon(null);
+            }
+            try{
+                Nachricht letzteN = c.getLetztenachricht();
+                letzteN.setNachrichtList(null);
+            }
+            catch(NullPointerException e){
+                
+            }
+            
+        }
+        return chatList;
+    }
+    
     /**
      * Diese Methode gibt einen Chat anhand seiner Id zurück.
      * @param id Die Id des gesuchten Chats
@@ -85,11 +114,39 @@ public class ChatEJB {
             em.detach(n);
             n.setChatList(null);
             n.setAdminInGroups(null);
+            n.setOwnFriendList(null);
+            n.setOtherFriendList(null);
+            n.setHatBlockiert(null);
+            n.setBlockiertVon(null);
         }
         for(Nutzer n : c.getAdminList()){
             em.detach(n);
             n.setChatList(null);
             n.setAdminInGroups(null);
+            n.setOwnFriendList(null);
+            n.setOtherFriendList(null);
+            n.setHatBlockiert(null);
+            n.setBlockiertVon(null);
+        }
+        try{
+            Nachricht letzteN = c.getLetztenachricht();
+            letzteN.setNachrichtList(null);
+        }
+        catch(NullPointerException e){
+            
+        }
+        
+        return c;
+    }
+    
+    public Chat getCopyListsNotNull(int id) {
+        Chat c = em.find(Chat.class, id);
+        em.detach(c);
+        for(Nutzer n : c.getNutzerList()){
+            em.detach(n);
+        }
+        for(Nutzer n : c.getAdminList()){
+            em.detach(n);
         }
         try{
             Nachricht letzteN = c.getLetztenachricht();

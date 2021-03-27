@@ -250,6 +250,8 @@ public class NutzerWS {
                 n.setChatList(null);
                 n.setOtherFriendList(null);
                 n.setOwnFriendList(null);
+                n.setHatBlockiert(null);
+                n.setBlockiertVon(null);
             }
             
             List<Nutzer> otherFriendListDB = self.getOtherFriendList();
@@ -258,6 +260,8 @@ public class NutzerWS {
                 n.setChatList(null);
                 n.setOtherFriendList(null);
                 n.setOwnFriendList(null);
+                n.setHatBlockiert(null);
+                n.setBlockiertVon(null);
             }
             List<Nutzer> friends = new ArrayList<>();
             List<Nutzer> friendRequests = new ArrayList<>();
@@ -403,6 +407,38 @@ public class NutzerWS {
                     nutzerEJB.block(self, other);
                     self.getHatBlockiert().add(other);
                     other.getBlockiertVon().add(self);
+                    
+                    return response.generiereAntwort("true");      
+            }
+            catch(JsonSyntaxException e) {
+                return response.generiereFehler406("Json wrong");
+            }
+        }
+    }
+    
+    @POST
+    @Path("/unblock/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response unblock(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+        
+            try{
+                JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
+
+                int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
+                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
+
+                String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
+                Nutzer other = nutzerEJB.getCopyByUsernameListsNotNull(andererName);
+
+                    nutzerEJB.unblock(self, other);
+                    self.getHatBlockiert().remove(other);
+                    other.getBlockiertVon().remove(self);
                     
                     return response.generiereAntwort("true");      
             }
