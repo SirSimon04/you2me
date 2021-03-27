@@ -6,9 +6,9 @@ import java.io.*;
 
 public class Mail
 {
-  private static final String SMTP_HOST_NAME = "smtp.ionos.de"; //or simply "localhost"
-  private static final String SMTP_AUTH_USER = "simi@engelnetz.de";
-  private static final String SMTP_AUTH_PWD  = "Simoneng";
+  private static final String SMTP_HOST_NAME = "sxxxxx"; //or simply "localhost"
+  private static final String SMTP_AUTH_USER = "xxxxx";
+  private static final String SMTP_AUTH_PWD  = "xxxxx";
 
   
 

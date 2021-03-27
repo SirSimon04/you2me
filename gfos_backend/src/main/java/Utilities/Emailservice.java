@@ -26,12 +26,12 @@ public class Emailservice {
     */
     public void setdaten() {  //args[] to,subjekt,body
         //setzte Daten
-        String from = "simi@engelnetz.de";
-        String pass = "Simoneng"; 
-        String to = "simi@engelnetz.de";
+        String from = "xxxxx";
+        String pass = "xxxxxx"; 
+        String to = "xxxxxx";
         String subject = "Test";
         String body = "";
-        String host = "smtp.ionos.de";
+        String host = "xxxxx";
         String port = "587";
         sendFromGMail(host, port, from, pass, to, subject, body);
     }
