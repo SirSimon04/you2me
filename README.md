@@ -110,6 +110,7 @@ CREATE TABLE Nachricht
     foto int,
     antwortauf int,
     sender varchar(50),
+    isImportant boolean,
     
     foreign key(foto) references Foto(id),
     foreign key(antwortauf) references Nachricht(nachrichtId)
