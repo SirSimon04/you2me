@@ -69,6 +69,19 @@ Ideen für Einstellungen im frontend:
     
 
 ## Datenbank
+
+Create Table Foto(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    base64 VARCHAR(32000)
+);
+
+Create Table blacklist(
+    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
+    (START WITH 1, INCREMENT BY 1),
+    token VARCHAR(200),
+    timestamp Timestamp
+);
 CREATE TABLE Nutzer
 (
     id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
@@ -112,6 +125,8 @@ CREATE TABLE Chat
     profilbild int,
     letzteNachricht int,
     isGroup boolean,
+    isBlocked boolean,
+    gotBlocked boolean,
     
     foreign key(profilbild) references Foto(id),
     foreign key(letzteNachricht) references Nachricht(nachrichtId)
@@ -142,21 +157,17 @@ Create Table isAdmin(
     chatid integer not null,
     
     foreign Key(nutzerId) references Nutzer(id) on delete cascade,
-    foreign Key(chatId) refrences Chat(chatid) on delete cascade
+    foreign Key(chatId) references Chat(chatid) on delete cascade
 );
 
-Create Table Foto(
-    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
-    (START WITH 1, INCREMENT BY 1),
-    base64 VARCHAR(max)
-);
 
-Create Table blacklist(
-    id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
-    (START WITH 1, INCREMENT BY 1),
-    token VARCHAR(200),
-    timestamp Timestamp
-);
+
+INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
+	VALUES ('Simon', NULL, NULL, 'se@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL);
+INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
+	VALUES ('Jet3141', NULL, NULL, 'jet@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL);
+INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
+	VALUES ('NoSkiller', NULL, NULL, 'no@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL);
 
 #### Things to do after Recreating of Entities
 alle Listen aus Foto löschen
