@@ -55,6 +55,8 @@ public class NutzerEJB {
            n.setOwnFriendList(null);
            n.setOtherFriendList(null);
            n.setChatList(null);
+           n.setHatBlockiert(null);
+            n.setBlockiertVon(null);
         }
         return nutzerList;
     
@@ -85,6 +87,8 @@ public class NutzerEJB {
         n.setOwnFriendList(null);
         n.setOtherFriendList(null);
         n.setChatList(null);
+        n.setHatBlockiert(null);
+        n.setBlockiertVon(null);
         return n;
         
     }
@@ -110,8 +114,15 @@ public class NutzerEJB {
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
            }
+           for(Nutzer nutzer : n.getBlockiertVon()){
+               em.detach(nutzer);
+            }
+           for(Nutzer nutzer : n.getHatBlockiert()){
+               em.detach(nutzer);
+            }
         return n;
     }
+    
     /**
      * Diese Methode gibt alle Nutzer aus einem bestimmten Chat zurück. Dabei wird die Verbindung der Nutzer
      * zur Datenbank getrennt, das heißt die Nutzer können ohne Auswirkung auf die Datenbank
@@ -149,9 +160,24 @@ public class NutzerEJB {
                 nu.setOtherFriendList(null);
                 nu.setPasswordhash(null);
            }
+           for(Nutzer nutzer : n.getBlockiertVon()){
+               em.detach(nutzer);
+               nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswordhash(null);
+            }
+           for(Nutzer nutzer : n.getHatBlockiert()){
+               em.detach(nutzer);
+               nutzer.setChatList(null);
+                nutzer.setOwnFriendList(null);
+                nutzer.setOtherFriendList(null);
+                nutzer.setPasswordhash(null);
+            }
         }
         return nutzerList;
     }
+    
     /**
      * Diese Methode sucht einen Nutzer anhand seines Benutzernamens.
      * @param username Der Benutzername des gesuchten Nutzers.
@@ -185,10 +211,12 @@ public class NutzerEJB {
         Nutzer n = (Nutzer) query.getSingleResult();
         em.detach(n);
         n.setPasswordhash(null);
-           n.setAdminInGroups(null);
-           n.setOwnFriendList(null);
-           n.setOtherFriendList(null);
-           n.setChatList(null);
+        n.setAdminInGroups(null);
+        n.setOwnFriendList(null);
+        n.setOtherFriendList(null);
+        n.setChatList(null);
+        n.setHatBlockiert(null);
+        n.setBlockiertVon(null);
         return n;
     }
     /**
@@ -333,6 +361,13 @@ public class NutzerEJB {
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getOwnFriendList().remove(other);
         otherInDB.getOtherFriendList().remove(self);
+    }
+    
+    public void block(Nutzer self, Nutzer other){
+        Nutzer selfInDB = em.find(Nutzer.class, self.getId());
+        Nutzer otherInDB = em.find(Nutzer.class, other.getId());
+        selfInDB.getHatBlockiert().add(other);
+        otherInDB.getBlockiertVon().add(self);
     }
     
     /**

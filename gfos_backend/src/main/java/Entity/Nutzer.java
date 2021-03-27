@@ -81,6 +81,13 @@ public class Nutzer implements Serializable {
     private String info;
     @Column(name = "ISADMIN")
     private Boolean isadmin;
+    @JoinTable(name = "HATBLOCKIERT", joinColumns = {
+        @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<Nutzer> hatBlockiert;
+    @ManyToMany(mappedBy = "hatBlockiert")
+    private List<Nutzer> blockiertVon;
     @JoinTable(name = "BEFREUNDETMIT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -183,6 +190,24 @@ public class Nutzer implements Serializable {
 
     public void setIsadmin(Boolean isadmin) {
         this.isadmin = isadmin;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getHatBlockiert() {
+        return hatBlockiert;
+    }
+
+    public void setHatBlockiert(List<Nutzer> hatBlockiert) {
+        this.hatBlockiert = hatBlockiert;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getBlockiertVon() {
+        return blockiertVon;
+    }
+
+    public void setBlockiertVon(List<Nutzer> blockiertVon) {
+        this.blockiertVon = blockiertVon;
     }
 
     @XmlTransient

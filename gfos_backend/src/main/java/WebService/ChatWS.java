@@ -331,6 +331,16 @@ public class ChatWS {
         }
         
     }
+    
+//    @GET
+//    @Path("/testBlock")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response testBlock(){
+//        Gson parser = new Gson();
+//        self = nutzer
+//                
+//    }
+    
     /**
      * Diese Methode liefert die Liste mit den letzten Chats zurück. Falls es sich bei einem Chat um einen Einzelchat handelt,
      * werden als Chatinformationen die Informationen des anderen Nutzers angegeben (Profilbild, Name und Info). Die ganze Liste wird 
@@ -351,11 +361,11 @@ public class ChatWS {
             try{
                 List<Chat> returnList = new ArrayList<Chat>();
 
-                Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
+                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(nutzerid);
 
                 List<Chat> liste = chatEJB.getAllCopy();
                 for(Chat c : liste) {
-                    if(c.getNutzerList().contains(nutzer))
+                    if(c.getNutzerList().contains(self))
                     {
                         returnList.add(c);
                     }
@@ -392,6 +402,12 @@ public class ChatWS {
                             c.setBeschreibung(andererNutzer.getInfo());
                             c.setNutzerList(null);
                             System.out.println(nutzerList);
+                            
+                            
+                            System.out.println(self.getHatBlockiert());
+                            if(self.getHatBlockiert().contains(andererNutzer)){
+                                c.setIsblocked(Boolean.TRUE);
+                            }
                         }
                         c.setAdminList(null);
                         c.setNutzerList(null);

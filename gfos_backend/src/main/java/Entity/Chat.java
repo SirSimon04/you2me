@@ -37,7 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Chat.findByErstelldatum", query = "SELECT c FROM Chat c WHERE c.erstelldatum = :erstelldatum"),
     @NamedQuery(name = "Chat.findByName", query = "SELECT c FROM Chat c WHERE c.name = :name"),
     @NamedQuery(name = "Chat.findByBeschreibung", query = "SELECT c FROM Chat c WHERE c.beschreibung = :beschreibung"),
-    @NamedQuery(name = "Chat.findByIsgroup", query = "SELECT c FROM Chat c WHERE c.isgroup = :isgroup")})
+    @NamedQuery(name = "Chat.findByIsgroup", query = "SELECT c FROM Chat c WHERE c.isgroup = :isgroup"),
+    @NamedQuery(name = "Chat.findByIsblocked", query = "SELECT c FROM Chat c WHERE c.isblocked = :isblocked")})
 public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,6 +58,8 @@ public class Chat implements Serializable {
     private String beschreibung;
     @Column(name = "ISGROUP")
     private Boolean isgroup;
+    @Column(name = "ISBLOCKED")
+    private Boolean isblocked;
     @JoinTable(name = "NIMMTTEIL", joinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -116,6 +119,14 @@ public class Chat implements Serializable {
 
     public void setIsgroup(Boolean isgroup) {
         this.isgroup = isgroup;
+    }
+
+    public Boolean getIsblocked() {
+        return isblocked;
+    }
+
+    public void setIsblocked(Boolean isblocked) {
+        this.isblocked = isblocked;
     }
 
     @XmlTransient
