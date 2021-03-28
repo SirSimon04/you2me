@@ -7,6 +7,7 @@ package EJB;
 
 import javax.ejb.Stateless;
 import Entity.Nachricht;
+import Entity.Nutzer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class NachrichtEJB {
         for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
+            n.setNutzerList(null);
             try{
                 n.setSender(nutzerEJB.getCopyById(n.getSenderid()).getBenutzername());
             }
@@ -73,6 +75,22 @@ public class NachrichtEJB {
     public Nachricht getById(int id){
         return em.find(Nachricht.class, id);
     }
+    
+    public Nachricht getCopyById(int id){
+        Nachricht n = em.find(Nachricht.class, id);
+        em.detach(n);
+        for(Nutzer nutzer : n.getNutzerList()){
+            em.detach(nutzer); 
+           nutzer.setPasswordhash(null);
+           nutzer.setAdminInGroups(null);
+           nutzer.setOwnFriendList(null);
+           nutzer.setOtherFriendList(null);
+           nutzer.setChatList(null);
+           nutzer.setHatBlockiert(null);
+            nutzer.setBlockiertVon(null);
+            }
+        return n;
+    }
     /**
      * Diese Methode gibt alle Nachrichten eines Chats zurück. 
      * Dabei wird der Benutzername des Senders aus der Id des Senders ermittelt. 
@@ -82,11 +100,12 @@ public class NachrichtEJB {
      * @param id
      * @return 
      */
-    public List<Nachricht> getByChatId(int id){   
+    public List<Nachricht> getCopyByChat(int id){   
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
+            n.setNutzerList(null);
             try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
             }
@@ -95,6 +114,10 @@ public class NachrichtEJB {
             }
             
         }
+        return nachrichtList;
+    }
+    public List<Nachricht> getByChat(int id){
+        List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         return nachrichtList;
     }
     /**
@@ -116,10 +139,12 @@ public class NachrichtEJB {
             for(Nachricht n : nachrichtList){
                 em.detach(n);
                 n.setNachrichtList(null);
+                n.setNutzerList(null);
             }
             Nachricht n = nachrichtList.get(nachrichtList.size() - 1);
             em.detach(n);
             n.setNachrichtList(null);
+            n.setNutzerList(null);
             try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
                 

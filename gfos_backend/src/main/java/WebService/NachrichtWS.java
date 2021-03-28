@@ -32,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.ws.rs.core.Response;
 
@@ -104,25 +105,69 @@ public class NachrichtWS {
     }
     
     /**
-     * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück.
-     * @param id Die Id des Chats, aus dem die Nachrichten angezeigt werden solln
+     * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück. 
+     * Sobald ein Nutzer die neuen Nachrichten eines Chats lädt, bedeutet dass, das der Nutzer diese gelesen hat.
+     * @param chatid Die Id des Chats, aus dem die Nachrichten angezeigt werden solln
      * @param token Das Webtoken    
      * @return Die Liste mit den Nachrichten.
      */
     @GET
-    @Path("/chat/{id}/{token}")
+    @Path("/chat/{id}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByChat(@PathParam("id") int id, @PathParam("token") String token) {
+    public Response getByChat(@PathParam("id") int chatid, @PathParam("token") String token, @PathParam("nutzerid") int nutzerid) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
+            
+            Nutzer self = nutzerEJB.getById(nutzerid);
+            List<Nachricht> list = nachrichtEJB.getByChat(chatid);
+            for(Nachricht n : list){
+                if(!n.getNutzerList().contains(self)){
+                    n.getNutzerList().add(self);
+                }
+            }
             Gson parser = new Gson();
-            List<Nachricht> nList = nachrichtEJB.getByChatId(id);
+            List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatid);
             return response.generiereAntwort(parser.toJson(nList));
         }
         
     } 
+    /**
+     * Diese Methode gibt die Informationen einer Nachricht zurück. Das beinhaltet zwei Listen.
+     * Die eine zeigt alle Nutzer, die die Nachricht noch nicht gelesen haben und die andere,
+     * welche die Nachricht gelesen haben. Dabei ist die zweite Liste so sortiert, dass die Nutezr die die Nachricht eher
+     * gelesen haben am Anfang der Liste stehen
+     * @param id Die Id der Nachricht
+     * @param token Das Webtoken
+     * @return Die Nachrichteninformationen
+     */
+    @GET
+    @Path("/info/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInfo(@PathParam("id") int id, @PathParam("token") String token) {
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+            Nachricht n = nachrichtEJB.getCopyById(id);
+            
+            List<Nutzer> gelesenVon = new ArrayList<>();
+            gelesenVon.addAll(n.getNutzerList());
+            
+            List<Nutzer> nichtGelesenVon = chatEJB.getCopy(n.getChatid()).getNutzerList();
+            nichtGelesenVon.removeAll(gelesenVon);
+            
+            Gson parser = new Gson(); 
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.add("gelesenVon", parser.toJsonTree(gelesenVon));
+            jsonObject.add("nichtgelesenVon", parser.toJsonTree(nichtGelesenVon));
+            
+            return response.generiereAntwort(parser.toJson(jsonObject));
+//                return response.generiereAntwort(parser.toJson(nachrichtEJB.getCopyById(id)));
+            
+        }
+    }
     /**
      * Diese Methode liefert die neuste Nachricht aus einem Chat.
      * @param id Die Id des Chats
@@ -241,7 +286,7 @@ public class NachrichtWS {
                 
                 nachrichtEJB.delete(lNachrichtId);
                 
-                List<Nachricht> nList = nachrichtEJB.getByChatId(n.getChatid());
+                List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
                 System.out.println(nList);
                 if(nList.size() != 0){
                     chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));

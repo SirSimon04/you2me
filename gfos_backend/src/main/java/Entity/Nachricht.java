@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -71,6 +73,11 @@ public class Nachricht implements Serializable {
     private String sender;
     @Column(name = "ISIMPORTANT")
     private Boolean isimportant;
+    @JoinTable(name = "HATGELESEN", joinColumns = {
+        @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<Nutzer> nutzerList;
     @JoinColumn(name = "FOTO", referencedColumnName = "ID")
     @ManyToOne
     private Foto foto;
@@ -149,6 +156,15 @@ public class Nachricht implements Serializable {
 
     public void setIsimportant(Boolean isimportant) {
         this.isimportant = isimportant;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getNutzerList() {
+        return nutzerList;
+    }
+
+    public void setNutzerList(List<Nutzer> nutzerList) {
+        this.nutzerList = nutzerList;
     }
 
     public Foto getFoto() {

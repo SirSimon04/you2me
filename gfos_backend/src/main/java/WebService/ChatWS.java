@@ -206,7 +206,7 @@ public class ChatWS {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.add("nutzerliste", parser.toJsonTree(returnList));
 
-                List<Nachricht> nList = nachrichtEJB.getByChatId(chatId);
+                List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatId);
                 int anzahlNachrichten = nList.size();
                 int anzahlFotos = 0;
                 for(Nachricht n : nList){
@@ -237,7 +237,7 @@ public class ChatWS {
                nutzerListe.remove(self);
                Nutzer other = nutzerListe.get(0);
                JsonObject jsonObject = new JsonObject();
-               List<Nachricht> nList = nachrichtEJB.getByChatId(chatId);
+               List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatId);
                 int anzahlNachrichten = nList.size();
                 int anzahlFotos = 0;
                 for(Nachricht n : nList){
