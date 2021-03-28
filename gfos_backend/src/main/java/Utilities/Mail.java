@@ -1,11 +1,8 @@
 package Utilities;
 
 
-import EJB.NutzerEJB;
-import Entity.Nutzer;
 import java.io.IOException;
 import java.util.Properties;
-import javax.ejb.EJB;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -18,12 +15,25 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-public class MailTest {
+/**
+ *<h1>* Die Java-Klasse zum Versenden von E-Mails</h1>
+ * <p>Diese Klasse versendet die E-Mails über einen konfigurierbaren SMTP-Server.</p>
+ * @author simon
+ */
+public class Mail {
     
-    @EJB
-    private NutzerEJB nutzerEJB;
- 
+ /**
+  * Die folgende Methode versendet die E-Mails an die Nutzer, in der sie ihren Verifizierungspin erhalten, um ihr Konto freizuschalten.
+  * @param mailFrom E-Mail zur Authentifizierung des SMTP-Servers
+  * @param pw Passwort zur Authentifizierung des SMTP-Servers
+  * @param benutzername Benutzername des neu registrierten Benutzers
+  * @param mailTo E-Mail-Adresse des neu registrierten Benutzers
+  * @param pin Der zuvor zufällig erstellte Verifizierungspin
+  * @throws IOException 
+  * @throws AddressException
+  * @throws MessagingException
+  * @throws InterruptedException 
+  */
  public void send(String mailFrom, String pw, String benutzername, String mailTo, int pin) throws IOException, AddressException, MessagingException, InterruptedException {
         System.out.println("hello");
 

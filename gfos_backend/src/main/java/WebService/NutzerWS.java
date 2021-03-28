@@ -15,7 +15,7 @@ import Entity.Nutzer;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
 import Utilities.Antwort;
-import Utilities.MailTest;
+import Utilities.Mail;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -73,7 +73,7 @@ public class NutzerWS {
     
     private Antwort response = new Antwort();
     
-    private MailTest mail = new MailTest();
+    private Mail mail = new Mail();
     
     /**
      * Diese Methode verifiziert einen Token.
@@ -397,7 +397,13 @@ public class NutzerWS {
             }
         }
     }
-    
+    /**
+     * Dise Methode blockiert einen anderen Nutzer, das heißt, dass die beiden Nutzer sich gegenseitig keine Nachrichten mehr schicken 
+     * können.
+     * @param token
+     * @param Daten
+     * @return 
+     */
     @POST
     @Path("/block/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -429,7 +435,12 @@ public class NutzerWS {
             }
         }
     }
-    
+    /**
+     * Diese Methode entfernt die Blockierung eines anderen Nutzers, das heißt, dass die Nutzer sich wieder Nachrichten senden können.
+     * @param token Das Webtoken
+     * @param Daten Die Daten zum eigenen sowie anderen Nutzer
+     * @return 
+     */
     @POST
     @Path("/unblock/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -568,8 +579,9 @@ public class NutzerWS {
     
     
     /**
-     * Diese Methode fügt einen Nutzer in das System ein.
-     * @param Daten
+     * Diese Methode fügt einen Nutzer in das System ein. Bevor dieser Nutzer sich aber einloggen kann, erhält er 
+     * einen vierstelligen Pin per E-Mail, mit dem der Nutzer sein Konto erst freischalten muss.
+     * @param Daten Die Daten zum neuen Nutzer
      * @return Das Responseobjekt mit den Nutzerinformationen und dem Webtoken
      */
     @POST
@@ -660,7 +672,12 @@ public class NutzerWS {
             //return "";
         
     }
-    
+    /**
+     * Diese Methode schaltet einen neu registrierten Benutzer frei. Dafür muss dieser den zuvor per E-Mail erhaltenen
+     * Pin eingeben.
+     * @param Daten Die Informationen zum Nutzer und der per E-Mail erhaltene Pin
+     * @return 
+     */
     @POST
     @Path("/verify")
     @Consumes(MediaType.APPLICATION_JSON)
