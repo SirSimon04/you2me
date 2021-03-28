@@ -95,6 +95,7 @@ CREATE TABLE Nutzer
     profilbild int,
     info VARCHAR(256),
     isAdmin boolean,
+    VerificationPin int,
     
     foreign key(profilbild) references Foto(id) on delete cascade
 );
@@ -170,6 +171,8 @@ Create Table hatBlockiert(
 );
 
 
+INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
+	VALUES ('MailAuth', Null, Null, 'simiquatsch1@gmail.com', 'Simi272727', NULL, NULL, NULL, NULL);
 
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
 	VALUES ('Simon', NULL, NULL, 'se@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL);
