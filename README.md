@@ -170,6 +170,13 @@ Create Table hatBlockiert(
     foreign Key(nutzer2Id) references Nutzer(id) on delete cascade
 );
 
+Create Table hatGelesen(
+	nutzerId integer not null,
+	nachrichtId integer not null,
+	foreign Key(nutzerId) references Nutzer(id) on delete cascade,
+	foreign Key(nachrichtId) references Nachricht(nachrichtId) on delete cascade
+);
+
 
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) 
 	VALUES ('MailAuth', Null, Null, 'simiquatsch1@gmail.com', 'Simi272727', NULL, NULL, NULL, NULL);
