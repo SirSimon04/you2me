@@ -257,6 +257,7 @@ public class Nutzer implements Serializable {
         this.adminInGroups = adminInGroups;
     }
 
+
     public Foto getProfilbild() {
         return profilbild;
     }

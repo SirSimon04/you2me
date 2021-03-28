@@ -421,9 +421,17 @@ public class ChatWS {
                                 c.setGotblocked(Boolean.TRUE);
                             }
                         }
-                        c.setAdminList(null);
-                        c.setNutzerList(null);
-                    
+                    c.setAdminList(null);
+                    c.setNutzerList(null);
+                    c.setNnew(0);
+                    List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
+                    for(Nachricht n : nList){
+                        System.out.println("hey im for");
+                        if(!n.getNutzerList().contains(self)){
+                            System.out.println("hey im if");
+                            c.setNnew(c.getNnew() + 1);
+                        }
+                    }
                 }
                 
                 

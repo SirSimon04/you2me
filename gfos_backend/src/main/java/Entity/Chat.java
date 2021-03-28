@@ -39,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Chat.findByBeschreibung", query = "SELECT c FROM Chat c WHERE c.beschreibung = :beschreibung"),
     @NamedQuery(name = "Chat.findByIsgroup", query = "SELECT c FROM Chat c WHERE c.isgroup = :isgroup"),
     @NamedQuery(name = "Chat.findByIsblocked", query = "SELECT c FROM Chat c WHERE c.isblocked = :isblocked"),
-    @NamedQuery(name = "Chat.findByGotblocked", query = "SELECT c FROM Chat c WHERE c.gotblocked = :gotblocked")})
+    @NamedQuery(name = "Chat.findByGotblocked", query = "SELECT c FROM Chat c WHERE c.gotblocked = :gotblocked"),
+    @NamedQuery(name = "Chat.findByNnew", query = "SELECT c FROM Chat c WHERE c.nnew = :nnew")})
 public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,6 +64,8 @@ public class Chat implements Serializable {
     private Boolean isblocked;
     @Column(name = "GOTBLOCKED")
     private Boolean gotblocked;
+    @Column(name = "NNEW")
+    private Integer nnew;
     @JoinTable(name = "NIMMTTEIL", joinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -138,6 +141,14 @@ public class Chat implements Serializable {
 
     public void setGotblocked(Boolean gotblocked) {
         this.gotblocked = gotblocked;
+    }
+
+    public Integer getNnew() {
+        return nnew;
+    }
+
+    public void setNnew(Integer nnew) {
+        this.nnew = nnew;
     }
 
     @XmlTransient
