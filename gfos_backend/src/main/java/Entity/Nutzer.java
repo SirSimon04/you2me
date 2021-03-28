@@ -42,7 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nutzer.findByPasswordhash", query = "SELECT n FROM Nutzer n WHERE n.passwordhash = :passwordhash"),
     @NamedQuery(name = "Nutzer.findByHandynummer", query = "SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
     @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info"),
-    @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin")})
+    @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin"),
+    @NamedQuery(name = "Nutzer.findByVerificationpin", query = "SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin")})
 public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -81,6 +82,8 @@ public class Nutzer implements Serializable {
     private String info;
     @Column(name = "ISADMIN")
     private Boolean isadmin;
+    @Column(name = "VERIFICATIONPIN")
+    private Integer verificationpin;
     @JoinTable(name = "HATBLOCKIERT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -190,6 +193,14 @@ public class Nutzer implements Serializable {
 
     public void setIsadmin(Boolean isadmin) {
         this.isadmin = isadmin;
+    }
+
+    public Integer getVerificationpin() {
+        return verificationpin;
+    }
+
+    public void setVerificationpin(Integer verificationpin) {
+        this.verificationpin = verificationpin;
     }
 
     @XmlTransient

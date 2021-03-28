@@ -31,6 +31,16 @@ public class NutzerEJB {
     
     @PersistenceContext
     private EntityManager em;
+    
+    public String[] getAuth(){
+        String[] returnStrings = new String[2];
+        Nutzer n = this.getById(1);
+        System.out.println(n);
+        returnStrings[0] = n.getEmail();
+        returnStrings[1] = n.getPasswordhash();
+        System.out.println("getAuth:" + returnStrings);
+        return returnStrings;
+    }
     /**
      * Diese Methode gibt alle Nutzer zurück.
      * @return 

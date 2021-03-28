@@ -15,8 +15,7 @@ import Entity.Nutzer;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
 import Utilities.Antwort;
-import Utilities.Mail;
-import Utilities.Emailservice;
+import Utilities.MailTest;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -33,6 +32,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +42,7 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.TransactionRolledbackLocalException;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
@@ -70,12 +71,9 @@ public class NutzerWS {
     @EJB
     private BlacklistEJB blacklistEJB;
     
-    @EJB
-    private Emailservice email;
-    
     private Antwort response = new Antwort();
     
-    private Mail mail = new Mail();
+    private MailTest mail = new MailTest();
     
     /**
      * Diese Methode verifiziert einen Token.
@@ -109,10 +107,26 @@ public class NutzerWS {
         
     }
     
-    /*
-    Es folgen alle Methoden, die sich auf die Klasse Nutzer beziehen
-    */
-    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/mail")
+    public String mailTest(){
+        System.out.println("mailBegin");
+        try{
+            Nutzer n = nutzerEJB.getById(1);
+            String mailFrom = n.getEmail();
+            String pw = n.getPasswordhash();
+            mail.send(mailFrom, pw, "SirSimon04", "simi@engelnetz.de", 1234);
+            
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return "false";
+        }
+        System.out.println("mailEnd");
+        return "true";
+        
+    }
     /**
      * Diese Methode gibt alle Nutzer zurück.
      * @param token Das Webtoken
@@ -458,8 +472,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/login")
-    @Consumes(MediaType.TEXT_PLAIN) 
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON) 
+    @Produces(MediaType.TEXT_PLAIN)
     public Response login(String Daten) {
 //        Response r = response.generiereAntwort(Daten);
         Gson parser = new Gson();
@@ -474,8 +488,8 @@ public class NutzerWS {
             for(Chat c : dbNutzer.getChatList()) {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
             }
-            
-            if(hasher.checkPassword(jsonPasswort).equals(dbNutzer.getPasswordhash()))
+            if(dbNutzer.getVerificationpin() == null){
+                if(hasher.checkPassword(jsonPasswort).equals(dbNutzer.getPasswordhash()))
             {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("id", dbNutzer.getId());
@@ -495,13 +509,15 @@ public class NutzerWS {
                 return response.generiereAntwort(parser.toJson(jsonObject));
                 //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
 //                return response.generiereAntwort("test");
+                }
+                else 
+                {
+                    return response.generiereFehler406("PW falsch");
+                }
             }
-            else 
-            {
-                return response.generiereFehler406("PW falsch");
+            else{
+                return response.generiereFehler406("Du musst dich erst verifizieren");
             }
-            
-            
             
         }
             catch(JsonSyntaxException e) {
@@ -560,7 +576,7 @@ public class NutzerWS {
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response create(String Daten) {
+    public Response register(String Daten) throws IOException, MessagingException, AddressException, InterruptedException {
         
             System.out.println(Daten);
             Gson parser = new Gson();
@@ -617,15 +633,22 @@ public class NutzerWS {
             if(neueInfo != null){
                 neuerNutzer.setInfo(neueInfo);
             }
-
-
+            
+            Nutzer n = nutzerEJB.getById(1);
+            String mailFrom = n.getEmail();
+            String pw = n.getPasswordhash();
+            int min = 1000;
+            int max = 9999;
+            int random_int = (int)(Math.random() * (max - min + 1) + min);
+            neuerNutzer.setVerificationpin(random_int);
+            mail.send(mailFrom, pw, neuerNutzername, neueEmail, random_int);
+            
             nutzerEJB.add(neuerNutzer);
             Nutzer nutzerInDbB = nutzerEJB.getByUsername(neuerNutzername);
             JsonObject returnObject = new JsonObject();
             returnObject.addProperty("id", nutzerInDbB.getId());
             returnObject.addProperty("benutzername", nutzerInDbB.getBenutzername());
             returnObject.addProperty("email", nutzerInDbB.getEmail());
-            returnObject.addProperty("token", tokenizer.createNewToken(nutzerInDbB.getBenutzername()));
 
             return response.generiereAntwort(parser.toJson(returnObject));
 
@@ -635,6 +658,33 @@ public class NutzerWS {
                 return response.generiereFehler406("Json falsch");
             }
             //return "";
+        
+    }
+    
+    @POST
+    @Path("/verify")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response verifyPin(String Daten) {
+        Gson parser = new Gson();
+        JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+        String name = parser.fromJson((jsonObject.get("name")), String.class);
+        int pin = parser.fromJson((jsonObject.get("pin")), Integer.class);
+        
+        Nutzer n = nutzerEJB.getByUsername(name);
+        try{
+            if(n.getVerificationpin() == pin){
+            n.setVerificationpin(null);
+            return response.generiereAntwort("true");
+        }
+        else{
+            return response.generiereFehler406("Falscher Pin");
+        }
+        }
+        catch(Exception e){
+            return response.generiereFehler500("Fehler");
+        }
+        
         
     }
     
