@@ -8,6 +8,7 @@ package Entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,7 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nutzer.findByHandynummer", query = "SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
     @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info"),
     @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin"),
-    @NamedQuery(name = "Nutzer.findByVerificationpin", query = "SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin")})
+    @NamedQuery(name = "Nutzer.findByVerificationpin", query = "SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin"),
+    @NamedQuery(name = "Nutzer.findByLastonline", query = "SELECT n FROM Nutzer n WHERE n.lastonline = :lastonline")})
 public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -84,6 +87,9 @@ public class Nutzer implements Serializable {
     private Boolean isadmin;
     @Column(name = "VERIFICATIONPIN")
     private Integer verificationpin;
+    @Size(max = 30)
+    @Column(name = "LASTONLINE")
+    private String lastonline;
     @JoinTable(name = "HATBLOCKIERT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -108,6 +114,8 @@ public class Nutzer implements Serializable {
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "nutzer")
+    private Setting setting;
 
     public Nutzer() {
     }
@@ -203,6 +211,14 @@ public class Nutzer implements Serializable {
         this.verificationpin = verificationpin;
     }
 
+    public String getLastonline() {
+        return lastonline;
+    }
+
+    public void setLastonline(String lastonline) {
+        this.lastonline = lastonline;
+    }
+
     @XmlTransient
     public List<Nutzer> getHatBlockiert() {
         return hatBlockiert;
@@ -264,6 +280,14 @@ public class Nutzer implements Serializable {
 
     public void setProfilbild(Foto profilbild) {
         this.profilbild = profilbild;
+    }
+
+    public Setting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
     }
 
     @Override

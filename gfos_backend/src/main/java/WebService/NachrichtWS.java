@@ -122,13 +122,18 @@ public class NachrichtWS {
             
             Nutzer self = nutzerEJB.getById(nutzerid);
             List<Nachricht> list = nachrichtEJB.getByChat(chatid);
+            Chat c = chatEJB.getById(chatid);
             for(Nachricht n : list){
-                if(!n.getNutzerList().contains(self)){
+                if(!n.getNutzerList().contains(self)){ //Nachricht wird von self gelesen
                     n.getNutzerList().add(self);
+                }
+                if(n.getNutzerList().size() == c.getNutzerList().size()){
+                    n.setReadbyall(Boolean.TRUE);
                 }
             }
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatid);
+            //gucken, ob von jedem gelesen
             return response.generiereAntwort(parser.toJson(nList));
         }
         

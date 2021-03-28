@@ -18,5 +18,6 @@ EJB/BlacklistEJB.class
 EJB/ChatEJB.class
 EJB/NutzerEJB.class
 Entity/Nachricht.class
+Entity/Setting.class
 Entity/Blacklist.class
 Utilities/Antwort.class

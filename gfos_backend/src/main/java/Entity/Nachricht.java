@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nachricht.findByDatumuhrzeit", query = "SELECT n FROM Nachricht n WHERE n.datumuhrzeit = :datumuhrzeit"),
     @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt"),
     @NamedQuery(name = "Nachricht.findBySender", query = "SELECT n FROM Nachricht n WHERE n.sender = :sender"),
-    @NamedQuery(name = "Nachricht.findByIsimportant", query = "SELECT n FROM Nachricht n WHERE n.isimportant = :isimportant")})
+    @NamedQuery(name = "Nachricht.findByIsimportant", query = "SELECT n FROM Nachricht n WHERE n.isimportant = :isimportant"),
+    @NamedQuery(name = "Nachricht.findByReadbyall", query = "SELECT n FROM Nachricht n WHERE n.readbyall = :readbyall")})
 public class Nachricht implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,6 +74,8 @@ public class Nachricht implements Serializable {
     private String sender;
     @Column(name = "ISIMPORTANT")
     private Boolean isimportant;
+    @Column(name = "READBYALL")
+    private Boolean readbyall;
     @JoinTable(name = "HATGELESEN", joinColumns = {
         @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -156,6 +159,14 @@ public class Nachricht implements Serializable {
 
     public void setIsimportant(Boolean isimportant) {
         this.isimportant = isimportant;
+    }
+
+    public Boolean getReadbyall() {
+        return readbyall;
+    }
+
+    public void setReadbyall(Boolean readbyall) {
+        this.readbyall = readbyall;
     }
 
     @XmlTransient
