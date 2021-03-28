@@ -129,6 +129,7 @@ CREATE TABLE Chat
     isGroup boolean,
     isBlocked boolean,
     gotBlocked boolean,
+    nNew integer,
     
     foreign key(profilbild) references Foto(id),
     foreign key(letzteNachricht) references Nachricht(nachrichtId)
