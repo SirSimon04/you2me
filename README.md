@@ -96,6 +96,7 @@ CREATE TABLE Nutzer
     info VARCHAR(256),
     isAdmin boolean,
     VerificationPin int,
+    lastOnline varchar(30),
     
     foreign key(profilbild) references Foto(id) on delete cascade
 );
@@ -112,6 +113,7 @@ CREATE TABLE Nachricht
     antwortauf int,
     sender varchar(50),
     isImportant boolean,
+    readByAll boolean,
     
     foreign key(foto) references Foto(id),
     foreign key(antwortauf) references Nachricht(nachrichtId)
@@ -176,6 +178,13 @@ Create Table hatGelesen(
 	nachrichtId integer not null,
 	foreign Key(nutzerId) references Nutzer(id) on delete cascade,
 	foreign Key(nachrichtId) references Nachricht(nachrichtId) on delete cascade
+);
+
+Create Table Setting(
+	nutzerId int not null primary key,
+	darkmode boolean,
+	lesebestätigung boolean,
+	foreign Key(nutzerId) references Nutzer(id) on delete cascade
 );
 
 
