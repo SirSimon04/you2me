@@ -5,10 +5,12 @@
  */
 package WebService;
 
+import EJB.BlacklistEJB;
 import EJB.ChatEJB;
 import EJB.FotoEJB;
 import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
+import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Foto;
 import Entity.Nachricht;
@@ -60,6 +62,8 @@ public class NachrichtWS {
     private NutzerEJB nutzerEJB;
     @EJB
     private Tokenizer tokenizer;
+    @EJB
+    private BlacklistEJB blacklistEJB;
     private Mail mail = new Mail();
     
     private Antwort response = new Antwort();
@@ -77,6 +81,17 @@ public class NachrichtWS {
             }
             else
             {
+                List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
+                for(Blacklist b : bl)
+                {
+                    if(b.getToken().equals(token))
+                    {
+                        return false;   
+                    }
+                }
+                
+                nutzerEJB.setOnline(token);
+                nutzerEJB.setOnline(token);
                 return true;
             }
         }
@@ -85,6 +100,24 @@ public class NachrichtWS {
         }
         
     }
+//    /**
+//     * Diese Methode aktualisiert das Datum, zu dem der Nutzer zuletzt online war.
+//     * @param token Das Webtoken des Nutzers
+//     */
+//    public void setLastOnline(String token){
+//        System.out.println(tokenizer.getUser(token));
+//        Nutzer z = nutzerEJB.getByUsername(tokenizer.getUser(token));
+//        Nutzer nutzerInDB = nutzerEJB.getById(z.getId());
+//        
+//        Date date = new Date();
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+//        nutzerInDB.setIsonline(true);
+//        nutzerInDB.setLastonline(formatter.format(date));
+//        System.out.println(nutzerInDB.getInfo());
+//        nutzerInDB.setInfo("1");
+//        System.out.println(nutzerInDB.getInfo());
+//        nutzerEJB.merge(nutzerInDB);
+//    }
     
      /**
       * Diese Methode gibt alle Nachrichten zurück.
@@ -123,7 +156,6 @@ public class NachrichtWS {
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
-            
             Nutzer self = nutzerEJB.getById(nutzerid);
             List<Nachricht> list = nachrichtEJB.getByChat(chatid);
             Chat c = chatEJB.getById(chatid);
@@ -198,7 +230,8 @@ public class NachrichtWS {
     }
     
     /**
-     * Diese Methode sendet eine Nachricht in einen Chat.
+     * Diese Methode sendet eine Nachricht in einen Chat. Wenn es sich bei der Nachricht um eine wichtige handelt,
+     * wird an alle Nutzer des Chats eine E-Mail mit der Nachricht gesendet.
      * @param Daten Die Daten zum Chat und der Nachricht.
      * @param token Das Webtoken
      * @return Das Responseobkjekt mit dem Status der Methode.
@@ -213,7 +246,7 @@ public class NachrichtWS {
             return response.generiereFehler401("dentifrisse");
         }
         else {
-            System.out.println(Daten);
+
             Gson parser = new Gson();
             try {
                 int jsonAnswerId = 0;
@@ -257,11 +290,9 @@ public class NachrichtWS {
                 //wenn wichtig, dann mail versenden
                 try{
                     if(neueNachricht.getIsimportant()){
-                        System.out.println("Yes");
                         Chat cc = chatEJB.getCopyListsNotNull(neueNachricht.getChatid());
                         List<Nutzer> nList = cc.getNutzerList();
                         nList.remove(self);
-                        System.out.println(nList);
                         Nutzer nutzer = nutzerEJB.getById(1);
                         String mailFrom = nutzer.getEmail();
                         String pw = nutzer.getPasswordhash();
@@ -305,7 +336,6 @@ public class NachrichtWS {
                     
                 }
                 
-                
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
@@ -336,6 +366,7 @@ public class NachrichtWS {
             return response.generiereFehler401("dentifrisse");
         }
         else {
+            
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int lNachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
@@ -348,7 +379,6 @@ public class NachrichtWS {
                 nachrichtEJB.delete(lNachrichtId);
                 
                 List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
-                System.out.println(nList);
                 if(nList.size() != 0){
                     chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
                 }
