@@ -14,6 +14,7 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Utilities.Antwort;
+import Utilities.Mail;
 import Utilities.Tokenizer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -31,9 +32,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -54,9 +58,9 @@ public class NachrichtWS {
     private ChatEJB chatEJB;
     @EJB
     private NutzerEJB nutzerEJB;
-    
     @EJB
     private Tokenizer tokenizer;
+    private Mail mail = new Mail();
     
     private Antwort response = new Antwort();
     
@@ -203,7 +207,7 @@ public class NachrichtWS {
     @Path("/add/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response send(String Daten, @PathParam("token") String token) {
+    public Response send(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException {
         
         if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
@@ -218,6 +222,7 @@ public class NachrichtWS {
                 String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
                 int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
                 int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class);
+                //Antwort auf eine andere Nachricht
                 try{
                     jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
                     Nachricht nachrichtInDB = nachrichtEJB.getById(jsonAnswerId);
@@ -226,7 +231,7 @@ public class NachrichtWS {
                 catch(NullPointerException e){
                     
                 }
-                
+                //Foto verschicken
                 if(jsonPic != null){
                     Foto f = new Foto();
                     f.setBase64(jsonPic);
@@ -249,6 +254,57 @@ public class NachrichtWS {
                         return response.generiereFehler406("Du bist von diesem Nutzer blockiert");
                     }
                 }
+                //wenn wichtig, dann mail versenden
+                try{
+                    if(neueNachricht.getIsimportant()){
+                        System.out.println("Yes");
+                        Chat cc = chatEJB.getCopyListsNotNull(neueNachricht.getChatid());
+                        List<Nutzer> nList = cc.getNutzerList();
+                        nList.remove(self);
+                        System.out.println(nList);
+                        Nutzer nutzer = nutzerEJB.getById(1);
+                        String mailFrom = nutzer.getEmail();
+                        String pw = nutzer.getPasswordhash();
+                        for(Nutzer n : nList){
+                            String msg = "";
+                            if(cc.getIsgroup()){
+                                msg += "<h2>Hallo " + n.getBenutzername() +",</h2>"
+                                        + "<p>in der Gruppe " + cc.getName() + " wurde von " 
+                                        + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
+                                        + " eine wichtige Nachricht gesendet.</p>"
+                                        + "<p>Sie lautet: \""
+                                        + neueNachricht.getInhalt()
+                                        + "\"</p>"
+                                        + "<p>Falls du keine Benachhrichtigungen mehr erhalten willst, "
+                                        + "wenn jemand eine wichtige Nachricht schickt, kannst du das "
+                                        + "in den Einstellungen ausschalten.</p>"
+                                        + "<h3>Mit freundlichen Grüßen,</h3>"
+                                        + "<h3>dein Disputatio-Team</h3>";
+                                mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
+                                
+                            }
+                            else{
+                                msg += "<h2>Hallo " + n.getBenutzername() + ",</h2>"
+                                        + "<p>"
+                                        + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
+                                        + " hat dir eine wichtige Nachricht gesendet.</p>"
+                                        + "<p>Sie lautet: \""
+                                        + neueNachricht.getInhalt()
+                                        + "\"</p>"
+                                        + "<p>Falls du keine Benachhrichtigungen mehr erhalten willst, "
+                                        + "wenn jemand eine wichtige Nachricht schickt, kannst du das "
+                                        + "in den Einstellungen ausschalten.</p>"
+                                        + "<h3>Mit freundlichen Grüßen,</h3>"
+                                        + "<h3>dein Disputatio-Team</h3>";
+                                mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
+                            }
+                        }
+                    }
+                }
+                catch(NullPointerException e){
+                    
+                }
+                
                 
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);

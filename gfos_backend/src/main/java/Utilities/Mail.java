@@ -112,4 +112,42 @@ public class Mail {
         Transport.send(message);
      
  }
+  
+  public void sendImportantMessage(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException {
+        System.out.println("hello");
+
+     
+     
+        Properties prop = new Properties();
+        prop.put("mail.smtp.auth", true);
+        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        
+        Session session = Session.getInstance(prop, new Authenticator() {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(mailFrom, pw);
+        }
+    });
+        
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(mailTo));
+        message.setRecipients(
+          Message.RecipientType.TO, InternetAddress.parse(mailTo));
+        message.setSubject("Wichtige Nachricht");
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(msg, "text/html");
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        message.setContent(multipart);
+
+        Transport.send(message);
+     
+ }
 }
+  
