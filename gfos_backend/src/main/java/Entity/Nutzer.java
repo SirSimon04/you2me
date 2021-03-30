@@ -46,7 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info"),
     @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin"),
     @NamedQuery(name = "Nutzer.findByVerificationpin", query = "SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin"),
-    @NamedQuery(name = "Nutzer.findByLastonline", query = "SELECT n FROM Nutzer n WHERE n.lastonline = :lastonline")})
+    @NamedQuery(name = "Nutzer.findByLastonline", query = "SELECT n FROM Nutzer n WHERE n.lastonline = :lastonline"),
+    @NamedQuery(name = "Nutzer.findByIsonline", query = "SELECT n FROM Nutzer n WHERE n.isonline = :isonline")})
 public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -90,6 +91,8 @@ public class Nutzer implements Serializable {
     @Size(max = 30)
     @Column(name = "LASTONLINE")
     private String lastonline;
+    @Column(name = "ISONLINE")
+    private Boolean isonline;
     @JoinTable(name = "HATBLOCKIERT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -114,6 +117,8 @@ public class Nutzer implements Serializable {
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "nutzer")
+    private Setting setting;
 
     public Nutzer() {
     }
@@ -217,6 +222,14 @@ public class Nutzer implements Serializable {
         this.lastonline = lastonline;
     }
 
+    public Boolean getIsonline() {
+        return isonline;
+    }
+
+    public void setIsonline(Boolean isonline) {
+        this.isonline = isonline;
+    }
+
     @XmlTransient
     public List<Nutzer> getHatBlockiert() {
         return hatBlockiert;
@@ -271,13 +284,21 @@ public class Nutzer implements Serializable {
         this.adminInGroups = adminInGroups;
     }
 
-
+    
     public Foto getProfilbild() {
         return profilbild;
     }
 
     public void setProfilbild(Foto profilbild) {
         this.profilbild = profilbild;
+    }
+
+    public Setting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
     }
 
     @Override

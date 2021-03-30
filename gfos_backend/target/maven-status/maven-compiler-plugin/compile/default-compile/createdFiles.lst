@@ -7,6 +7,7 @@ Entity/Foto.class
 Application/App.class
 EJB/ChatEJB.class
 Entity/Nachricht.class
+Entity/Setting.class
 Entity/Blacklist.class
 Utilities/Antwort.class
 testgfos2021/gfostest/resources/JavaEE8Resource.class

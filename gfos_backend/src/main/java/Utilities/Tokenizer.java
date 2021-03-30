@@ -5,6 +5,8 @@
  */
 package Utilities;
 
+import EJB.NutzerEJB;
+import Entity.Nutzer;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -12,6 +14,9 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 /**
@@ -27,8 +32,8 @@ import javax.ejb.Stateless;
 public class Tokenizer {
     private final String SECRET = "As7FA2df!-,.8Gg345ms/dh(65hj"; // TOPSECRET!
     private final long DT = 1200000; // Token 120 Sekunden gültig
-    private final boolean STATUS = false;
-    
+    private final boolean STATUS = true;
+
     /**
      * Diese Methode erstellt ein neues Token.
      * @param username Der Benutzername eines Nutzers
@@ -79,7 +84,7 @@ public class Tokenizer {
         }
     }
     /**
-     * Dise Methode gibt das zu einem Nutzer passende Token wieder. 
+     * Dise Methode gibt den zu einem Token passenden Nutzer wieder.
      * @param token Das Token
      * @return Der Benutzername
      */
