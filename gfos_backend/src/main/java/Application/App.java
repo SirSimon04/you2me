@@ -21,7 +21,8 @@ public class App extends Application{
     
     @EJB
     private BlacklistEJB blacklistEJB;
-    
+    @EJB
+    private NutzerEJB nutzerEJB;
     public App(){
         System.out.println("App constructed");
         ScheduledExecutorService execService
@@ -30,6 +31,11 @@ public class App extends Application{
             blacklistEJB.clearBlacklist();
             System.out.println("bl cleared");
         }, 30, 3600, TimeUnit.SECONDS);
+        
+//        execService.scheduleAtFixedRate(() -> {
+//            nutzerEJB.setAllOffline();
+//            System.out.println("all off");
+//        }, 300, 300, TimeUnit.SECONDS);
         
     }
 }

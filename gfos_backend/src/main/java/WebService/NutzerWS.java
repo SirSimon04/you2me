@@ -515,7 +515,7 @@ public class NutzerWS {
                     }
                 }
                 jsonObject.addProperty("token", token);
-                
+                dbNutzer.setIsonline(Boolean.TRUE);
                 //return parser.toJson(jsonObject);
                 return response.generiereAntwort(parser.toJson(jsonObject));
                 //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
@@ -562,6 +562,11 @@ public class NutzerWS {
                 bl.setTimestamp(date);
 
                 blacklistEJB.logOut(bl);
+                
+                Nutzer n = nutzerEJB.getByUsername(tokenizer.getUser(token));
+                n.setIsonline(Boolean.FALSE);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+                n.setLastonline(formatter.format(date));
                 
                 return response.generiereAntwort("true");
 
@@ -889,7 +894,7 @@ public class NutzerWS {
                     mail.sendAccChanges(mailFrom, pw, nutzerInDB.getEmail(), msg);
 
 
-                        return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));
+                    return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));
 
                 }
                 else{

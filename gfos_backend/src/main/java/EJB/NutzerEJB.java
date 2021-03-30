@@ -8,8 +8,12 @@ package EJB;
 import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Nutzer;
+import Utilities.Tokenizer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,6 +35,8 @@ public class NutzerEJB {
     
     @PersistenceContext
     private EntityManager em;
+    @EJB
+    private Tokenizer tokenizer;
     
     public String[] getAuth(){
         String[] returnStrings = new String[2];
@@ -425,6 +431,39 @@ public class NutzerEJB {
             return false;
         }
     }
+   /**
+    * Diese Methode setzt den Status aller Nutzer auf offline sowie die Zeit, zu der sie 
+    * zuletzt online waren auf die aktuelle Zeit. Sie wird alle fünf Minuten automatisch
+    * ausgeführt.
+    */
+    public void setAllOffline(){
+        List<Nutzer> l = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+       for(Nutzer n : l){
+            n.setIsonline(false);
+            n.setLastonline(formatter.format(date));
+       }
+       System.out.println("all off");
+    }
+    /**
+     * Die folgende Methode setzt den Status des zum Token gehörigen Nutzers auf online sowei die Zeit,
+     * zu der der Nutzer das letzte Mal online war auf die aktuelle Zeit.
+     * @param token Das Token des Nutzers
+     */
+    public void setOnline(String token){
+        System.out.println(tokenizer.getUser(token));
+        Nutzer n = (Nutzer) em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername").setParameter("benutzername", tokenizer.getUser(token)).getSingleResult();
+        System.out.println(n);
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        System.out.println(n.getIsonline());
+        n.setIsonline(true);
+        System.out.println(n.getIsonline());
+        n.setLastonline(formatter.format(date));
+    }
+    
+
     
     
 }

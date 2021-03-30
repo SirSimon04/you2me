@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package WebService;
+import EJB.BlacklistEJB;
 import EJB.ChatEJB;
 import EJB.FotoEJB;
 import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
+import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Foto;
 import Entity.Nachricht;
@@ -61,6 +63,9 @@ public class ChatWS {
     @EJB
     private Tokenizer tokenizer;
     
+    @EJB
+    private BlacklistEJB blacklistEJB;
+    
     private Antwort response = new Antwort();
     
     /**
@@ -76,6 +81,17 @@ public class ChatWS {
             }
             else
             {
+                List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
+                for(Blacklist b : bl)
+                {
+                    if(b.getToken().equals(token))
+                    {
+                        return false;   
+                    }
+                }
+                
+                nutzerEJB.setOnline(token);
+                nutzerEJB.setOnline(token);
                 return true;
             }
         }

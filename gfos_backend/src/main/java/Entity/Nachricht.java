@@ -42,7 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt"),
     @NamedQuery(name = "Nachricht.findBySender", query = "SELECT n FROM Nachricht n WHERE n.sender = :sender"),
     @NamedQuery(name = "Nachricht.findByIsimportant", query = "SELECT n FROM Nachricht n WHERE n.isimportant = :isimportant"),
-    @NamedQuery(name = "Nachricht.findByReadbyall", query = "SELECT n FROM Nachricht n WHERE n.readbyall = :readbyall")})
+    @NamedQuery(name = "Nachricht.findByReadbyall", query = "SELECT n FROM Nachricht n WHERE n.readbyall = :readbyall"),
+    @NamedQuery(name = "Nachricht.findByIsplanned", query = "SELECT n FROM Nachricht n WHERE n.isplanned = :isplanned")})
 public class Nachricht implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,6 +77,8 @@ public class Nachricht implements Serializable {
     private Boolean isimportant;
     @Column(name = "READBYALL")
     private Boolean readbyall;
+    @Column(name = "ISPLANNED")
+    private Boolean isplanned;
     @JoinTable(name = "HATGELESEN", joinColumns = {
         @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -167,6 +170,14 @@ public class Nachricht implements Serializable {
 
     public void setReadbyall(Boolean readbyall) {
         this.readbyall = readbyall;
+    }
+
+    public Boolean getIsplanned() {
+        return isplanned;
+    }
+
+    public void setIsplanned(Boolean isplanned) {
+        this.isplanned = isplanned;
     }
 
     @XmlTransient
