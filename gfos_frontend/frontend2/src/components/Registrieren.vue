@@ -82,7 +82,7 @@
           <div v-if="companyaccount_checkbox === true">
             <v-text-field
               v-model="benutzername"
-              :rules="nameRules"
+              
               :counter="20"
               label="Benutzernamen erstellen"
               required
@@ -97,10 +97,10 @@
           <div v-else>  
             <v-text-field
               v-model="vorname"
-              :rules="nameRules"
+              
               :counter="25"
               label="Vornamen eingeben"
-              required
+              
               
             ></v-text-field>
             <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Vornamen ein. Dieses Feld ist kein Pflichtfeld.</v-card-text></div>
@@ -109,7 +109,7 @@
               :rules="nameRules"
               :counter="25"
               label="Nachnamen eingeben"
-              required
+              
               
             ></v-text-field>
             <div v-if="hilfe_checkbox === true"><v-card-text>Bitte geben Sie an dieser Stelle Ihren Nachnamen ein. Wenn Sie möchten, brauchen Sie dieses Feld nicht auszufüllen. Generell kann eine Namensangabe aber dabei helfen, von Ihren Bekannten gefunden zu werden.</v-card-text></div>
@@ -301,116 +301,57 @@
           </v-card>
           <v-card-subtitle>Noch nicht angemeldet?</v-card-subtitle>
           <v-divider></v-divider>
-          <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
-        
-        
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" color= "#5c7d9d" style="position: relative; float: right; margin: 5px;">Login</v-btn>
-          </template>
-        
-          <template v-slot:default="dialog">
-            <div v-if="companyaccount_checkbox === true">
-            <div v-if="benutzername === undefined || passwort === undefined">
-              <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
-            </div>
-            <div v-else>
-              <v-card :loading="loading" class="mx-auto my-12" max-width="374">
-                <template slot="progress">
-                  <v-progress-linear
-                    color="deep-purple"
-                    height="10"
-                    indeterminate
-                  ></v-progress-linear>
-                </template>
-              
-              
-                <v-img
-                  height="250"
-                  src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                ></v-img>
-            
-                <v-card-title>{{firmenname}}</v-card-title>
-                <v-card-text> Inh. {{inhabervorname}} {{inhabernachname}}</v-card-text>
-                
-            
-                <v-divider class="mx-4"></v-divider>
-            
-                <v-card-title>Firmendaten</v-card-title>
-            
-                <v-card-text>{{plz}} {{firmenort}}</v-card-text>
-            
-                <v-card-actions>
-                  <v-card-text>{{slogan}}</v-card-text>
-                </v-card-actions>
-              </v-card>
-            </div>
-            </div>
-            <div v-else>
-                            
-                              <div v-if="benutzername === undefined || passwort === undefined"><v-toolbar color="#5c7d9d" dark>Fehler aufgetreten.</v-toolbar></div>
-                              <div v-else-if="loginzeigen === true"><v-toolbar color="#5c7d9d" dark>Herzlichen Glückwunsch!</v-toolbar></div>
-                              <div v-else><v-toolbar color="#5c7d9d" dark>Willkommen zurück!</v-toolbar></div>
-                              <v-card-text>
-                              <div v-if="benutzername === undefined || passwort === undefined">
-                                <div class="text-p2 pa-12">Bitte tragen Sie zunächst alle erforderlichen Daten ein.</div>
-                              </div>
-                              <div v-else>
-                                <div class="text-p2 pa-12">Sie sind nun registrierter Teil unseres Messenger-Dienstes. Sie können hier kostenlos mit Ihren Freunden chatten, arbeiten, in Kontakt bleiben, sich die Zeit vertreiben und vieles mehr! Wollen Sie eine kurze Anleitung für die Nutzun ansehen?<br><br> Eingeloggt sind Sie als:<br><br>
-                              </div>
-                              <div v-if="benutzername === undefined || passwort === undefined">
-                              </div>
-                              <div v-else>
-                                <v-card class="mx-auto" max-width="344">
-                                  <v-img height="200px">{{profilbild}}</v-img>
-                                        <v-card-title>
-                                          {{benutzername}} 
-                                        </v-card-title>
-                                        <v-card-subtitle>{{info}}</v-card-subtitle>
-                                        
-                                        <v-card-subtitle>
-                                          Vorname: {{vorname}}<br>
-                                          Nachname: {{nachname}}<br>
-                                          E-Mail: {{email}}
-                                        </v-card-subtitle>
-                                    
-                                            <v-divider></v-divider>
-                                            <v-card-text>
-                                            <div v-if="benutzername === 'JET3141'">Herzlich Willkommen, Herr Thomas</div>
-                                            <div v-else-if="benutzername === 'SirSimon04'">Salute, SirSimon!</div>
-                                            <div v-else-if="benutzername === 'SimpusMaximus'">Ein wunderherlichen, Lukas aka SimpusMaximus! <br><br><p6>Was ich mich ja eigentlich schon immer mal gefragt habe: Steht das "Simpus" für "Simp"?</p6></div>
-                                            <div v-else>Hallo, {{benutzername}}. Danke, dass Sie sich angemeldet haben!</div>
-                                            </v-card-text>
-                                </v-card>
-            
-                              </div>
-             
-          </div>
-                
-                  </v-card-text>
-                        <v-card-actions class="justify-end">
-                          <div v-if="benutzername === undefined || passwort === undefined">
-                            <v-alert border="bottom" color="red" type="error">Die Anmeldedaten sind teilweise leer.</v-alert>
-                          </div>
-                          <div v-else>
-                            <v-btn
-                              text
-                              v-on:click="test()"
-                            >Einstellungen</v-btn>
-                            <v-btn text @click="dialog.value = false">Zum Messenger</v-btn>
-                          </div>
-                        </v-card-actions>
-                    
-                  
-              
-              
-            </div>
-          </template>
-        </v-dialog>
+          
           <v-btn text
           position = "right"
           @click= "e1 = 1, loginzeigen = true" style="margin: 5px">
             Zur Anmeldung
           </v-btn>
+          <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="primary" dark v-bind="attrs" v-on="on" style =" position: relative; float: right; margin: 5px">Login</v-btn>
+            </template>
+  
+            <v-card>
+              <v-card-title class="headline grey lighten-2">
+                Bestätigen  
+              </v-card-title>
+  
+              <v-card-text>
+                <div v-if="PINrichtig === true">
+                  Sie sind nun ein registrierter Teil unseres Dienstes!
+                </div>
+                <div v-else>
+                  Bitte geben Sie Ihre Bestätigungs-PIN ein. Die Bestätigungs-PIN wurde Ihnen per Mail zugesandt.
+                  <v-container>
+                    <v-row>
+                      <v-col cols="4" md="2">
+                        <v-text-field v-model="PINeins"></v-text-field>
+                      </v-col>
+                      <v-col cols="4" md="2">
+                        <v-text-field v-model="PINeins"></v-text-field>
+                      </v-col>
+                      <v-col cols="4" md="2">
+                        <v-text-field v-model="PINeins"></v-text-field>
+                      </v-col>
+                      <v-col cols="4" md="2">
+                        <v-text-field v-model="PINeins"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
+              </v-card-text>
+  
+              <v-divider></v-divider>
+  
+              <v-card-actions>
+              <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="PINrichtig = true">
+                  Bestätigen
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -439,7 +380,17 @@
       settings_checkbox: false,
       companyaccount_checkbox: false,
       hilfe_checkbox: false,
-      firmenkontenakzeptieren: false, 
+      firmenkontenakzeptieren: false,
+      valid: false,
+      passwordRules: [
+      v => !!v || 'Dieses Feld ist erforderlich.',
+      v => !v.contains('A') || 'Das Passwort muss einen Großbuchstaben enthalten.',
+      v => v.length <= 10 || 'Der Name muss kürzer als 15 Zeichen lang sein.',
+    ],
+      emailRules: [
+      v => !!v || 'Die E-Mail ist erforderlich.',
+      v => /.+@.+/.test(v) || 'Bitte geben Sie eine reale E-Mail ein.',
+    ], 
       
 
     }
