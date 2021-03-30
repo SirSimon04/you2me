@@ -97,6 +97,7 @@ CREATE TABLE Nutzer
     isAdmin boolean,
     VerificationPin int,
     lastOnline varchar(30),
+    isOnline boolean,
     
     foreign key(profilbild) references Foto(id) on delete cascade
 );
@@ -114,6 +115,7 @@ CREATE TABLE Nachricht
     sender varchar(50),
     isImportant boolean,
     readByAll boolean,
+    isPlanned boolean,
     
     foreign key(foto) references Foto(id),
     foreign key(antwortauf) references Nachricht(nachrichtId)
@@ -184,6 +186,7 @@ Create Table Setting(
 	nutzerId int not null primary key,
 	darkmode boolean,
 	lesebestätigung boolean,
+	mailIfImportant boolean,
 	foreign Key(nutzerId) references Nutzer(id) on delete cascade
 );
 
