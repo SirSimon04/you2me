@@ -160,16 +160,51 @@ export default {
                     }
                     response.clone();
                     response.json().then(msgs => {
-                        document.getElementById('chatcontainer').innerHTML = '';
+                        var cc = document.getElementById('chatcontainer');
+                        var isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
+
+                        cc.innerHTML = '';
                         // Write all single messages into the chatcontainer
                         for (var i=0; i<msgs.length; i++) {
                             var data = msgs[i];
                             var elem = '';
+                            // Add icon for planned message (if sent by me: icon; if sent by other: show if date is not a future date)
                             if (data['senderid'] === CURRENT_USER_ID) elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
                             else elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
-                            document.getElementById('chatcontainer').innerHTML += elem;
+                            cc.innerHTML += elem;
                         }
 
+                        function f(t, u8s) {
+                            var a = -1.25; // 4sec
+                            if (u8s) a = -0.078125; // 8sec
+                            
+                            var d = 2; // 4sec
+                            if (u8s) d = 4; // 8sec
+
+                            var e = 20; // Max px/s
+
+                            var pow = Math.pow((t - d), 4);
+                            // -1.25 * (x - 2)^4 + 20
+                            // -0.078125 * (x - 4)^4 + 20 if u8s
+                            return a * pow + e;
+                        }
+
+                        if (isBottom) {
+                            console.log('Is at bottom');
+                            var use8s = msgs.length - messages.length > 60;
+                            isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
+                            var time = 0;
+                            var scrollAnim = setInterval(function() {
+                                cc.scrollBy(0, f(time, use8s));
+
+                                time += 0.01;
+                                isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
+                                // Time should not exceed a value of 4
+                                if (isBottom || time > (use8s ? 8 : 4)) clearInterval(scrollAnim);
+                            }, 10);
+                        }
+
+                        /*
                         // Scroll down to newest message (if user is at the button)
                         var difference = msgs.length - messages.length;
                         var allSingles = document.getElementsByClassName('singlemsgcontainer');
@@ -183,6 +218,7 @@ export default {
                             count += 15;
                             if (count >= scrollValue) clearInterval(id);
                         }, 16);
+                        */
 
                         messages = msgs;
                     }).catch(error => {
