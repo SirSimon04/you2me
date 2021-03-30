@@ -116,7 +116,7 @@ public class NutzerWS {
             Nutzer n = nutzerEJB.getById(1);
             String mailFrom = n.getEmail();
             String pw = n.getPasswordhash();
-            mail.send(mailFrom, pw, "SirSimon04", "simi@engelnetz.de", 1234);
+            mail.sendVerificationPin(mailFrom, pw, "SirSimon04", "simi@engelnetz.de", 1234);
             
         }
         catch(Exception e){
@@ -653,7 +653,7 @@ public class NutzerWS {
             int max = 9999;
             int random_int = (int)(Math.random() * (max - min + 1) + min);
             neuerNutzer.setVerificationpin(random_int);
-            mail.send(mailFrom, pw, neuerNutzername, neueEmail, random_int);
+            mail.sendVerificationPin(mailFrom, pw, neuerNutzername, neueEmail, random_int);
             
             nutzerEJB.add(neuerNutzer);
             Nutzer nutzerInDbB = nutzerEJB.getByUsername(neuerNutzername);
@@ -801,7 +801,7 @@ public class NutzerWS {
     @Path("/update/{token}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response update(@PathParam("token") String token, String Daten) {
+    public Response update(@PathParam("token") String token, String Daten) throws IOException, MessagingException, AddressException, InterruptedException {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }
@@ -825,15 +825,42 @@ public class NutzerWS {
             Nutzer nutzerInDB = nutzerEJB.getById(eigeneId);
             Hasher hasher = new Hasher();
             if(nutzerInDB.getPasswordhash().equals(hasher.checkPassword(altesPasswort))){
-            
+                String msg = "<h2>Hallo " + nutzerInDB.getBenutzername() + ",</h2>"
+                        + "<p>deine Accountinformationen wurden überarbeitet, hier siehst du die Änderungen:</p><p>";
                 if(nutzerInDB != null){
+                    
+                    if(neuerNutzername != null){
+                        Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername); 
 
+                        if(UserNameIsFree == null){ 
+                            nutzerInDB.setBenutzername(neuerNutzername);  
+                            msg += "Dein neuer Benutzername: \"" + neuerNutzername + "\"</p><p>";
+                        }
+                        else{
+                            return response.generiereFehler500("Benutzername bereits vergeben");
+                        }
+                    }
+                    
+                    if(neueEmail != null){
+                        Nutzer EmailIsFree = nutzerEJB.getByMail(neueEmail); 
+
+                        if(EmailIsFree == null){ 
+                            nutzerInDB.setEmail(neueEmail);
+                            msg += "Deine neue E-Mail: \"" + neueEmail + "\"</p><p>";
+                        }
+                        else{
+                            return response.generiereFehler500("Benutzername bereits vergeben");
+                        }
+                    }
+                    
                     if(neuerVorname != null){
-                        nutzerInDB.setVorname(neuerVorname);    
+                        nutzerInDB.setVorname(neuerVorname);   
+                        msg += "Dein neuer Vorname: \"" + neuerVorname + "\"</p><p>";
                     }
 
                     if(neuerVorname != null){    
-                        nutzerInDB.setNachname(neuerNachname);    
+                        nutzerInDB.setNachname(neuerNachname);  
+                        msg += "Dein neuer Nachname: \"" + neuerNachname + "\"</p><p>";
                     }
 
                     if(neuesPasswort != null){
@@ -842,35 +869,24 @@ public class NutzerWS {
 
                     if(neueHandynummer != null){
                         nutzerInDB.setHandynummer(neueHandynummer);
+                        msg += "Deine neue Handynummer: \"" + neueHandynummer + "\"</p><p>";
                     }
 
                     if(neueInfo != null){
                         nutzerInDB.setInfo(neueInfo);
+                        msg += "Deine neue Info: \"" + neueInfo + "\"</p><p>";
                     }
 
-                    if(neuerNutzername != null){
-                        Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername); 
+                    
+                    msg += "Falls du diese Änderungen vorgenommen hast, kannst du diese Mail ignorieren, wenn du diese Änderungen nicht vorgenommen hast, dann gibt es ein Sicherheitsproblem mit deinem Account und du solltst schnellstmöglich dein Passwort ändern!</p>"
+                            + "<h3>Mit freundlichen Grüßen,</h3>"
+                            + "<h3>dein Disputatio-Team</h3>";
+                    
 
-                        if(UserNameIsFree == null){ 
-                            nutzerInDB.setBenutzername(neuerNutzername);    
-                        }
-                        else{
-                            return response.generiereFehler500("Benutzername bereits vergeben");
-                        }
-                    }
-
-                    if(neueEmail != null){
-                        Nutzer EmailIsFree = nutzerEJB.getByMail(neueEmail); 
-
-                        if(EmailIsFree == null){ 
-                            nutzerInDB.setEmail(neueEmail);    
-                        }
-                        else{
-                            return response.generiereFehler500("Benutzername bereits vergeben");
-                        }
-                    }
-
-
+                    Nutzer n = nutzerEJB.getById(1);
+                    String mailFrom = n.getEmail();
+                    String pw = n.getPasswordhash();
+                    mail.sendAccChanges(mailFrom, pw, nutzerInDB.getEmail(), msg);
 
 
                         return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));

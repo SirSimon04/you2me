@@ -114,8 +114,6 @@ public class Nutzer implements Serializable {
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "nutzer")
-    private Setting setting;
 
     public Nutzer() {
     }
@@ -280,14 +278,6 @@ public class Nutzer implements Serializable {
 
     public void setProfilbild(Foto profilbild) {
         this.profilbild = profilbild;
-    }
-
-    public Setting getSetting() {
-        return setting;
-    }
-
-    public void setSetting(Setting setting) {
-        this.setting = setting;
     }
 
     @Override
