@@ -98,6 +98,7 @@ CREATE TABLE Nutzer
     VerificationPin int,
     lastOnline varchar(30),
     isOnline boolean,
+    mitgliedSeit int,
     
     foreign key(profilbild) references Foto(id) on delete cascade
 );
@@ -108,7 +109,7 @@ CREATE TABLE Nachricht
     (START WITH 1, INCREMENT BY 1),
     senderId INT NOT NULL,
     chatId INT NOT NULL,
-    datumUhrzeit VARCHAR(30) NOT NULL,
+    datumUhrzeit int not null,
     inhalt VARCHAR(1024) NOT NULL,
     foto int,
     antwortauf int,
@@ -125,7 +126,7 @@ CREATE TABLE Chat
 (
     chatId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
     (START WITH 1, INCREMENT BY 1),
-    erstelldatum VARCHAR(30),
+    erstelldatum int,
     name VARCHAR(50),
     beschreibung VARCHAR(100),
     profilbild int,
