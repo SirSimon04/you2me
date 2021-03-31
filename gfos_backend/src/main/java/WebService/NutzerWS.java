@@ -48,6 +48,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.ws.rs.core.Response;
+import static java.lang.Math.toIntExact;
 
 
 
@@ -660,6 +661,8 @@ public class NutzerWS {
             int random_int = (int)(Math.random() * (max - min + 1) + min);
             neuerNutzer.setVerificationpin(random_int);
             mail.sendVerificationPin(mailFrom, pw, neuerNutzername, neueEmail, random_int);
+            
+            neuerNutzer.setMitgliedseit(toIntExact((System.currentTimeMillis() / 1000)));
             
             nutzerEJB.add(neuerNutzer);
             Nutzer nutzerInDbB = nutzerEJB.getByUsername(neuerNutzername);
