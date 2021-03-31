@@ -96,7 +96,7 @@ CREATE TABLE Nutzer
     info VARCHAR(256),
     isAdmin boolean,
     VerificationPin int,
-    lastOnline varchar(30),
+    lastOnline long,
     isOnline boolean,
     mitgliedSeit int,
     
@@ -109,7 +109,7 @@ CREATE TABLE Nachricht
     (START WITH 1, INCREMENT BY 1),
     senderId INT NOT NULL,
     chatId INT NOT NULL,
-    datumUhrzeit int not null,
+    datumUhrzeit long not null,
     inhalt VARCHAR(1024) NOT NULL,
     foto int,
     antwortauf int,
@@ -126,7 +126,7 @@ CREATE TABLE Chat
 (
     chatId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
     (START WITH 1, INCREMENT BY 1),
-    erstelldatum int,
+    erstelldatum long,
     name VARCHAR(50),
     beschreibung VARCHAR(100),
     profilbild int,
