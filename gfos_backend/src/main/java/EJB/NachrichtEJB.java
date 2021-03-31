@@ -126,6 +126,9 @@ public class NachrichtEJB {
      * Das geschieht aus dem Grund, dass der Benutzername des Senders nicht bei jeder
      * Nachricht gespeichert werden soll und ein Nutzer seinen Benutzernamen ändern kann.
      * Existiert der Nutzer nicht mehr in der Datenbank, wird das im Sender der Nachricht deutlich.
+     * Außerdem wird überprüft, ob das Sendedatum der Nachricht vor dem aktuellen Datum liegt,
+     * wenn das nicht der Fall ist werden die Nachrichten des Chats solange zurückgelaufen,
+     * bis eine ungeplante Nachricht gefunden wurde.
      * @param id
      * @return 
      */
@@ -141,7 +144,14 @@ public class NachrichtEJB {
                 n.setNachrichtList(null);
                 n.setNutzerList(null);
             }
-            Nachricht n = nachrichtList.get(nachrichtList.size() - 1);
+//            Nachricht n = nachrichtList.get(nachrichtList.size() - 1);
+            Nachricht n = null;
+            for(int i = nachrichtList.size() - 1; i>0; i--){
+                if(nachrichtList.get(i).getDatumuhrzeit() < System.currentTimeMillis()){
+                    n = nachrichtList.get(i);
+                    break;
+                }
+            }
             em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
@@ -150,7 +160,7 @@ public class NachrichtEJB {
                 
             }
             catch(Exception e){
-                n.setSender("gelöschter Nutezr");
+                n.setSender("gelöschter Nutzer");
             }
             
             return n;

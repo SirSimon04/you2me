@@ -23,6 +23,6 @@ public class DateSorter implements Comparator<Chat> {
      */
     @Override
     public int compare(Chat c1, Chat c2){
-        return c2.getLetztenachricht().getDatumuhrzeit().compareTo(c1.getLetztenachricht().getDatumuhrzeit());
+        return Long.compare(c2.getLetztenachricht().getDatumuhrzeit(), c1.getLetztenachricht().getDatumuhrzeit());
     }
 }

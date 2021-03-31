@@ -6,6 +6,7 @@
 package Entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -47,7 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin"),
     @NamedQuery(name = "Nutzer.findByVerificationpin", query = "SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin"),
     @NamedQuery(name = "Nutzer.findByLastonline", query = "SELECT n FROM Nutzer n WHERE n.lastonline = :lastonline"),
-    @NamedQuery(name = "Nutzer.findByIsonline", query = "SELECT n FROM Nutzer n WHERE n.isonline = :isonline")})
+    @NamedQuery(name = "Nutzer.findByIsonline", query = "SELECT n FROM Nutzer n WHERE n.isonline = :isonline"),
+    @NamedQuery(name = "Nutzer.findByMitgliedseit", query = "SELECT n FROM Nutzer n WHERE n.mitgliedseit = :mitgliedseit")})
 public class Nutzer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -88,11 +90,12 @@ public class Nutzer implements Serializable {
     private Boolean isadmin;
     @Column(name = "VERIFICATIONPIN")
     private Integer verificationpin;
-    @Size(max = 30)
     @Column(name = "LASTONLINE")
-    private String lastonline;
+    private BigInteger lastonline;
     @Column(name = "ISONLINE")
     private Boolean isonline;
+    @Column(name = "MITGLIEDSEIT")
+    private Integer mitgliedseit;
     @JoinTable(name = "HATBLOCKIERT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -214,11 +217,11 @@ public class Nutzer implements Serializable {
         this.verificationpin = verificationpin;
     }
 
-    public String getLastonline() {
+    public BigInteger getLastonline() {
         return lastonline;
     }
 
-    public void setLastonline(String lastonline) {
+    public void setLastonline(BigInteger lastonline) {
         this.lastonline = lastonline;
     }
 
@@ -228,6 +231,14 @@ public class Nutzer implements Serializable {
 
     public void setIsonline(Boolean isonline) {
         this.isonline = isonline;
+    }
+
+    public Integer getMitgliedseit() {
+        return mitgliedseit;
+    }
+
+    public void setMitgliedseit(Integer mitgliedseit) {
+        this.mitgliedseit = mitgliedseit;
     }
 
     @XmlTransient
@@ -284,7 +295,7 @@ public class Nutzer implements Serializable {
         this.adminInGroups = adminInGroups;
     }
 
-    
+
     public Foto getProfilbild() {
         return profilbild;
     }

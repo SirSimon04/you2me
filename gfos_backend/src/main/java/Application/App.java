@@ -24,6 +24,7 @@ public class App extends Application{
     @EJB
     private NutzerEJB nutzerEJB;
     public App(){
+        System.out.println(System.currentTimeMillis());
         System.out.println("App constructed");
         ScheduledExecutorService execService
                         =   Executors.newScheduledThreadPool(5);

@@ -22,6 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.math.BigInteger;
 
 /**
  * <h1>Die Klasse zum Verwalten der Nutzer in der Datenbank</h1>
@@ -438,11 +439,10 @@ public class NutzerEJB {
     */
     public void setAllOffline(){
         List<Nutzer> l = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
        for(Nutzer n : l){
             n.setIsonline(false);
-            n.setLastonline(formatter.format(date));
+            BigInteger x = new BigInteger("" + System.currentTimeMillis());
+            n.setLastonline(x);
        }
        System.out.println("all off");
     }
@@ -454,13 +454,11 @@ public class NutzerEJB {
     public void setOnline(String token){
         System.out.println(tokenizer.getUser(token));
         Nutzer n = (Nutzer) em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername").setParameter("benutzername", tokenizer.getUser(token)).getSingleResult();
-        System.out.println(n);
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         System.out.println(n.getIsonline());
         n.setIsonline(true);
         System.out.println(n.getIsonline());
-        n.setLastonline(formatter.format(date));
+        BigInteger x = new BigInteger("" + System.currentTimeMillis());
+        n.setLastonline(x);
     }
     
 

@@ -6,6 +6,7 @@
 package Entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -49,9 +50,8 @@ public class Chat implements Serializable {
     @Basic(optional = false)
     @Column(name = "CHATID")
     private Integer chatid;
-    @Size(max = 30)
     @Column(name = "ERSTELLDATUM")
-    private String erstelldatum;
+    private BigInteger erstelldatum;
     @Size(max = 50)
     @Column(name = "NAME")
     private String name;
@@ -95,11 +95,11 @@ public class Chat implements Serializable {
         this.chatid = chatid;
     }
 
-    public String getErstelldatum() {
+    public BigInteger getErstelldatum() {
         return erstelldatum;
     }
 
-    public void setErstelldatum(String erstelldatum) {
+    public void setErstelldatum(BigInteger erstelldatum) {
         this.erstelldatum = erstelldatum;
     }
 

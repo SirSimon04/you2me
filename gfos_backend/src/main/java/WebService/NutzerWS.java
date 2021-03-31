@@ -33,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -565,8 +566,8 @@ public class NutzerWS {
                 
                 Nutzer n = nutzerEJB.getByUsername(tokenizer.getUser(token));
                 n.setIsonline(Boolean.FALSE);
-                SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-                n.setLastonline(formatter.format(date));
+                BigInteger x = new BigInteger("" + System.currentTimeMillis());
+                n.setLastonline(x);
                 
                 return response.generiereAntwort("true");
 
