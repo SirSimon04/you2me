@@ -123,26 +123,33 @@ public class NutzerEJB {
     public Nutzer getCopyByIdListsNotNull(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
+        n.setSetting(null);
         for(Chat chat : n.getChatList()){
             em.detach(chat);
             }
             for(Chat chat : n.getAdminInGroups()){
-            em.detach(chat);
+                em.detach(chat);
             }
            
            for(Nutzer nutzer : n.getOwnFriendList()) {
                em.detach(nutzer);
+//               nutzer.setSetting(null);
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
+//               nu.setSetting(null);
            }
            for(Nutzer nutzer : n.getBlockiertVon()){
                em.detach(nutzer);
+//               nutzer.setSetting(null);
             }
            for(Nutzer nutzer : n.getHatBlockiert()){
                em.detach(nutzer);
+//               nutzer.setSetting(null);
             }
         return n;
+//        return em.find(Nutzer.class, id);
+
     }
     
     /**
@@ -476,8 +483,4 @@ public class NutzerEJB {
         BigInteger x = new BigInteger("" + System.currentTimeMillis());
         n.setLastonline(x);
     }
-    
-
-    
-    
 }

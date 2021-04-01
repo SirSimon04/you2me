@@ -60,7 +60,8 @@ public class ChatEJB {
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
-            letzteN.setNachrichtList(null);
+                letzteN.setNachrichtList(null);
+                letzteN.setNutzerList(null);
             }
             catch(NullPointerException e){
                 
@@ -85,6 +86,7 @@ public class ChatEJB {
             try{
                 Nachricht letzteN = c.getLetztenachricht();
                 letzteN.setNachrichtList(null);
+                letzteN.setNutzerList(null);
             }
             catch(NullPointerException e){
                 
@@ -119,6 +121,7 @@ public class ChatEJB {
             n.setOtherFriendList(null);
             n.setHatBlockiert(null);
             n.setBlockiertVon(null);
+//            n.setSetting(null);
         }
         for(Nutzer n : c.getAdminList()){
             em.detach(n);
@@ -128,13 +131,16 @@ public class ChatEJB {
             n.setOtherFriendList(null);
             n.setHatBlockiert(null);
             n.setBlockiertVon(null);
+//            n.setSetting(null);
         }
         try{
             Nachricht letzteN = c.getLetztenachricht();
+//            em.detach(letzteN);
             letzteN.setNachrichtList(null);
+            letzteN.setNutzerList(null);
         }
-        catch(NullPointerException e){
-            
+        catch(Exception e){
+            System.out.println("nullpointer");
         }
         
         return c;
@@ -152,6 +158,7 @@ public class ChatEJB {
         try{
             Nachricht letzteN = c.getLetztenachricht();
             letzteN.setNachrichtList(null);
+            letzteN.setNutzerList(null);
         }
         catch(NullPointerException e){
             

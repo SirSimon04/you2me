@@ -110,7 +110,8 @@ public class NutzerWS {
                     }
                 }
             }
-            
+            nutzerEJB.setOnline(token);
+            nutzerEJB.setOnline(token);
             return true;
             
         }
@@ -270,6 +271,9 @@ public class NutzerWS {
             JsonObject jsonObject = new JsonObject();
         
             Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
+//            for(Nutzer n : self.getOtherFriendList()){
+//                n.set
+//            }
             
             List<Nutzer> ownFriendListDB = self.getOwnFriendList();
             for(Nutzer n : ownFriendListDB){
@@ -279,6 +283,7 @@ public class NutzerWS {
                 n.setOwnFriendList(null);
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
+                n.setSetting(null);
             }
             
             List<Nutzer> otherFriendListDB = self.getOtherFriendList();
@@ -289,14 +294,30 @@ public class NutzerWS {
                 n.setOwnFriendList(null);
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
+                n.setSetting(null);
             }
+            
+            for(Nutzer n : self.getHatBlockiert()){
+                n.setAdminInGroups(null);
+                n.setChatList(null);
+                n.setOtherFriendList(null);
+                n.setOwnFriendList(null);
+                n.setHatBlockiert(null);
+                n.setBlockiertVon(null);
+                n.setSetting(null);
+            }
+            
             List<Nutzer> friends = new ArrayList<>();
             List<Nutzer> friendRequests = new ArrayList<>();
             List<Nutzer> pendingRequests = new ArrayList<>();
-            
+            List<Nutzer> onlineFriends = new ArrayList<>();
+            List<Nutzer> blockedUser = self.getHatBlockiert();
             for(Nutzer n : ownFriendListDB){
                 if(otherFriendListDB.contains(n)){
                     friends.add(n);
+                    if(n.getIsonline()){
+                        onlineFriends.add(n);
+                    }
                 }
                 else{
                     pendingRequests.add(n);
@@ -307,11 +328,13 @@ public class NutzerWS {
                 if(!ownFriendListDB.contains(n)){
                     friendRequests.add(n);
                 }
-            }
+            } 
             
             jsonObject.add("friendList", parser.toJsonTree(friends));
             jsonObject.add("friendRequests", parser.toJsonTree(friendRequests));
             jsonObject.add("pendingRequests", parser.toJsonTree(pendingRequests));
+            jsonObject.add("onlineFriends", parser.toJsonTree(onlineFriends));
+            jsonObject.add("blockedUser", parser.toJsonTree(blockedUser));
             
             
             return response.generiereAntwort(parser.toJson(jsonObject)); 
@@ -753,6 +776,15 @@ public class NutzerWS {
             returnObject.addProperty("benutzername", nutzerInDbB.getBenutzername());
             returnObject.addProperty("email", nutzerInDbB.getEmail());
 
+            Setting s = new Setting();
+            s.setDarkmode(Boolean.TRUE);
+            s.setLesebestätigung(Boolean.TRUE);
+            s.setMailifimportant(Boolean.TRUE);
+            s.setNutzer(nutzerInDbB);
+            s.setNutzerid(nutzerInDbB.getId());
+            settingsEJB.add(s);
+            nutzerInDbB.setSetting(s);
+            
             return response.generiereAntwort(parser.toJson(returnObject));
 
 

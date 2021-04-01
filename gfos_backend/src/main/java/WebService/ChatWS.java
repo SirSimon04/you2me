@@ -128,7 +128,7 @@ public class ChatWS {
         
     }
     /**
-     * Diese Methode gibt einen Chat anhand seiner Id zurück-
+     * Diese Methode gibt einen Chat anhand seiner Id zurück.
      * @param token Das Webtoken
      * @param id Die id
      * @return Der Chat
@@ -152,7 +152,7 @@ public class ChatWS {
     }
     /**
      * Diese Methode gibt die Informationen eines Chats zurück. Das beinhaltet die Anzahl der Nachrichten, die Anzahl der Fotos,
-     * das Prfilbild und den Status oder die Gruppenbeschreibung. Wenn es sich um eine Gruppe handelt, wird die Nutzerliste nach folgendem Schema sortiert:
+     * das Profilbild und den Status oder die Gruppenbeschreibung. Wenn es sich um eine Gruppe handelt, wird die Nutzerliste nach folgendem Schema sortiert:
      * Zuerst steht der eigene Nutzer, dann die Administratoren der Gruppe und zuletzt die restlichen Nutzer.
      * @param token Das Webtoken
      * @param id Die eigene Id
@@ -196,6 +196,7 @@ public class ChatWS {
                     nutzer.setOwnFriendList(null);
                     nutzer.setHatBlockiert(null);
                     nutzer.setBlockiertVon(null);
+                    nutzer.setSetting(null);
                    if(adminListe.contains(nutzer)){
                        isAdmin.add(nutzer); 
                    }
@@ -213,6 +214,7 @@ public class ChatWS {
                  self.setOtherFriendList(null);
                  self.setOwnFriendList(null);
                  self.setChatList(null);
+                 self.setSetting(null);
                  if(adminListe.contains(self)){
                      self.setIsadmin(true);
                  }
@@ -220,7 +222,7 @@ public class ChatWS {
                  for(Nutzer n : isAdmin){
                      n.setIsadmin(true);
                  }
-
+//
                  List<Nutzer> returnList = new ArrayList<>();
                  returnList.add(self);
                  returnList.addAll(isAdmin);
@@ -259,23 +261,31 @@ public class ChatWS {
            else{
                nutzerListe.remove(self);
                Nutzer other = nutzerListe.get(0);
-               JsonObject jsonObject = new JsonObject();
-               List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatId);
-                int anzahlNachrichten = nList.size();
-                int anzahlFotos = 0;
-                for(Nachricht n : nList){
-                    if(n.getFoto() != null){
-                        anzahlFotos += 1;
-                    }
-                }
-                other.setPasswordhash(null);
+               other.setPasswordhash(null);
                 other.setOwnFriendList(null);
                 other.setOtherFriendList(null);
                 other.setHatBlockiert(null);
                 other.setBlockiertVon(null);
+                other.setSetting(null);
+                
+                JsonObject jsonObject = new JsonObject();
                 jsonObject.add("nutzer", parser.toJsonTree(other));
+                
+               
+               List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatId);
+                int anzahlNachrichten = 0;
+                int anzahlFotos = 0;
+                for(Nachricht n : nList){
+                    anzahlNachrichten += 1;
+                    if(n.getFoto() != null){
+                        anzahlFotos += 1;
+                    }
+                }
+                
                 jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
                 jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
+                
+                
                 
                 try{
                     jsonObject.add("beschreibung", parser.toJsonTree(other.getInfo()));
@@ -289,7 +299,7 @@ public class ChatWS {
                 catch(NullPointerException e){
 
                 }
-                //TODO: gemeinsame Chatliste überarbeiten
+//                TODO: gemeinsame Chatliste überarbeiten
                 List<Chat> allChats = chatEJB.getAllCopy();
                 List<Chat> listTogether = new ArrayList<>();
                 for(Chat chat : allChats){
@@ -303,28 +313,39 @@ public class ChatWS {
                     chat.setNutzerList(null);
                     chat.setLetztenachricht(null);
                 }
-                
+//                
                 Chat chat = chatEJB.getById(chatId);
                 listTogether.remove(chat);
                 Nutzer o = nutzerEJB.getById(other.getId());
                 jsonObject.add("gemeinsameChatListe", parser.toJsonTree(listTogether));
+                try{
+                        if(self.getHatBlockiert().contains(o)){
+                        jsonObject.add("isblocked", parser.toJsonTree(true));
+                    }
+                }
+                catch(NullPointerException e){
+                    
+                }
+                try{
+                     if(o.getHatBlockiert().contains(self)){
+                        jsonObject.add("gotblocked", parser.toJsonTree(true));
+                    }
+                }
+                catch(NullPointerException e){
+                    
+                }
                 
-                if(self.getHatBlockiert().contains(o)){
-                    jsonObject.add("isblocked", parser.toJsonTree(true));
-                }
-                if(o.getHatBlockiert().contains(self)){
-                    jsonObject.add("gotblocked", parser.toJsonTree(true));
-                }
                 
                 return response.generiereAntwort(parser.toJson(jsonObject)); 
            }
+    
            
             
            
            
-//           return response.generiereAntwort("true");
+           
         }
-        
+//        return response.generiereAntwort("true");
     }
     
     // kann am Ende entfernt werden?
@@ -414,49 +435,55 @@ public class ChatWS {
                     catch(Exception e){
                         
                     }
-                    
+//                    
                     for(Nutzer n : c.getNutzerList()){
                         n.setPasswordhash(null);
                         n.setOtherFriendList(null);
                         n.setOwnFriendList(null);
                     }
-                        
+//                        
                         if(!c.getIsgroup())
                         {
-                            System.out.println(c);
-                           // c.setAdminList(null);
-                            List<Nutzer> nutzerList = c.getNutzerList();
-                            Nutzer n = nutzerEJB.getCopyById(nutzerid);
-                            nutzerList.remove(n);
-
-                            Nutzer andererNutzer = nutzerList.get(0);
-
-                            c.setName(andererNutzer.getBenutzername());
-                            c.setProfilbild(andererNutzer.getProfilbild());
-                            c.setBeschreibung(andererNutzer.getInfo());
-                            c.setNutzerList(null);
-                            System.out.println(nutzerList);
-                            
-                            
-                            if(self.getHatBlockiert().contains(andererNutzer)){
-                                c.setIsblocked(Boolean.TRUE);
-                            }
-                            if(andererNutzer.getHatBlockiert().contains(self)){
-                                c.setGotblocked(Boolean.TRUE);
-                            }
+//                            System.out.println(c);
+//                           // c.setAdminList(null);
+//                            List<Nutzer> nutzerList = c.getNutzerList();
+//                            Nutzer n = nutzerEJB.getCopyById(nutzerid);
+//                            nutzerList.remove(n);
+//
+//                            Nutzer andererNutzer = nutzerList.get(0);
+//
+//                            c.setName(andererNutzer.getBenutzername());
+//                            c.setProfilbild(andererNutzer.getProfilbild());
+//                            c.setBeschreibung(andererNutzer.getInfo());
+//                            c.setNutzerList(null);
+//                            System.out.println(nutzerList);
+//                            
+//                            
+//                            if(self.getHatBlockiert().contains(andererNutzer)){
+//                                c.setIsblocked(Boolean.TRUE);
+//                            }
+//                            if(andererNutzer.getHatBlockiert().contains(self)){
+//                                c.setGotblocked(Boolean.TRUE);
+//                            }
                         }
                     c.setAdminList(null);
                     c.setNutzerList(null);
-                    c.setNnew(0);
+                    try{
+                        c.setNnew(0);
                     List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
                     for(Nachricht n : nList){
                         if(!n.getNutzerList().contains(self)){
                             if(n.getDatumuhrzeit() < System.currentTimeMillis()){
                                 c.setNnew(c.getNnew() + 1);
                             }
-                            
+                                
+                            }
                         }
                     }
+                    catch(EJBTransactionRolledbackException e){
+                        
+                    }
+                    
                 }
                 
                 
@@ -472,6 +499,7 @@ public class ChatWS {
                 returnList.addAll(toRemove);
                 Gson parser = new Gson();
                 return response.generiereAntwort(parser.toJson(returnList)); 
+//                return response.generiereAntwort("true");
             }
             catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler401("Id nicht vorhanden");
@@ -482,7 +510,7 @@ public class ChatWS {
     }
     
 
-
+    //???
     public List<Chat> getOwnChatlistByUserIdAsEntityList(int nutzerid) {
         
             try{

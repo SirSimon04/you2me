@@ -58,7 +58,7 @@ public class Mail {
         message.setFrom(new InternetAddress(mailTo));
         message.setRecipients(
           Message.RecipientType.TO, InternetAddress.parse(mailTo));
-        message.setSubject("Desputatio-Registrierung");
+        message.setSubject("Disputatio-Registrierung");
 
         String msg = "<h2>Hallo " + benutzername +",</h2><p>vielen Dank für deine Registrierung bei Desputatio. Wir freuen uns darüber, dass du dich bei uns anmelden willst. Um deine Registrierung abzuschließen, brauchst du lediglich noch den folgenden Verifizierungscode einzugeben:</p>"
                 + "</br>" + "<h2>"+ pin +"</h2>";
