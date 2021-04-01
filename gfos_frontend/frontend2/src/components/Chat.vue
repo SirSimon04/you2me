@@ -267,7 +267,12 @@ export default {
         }); // EventBus.$on('OPENCHAT')
     }, // mounted()
 }
+window.canSend = true;
+
 window.sendMessage = function sendMessage() {
+    if (!window.canSend) return;
+    window.canSend = false;
+    
     var content = document.getElementById('sendMessage_Area').value;
     document.getElementById('sendMessage_Area').value = '';
     var currentMillis = new Date().getTime();
@@ -275,16 +280,19 @@ window.sendMessage = function sendMessage() {
     var time = 0;
     var button = document.getElementById('sendMessage_Button');
     var animationDuration = 0.75;
+
     function F(t) {
         var a = 100;
         var pot = t / animationDuration;
         return Math.pow(a, pot);
     }
+
     function f(t) {
         var pot = (4 * t) / 3;
         var z = Math.log1p(100) * Math.pow(100, pot);
         return (4 * z) / 3;
     }
+
     var sendAnim = setInterval(function() {
         var x = F(time);
         var r = (Math.atan(f(time)) * 180) / Math.PI * 1.025;
@@ -319,6 +327,7 @@ window.sendMessage = function sendMessage() {
                 time += 0.01;
                 if (time > resetDuration) {
                     clearInterval(resetAnim);
+                    window.canSend = true;
                 }
             }, 10);
         }
