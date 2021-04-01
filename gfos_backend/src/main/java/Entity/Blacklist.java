@@ -3,6 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/**
+ * Die aus der Datenbank generierten Entitäten.
+ */
 package Entity;
 
 import java.io.Serializable;

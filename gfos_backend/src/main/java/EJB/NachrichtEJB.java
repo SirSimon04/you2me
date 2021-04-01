@@ -16,6 +16,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import Entity.Nutzer;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 
 /**
@@ -166,6 +167,18 @@ public class NachrichtEJB {
             return n;
         }
         
+    }
+    
+    public List<Nachricht> getOwnMessages(int id){
+        List<Nachricht> nachrichtList  = em.createNamedQuery(Nachricht.class.getSimpleName()+".findAll").getResultList();
+        List<Nachricht> r = new ArrayList<>();
+        for(Nachricht n : nachrichtList){
+            em.detach(n);
+            if(n.getSenderid() == id){
+                r.add(n);
+            }
+        }
+        return r;
     }
     
     

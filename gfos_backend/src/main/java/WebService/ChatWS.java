@@ -3,6 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+/**
+ * Der Webserver, der die Anfragen der Nutzer verarbeitet.
+ */
 package WebService;
 import EJB.BlacklistEJB;
 import EJB.ChatEJB;

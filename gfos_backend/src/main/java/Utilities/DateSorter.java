@@ -7,12 +7,8 @@ package Utilities;
 import java.util.Comparator;
 import Entity.Chat;
 /**
- * <h1>Die Klasse zum Sortieren der Chats</h1>
- * <p></p>
- */
-/**
- *
- * @author simon
+ * <h1>Die Klasse zum Sortieren der Chats.</h1>
+ * <p>Diese Klasse ist für das sortieren der Chats in der eigenen Chatliste vcerantwortlich.</p>
  */
 public class DateSorter implements Comparator<Chat> {
     /**

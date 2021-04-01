@@ -5,6 +5,7 @@ import javax.ejb.Stateless;
 import Entity.Chat;
 import Entity.Nachricht;
 import Entity.Nutzer;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
@@ -157,6 +158,17 @@ public class ChatEJB {
         }
         
         return c;
+    }
+    
+    public List<Chat> getOwnChats(Nutzer self){
+        List<Chat> l = em.createNamedQuery(Chat.class.getSimpleName()+".findAll").getResultList();
+        List<Chat> r = new ArrayList<>();
+        for(Chat c  : l){
+            if(c.getNutzerList().contains(self)){
+                r.add(c);
+            }
+        }
+        return r;
     }
     
     /**

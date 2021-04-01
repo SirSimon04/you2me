@@ -3,6 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/**
+ * Die Datenbankzugriffsschicht.
+ */
 package EJB;
 
 import Entity.Blacklist;
@@ -74,6 +77,7 @@ public class NutzerEJB {
            n.setChatList(null);
            n.setHatBlockiert(null);
             n.setBlockiertVon(null);
+            n.setSetting(null);
         }
         return nutzerList;
     
@@ -106,6 +110,7 @@ public class NutzerEJB {
         n.setChatList(null);
         n.setHatBlockiert(null);
         n.setBlockiertVon(null);
+        n.setSetting(null);
         return n;
         
     }
@@ -152,6 +157,7 @@ public class NutzerEJB {
         List<Nutzer> nutzerList = c.getNutzerList();
         for(Nutzer n : nutzerList){
            em.detach(n); 
+           n.setSetting(null);
            for(Chat chat : n.getChatList()){
             em.detach(chat);
             c.setNutzerList(null);
@@ -169,6 +175,7 @@ public class NutzerEJB {
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
+                nutzer.setSetting(null);
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
@@ -176,6 +183,7 @@ public class NutzerEJB {
                 nu.setOwnFriendList(null);
                 nu.setOtherFriendList(null);
                 nu.setPasswordhash(null);
+                nu.setSetting(null);
            }
            for(Nutzer nutzer : n.getBlockiertVon()){
                em.detach(nutzer);
@@ -183,6 +191,7 @@ public class NutzerEJB {
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
+                nutzer.setSetting(null);
             }
            for(Nutzer nutzer : n.getHatBlockiert()){
                em.detach(nutzer);
@@ -190,6 +199,7 @@ public class NutzerEJB {
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
+                nutzer.setSetting(null);
             }
         }
         return nutzerList;
@@ -234,6 +244,7 @@ public class NutzerEJB {
         n.setChatList(null);
         n.setHatBlockiert(null);
         n.setBlockiertVon(null);
+        n.setSetting(null);
         return n;
     }
     /**
@@ -299,15 +310,18 @@ public class NutzerEJB {
         
         Nutzer n = (Nutzer) query.getSingleResult();
         em.detach(n);
+        n.setSetting(null);
         for(Chat c : n.getChatList()){
             em.detach(c);
             c.setNutzerList(null);
             c.setAdminList(null);
+            n.setSetting(null);
         }
         for(Chat c : n.getAdminInGroups()){
             em.detach(c);
             c.setNutzerList(null);
             c.setAdminList(null);
+            n.setSetting(null);
         }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
@@ -315,6 +329,7 @@ public class NutzerEJB {
             nutzer.setOwnFriendList(null);
             nutzer.setOtherFriendList(null);
             nutzer.setPasswordhash(null);
+            n.setSetting(null);
         }
         for(Nutzer nutzer : n.getOtherFriendList()) {
             em.detach(nutzer);
@@ -323,6 +338,7 @@ public class NutzerEJB {
             nutzer.setOwnFriendList(null);
             nutzer.setOtherFriendList(null);
             nutzer.setPasswordhash(null);
+            n.setSetting(null);
         }
         
         return n;
