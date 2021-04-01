@@ -96,7 +96,7 @@ CREATE TABLE Nutzer
     info VARCHAR(256),
     isAdmin boolean,
     VerificationPin int,
-    lastOnline long,
+    lastOnline bigint,
     isOnline boolean,
     mitgliedSeit int,
     
@@ -109,7 +109,7 @@ CREATE TABLE Nachricht
     (START WITH 1, INCREMENT BY 1),
     senderId INT NOT NULL,
     chatId INT NOT NULL,
-    datumUhrzeit long not null,
+    datumUhrzeit bigint not null,
     inhalt VARCHAR(1024) NOT NULL,
     foto int,
     antwortauf int,
@@ -122,23 +122,6 @@ CREATE TABLE Nachricht
     foreign key(antwortauf) references Nachricht(nachrichtId)
 );
 
-CREATE TABLE Chat 
-(
-    chatId INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY
-    (START WITH 1, INCREMENT BY 1),
-    erstelldatum long,
-    name VARCHAR(50),
-    beschreibung VARCHAR(100),
-    profilbild int,
-    letzteNachricht int,
-    isGroup boolean,
-    isBlocked boolean,
-    gotBlocked boolean,
-    nNew integer,
-    
-    foreign key(profilbild) references Foto(id),
-    foreign key(letzteNachricht) references Nachricht(nachrichtId)
-);
 
 create table NimmtTeil (
     chatId integer not null,
