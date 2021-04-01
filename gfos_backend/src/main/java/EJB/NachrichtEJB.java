@@ -89,6 +89,7 @@ public class NachrichtEJB {
            nutzer.setChatList(null);
            nutzer.setHatBlockiert(null);
             nutzer.setBlockiertVon(null);
+            nutzer.setSetting(null);
             }
         return n;
     }

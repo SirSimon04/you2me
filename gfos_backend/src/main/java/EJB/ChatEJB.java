@@ -48,6 +48,7 @@ public class ChatEJB {
                 n.setOtherFriendList(null);
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
+                n.setSetting(null);
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
@@ -57,6 +58,7 @@ public class ChatEJB {
                 n.setOtherFriendList(null);
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
+                n.setSetting(null);
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
@@ -78,10 +80,12 @@ public class ChatEJB {
             em.detach(c);
             for(Nutzer n : c.getNutzerList()){
                 em.detach(n);
+                n.setSetting(null);
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
                 n.setBlockiertVon(null);
+                n.setSetting(null);
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
@@ -121,6 +125,7 @@ public class ChatEJB {
             n.setOtherFriendList(null);
             n.setHatBlockiert(null);
             n.setBlockiertVon(null);
+            n.setSetting(null);
 //            n.setSetting(null);
         }
         for(Nutzer n : c.getAdminList()){
@@ -131,6 +136,7 @@ public class ChatEJB {
             n.setOtherFriendList(null);
             n.setHatBlockiert(null);
             n.setBlockiertVon(null);
+            n.setSetting(null);
 //            n.setSetting(null);
         }
         try{
@@ -151,9 +157,11 @@ public class ChatEJB {
         em.detach(c);
         for(Nutzer n : c.getNutzerList()){
             em.detach(n);
+            n.setSetting(null);
         }
         for(Nutzer n : c.getAdminList()){
             em.detach(n);
+            n.setSetting(null);
         }
         try{
             Nachricht letzteN = c.getLetztenachricht();
