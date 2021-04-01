@@ -62,9 +62,8 @@ public class Nachricht implements Serializable {
     private int chatid;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
     @Column(name = "DATUMUHRZEIT")
-    private String datumuhrzeit;
+    private long datumuhrzeit;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 1024)
@@ -100,7 +99,7 @@ public class Nachricht implements Serializable {
         this.nachrichtid = nachrichtid;
     }
 
-    public Nachricht(Integer nachrichtid, int senderid, int chatid, String datumuhrzeit, String inhalt) {
+    public Nachricht(Integer nachrichtid, int senderid, int chatid, long datumuhrzeit, String inhalt) {
         this.nachrichtid = nachrichtid;
         this.senderid = senderid;
         this.chatid = chatid;
@@ -132,11 +131,11 @@ public class Nachricht implements Serializable {
         this.chatid = chatid;
     }
 
-    public String getDatumuhrzeit() {
+    public long getDatumuhrzeit() {
         return datumuhrzeit;
     }
 
-    public void setDatumuhrzeit(String datumuhrzeit) {
+    public void setDatumuhrzeit(long datumuhrzeit) {
         this.datumuhrzeit = datumuhrzeit;
     }
 

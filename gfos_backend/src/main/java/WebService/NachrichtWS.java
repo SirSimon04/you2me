@@ -100,24 +100,7 @@ public class NachrichtWS {
         }
         
     }
-//    /**
-//     * Diese Methode aktualisiert das Datum, zu dem der Nutzer zuletzt online war.
-//     * @param token Das Webtoken des Nutzers
-//     */
-//    public void setLastOnline(String token){
-//        System.out.println(tokenizer.getUser(token));
-//        Nutzer z = nutzerEJB.getByUsername(tokenizer.getUser(token));
-//        Nutzer nutzerInDB = nutzerEJB.getById(z.getId());
-//        
-//        Date date = new Date();
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-//        nutzerInDB.setIsonline(true);
-//        nutzerInDB.setLastonline(formatter.format(date));
-//        System.out.println(nutzerInDB.getInfo());
-//        nutzerInDB.setInfo("1");
-//        System.out.println(nutzerInDB.getInfo());
-//        nutzerEJB.merge(nutzerInDB);
-//    }
+
     
      /**
       * Diese Methode gibt alle Nachrichten zurück.
@@ -160,15 +143,30 @@ public class NachrichtWS {
             List<Nachricht> list = nachrichtEJB.getByChat(chatid);
             Chat c = chatEJB.getById(chatid);
             for(Nachricht n : list){
-                if(!n.getNutzerList().contains(self)){ //Nachricht wird von self gelesen
-                    n.getNutzerList().add(self);
-                }
-                if(n.getNutzerList().size() == c.getNutzerList().size()){
-                    n.setReadbyall(Boolean.TRUE);
+                if(n.getDatumuhrzeit() < System.currentTimeMillis()){
+                 
+                    if(!n.getNutzerList().contains(self)){ //Nachricht wird von self gelesen
+                        n.getNutzerList().add(self);
+                    }
+                    if(n.getNutzerList().size() == c.getNutzerList().size()){
+                        n.setReadbyall(Boolean.TRUE);
+                    }
                 }
             }
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatid);
+            List<Nachricht> newN = new ArrayList<>();
+            for(Nachricht n : nList){
+                if(n.getDatumuhrzeit() > System.currentTimeMillis()){
+                    if(n.getSenderid() != self.getId()){
+                        newN.add(n);
+                    }
+                    else{
+                        n.setIsplanned(Boolean.TRUE);
+                    }
+                }
+            }
+            nList.removeAll(newN);
             //gucken, ob von jedem gelesen
             return response.generiereAntwort(parser.toJson(nList));
         }
@@ -264,6 +262,7 @@ public class NachrichtWS {
                 catch(NullPointerException e){
                     
                 }
+//                System.out.println(neueNachricht.getIsplanned());
                 //Foto verschicken
                 if(jsonPic != null){
                     Foto f = new Foto();

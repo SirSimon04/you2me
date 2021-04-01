@@ -20,7 +20,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 /**
- * <h1>Die Java-Klassse zur Identifizierung und Authentifizierung der Nutzer</h1>
+ * <h1>Die Java-Klassse zur Identifizierung und Authentifizierung der Nutzer.</h1>
  * <p>Diese Klasse erstellt ein neues Webtoken, welches die Identifizierung und Authentifizierung
  * der einzelnen Nutzer ermöglicht. Die erstellten Token sind dabei nur begrenzt gültig und
  * realisiert das automatische Beenden der Sitzung nach einem definierten Zeitpunkt.
@@ -32,10 +32,10 @@ import javax.ejb.Stateless;
 public class Tokenizer {
     private final String SECRET = "As7FA2df!-,.8Gg345ms/dh(65hj"; // TOPSECRET!
     private final long DT = 1200000; // Token 120 Sekunden gültig
-    private final boolean STATUS = true;
+    private final boolean STATUS = false;
 
     /**
-     * Diese Methode erstellt ein neues Token.
+     * Diese Methode erstellt ein neues Token mit dem Nutzernamen des Nutzers.
      * @param username Der Benutzername eines Nutzers
      * @return Das neue Token
      */
@@ -84,7 +84,7 @@ public class Tokenizer {
         }
     }
     /**
-     * Dise Methode gibt den zu einem Token passenden Nutzer wieder.
+     * Dise Methode gibt den zu einem Token passenden Nutzernamen wieder.
      * @param token Das Token
      * @return Der Benutzername
      */

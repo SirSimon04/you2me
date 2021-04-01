@@ -1,3 +1,6 @@
+/**
+ * Paket mit Servicediensten.
+ */
 package Utilities;
 
 import javax.ejb.LocalBean;
@@ -6,9 +9,9 @@ import javax.ws.rs.core.Response;
 
  
 /**
- * <h1>Die Klasse zum Erstellen von Response-Objekten</h1>
+ * <h1>Die Klasse zum Erstellen von Response-Objekten.</h1>
  * <p>Diese Klasse erstellt mit den gegeben Daten ein Response-Objekt zur fehlerfreien
- * Datenübertragung an das Frontend</p>
+ * Datenübertragung an das Frontend.</p>
  * @author simon
  */
 @Stateless

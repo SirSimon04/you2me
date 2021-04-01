@@ -3,6 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+/**
+ * Der Webserver, der die Anfragen der Nutzer verarbeitet.
+ */
 package WebService;
 import EJB.BlacklistEJB;
 import EJB.ChatEJB;
@@ -37,6 +41,7 @@ import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ws.rs.core.Response;
+import java.math.BigInteger;
 
 /**
  * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Chats</h1>
@@ -110,6 +115,8 @@ public class ChatWS {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@PathParam("token") String token) {
         if(!verify(token)){
+            System.out.println(System.currentTimeMillis());
+            System.out.println("LUL");
             return response.generiereFehler401("Kein gültiges Token");
         }
         else {
@@ -402,6 +409,7 @@ public class ChatWS {
                     try{
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
                         c.getLetztenachricht().setSender(n.getSender());
+                        c.setLetztenachricht(n);
                     }
                     catch(Exception e){
                         
@@ -442,10 +450,11 @@ public class ChatWS {
                     c.setNnew(0);
                     List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
                     for(Nachricht n : nList){
-                        System.out.println("hey im for");
                         if(!n.getNutzerList().contains(self)){
-                            System.out.println("hey im if");
-                            c.setNnew(c.getNnew() + 1);
+                            if(n.getDatumuhrzeit() < System.currentTimeMillis()){
+                                c.setNnew(c.getNnew() + 1);
+                            }
+                            
                         }
                     }
                 }
@@ -618,7 +627,7 @@ public class ChatWS {
                 
                 JsonObject jsonTP = parser.fromJson(Daten, JsonObject.class);
                 String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
-                String date = parser.fromJson((jsonTP.get("erstelldatum")), String.class);
+                BigInteger date = parser.fromJson((jsonTP.get("erstelldatum")), BigInteger.class);
                 int eigeneId = parser.fromJson((jsonTP.get("eigeneId")), Integer.class);
                 
                 Chat neuerChat = new Chat();

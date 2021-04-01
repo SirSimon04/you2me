@@ -20,6 +20,7 @@ Utilities/Hasher.class
 Utilities/Mail.class
 Entity/Nutzer.class
 Entity/Chat.class
+EJB/SettingsEJB.class
 EJB/NachrichtEJB.class
 EJB/BlacklistEJB.class
 EJB/NutzerEJB.class

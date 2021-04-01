@@ -6,12 +6,17 @@
 package WebService;
 
 import EJB.BlacklistEJB;
+import EJB.ChatEJB;
 import EJB.FotoEJB;
+import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
+import EJB.SettingsEJB;
 import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Foto;
+import Entity.Nachricht;
 import Entity.Nutzer;
+import Entity.Setting;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
 import Utilities.Antwort;
@@ -33,6 +38,7 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +53,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.ws.rs.core.Response;
+import static java.lang.Math.toIntExact;
 
 
 
@@ -70,6 +77,12 @@ public class NutzerWS {
     private FotoEJB fotoEJB;
     @EJB
     private BlacklistEJB blacklistEJB;
+    @EJB
+    private SettingsEJB settingsEJB;
+    @EJB
+    private NachrichtEJB nachrichtEJB;
+    @EJB
+    private ChatEJB chatEJB;
     
     private Antwort response = new Antwort();
     
@@ -306,6 +319,76 @@ public class NutzerWS {
         
     }
     
+    @GET
+    @Path("/getSettings/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSettings(@PathParam("token") String token, @PathParam("id") int id){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else{
+            Gson parser = new Gson();
+            JsonObject j = new JsonObject();
+            j.add("settings", parser.toJsonTree(settingsEJB.getCopyById(id)));
+            
+            //alle selbst gesendeten Nachrichten, Fotos, etc
+            int anzahlN = 0;
+            int anzahlF = 0;
+            List<Nachricht> nL = nachrichtEJB.getOwnMessages(id);
+            for(Nachricht n : nL){
+                anzahlN++;
+                if(n.getFoto() != null){
+                    anzahlF++;
+                }
+            }        
+            j.add("anzahlSelbstGesendet", parser.toJsonTree(anzahlN));
+            j.add("anzahlFotosSelbstGesendet", parser.toJsonTree(anzahlF));
+            
+            //für jeden eigenen Chat Liste mit Anzahl Nachrichten, Fotos, etc
+            Nutzer self = nutzerEJB.getById(id);
+            List<Chat> chatList = chatEJB.getOwnChats(self); 
+            List<JsonObject> jsonList = new ArrayList<>();
+            for(Chat c : chatList){
+                JsonObject jO = new JsonObject();
+                int anzahlNa = 0;
+                int anzahlFo = 0;
+                List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
+                for(Nachricht nachricht : nList){
+                    anzahlNa++;
+                    if(nachricht.getFoto() != null){
+                        anzahlFo++;
+                    }
+                }
+                jO.add("id", parser.toJsonTree(c.getChatid()));
+                jO.add("anzahlNachrichten", parser.toJsonTree(anzahlNa));
+                jO.add("anzahlFotos", parser.toJsonTree(anzahlFo));
+                jsonList.add(jO);
+            }
+            j.add("chatübersicht", parser.toJsonTree(jsonList));
+            
+            return response.generiereAntwort(parser.toJson(j));
+        }
+    }
+    
+    //zum manuellen hinzufügen von Einstellungen
+    //soll später automatisch beim registrieren passieren
+    @POST
+    @Path("/addSettings")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response settingsTest(String Daten){
+        Gson parser = new Gson();
+//        List<Setting> s = settingsEJB.getAll();
+//        return response.generiereAntwort(parser.toJson(s));
+//        return response.generiereAntwort("yep");
+            Setting s = parser.fromJson(Daten, Setting.class);
+            settingsEJB.add(s);
+            Nutzer self = nutzerEJB.getById(s.getNutzerid());
+            self.setSetting(s);
+            s.setNutzer(self);
+            return response.generiereAntwort("true");
+    }
+    
     @POST
     @Path("/testPost")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -352,8 +435,9 @@ public class NutzerWS {
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("Json wrong");
-            }
+            
         }
+    }
     }
     
     /**
@@ -565,8 +649,8 @@ public class NutzerWS {
                 
                 Nutzer n = nutzerEJB.getByUsername(tokenizer.getUser(token));
                 n.setIsonline(Boolean.FALSE);
-                SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-                n.setLastonline(formatter.format(date));
+                BigInteger x = new BigInteger("" + System.currentTimeMillis());
+                n.setLastonline(x);
                 
                 return response.generiereAntwort("true");
 
@@ -659,6 +743,8 @@ public class NutzerWS {
             int random_int = (int)(Math.random() * (max - min + 1) + min);
             neuerNutzer.setVerificationpin(random_int);
             mail.sendVerificationPin(mailFrom, pw, neuerNutzername, neueEmail, random_int);
+            
+            neuerNutzer.setMitgliedseit(toIntExact((System.currentTimeMillis() / 1000)));
             
             nutzerEJB.add(neuerNutzer);
             Nutzer nutzerInDbB = nutzerEJB.getByUsername(neuerNutzername);

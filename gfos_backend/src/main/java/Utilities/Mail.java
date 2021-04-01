@@ -17,7 +17,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 /**
- *<h1>* Die Java-Klasse zum Versenden von E-Mails</h1>
+ *<h1>Die Java-Klasse zum Versenden von E-Mails.</h1>
  * <p>Diese Klasse versendet die E-Mails über einen konfigurierbaren SMTP-Server.</p>
  * @author simon
  */
