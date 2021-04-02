@@ -43,12 +43,6 @@ public class Foto implements Serializable {
     @Size(max = 32000)
     @Column(name = "BASE64")
     private String base64;
-    @OneToMany(mappedBy = "profilbild")
-    private List<Nutzer> nutzerList;
-    @OneToMany(mappedBy = "profilbild")
-    private List<Chat> chatList;
-    @OneToMany(mappedBy = "foto")
-    private List<Nachricht> nachrichtList;
 
     public Foto() {
     }
@@ -73,32 +67,7 @@ public class Foto implements Serializable {
         this.base64 = base64;
     }
 
-    @XmlTransient
-    public List<Nutzer> getNutzerList() {
-        return nutzerList;
-    }
 
-    public void setNutzerList(List<Nutzer> nutzerList) {
-        this.nutzerList = nutzerList;
-    }
-
-    @XmlTransient
-    public List<Chat> getChatList() {
-        return chatList;
-    }
-
-    public void setChatList(List<Chat> chatList) {
-        this.chatList = chatList;
-    }
-
-    @XmlTransient
-    public List<Nachricht> getNachrichtList() {
-        return nachrichtList;
-    }
-
-    public void setNachrichtList(List<Nachricht> nachrichtList) {
-        this.nachrichtList = nachrichtList;
-    }
 
     @Override
     public int hashCode() {
