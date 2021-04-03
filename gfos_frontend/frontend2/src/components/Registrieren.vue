@@ -385,7 +385,7 @@
       passwordRules: [
       v => !!v || 'Dieses Feld ist erforderlich.',
       v => !v.contains('A') || 'Das Passwort muss einen Großbuchstaben enthalten.',
-      v => v.length <= 10 || 'Der Name muss kürzer als 15 Zeichen lang sein.',
+      v => v.length <= 10 || 'Das Passwort muss kürzer als 15 Zeichen sein.',
     ],
       emailRules: [
       v => !!v || 'Die E-Mail ist erforderlich.',
