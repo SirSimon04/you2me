@@ -117,6 +117,11 @@ public class Nutzer implements Serializable {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
     @ManyToMany
     private List<Chat> adminInGroups;
+    @JoinTable(name = "HATMARKIERT", joinColumns = {
+        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")})
+    @ManyToMany
+    private List<Nachricht> markedMessages;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -295,6 +300,14 @@ public class Nutzer implements Serializable {
         this.adminInGroups = adminInGroups;
     }
 
+    @XmlTransient
+    public List<Nachricht> getMarkedMessages() {
+        return markedMessages;
+    }
+
+    public void setMarkedMessages(List<Nachricht> markedMessages) {
+        this.markedMessages = markedMessages;
+    }
 
     public Foto getProfilbild() {
         return profilbild;
