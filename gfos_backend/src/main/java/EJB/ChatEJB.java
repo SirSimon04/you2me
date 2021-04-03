@@ -49,6 +49,7 @@ public class ChatEJB {
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
                 n.setSetting(null);
+                n.setMarkedMessages(null);
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
@@ -59,6 +60,7 @@ public class ChatEJB {
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
                 n.setSetting(null);
+                n.setMarkedMessages(null);
             }
             try{
                 Nachricht letzteN = c.getLetztenachricht();
@@ -81,10 +83,12 @@ public class ChatEJB {
             for(Nutzer n : c.getNutzerList()){
                 em.detach(n);
                 n.setSetting(null);
+                n.setMarkedMessages(null);
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
                 n.setBlockiertVon(null);
+                n.setMarkedMessages(null);
                 n.setSetting(null);
             }
             try{
@@ -126,6 +130,7 @@ public class ChatEJB {
             n.setHatBlockiert(null);
             n.setBlockiertVon(null);
             n.setSetting(null);
+            n.setMarkedMessages(null);
 //            n.setSetting(null);
         }
         for(Nutzer n : c.getAdminList()){
@@ -137,6 +142,7 @@ public class ChatEJB {
             n.setHatBlockiert(null);
             n.setBlockiertVon(null);
             n.setSetting(null);
+            n.setMarkedMessages(null);
 //            n.setSetting(null);
         }
         try{

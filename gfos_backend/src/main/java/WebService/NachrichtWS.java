@@ -227,6 +227,26 @@ public class NachrichtWS {
         }
     }
     
+    @GET
+    @Path("/getMarked/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMarked(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
+            List<Nachricht> nList = self.getMarkedMessages();
+            for(Nachricht n : nList){
+                n.setNachrichtList(null);
+                n.setNutzerList(null);
+            }
+            return response.generiereAntwort(parser.toJson(nList));
+        }
+    
+    }
+    
     /**
      * Diese Methode sendet eine Nachricht in einen Chat. Wenn es sich bei der Nachricht um eine wichtige handelt,
      * wird an alle Nutzer des Chats eine E-Mail mit der Nachricht gesendet.
@@ -396,6 +416,62 @@ public class NachrichtWS {
             
         }
         
+    }
+    
+    @POST
+    @Path("/mark/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response markMessage(String Daten, @PathParam("token") String token) {
+        if(!verify(token)){
+            return response.generiereFehler401("dentifrisse");
+        }
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+            
+            Nachricht na = nachrichtEJB.getById(nId);
+            Nutzer nu = nutzerEJB.getById(eigeneId);
+            
+            try{
+                nachrichtEJB.markiere(na, nu);
+                return response.generiereAntwort("true");
+            }
+            catch(Exception e){
+                return response.generiereFehler406("Fehler");
+            }
+            
+        }
+    }
+    
+    @POST
+    @Path("/unmark/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response unMarkMessage(String Daten, @PathParam("token") String token) {
+        if(!verify(token)){
+            return response.generiereFehler401("dentifrisse");
+        }
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+            
+            Nachricht na = nachrichtEJB.getById(nId);
+            Nutzer nu = nutzerEJB.getById(eigeneId);
+            
+            try{
+                nachrichtEJB.entMarkiere(na, nu);
+                return response.generiereAntwort("true");
+            }
+            catch(Exception e){
+                return response.generiereFehler406("Fehler");
+            }
+            
+        }
     }
     
 }

@@ -197,6 +197,7 @@ public class ChatWS {
                     nutzer.setHatBlockiert(null);
                     nutzer.setBlockiertVon(null);
                     nutzer.setSetting(null);
+                    nutzer.setMarkedMessages(null);
                    if(adminListe.contains(nutzer)){
                        isAdmin.add(nutzer); 
                    }
@@ -215,6 +216,7 @@ public class ChatWS {
                  self.setOwnFriendList(null);
                  self.setChatList(null);
                  self.setSetting(null);
+                 self.setMarkedMessages(null);
                  if(adminListe.contains(self)){
                      self.setIsadmin(true);
                  }
@@ -267,6 +269,7 @@ public class ChatWS {
                 other.setHatBlockiert(null);
                 other.setBlockiertVon(null);
                 other.setSetting(null);
+                other.setMarkedMessages(null);
                 
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.add("nutzer", parser.toJsonTree(other));

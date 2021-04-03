@@ -182,5 +182,14 @@ public class NachrichtEJB {
         return r;
     }
     
+    public void markiere(Nachricht na, Nutzer nu){
+        nu.getMarkedMessages().add(na);
+    }
+    
+    public void entMarkiere(Nachricht na, Nutzer nu){
+        nu.getMarkedMessages().remove(na);
+    }
+    
+    
     
 }

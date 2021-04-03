@@ -78,6 +78,7 @@ public class NutzerEJB {
            n.setHatBlockiert(null);
             n.setBlockiertVon(null);
             n.setSetting(null);
+            n.setMarkedMessages(null);
         }
         return nutzerList;
     
@@ -111,6 +112,7 @@ public class NutzerEJB {
         n.setHatBlockiert(null);
         n.setBlockiertVon(null);
         n.setSetting(null);
+        n.setMarkedMessages(null);
         return n;
         
     }
@@ -183,6 +185,7 @@ public class NutzerEJB {
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
                 nutzer.setSetting(null);
+                n.setMarkedMessages(null);
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
@@ -191,6 +194,7 @@ public class NutzerEJB {
                 nu.setOtherFriendList(null);
                 nu.setPasswordhash(null);
                 nu.setSetting(null);
+                n.setMarkedMessages(null);
            }
            for(Nutzer nutzer : n.getBlockiertVon()){
                em.detach(nutzer);
@@ -199,6 +203,7 @@ public class NutzerEJB {
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
                 nutzer.setSetting(null);
+                n.setMarkedMessages(null);
             }
            for(Nutzer nutzer : n.getHatBlockiert()){
                em.detach(nutzer);
@@ -207,6 +212,7 @@ public class NutzerEJB {
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
                 nutzer.setSetting(null);
+                n.setMarkedMessages(null);
             }
         }
         return nutzerList;
@@ -252,6 +258,7 @@ public class NutzerEJB {
         n.setHatBlockiert(null);
         n.setBlockiertVon(null);
         n.setSetting(null);
+        n.setMarkedMessages(null);
         return n;
     }
     /**
@@ -337,6 +344,7 @@ public class NutzerEJB {
             nutzer.setOtherFriendList(null);
             nutzer.setPasswordhash(null);
             n.setSetting(null);
+            n.setMarkedMessages(null);
         }
         for(Nutzer nutzer : n.getOtherFriendList()) {
             em.detach(nutzer);
@@ -346,6 +354,7 @@ public class NutzerEJB {
             nutzer.setOtherFriendList(null);
             nutzer.setPasswordhash(null);
             n.setSetting(null);
+            n.setMarkedMessages(null);
         }
         
         return n;
