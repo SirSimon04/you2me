@@ -86,7 +86,7 @@ public class NachrichtEJB {
            nutzer.setAdminInGroups(null);
            nutzer.setOwnFriendList(null);
            nutzer.setOtherFriendList(null);
-           nutzer.setChatList(null);
+           nutzer.setPinnedChats(null);
            nutzer.setHatBlockiert(null);
             nutzer.setBlockiertVon(null);
             nutzer.setSetting(null);

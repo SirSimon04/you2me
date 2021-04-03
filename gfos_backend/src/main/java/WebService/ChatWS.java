@@ -214,7 +214,7 @@ public class ChatWS {
                  self.setPasswordhash(null);
                  self.setOtherFriendList(null);
                  self.setOwnFriendList(null);
-                 self.setChatList(null);
+                 self.setPinnedChats(null);
                  self.setSetting(null);
                  self.setMarkedMessages(null);
                  if(adminListe.contains(self)){
@@ -366,7 +366,7 @@ public class ChatWS {
                 int length = 0;
 
                 for(Nutzer n : c.getNutzerList()){
-                    n.setChatList(null);
+                    n.setPinnedChats(null);
                     length +=1;
                 }
 

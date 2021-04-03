@@ -74,7 +74,7 @@ public class NutzerEJB {
            n.setAdminInGroups(null);
            n.setOwnFriendList(null);
            n.setOtherFriendList(null);
-           n.setChatList(null);
+           n.setPinnedChats(null);
            n.setHatBlockiert(null);
             n.setBlockiertVon(null);
             n.setSetting(null);
@@ -108,7 +108,7 @@ public class NutzerEJB {
         n.setAdminInGroups(null);
         n.setOwnFriendList(null);
         n.setOtherFriendList(null);
-        n.setChatList(null);
+        n.setPinnedChats(null);
         n.setHatBlockiert(null);
         n.setBlockiertVon(null);
         n.setSetting(null);
@@ -126,7 +126,7 @@ public class NutzerEJB {
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
         n.setSetting(null);
-        for(Chat chat : n.getChatList()){
+        for(Chat chat : n.getPinnedChats()){
             em.detach(chat);
             }
             for(Chat chat : n.getAdminInGroups()){
@@ -167,7 +167,7 @@ public class NutzerEJB {
         for(Nutzer n : nutzerList){
            em.detach(n); 
            n.setSetting(null);
-           for(Chat chat : n.getChatList()){
+           for(Chat chat : n.getPinnedChats()){
             em.detach(chat);
             c.setNutzerList(null);
             c.setAdminList(null);
@@ -180,7 +180,7 @@ public class NutzerEJB {
            
            for(Nutzer nutzer : n.getOwnFriendList()) {
                em.detach(nutzer);
-               nutzer.setChatList(null);
+               nutzer.setPinnedChats(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
@@ -189,7 +189,7 @@ public class NutzerEJB {
            }
            for(Nutzer nu : n.getOtherFriendList()) {
                em.detach(nu);
-               nu.setChatList(null);
+               nu.setPinnedChats(null);
                 nu.setOwnFriendList(null);
                 nu.setOtherFriendList(null);
                 nu.setPasswordhash(null);
@@ -198,7 +198,7 @@ public class NutzerEJB {
            }
            for(Nutzer nutzer : n.getBlockiertVon()){
                em.detach(nutzer);
-               nutzer.setChatList(null);
+               nutzer.setPinnedChats(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
@@ -207,7 +207,7 @@ public class NutzerEJB {
             }
            for(Nutzer nutzer : n.getHatBlockiert()){
                em.detach(nutzer);
-               nutzer.setChatList(null);
+               nutzer.setPinnedChats(null);
                 nutzer.setOwnFriendList(null);
                 nutzer.setOtherFriendList(null);
                 nutzer.setPasswordhash(null);
@@ -254,7 +254,7 @@ public class NutzerEJB {
         n.setAdminInGroups(null);
         n.setOwnFriendList(null);
         n.setOtherFriendList(null);
-        n.setChatList(null);
+        n.setPinnedChats(null);
         n.setHatBlockiert(null);
         n.setBlockiertVon(null);
         n.setSetting(null);
@@ -275,7 +275,7 @@ public class NutzerEJB {
         
         Nutzer n = (Nutzer) query.getSingleResult();
         
-        for(Chat chat : n.getChatList()){
+        for(Chat chat : n.getPinnedChats()){
             em.detach(chat);
             }
             for(Chat chat : n.getAdminInGroups()){
@@ -325,7 +325,7 @@ public class NutzerEJB {
         Nutzer n = (Nutzer) query.getSingleResult();
         em.detach(n);
         n.setSetting(null);
-        for(Chat c : n.getChatList()){
+        for(Chat c : n.getPinnedChats()){
             em.detach(c);
             c.setNutzerList(null);
             c.setAdminList(null);
@@ -339,7 +339,7 @@ public class NutzerEJB {
         }
         for(Nutzer nutzer : n.getOwnFriendList()) {
             em.detach(nutzer);
-            nutzer.setChatList(null);
+            nutzer.setPinnedChats(null);
             nutzer.setOwnFriendList(null);
             nutzer.setOtherFriendList(null);
             nutzer.setPasswordhash(null);
@@ -349,7 +349,7 @@ public class NutzerEJB {
         for(Nutzer nutzer : n.getOtherFriendList()) {
             em.detach(nutzer);
             em.detach(nutzer);
-            nutzer.setChatList(null);
+            nutzer.setPinnedChats(null);
             nutzer.setOwnFriendList(null);
             nutzer.setOtherFriendList(null);
             nutzer.setPasswordhash(null);
@@ -376,7 +376,7 @@ public class NutzerEJB {
     public void fuegeChatHinzu(Chat chat, Nutzer nutzer) {
         System.out.println("nEJB fch");
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
-        nutzerInDB.getChatList().add(chat);
+        nutzerInDB.getPinnedChats().add(chat);
     }
     /**
      * Diese Methode entfernt einen Nutzer aus einem Chat. Dabei ist es egal,
@@ -386,7 +386,7 @@ public class NutzerEJB {
      */
     public void entferneChat(Chat chat, Nutzer nutzer) {
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
-        nutzerInDB.getChatList().remove(chat);
+        nutzerInDB.getPinnedChats().remove(chat);
     }
     /**
      * Diese Methode fügt einen Nutzer zu der eigenen Freundesliste hinzu, sowie den eigenen Nutzer in die Freundesliste des 

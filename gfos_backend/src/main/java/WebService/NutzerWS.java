@@ -278,7 +278,7 @@ public class NutzerWS {
             List<Nutzer> ownFriendListDB = self.getOwnFriendList();
             for(Nutzer n : ownFriendListDB){
                 n.setAdminInGroups(null);
-                n.setChatList(null);
+                n.setPinnedChats(null);
                 n.setOtherFriendList(null);
                 n.setOwnFriendList(null);
                 n.setHatBlockiert(null);
@@ -289,7 +289,7 @@ public class NutzerWS {
             List<Nutzer> otherFriendListDB = self.getOtherFriendList();
             for(Nutzer n : otherFriendListDB){
                 n.setAdminInGroups(null);
-                n.setChatList(null);
+                n.setPinnedChats(null);
                 n.setOtherFriendList(null);
                 n.setOwnFriendList(null);
                 n.setHatBlockiert(null);
@@ -299,7 +299,7 @@ public class NutzerWS {
             
             for(Nutzer n : self.getHatBlockiert()){
                 n.setAdminInGroups(null);
-                n.setChatList(null);
+                n.setPinnedChats(null);
                 n.setOtherFriendList(null);
                 n.setOwnFriendList(null);
                 n.setHatBlockiert(null);
@@ -603,7 +603,7 @@ public class NutzerWS {
             
             Nutzer dbNutzer = nutzerEJB.getCopyByUsernameListsNotNull(jsonUsername);
             
-            for(Chat c : dbNutzer.getChatList()) {
+            for(Chat c : dbNutzer.getPinnedChats()) {
                 c.setNutzerList(null); // Dies ist entscheidend, damit er nicht bis ins unendliche versucht den Parsingtree aufzubauen.
             }
             if(dbNutzer.getVerificationpin() == null){

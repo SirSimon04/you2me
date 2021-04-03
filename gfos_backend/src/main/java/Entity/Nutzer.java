@@ -96,13 +96,6 @@ public class Nutzer implements Serializable {
     private Boolean isonline;
     @Column(name = "MITGLIEDSEIT")
     private Integer mitgliedseit;
-    @JoinTable(name = "HATBLOCKIERT", joinColumns = {
-        @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
-    @ManyToMany
-    private List<Nutzer> hatBlockiert;
-    @ManyToMany(mappedBy = "hatBlockiert")
-    private List<Nutzer> blockiertVon;
     @JoinTable(name = "BEFREUNDETMIT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -110,18 +103,28 @@ public class Nutzer implements Serializable {
     private List<Nutzer> ownFriendList;
     @ManyToMany(mappedBy = "ownFriendList")
     private List<Nutzer> otherFriendList;
-    @ManyToMany(mappedBy = "nutzerList")
-    private List<Chat> chatList;
-    @JoinTable(name = "ISADMIN", joinColumns = {
+    @JoinTable(name = "HATANGEPINNT", joinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
     @ManyToMany
-    private List<Chat> adminInGroups;
+    private List<Chat> pinnedChats;
     @JoinTable(name = "HATMARKIERT", joinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")})
     @ManyToMany
     private List<Nachricht> markedMessages;
+    @JoinTable(name = "HATBLOCKIERT", joinColumns = {
+        @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<Nutzer> hatBlockiert;
+    @ManyToMany(mappedBy = "hatBlockiert")
+    private List<Nutzer> blockiertVon;
+    @JoinTable(name = "ISADMIN", joinColumns = {
+        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
+    @ManyToMany
+    private List<Chat> adminInGroups;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -247,24 +250,6 @@ public class Nutzer implements Serializable {
     }
 
     @XmlTransient
-    public List<Nutzer> getHatBlockiert() {
-        return hatBlockiert;
-    }
-
-    public void setHatBlockiert(List<Nutzer> hatBlockiert) {
-        this.hatBlockiert = hatBlockiert;
-    }
-
-    @XmlTransient
-    public List<Nutzer> getBlockiertVon() {
-        return blockiertVon;
-    }
-
-    public void setBlockiertVon(List<Nutzer> blockiertVon) {
-        this.blockiertVon = blockiertVon;
-    }
-
-    @XmlTransient
     public List<Nutzer> getOwnFriendList() {
         return ownFriendList;
     }
@@ -283,21 +268,12 @@ public class Nutzer implements Serializable {
     }
 
     @XmlTransient
-    public List<Chat> getChatList() {
-        return chatList;
+    public List<Chat> getPinnedChats() {
+        return pinnedChats;
     }
 
-    public void setChatList(List<Chat> chatList) {
-        this.chatList = chatList;
-    }
-
-    @XmlTransient
-    public List<Chat> getAdminInGroups() {
-        return adminInGroups;
-    }
-
-    public void setAdminInGroups(List<Chat> adminInGroups) {
-        this.adminInGroups = adminInGroups;
+    public void setPinnedChats(List<Chat> pinnedChats) {
+        this.pinnedChats = pinnedChats;
     }
 
     @XmlTransient
@@ -307,6 +283,32 @@ public class Nutzer implements Serializable {
 
     public void setMarkedMessages(List<Nachricht> markedMessages) {
         this.markedMessages = markedMessages;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getHatBlockiert() {
+        return hatBlockiert;
+    }
+
+    public void setHatBlockiert(List<Nutzer> hatBlockiert) {
+        this.hatBlockiert = hatBlockiert;
+    }
+
+    @XmlTransient
+    public List<Nutzer> getBlockiertVon() {
+        return blockiertVon;
+    }
+
+    public void setBlockiertVon(List<Nutzer> blockiertVon) {
+        this.blockiertVon = blockiertVon;
+    }
+    @XmlTransient
+    public List<Chat> getAdminInGroups() {
+        return adminInGroups;
+    }
+
+    public void setAdminInGroups(List<Chat> adminInGroups) {
+        this.adminInGroups = adminInGroups;
     }
 
     public Foto getProfilbild() {

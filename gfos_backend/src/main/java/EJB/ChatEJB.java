@@ -42,7 +42,7 @@ public class ChatEJB {
             em.detach(c);
             for(Nutzer n : c.getNutzerList()){
                 em.detach(n);
-                n.setChatList(null);
+                n.setPinnedChats(null);
                 n.setAdminInGroups(null);
                 n.setOwnFriendList(null);
                 n.setOtherFriendList(null);
@@ -53,7 +53,7 @@ public class ChatEJB {
             }
             for(Nutzer n : c.getAdminList()){
                 em.detach(n);
-                n.setChatList(null);
+                n.setPinnedChats(null);
                 n.setAdminInGroups(null);
                 n.setOwnFriendList(null);
                 n.setOtherFriendList(null);
@@ -123,7 +123,7 @@ public class ChatEJB {
         em.detach(c);
         for(Nutzer n : c.getNutzerList()){
             em.detach(n);
-            n.setChatList(null);
+            n.setPinnedChats(null);
             n.setAdminInGroups(null);
             n.setOwnFriendList(null);
             n.setOtherFriendList(null);
@@ -135,7 +135,7 @@ public class ChatEJB {
         }
         for(Nutzer n : c.getAdminList()){
             em.detach(n);
-            n.setChatList(null);
+            n.setPinnedChats(null);
             n.setAdminInGroups(null);
             n.setOwnFriendList(null);
             n.setOtherFriendList(null);

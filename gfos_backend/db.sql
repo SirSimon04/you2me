@@ -6,7 +6,7 @@ CREATE TABLE NUTZER (ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WITH
 
 CREATE TABLE NACHRICHT (NACHRICHTID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), SENDERID INTEGER NOT NULL, CHATID INTEGER NOT NULL, DATUMUHRZEIT BIGINT NOT NULL, INHALT VARCHAR(1024) NOT NULL, FOTO INTEGER, ANTWORTAUF INTEGER, SENDER VARCHAR(50), ISIMPORTANT BOOLEAN, READBYALL BOOLEAN, ISPLANNED BOOLEAN, PRIMARY KEY (NACHRICHTID), foreign key(FOTO) references Foto(id), foreign key(antwortauf) references Nachricht(Nachrichtid));
 
-CREATE TABLE CHAT (CHATID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), ERSTELLDATUM BIGINT, NAME VARCHAR(50), BESCHREIBUNG VARCHAR(100), PROFILBILD INTEGER, LETZTENACHRICHT INTEGER, ISGROUP BOOLEAN, ISBLOCKED BOOLEAN, GOTBLOCKED BOOLEAN, NNEW INTEGER, PRIMARY KEY (CHATID), foreign key(profilbild) references Foto(id), foreign key(letzteNachricht) references Nachricht(nachrichtid));
+CREATE TABLE CHAT (CHATID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), ERSTELLDATUM BIGINT, NAME VARCHAR(50), BESCHREIBUNG VARCHAR(100), PROFILBILD INTEGER, LETZTENACHRICHT INTEGER, ISGROUP BOOLEAN, ISBLOCKED BOOLEAN, GOTBLOCKED BOOLEAN, NNEW INTEGER, isPinned BOOLEAN, PRIMARY KEY (CHATID), foreign key(profilbild) references Foto(id), foreign key(letzteNachricht) references Nachricht(nachrichtid));
 
 Create Table Setting( nutzerId int not null primary key, darkmode boolean, lesebestätigung boolean, mailIfImportant boolean, foreign Key(nutzerId) references Nutzer(id) on delete cascade );
 
@@ -21,6 +21,8 @@ Create Table hatBlockiert( nutzer1Id integer not null, nutzer2Id integer not nul
 Create Table hatGelesen( nutzerId integer not null, nachrichtId integer not null, foreign Key(nutzerId) references Nutzer(id) on delete cascade, foreign Key(nachrichtId) references Nachricht(nachrichtId) on delete cascade );
 
 Create Table hatMarkiert(nutzerId integer not null, nachrichtId integer not null, foreign key(nutzerid) references Nutzer(id) on delete cascade, foreign key(nachrichtId) references Nachricht(nachrichtId) on delete cascade);
+
+Create Table hatAngepinnt(nutzerId integer not null, chatId integer not null, foreign key(nutzerid) references Nutzer(id) on delete cascade, foreign key(chatId) references Chat(Chatid) on delete cascade);
 
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN, VERIFICATIONPIN, LASTONLINE, ISONLINE, MITGLIEDSEIT) VALUES ('MailAuth', NULL, NULL, 'simiquatsch1@gmail.com', 'Simi272727', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) VALUES ('Simon', NULL, NULL, 'se@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL); 

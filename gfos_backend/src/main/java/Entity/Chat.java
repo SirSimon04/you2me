@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Chat.findByIsgroup", query = "SELECT c FROM Chat c WHERE c.isgroup = :isgroup"),
     @NamedQuery(name = "Chat.findByIsblocked", query = "SELECT c FROM Chat c WHERE c.isblocked = :isblocked"),
     @NamedQuery(name = "Chat.findByGotblocked", query = "SELECT c FROM Chat c WHERE c.gotblocked = :gotblocked"),
-    @NamedQuery(name = "Chat.findByNnew", query = "SELECT c FROM Chat c WHERE c.nnew = :nnew")})
+    @NamedQuery(name = "Chat.findByNnew", query = "SELECT c FROM Chat c WHERE c.nnew = :nnew"),
+    @NamedQuery(name = "Chat.findByIspinned", query = "SELECT c FROM Chat c WHERE c.ispinned = :ispinned")})
 public class Chat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,6 +67,8 @@ public class Chat implements Serializable {
     private Boolean gotblocked;
     @Column(name = "NNEW")
     private Integer nnew;
+    @Column(name = "ISPINNED")
+    private Boolean ispinned;
     @JoinTable(name = "NIMMTTEIL", joinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -150,6 +153,15 @@ public class Chat implements Serializable {
     public void setNnew(Integer nnew) {
         this.nnew = nnew;
     }
+
+    public Boolean getIspinned() {
+        return ispinned;
+    }
+
+    public void setIspinned(Boolean ispinned) {
+        this.ispinned = ispinned;
+    }
+
 
     @XmlTransient
     public List<Nutzer> getNutzerList() {
