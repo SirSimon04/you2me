@@ -62,6 +62,23 @@
             </textarea>
             <img onclick="window.sendMessage();" style="position: relative; right: -4px; bottom: 4px;" width="32" height="32" id="sendMessage_Button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGfSURBVEiJrdQvTxxRFAXw32SzBr4FHggSi6hpUrMYiimQ9HOgIHj4FljEQoIEWoFD0CYkVa0rbYLlVcydzWM6s7M7MMkTc/+cc+49M69IKXnLpyiKIT7gMwZSSm9ysIQD/ESKM34t6BAjjPGM33jKCEavUXuIXwF0hU84ivenmGQ4r9pNnIfaRxxjOfL7AX4UkxyklPRRe40dLGQ1Ffh+TPKMpVaCKWpXGmon4PF+hfEk36H2Bru52g7w5crcrGai9iLU/sEJVjtW9wI8YschbpgTfInCB+xhcQZfmsAXYpWHtVpb+BHqT7E2L3jEd3JzX3gQa9rD92g+w/qs4JG7xvl/8VrRANu4C6BLbMwAvhK5zakEWUOhvAJuo/G+DbzN3KkEteb3+Ib7lnyjuTMTZCSpWlctt9tkbnWK6lPqeoqiuMVjSmmjFr/B35TSu8bGWSYIEaOYYj2LrbaZO9eKMuPvcJbFTtrMnZsgALdD8RoWlddKo7l9CQbKn/FU+WO2mtuLIEgq4AdcdNb3IBgq766p5vYmCJKP+DrN3Or8A60pb5tuGI4XAAAAAElFTkSuQmCC">
         </div>
+        <div class="text-center">
+            <v-btn
+                id="showEmptyMessageError"
+                hidden
+                dark
+                color="orange darken-2"
+                @click="emptyMessageError = true"
+            >
+                Open Snackbar
+            </v-btn>
+            <v-snackbar
+                v-model="emptyMessageError"
+                :timeout="emptyMessageErrorTimeout"
+            >
+                <pre style="color: white;">Nachricht darf nicht leer sein!</pre>
+            </v-snackbar>
+        </div>
     </v-container>
 </template>
 
@@ -72,6 +89,8 @@ export default {
     name: 'Chat',
 
     data: () => ({
+        emptyMessageError: false,
+        emptyMessageErrorTimeout: 2000,
     }),
 
     mounted() {
@@ -123,7 +142,7 @@ export default {
             });
         }
 
-        function testPost3() {
+        function loginTest() {
             fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/login', {
                 mode: 'cors',
                 method: 'POST',
@@ -143,7 +162,7 @@ export default {
             });
         }
 
-        testPost3();
+        loginTest();
 
         function fetchIfNewest(loadMsgs) {
             // Check for newest message and reload all messages if there is a newer one
@@ -204,10 +223,27 @@ export default {
                             var data = msgs[i];
                             var elem = '';
                             // Add icon for planned message (ifÖsent by me: icon; if sent by other: show if date is not a future date)
-                            if (data['senderid'] === CURRENT_USER_ID) elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
-                            else elem = '<div class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                            if (data['senderid'] === CURRENT_USER_ID) elem = '<div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                            else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
                             cc.innerHTML += elem;
                         }
+
+                        var fadeTime = 0;
+                        var chatContainerWidth = cc.clientWidth;
+                        console.warn(chatContainerWidth);
+                        var fadeAnim = setInterval(function() {
+                            var elems = document.getElementsByClassName('singlemsgcontainer');
+                            for (i=0; i<elems.length; i++) {
+                                elem = elems[i];
+                                var fadeX = (1 - fadeTime) * -((elem.id == 'myMessage') ? chatContainerWidth : (chatContainerWidth / 2));
+                                elem.style = `
+                                position: relative;
+                                left: ` + fadeX + `px;
+                                `;
+                            }
+                            fadeTime += 0.01;
+                            if (fadeTime > 1) clearInterval(fadeAnim);
+                        }, 10);
 
                         function f(t, u8s) {
                             var a = -1.25; // 4sec
@@ -234,26 +270,10 @@ export default {
 
                                 time += 0.01;
                                 isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
-                                // Time should not exceed a value of 4
+                                // Time should not exceed a value of 4 or 8
                                 if (isBottom || time > (use8s ? 8 : 4)) clearInterval(scrollAnim);
                             }, 10);
                         }
-
-                        /*
-                        // Scroll down to newest message (if user is at the button)
-                        var difference = msgs.length - messages.length;
-                        var allSingles = document.getElementsByClassName('singlemsgcontainer');
-                        var scrollValue = 0; // Funktioniert, scrollt aber ein paar Pixel weiter (das doppelte?)
-                        for (i=allSingles.length-1; i>=difference; i--) {
-                            scrollValue += allSingles[i].scrollHeight;
-                        }
-                        var count = 0;
-                        var id = setInterval(function() {
-                            window.scrollBy(0, 5);
-                            count += 15;
-                            if (count >= scrollValue) clearInterval(id);
-                        }, 16);
-                        */
 
                         messages = msgs;
                     }).catch(error => {
@@ -270,10 +290,13 @@ export default {
 window.canSend = true;
 
 window.sendMessage = function sendMessage() {
+    var content = document.getElementById('sendMessage_Area').value.trim();
     if (!window.canSend) return;
+    if (content === '') {
+        document.getElementById('showEmptyMessageError').click();
+        return;
+    }
     window.canSend = false;
-    
-    var content = document.getElementById('sendMessage_Area').value;
     document.getElementById('sendMessage_Area').value = '';
     var currentMillis = new Date().getTime();
 
