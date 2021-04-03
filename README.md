@@ -6,13 +6,6 @@ Name: db; <br />
 User: root; <br />
 Password: root; <br />
 
-### Tabellen:      
-Nutzer(int id primary key, String vorname length 50, String nachname length 50)
-
-### Container: 
-Anmelden/Registrieren <br />
-Letzte Chats <br />
-Chats <br />
 
 ### Colors:
 #### App-Background:
