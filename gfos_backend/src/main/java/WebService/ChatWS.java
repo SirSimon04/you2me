@@ -265,6 +265,27 @@ public class ChatWS {
            else{
                nutzerListe.remove(self);
                Nutzer other = nutzerListe.get(0);
+               
+               JsonObject jsonObject = new JsonObject();
+               
+               try{
+                   if(self.getBlockiertVon().contains(other)){
+                       jsonObject.add("blockiertVon", parser.toJsonTree("true"));
+                    }
+               }
+               catch(NullPointerException e){
+                   
+               }
+               try{
+                   if(self.getHatBlockiert().contains(other)){
+                        jsonObject.add("blockiertWorden", parser.toJsonTree("true"));
+                    }
+               }
+               catch(NullPointerException e){
+                   
+               }
+               
+               
                other.setPasswordhash(null);
                 other.setOwnFriendList(null);
                 other.setOtherFriendList(null);
@@ -273,7 +294,7 @@ public class ChatWS {
                 other.setSetting(null);
                 other.setMarkedMessages(null);
                 
-                JsonObject jsonObject = new JsonObject();
+                
                 jsonObject.add("nutzer", parser.toJsonTree(other));
                 
                

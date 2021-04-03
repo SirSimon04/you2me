@@ -563,16 +563,23 @@ public class NutzerWS {
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
+                Nutzer self = nutzerEJB.getById(eigeneId);
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getCopyByUsernameListsNotNull(andererName);
+                Nutzer other = nutzerEJB.getByUsername(andererName);
 
+                if(!self.getHatBlockiert().contains(other)){
                     nutzerEJB.block(self, other);
                     self.getHatBlockiert().add(other);
                     other.getBlockiertVon().add(self);
-                    
                     return response.generiereAntwort("true");      
+                }
+                else{
+                    return response.generiereAntwort("Bereits blockiert");
+                }
+                    
+                    
+                    
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("Json wrong");
@@ -600,10 +607,10 @@ public class NutzerWS {
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
+                Nutzer self = nutzerEJB.getById(eigeneId);
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getCopyByUsernameListsNotNull(andererName);
+                Nutzer other = nutzerEJB.getByUsername(andererName);
 
                     nutzerEJB.unblock(self, other);
                     self.getHatBlockiert().remove(other);
