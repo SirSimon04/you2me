@@ -405,10 +405,12 @@ public class NutzerWS {
 //        return response.generiereAntwort(parser.toJson(s));
 //        return response.generiereAntwort("yep");
             Setting s = parser.fromJson(Daten, Setting.class);
-            settingsEJB.add(s);
+            
             Nutzer self = nutzerEJB.getById(s.getNutzerid());
             self.setSetting(s);
             s.setNutzer(self);
+            s.setNutzerid(self.getId());
+            settingsEJB.add(s);
             return response.generiereAntwort("true");
     }
     
@@ -424,6 +426,7 @@ public class NutzerWS {
             Gson parser = new Gson();
             Setting s = parser.fromJson(Daten, Setting.class);
             Nutzer self = nutzerEJB.getById(s.getNutzerid());
+            
             try{
                 self.getSetting().setDarkmode(s.getDarkmode());
             }

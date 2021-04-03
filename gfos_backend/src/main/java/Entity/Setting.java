@@ -81,6 +81,7 @@ public class Setting implements Serializable {
     }
 
     public Boolean getMailifimportant() {
+        System.out.println("getMailifimportant");
         return mailifimportant;
     }
 
