@@ -413,6 +413,40 @@ public class NutzerWS {
     }
     
     @POST
+    @Path("/setSettings/{token}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setSettings(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            Setting s = parser.fromJson(Daten, Setting.class);
+            Nutzer self = nutzerEJB.getById(s.getNutzerid());
+            try{
+                self.getSetting().setDarkmode(s.getDarkmode());
+            }
+            catch(NullPointerException e){
+                
+            }
+            try{
+                self.getSetting().setLesebestaetigung(s.getLesebestaetigung());
+            }
+            catch(NullPointerException e){
+                
+            }
+            try{
+                self.getSetting().setMailifimportant(s.getMailifimportant());
+            }
+            catch(NullPointerException e){
+                
+            }
+            return response.generiereAntwort("true");
+        }
+    }
+    
+    @POST
     @Path("/testPost")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
@@ -778,7 +812,7 @@ public class NutzerWS {
 
             Setting s = new Setting();
             s.setDarkmode(Boolean.TRUE);
-            s.setLesebestätigung(Boolean.TRUE);
+            s.setLesebestaetigung(Boolean.TRUE);
             s.setMailifimportant(Boolean.TRUE);
             s.setNutzer(nutzerInDbB);
             s.setNutzerid(nutzerInDbB.getId());
