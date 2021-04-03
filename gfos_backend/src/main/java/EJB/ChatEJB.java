@@ -250,5 +250,19 @@ public class ChatEJB {
     public void delete(Chat c){
         em.remove(c);
     }
+    
+    public void pin(int chatId, int nutzerId){
+        Chat chatInDB = em.find(Chat.class, chatId);
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
+        nutzerInDB.getPinnedChats().add(chatInDB);
+       
+    }
+    
+    public void unpin(int chatId, int nutzerId){
+        Chat chatInDB = em.find(Chat.class, chatId);
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
+        nutzerInDB.getPinnedChats().remove(chatInDB);
+       
+    }
             
 }

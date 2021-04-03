@@ -12,6 +12,7 @@ Entity/Blacklist.class
 Utilities/Antwort.class
 testgfos2021/gfostest/resources/JavaEE8Resource.class
 testgfos2021/gfostest/JAXRSConfiguration.class
+Utilities/NameSorter.class
 Utilities/Mail$1.class
 WebService/ChatWS.class
 Utilities/Mail$3.class

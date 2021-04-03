@@ -2,6 +2,7 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Setting.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/BlacklistEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/SettingsEJB.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/NameSorter.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Hasher.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/WebService/NutzerWS.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/WebService/ChatWS.java
