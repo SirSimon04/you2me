@@ -64,6 +64,11 @@ export default {
     }),
 
     mounted() {
+        var pressedKeys = [];
+        var commands = {
+            'sendMessage': ['Control', 'Enter'],
+        }
+
         EventBus.$on('OPENCHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = true;
             EventBus.$emit('LOADPROFILE', {'username': payload['username']});
@@ -72,6 +77,30 @@ export default {
         EventBus.$on('CLOSECHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = false;
         }); // EventBus.$on('CLOSECHATINFO')
+
+        function equals(array0, array1) {
+            if (array0.length !== array1.length) return false;
+            for (var i=0; i<array0.length; i++) {
+                if (array0[i] !== array1[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        window.addEventListener("keydown", function (event) {
+            if (pressedKeys.includes(event.key)) return;
+            if (equals(pressedKeys, commands['sendMessage'])) {
+                EventBus.$emit('KSC_SENDMESSAGE', {});
+            }
+        }, true);
+
+        window.addEventListener("keyup", function (event) {
+            pressedKeys = pressedKeys.filter(e => e !== event.key);
+        }, true);
+
     }
 };
+window.CURRENT_USER_ID = 2;
+
 </script>

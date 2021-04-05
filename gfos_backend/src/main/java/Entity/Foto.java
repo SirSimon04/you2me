@@ -66,7 +66,7 @@ public class Foto implements Serializable {
     public void setBase64(String base64) {
         this.base64 = base64;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -113,6 +113,11 @@ public class Nutzer implements Serializable {
         @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")})
     @ManyToMany
     private List<Nachricht> markedMessages;
+    @JoinTable(name = "HATARCHIVIERT", joinColumns = {
+        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
+        @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
+    @ManyToMany
+    private List<Chat> archivedChats;
     @JoinTable(name = "HATBLOCKIERT", joinColumns = {
         @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
@@ -283,6 +288,15 @@ public class Nutzer implements Serializable {
 
     public void setMarkedMessages(List<Nachricht> markedMessages) {
         this.markedMessages = markedMessages;
+    }
+
+    @XmlTransient
+    public List<Chat> getArchivedChats() {
+        return archivedChats;
+    }
+
+    public void setArchivedChats(List<Chat> archivedChats) {
+        this.archivedChats = archivedChats;
     }
 
     @XmlTransient

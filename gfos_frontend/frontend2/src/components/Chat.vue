@@ -94,13 +94,13 @@ export default {
     }),
 
     mounted() {
-        var IP_ADDRESS = '91.49.179.104';
-        var CURRENT_USER_ID = -1;
-        var CURRENT_CHAT_ID = -1;
+        window.IP_ADDRESS = 'fb1258db8832.ngrok.io';
+        //window.CURRENT_USER_ID = -1;
+        window.CURRENT_CHAT_ID = -1;
         var messages = [];
 
         function testPost() {
-            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/testPost', {
+            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nutzer/testPost', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -122,17 +122,17 @@ export default {
         function sendMessage() {
             var content = document.getElementById('sendMessage_Area').text;
             var currentMillis = new Date.currentMillis;
-            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/add/1', {
+            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'text/plain'
                 },
                 body: JSON.stringify({
-                    senderid: CURRENT_USER_ID,
+                    senderid: window.CURRENT_USER_ID,
                     inhalt: content,
                     datumuhrzeit: currentMillis,
-                    chatid: CURRENT_CHAT_ID,
+                    chatid: window.CURRENT_CHAT_ID,
                 })
             }).then(response => {
                 response.clone();
@@ -143,7 +143,7 @@ export default {
         }
 
         function loginTest() {
-            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/login', {
+            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nutzer/login', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -164,10 +164,20 @@ export default {
 
         loginTest();
 
+        function fillStringZero(string, length) {
+            string = string.toString();
+            var zeroString = '';
+            for (var i=length-string.length; i>0; i--) {
+                zeroString += '0';
+            }
+            return zeroString + string;
+        }
+
         function fetchIfNewest(loadMsgs) {
             // Check for newest message and reload all messages if there is a newer one
+            console.log('checking');
             var newest = null;
-            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/chat/getNewest/' + CURRENT_CHAT_ID + '/1').then(response => {
+            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/getNewest/' + window.CURRENT_CHAT_ID + '/1').then(response => {
                 if (response.status !== 200) {
                     console.error('Code !== 200:' + response);
                     return null;
@@ -197,23 +207,25 @@ export default {
         });
 
         EventBus.$on('OPENCHAT', (payload) => {
+            console.log('removing interval');
             clearInterval(interval); // Stop current loading interval to not load multiple chats at the same time
 
-            CURRENT_USER_ID = payload['userid']; //set in cookie?
-            CURRENT_CHAT_ID = payload['chatid'];
+            //window.CURRENT_USER_ID = payload['userid']; //set in cookie?
+            window.CURRENT_CHAT_ID = payload['chatid'];
             messages = [];
 
             document.getElementById('chatcontainer').innerHTML = '';
 
-            // Nachrichten mit dieser Animation einfügen: https://www.w3schools.com/css/tryit.asp?filename=trycss3_animation_speed
             function loadMessages() { // Reload all messages (will be called if a newer message is available)
-                fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nachricht/chat/' + CURRENT_CHAT_ID + '/1').then(response => {
+                fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
                     if (response.status !== 200) {
                         console.error('Code !== 200:' + response);
                         return null;
                     }
                     response.clone();
                     response.json().then(msgs => {
+                        var diff = msgs.length - messages.length;
+
                         var cc = document.getElementById('chatcontainer');
                         var isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
 
@@ -222,19 +234,20 @@ export default {
                         for (var i=0; i<msgs.length; i++) {
                             var data = msgs[i];
                             var elem = '';
-                            // Add icon for planned message (ifÖsent by me: icon; if sent by other: show if date is not a future date)
-                            if (data['senderid'] === CURRENT_USER_ID) elem = '<div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
-                            else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + data["datumuhrzeit"] + '</div></div></div></div><br></div>';
+                            // Add icon for planned message (if sent by me: icon; if sent by other: show if date is not a future date)
+                            var date = new Date(data['datumuhrzeit']);
+                            var dateFormatted = fillStringZero(date.getHours(), 2) + ':' + fillStringZero(date.getMinutes(), 2);
+                            if (data['senderid'] === window.CURRENT_USER_ID) elem = '<div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
+                            else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
                             cc.innerHTML += elem;
                         }
 
                         var fadeTime = 0;
                         var chatContainerWidth = cc.clientWidth;
-                        console.warn(chatContainerWidth);
                         var fadeAnim = setInterval(function() {
                             var elems = document.getElementsByClassName('singlemsgcontainer');
-                            for (i=0; i<elems.length; i++) {
-                                elem = elems[i];
+                            for (i=0; i<diff; i++) {
+                                elem = elems[elems.length-i-1];
                                 var fadeX = (1 - fadeTime) * -((elem.id == 'myMessage') ? chatContainerWidth : (chatContainerWidth / 2));
                                 elem.style = `
                                 position: relative;
@@ -282,13 +295,21 @@ export default {
                 });
             }
             
-            interval = setInterval(fetchIfNewest(loadMessages), 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
+            console.log('resetting fetch intervall');
+            interval = setInterval(function() {
+                fetchIfNewest(loadMessages);
+            }, 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
 
         }); // EventBus.$on('OPENCHAT')
+
+        EventBus.$on('KSC_SENDMESSAGE', (payload) => {
+            console.log('EventBus: KSC_SENDMESSAGE calling function window.sendMessage();');
+            window.sendMessage();
+        }); // EventBus.$on('KSC_SENDMESSAGE');
     }, // mounted()
 }
-window.canSend = true;
 
+window.canSend = true;
 window.sendMessage = function sendMessage() {
     var content = document.getElementById('sendMessage_Area').value.trim();
     if (!window.canSend) return;
@@ -356,17 +377,17 @@ window.sendMessage = function sendMessage() {
         }
     }, 10);
 
-    fetch('http://' + this.IP_ADDRESS + ':8080/GFOS/daten/nachricht/add/1', {
+    fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'text/plain'
         },
         body: JSON.stringify({
-            senderid: this.CURRENT_USER_ID,
+            senderid: window.CURRENT_USER_ID,
             inhalt: content,
             datumuhrzeit: currentMillis,
-            chatid: this.CURRENT_CHAT_ID,
+            chatid: window.CURRENT_CHAT_ID,
         })
     }).then(response => {
         response.clone();

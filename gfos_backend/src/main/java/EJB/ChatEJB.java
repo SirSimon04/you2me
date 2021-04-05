@@ -262,7 +262,20 @@ public class ChatEJB {
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
         nutzerInDB.getPinnedChats().remove(chatInDB);
-       
     }
+    
+    public void archive(int chatId, int nutzerId){
+        Chat chatInDB = em.find(Chat.class, chatId);
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
+        nutzerInDB.getArchivedChats().add(chatInDB);
+    }
+    
+    public void unArchive(int chatId, int nutzerId){
+        Chat chatInDB = em.find(Chat.class, chatId);
+        Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
+        nutzerInDB.getArchivedChats().remove(chatInDB);
+    }
+    
+    
             
 }
