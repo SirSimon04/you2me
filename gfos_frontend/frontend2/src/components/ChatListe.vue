@@ -20,7 +20,7 @@ export default {
     }),
 
     mounted() {
-        var IP_ADDRESS = '91.49.179.104';
+        var IP_ADDRESS = 'fb1258db8832.ngrok.io';
         var CURRENT_USER_ID = 2;
 
         var image_data = '';
@@ -33,7 +33,7 @@ export default {
 
         var chats = [];
 
-        fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/chat/nutzerid/' + CURRENT_USER_ID + '/1').then(response => {
+        fetch('http://' + IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + CURRENT_USER_ID + '/1').then(response => {
             if (response.status !== 200) {
                 console.error('Code !== 200:' + response);
                 return null;
