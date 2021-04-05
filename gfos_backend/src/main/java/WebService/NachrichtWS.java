@@ -10,11 +10,13 @@ import EJB.ChatEJB;
 import EJB.FotoEJB;
 import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
+import EJB.SettingsEJB;
 import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
+import Entity.Setting;
 import Utilities.Antwort;
 import Utilities.Mail;
 import Utilities.Tokenizer;
@@ -64,6 +66,8 @@ public class NachrichtWS {
     private Tokenizer tokenizer;
     @EJB
     private BlacklistEJB blacklistEJB;
+    @EJB
+    private SettingsEJB settingsEJB;
     private Mail mail = new Mail();
     
     private Antwort response = new Antwort();
@@ -309,6 +313,7 @@ public class NachrichtWS {
                 //wenn wichtig, dann mail versenden
                 try{
                     if(neueNachricht.getIsimportant()){
+                        System.out.println("HIIIIIIIIIEEEEEEEEEEEEERRRRRRRR");
                         Chat cc = chatEJB.getCopyListsNotNull(neueNachricht.getChatid());
                         List<Nutzer> nList = cc.getNutzerList();
                         nList.remove(self);
@@ -316,43 +321,52 @@ public class NachrichtWS {
                         String mailFrom = nutzer.getEmail();
                         String pw = nutzer.getPasswordhash();
                         for(Nutzer n : nList){
-                            String msg = "";
-                            if(cc.getIsgroup()){
-                                msg += "<h2>Hallo " + n.getBenutzername() +",</h2>"
-                                        + "<p>in der Gruppe " + cc.getName() + " wurde von " 
-                                        + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
-                                        + " eine wichtige Nachricht gesendet.</p>"
-                                        + "<p>Sie lautet: \""
-                                        + neueNachricht.getInhalt()
-                                        + "\"</p>"
-                                        + "<p>Falls du keine Benachhrichtigungen mehr erhalten willst, "
-                                        + "wenn jemand eine wichtige Nachricht schickt, kannst du das "
-                                        + "in den Einstellungen ausschalten.</p>"
-                                        + "<h3>Mit freundlichen Grüßen,</h3>"
-                                        + "<h3>dein Disputatio-Team</h3>";
-                                mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
+//                            System.out.println(n.getSetting() == null);
+                            Setting s = settingsEJB.getById(n.getId());
+                            System.out.println(s.getMailifimportant());
+//                            System.out.println(n.getSetting().getMailifimportant());
+//                            if(n.getSetting().getMailifimportant()){
+                                if(s.getMailifimportant()){
+                                    String msg = "";
+                                if(cc.getIsgroup()){
+                                    msg += "<h2>Hallo " + n.getBenutzername() +",</h2>"
+                                            + "<p>in der Gruppe " + cc.getName() + " wurde von " 
+                                            + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
+                                            + " eine wichtige Nachricht gesendet.</p>"
+                                            + "<p>Sie lautet: \""
+                                            + neueNachricht.getInhalt()
+                                            + "\"</p>"
+                                            + "<p>Falls du keine Benachhrichtigungen mehr erhalten willst, "
+                                            + "wenn jemand eine wichtige Nachricht schickt, kannst du das "
+                                            + "in den Einstellungen ausschalten.</p>"
+                                            + "<h3>Mit freundlichen Grüßen,</h3>"
+                                            + "<h3>dein Disputatio-Team</h3>";
+                                    mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
+
+                                }
+                                else{
+                                    msg += "<h2>Hallo " + n.getBenutzername() + ",</h2>"
+                                            + "<p>"
+                                            + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
+                                            + " hat dir eine wichtige Nachricht gesendet.</p>"
+                                            + "<p>Sie lautet: \""
+                                            + neueNachricht.getInhalt()
+                                            + "\"</p>"
+                                            + "<p>Falls du keine Benachhrichtigungen mehr erhalten willst, "
+                                            + "wenn jemand eine wichtige Nachricht schickt, kannst du das "
+                                            + "in den Einstellungen ausschalten.</p>"
+                                            + "<h3>Mit freundlichen Grüßen,</h3>"
+                                            + "<h3>dein Disputatio-Team</h3>";
+                                    mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
+                                }
+                                }
+                                }
                                 
-                            }
-                            else{
-                                msg += "<h2>Hallo " + n.getBenutzername() + ",</h2>"
-                                        + "<p>"
-                                        + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
-                                        + " hat dir eine wichtige Nachricht gesendet.</p>"
-                                        + "<p>Sie lautet: \""
-                                        + neueNachricht.getInhalt()
-                                        + "\"</p>"
-                                        + "<p>Falls du keine Benachhrichtigungen mehr erhalten willst, "
-                                        + "wenn jemand eine wichtige Nachricht schickt, kannst du das "
-                                        + "in den Einstellungen ausschalten.</p>"
-                                        + "<h3>Mit freundlichen Grüßen,</h3>"
-                                        + "<h3>dein Disputatio-Team</h3>";
-                                mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
-                            }
-                        }
+//                        }
                     }
                 }
                 catch(NullPointerException e){
-                    
+                    response.generiereAntwort("Komisch");
                 }
                 
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);

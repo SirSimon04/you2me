@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Setting.findAll", query = "SELECT s FROM Setting s"),
     @NamedQuery(name = "Setting.findByNutzerid", query = "SELECT s FROM Setting s WHERE s.nutzerid = :nutzerid"),
     @NamedQuery(name = "Setting.findByDarkmode", query = "SELECT s FROM Setting s WHERE s.darkmode = :darkmode"),
-    @NamedQuery(name = "Setting.findByLesebest\u00e4tigung", query = "SELECT s FROM Setting s WHERE s.lesebest\u00e4tigung = :lesebest\u00e4tigung"),
+    @NamedQuery(name = "Setting.findByLesebest\u00e4tigung", query = "SELECT s FROM Setting s WHERE s.lesebestaetigung= :lesebestaetigung"),
     @NamedQuery(name = "Setting.findByMailifimportant", query = "SELECT s FROM Setting s WHERE s.mailifimportant = :mailifimportant")})
 public class Setting implements Serializable {
 
@@ -42,7 +42,7 @@ public class Setting implements Serializable {
     @Column(name = "DARKMODE")
     private Boolean darkmode;
     @Column(name = "LESEBEST\u00c4TIGUNG")
-    private Boolean lesebestätigung;
+    private Boolean lesebestaetigung;
     @Column(name = "MAILIFIMPORTANT")
     private Boolean mailifimportant;
     @JoinColumn(name = "NUTZERID", referencedColumnName = "ID", insertable = false, updatable = false)
@@ -52,7 +52,7 @@ public class Setting implements Serializable {
     public Setting() {
     }
 
-    public Setting(Integer nutzerid) {
+    public Setting(Integer nutzerid) { 
         this.nutzerid = nutzerid;
     }
 
@@ -72,15 +72,16 @@ public class Setting implements Serializable {
         this.darkmode = darkmode;
     }
 
-    public Boolean getLesebestätigung() {
-        return lesebestätigung;
+    public Boolean getLesebestaetigung() {
+        return lesebestaetigung;
     }
 
-    public void setLesebestätigung(Boolean lesebestätigung) {
-        this.lesebestätigung = lesebestätigung;
+    public void setLesebestaetigung(Boolean lesebestaetigung) {
+        this.lesebestaetigung = lesebestaetigung;
     }
 
     public Boolean getMailifimportant() {
+        System.out.println("getMailifimportant");
         return mailifimportant;
     }
 

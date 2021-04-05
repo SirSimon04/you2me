@@ -21,6 +21,7 @@ import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
 import Utilities.DateSorter;
+import Utilities.NameSorter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ws.rs.core.Response;
 import java.math.BigInteger;
+import java.util.Iterator;
 
 /**
  * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Chats</h1>
@@ -263,6 +265,27 @@ public class ChatWS {
            else{
                nutzerListe.remove(self);
                Nutzer other = nutzerListe.get(0);
+               
+               JsonObject jsonObject = new JsonObject();
+               
+               try{
+                   if(self.getBlockiertVon().contains(other)){
+                       jsonObject.add("blockiertVon", parser.toJsonTree("true"));
+                    }
+               }
+               catch(NullPointerException e){
+                   
+               }
+               try{
+                   if(self.getHatBlockiert().contains(other)){
+                        jsonObject.add("blockiertWorden", parser.toJsonTree("true"));
+                    }
+               }
+               catch(NullPointerException e){
+                   
+               }
+               
+               
                other.setPasswordhash(null);
                 other.setOwnFriendList(null);
                 other.setOtherFriendList(null);
@@ -271,7 +294,7 @@ public class ChatWS {
                 other.setSetting(null);
                 other.setMarkedMessages(null);
                 
-                JsonObject jsonObject = new JsonObject();
+                
                 jsonObject.add("nutzer", parser.toJsonTree(other));
                 
                
@@ -428,8 +451,10 @@ public class ChatWS {
                     }
                 }
 
+                List<Chat> pinnedChats = new ArrayList<>();
 
                 for(Chat c : returnList){
+                    //wenn eine neue Nachricht existiert, null setzn
                     try{
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
                         c.getLetztenachricht().setSender(n.getSender());
@@ -444,36 +469,38 @@ public class ChatWS {
                         n.setOtherFriendList(null);
                         n.setOwnFriendList(null);
                     }
-//                        
-                        if(!c.getIsgroup())
-                        {
-//                            System.out.println(c);
-//                           // c.setAdminList(null);
-//                            List<Nutzer> nutzerList = c.getNutzerList();
-//                            Nutzer n = nutzerEJB.getCopyById(nutzerid);
-//                            nutzerList.remove(n);
-//
-//                            Nutzer andererNutzer = nutzerList.get(0);
-//
-//                            c.setName(andererNutzer.getBenutzername());
-//                            c.setProfilbild(andererNutzer.getProfilbild());
-//                            c.setBeschreibung(andererNutzer.getInfo());
-//                            c.setNutzerList(null);
-//                            System.out.println(nutzerList);
-//                            
-//                            
-//                            if(self.getHatBlockiert().contains(andererNutzer)){
-//                                c.setIsblocked(Boolean.TRUE);
-//                            }
-//                            if(andererNutzer.getHatBlockiert().contains(self)){
-//                                c.setGotblocked(Boolean.TRUE);
-//                            }
+                     //wenn Einzelchat, Infos des Anderen übernehmen   
+                    if(!c.getIsgroup())
+                    {
+                        System.out.println(c);
+                       // c.setAdminList(null);
+                        List<Nutzer> nutzerList = c.getNutzerList();
+                        Nutzer n = nutzerEJB.getCopyById(nutzerid);
+                        nutzerList.remove(n);
+
+                        Nutzer andererNutzer = nutzerList.get(0);
+
+                        c.setName(andererNutzer.getBenutzername());
+                        c.setProfilbild(andererNutzer.getProfilbild());
+                        c.setBeschreibung(andererNutzer.getInfo());
+                        c.setNutzerList(null);
+                        System.out.println(nutzerList);
+
+
+                        if(self.getHatBlockiert().contains(andererNutzer)){
+                            c.setIsblocked(Boolean.TRUE);
                         }
+                        if(andererNutzer.getHatBlockiert().contains(self)){
+                            c.setGotblocked(Boolean.TRUE);
+                        }
+                    }
+                    //Listen auf null setzen    
                     c.setAdminList(null);
                     c.setNutzerList(null);
+                    //anzahl neuer Nachrichten zählen
                     try{
                         c.setNnew(0);
-                    List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
+                        List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
                     for(Nachricht n : nList){
                         if(!n.getNutzerList().contains(self)){
                             if(n.getDatumuhrzeit() < System.currentTimeMillis()){
@@ -489,8 +516,19 @@ public class ChatWS {
                     
                 }
                 
+                List<Chat> toRemove1 = new ArrayList<>();
+                for(Chat c : returnList){
+                    if(self.getPinnedChats().contains(c)){
+                        c.setIspinned(Boolean.TRUE);
+                        pinnedChats.add(c);
+                        toRemove1.add(c);
+                    }
+                }
                 
+                returnList.removeAll(toRemove1);
                 
+                //alle Chats, die keine Nachricht enthalten, vor dem
+                //Sortieren entfernen und danach wieder einfügen
                 List<Chat> toRemove = new ArrayList<>();
                 for(Chat c : returnList){
                     if(c.getLetztenachricht() == null){
@@ -500,8 +538,19 @@ public class ChatWS {
                 returnList.removeAll(toRemove);
                 returnList.sort(new DateSorter());
                 returnList.addAll(toRemove);
+                
+                //gepinnte Chats nach Name sortieren
+                pinnedChats.sort(new NameSorter());
+                
+                List<Chat> returnListFinal = new ArrayList<>();
+                returnListFinal.addAll(pinnedChats);
+                returnListFinal.addAll(returnList);
+                
+                
+                
+                
                 Gson parser = new Gson();
-                return response.generiereAntwort(parser.toJson(returnList)); 
+                return response.generiereAntwort(parser.toJson(returnListFinal)); 
 //                return response.generiereAntwort("true");
             }
             catch(EJBTransactionRolledbackException e){
@@ -1007,4 +1056,59 @@ public class ChatWS {
         
     }
     
+    @POST
+    @Path("/pin/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response pinChat(@PathParam("token") String token, String Daten) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+
+            chatEJB.pin(chatId, eigeneId);
+            
+            return response.generiereAntwort("true");
+        }
+        
+    }
+    
+    @POST
+    @Path("/unpin/{token}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response unPinChat(@PathParam("token") String token, String Daten) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+
+            chatEJB.unpin(chatId, eigeneId);
+            
+            return response.generiereAntwort("true");
+        }
+        
+    }
+    
+    @GET
+    @Path("/getPinned/{id}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getPinned(@PathParam("id") int id){
+        Gson parser = new Gson();
+        Nutzer n = nutzerEJB.getCopyByIdListsNotNull(id);
+        List<Chat> l = n.getPinnedChats();
+        for(Chat c : l){
+            c.setAdminList(null);
+            c.setNutzerList(null);
+        }
+        return response.generiereAntwort(parser.toJson(l));
+    }
 }

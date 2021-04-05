@@ -405,11 +405,48 @@ public class NutzerWS {
 //        return response.generiereAntwort(parser.toJson(s));
 //        return response.generiereAntwort("yep");
             Setting s = parser.fromJson(Daten, Setting.class);
-            settingsEJB.add(s);
+            
             Nutzer self = nutzerEJB.getById(s.getNutzerid());
             self.setSetting(s);
             s.setNutzer(self);
+            s.setNutzerid(self.getId());
+            settingsEJB.add(s);
             return response.generiereAntwort("true");
+    }
+    
+    @POST
+    @Path("/setSettings/{token}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setSettings(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            Setting s = parser.fromJson(Daten, Setting.class);
+            Nutzer self = nutzerEJB.getById(s.getNutzerid());
+            
+            try{
+                self.getSetting().setDarkmode(s.getDarkmode());
+            }
+            catch(NullPointerException e){
+                
+            }
+            try{
+                self.getSetting().setLesebestaetigung(s.getLesebestaetigung());
+            }
+            catch(NullPointerException e){
+                
+            }
+            try{
+                self.getSetting().setMailifimportant(s.getMailifimportant());
+            }
+            catch(NullPointerException e){
+                
+            }
+            return response.generiereAntwort("true");
+        }
     }
     
     @POST
@@ -526,16 +563,23 @@ public class NutzerWS {
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
+                Nutzer self = nutzerEJB.getById(eigeneId);
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getCopyByUsernameListsNotNull(andererName);
+                Nutzer other = nutzerEJB.getByUsername(andererName);
 
+                if(!self.getHatBlockiert().contains(other)){
                     nutzerEJB.block(self, other);
                     self.getHatBlockiert().add(other);
                     other.getBlockiertVon().add(self);
-                    
                     return response.generiereAntwort("true");      
+                }
+                else{
+                    return response.generiereAntwort("Bereits blockiert");
+                }
+                    
+                    
+                    
             }
             catch(JsonSyntaxException e) {
                 return response.generiereFehler406("Json wrong");
@@ -563,10 +607,10 @@ public class NutzerWS {
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getCopyByIdListsNotNull(eigeneId);
+                Nutzer self = nutzerEJB.getById(eigeneId);
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getCopyByUsernameListsNotNull(andererName);
+                Nutzer other = nutzerEJB.getByUsername(andererName);
 
                     nutzerEJB.unblock(self, other);
                     self.getHatBlockiert().remove(other);
@@ -778,7 +822,7 @@ public class NutzerWS {
 
             Setting s = new Setting();
             s.setDarkmode(Boolean.TRUE);
-            s.setLesebestätigung(Boolean.TRUE);
+            s.setLesebestaetigung(Boolean.TRUE);
             s.setMailifimportant(Boolean.TRUE);
             s.setNutzer(nutzerInDbB);
             s.setNutzerid(nutzerInDbB.getId());
