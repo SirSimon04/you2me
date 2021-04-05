@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -162,7 +163,7 @@ public class Chat implements Serializable {
         this.ispinned = ispinned;
     }
 
-    
+
     @XmlTransient
     public List<Nutzer> getNutzerList() {
         return nutzerList;

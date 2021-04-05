@@ -20,7 +20,7 @@ import Entity.Nachricht;
 import Entity.Nutzer;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
-import Utilities.DateSorter;
+import Utilities.DateSorterChat;
 import Utilities.NameSorter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -534,7 +534,7 @@ public class ChatWS {
                     }
                 }
                 ownChatListDB.removeAll(toRemove);
-                ownChatListDB.sort(new DateSorter());
+                ownChatListDB.sort(new DateSorterChat());
                 ownChatListDB.addAll(toRemove);
                 
                 //gepinnte Chats nach Name sortieren
@@ -638,7 +638,7 @@ public class ChatWS {
                     }
                 }
                 returnList.removeAll(toRemove);
-                returnList.sort(new DateSorter());
+                returnList.sort(new DateSorterChat());
                 returnList.addAll(toRemove);
                 return returnList;
             }
@@ -737,7 +737,7 @@ public class ChatWS {
                 nutzerEJB.fuegeChatHinzu(neuerChat, other);
                 
                 boolean test = true;
-                
+                //Anfrage, ob schon vorhanden
                 for(Chat c : chatEJB.getAll()){
                     List<Nutzer> nutzerList = new ArrayList();
                     for(Nutzer n : c.getNutzerList()){
@@ -768,7 +768,7 @@ public class ChatWS {
         }
         
     }
-    
+   
     
     /*
     Als erstes wird die Id des Chats angegeben, danach der Benutzername des Benutzers, der hinzugefügt wird

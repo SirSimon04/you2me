@@ -125,11 +125,16 @@ public class Nutzer implements Serializable {
     private List<Nutzer> hatBlockiert;
     @ManyToMany(mappedBy = "hatBlockiert")
     private List<Nutzer> blockiertVon;
+//    @ManyToMany(mappedBy = "nutzerList2")
+//    private List<Chat> chatList2;
     @JoinTable(name = "ISADMIN", joinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
     @ManyToMany
     private List<Chat> adminInGroups;
+    @JoinColumn(name = "CHANNEL", referencedColumnName = "CHATID")
+    @ManyToOne
+    private Chat channel;
     @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
     @ManyToOne
     private Foto profilbild;
@@ -323,6 +328,14 @@ public class Nutzer implements Serializable {
 
     public void setAdminInGroups(List<Chat> adminInGroups) {
         this.adminInGroups = adminInGroups;
+    }
+
+    public Chat getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Chat channel) {
+        this.channel = channel;
     }
 
     public Foto getProfilbild() {
