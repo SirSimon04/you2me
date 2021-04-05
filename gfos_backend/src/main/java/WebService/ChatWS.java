@@ -439,7 +439,7 @@ public class ChatWS {
         }
         else {
             try{
-                List<Chat> returnList = new ArrayList<Chat>();
+                List<Chat> ownChatListDB = new ArrayList<Chat>();
 
                 Nutzer self = nutzerEJB.getCopyByIdListsNotNull(nutzerid);
 
@@ -447,13 +447,13 @@ public class ChatWS {
                 for(Chat c : liste) {
                     if(c.getNutzerList().contains(self))
                     {
-                        returnList.add(c);
-                    }
+                        ownChatListDB.add(c);
+                    } 
                 }
-
+ 
                 List<Chat> pinnedChats = new ArrayList<>();
 
-                for(Chat c : returnList){
+                for(Chat c : ownChatListDB){
                     //wenn eine neue Nachricht existiert, null setzn
                     try{
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
@@ -472,7 +472,6 @@ public class ChatWS {
                      //wenn Einzelchat, Infos des Anderen übernehmen   
                     if(!c.getIsgroup())
                     {
-                        System.out.println(c);
                        // c.setAdminList(null);
                         List<Nutzer> nutzerList = c.getNutzerList();
                         Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -484,7 +483,6 @@ public class ChatWS {
                         c.setProfilbild(andererNutzer.getProfilbild());
                         c.setBeschreibung(andererNutzer.getInfo());
                         c.setNutzerList(null);
-                        System.out.println(nutzerList);
 
 
                         if(self.getHatBlockiert().contains(andererNutzer)){
@@ -517,7 +515,7 @@ public class ChatWS {
                 }
                 
                 List<Chat> toRemove1 = new ArrayList<>();
-                for(Chat c : returnList){
+                for(Chat c : ownChatListDB){
                     if(self.getPinnedChats().contains(c)){
                         c.setIspinned(Boolean.TRUE);
                         pinnedChats.add(c);
@@ -525,32 +523,50 @@ public class ChatWS {
                     }
                 }
                 
-                returnList.removeAll(toRemove1);
+                ownChatListDB.removeAll(toRemove1);
                 
                 //alle Chats, die keine Nachricht enthalten, vor dem
                 //Sortieren entfernen und danach wieder einfügen
                 List<Chat> toRemove = new ArrayList<>();
-                for(Chat c : returnList){
+                for(Chat c : ownChatListDB){
                     if(c.getLetztenachricht() == null){
                         toRemove.add(c);
                     }
                 }
-                returnList.removeAll(toRemove);
-                returnList.sort(new DateSorter());
-                returnList.addAll(toRemove);
+                ownChatListDB.removeAll(toRemove);
+                ownChatListDB.sort(new DateSorter());
+                ownChatListDB.addAll(toRemove);
                 
                 //gepinnte Chats nach Name sortieren
                 pinnedChats.sort(new NameSorter());
                 
                 List<Chat> returnListFinal = new ArrayList<>();
                 returnListFinal.addAll(pinnedChats);
-                returnListFinal.addAll(returnList);
+                
+                
+                List<Chat> archivedChats = new ArrayList<>();
+                
+                for(Chat c : ownChatListDB){
+                    if(self.getArchivedChats().contains(c)){
+                        archivedChats.add(c);
+                    }
+                }
+                
+                returnListFinal.addAll(ownChatListDB);
+                
+                returnListFinal.removeAll(archivedChats);
                 
                 
                 
+                JsonObject returnObject = new JsonObject();
                 
                 Gson parser = new Gson();
-                return response.generiereAntwort(parser.toJson(returnListFinal)); 
+                
+                returnObject.add("normal", parser.toJsonTree(returnListFinal));
+                returnObject.add("archived", parser.toJsonTree(archivedChats));
+                
+                
+                return response.generiereAntwort(parser.toJson(returnObject)); 
 //                return response.generiereAntwort("true");
             }
             catch(EJBTransactionRolledbackException e){
@@ -596,7 +612,6 @@ public class ChatWS {
                         
                         if(!c.getIsgroup())
                         {
-                            System.out.println(c);
                            // c.setAdminList(null);
                             List<Nutzer> nutzerList = c.getNutzerList();
                             Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -608,7 +623,6 @@ public class ChatWS {
                             c.setProfilbild(andererNutzer.getProfilbild());
                             c.setBeschreibung(andererNutzer.getInfo());
                             c.setNutzerList(null);
-                            System.out.println(nutzerList);
                         }
                         c.setAdminList(null);
                         c.setNutzerList(null);
@@ -644,8 +658,8 @@ public class ChatWS {
      */
     @POST
     @Path("/createAsGroup/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createAsGroup(String Daten, @PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
@@ -694,8 +708,8 @@ public class ChatWS {
      */
     @POST
     @Path("/createAsChat/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createAsChat(String Daten, @PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
@@ -771,8 +785,8 @@ public class ChatWS {
      */
     @POST
     @Path("/takepart/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response takePart(String Daten, @PathParam("token") String token){
         
         if(!verify(token)){
@@ -840,8 +854,8 @@ public class ChatWS {
      */
     @POST
     @Path("/entferneNutzer/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response entferneNutzer(String Daten, @PathParam("token") String token){
         
         if(!verify(token)){
@@ -920,8 +934,8 @@ public class ChatWS {
      */
     @POST
     @Path("/zuAdmin/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response macheZuAdmin(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -967,8 +981,8 @@ public class ChatWS {
      */
     @POST
     @Path("/entferneAdmin/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response entferneAdmin(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -1015,8 +1029,8 @@ public class ChatWS {
      */
     @POST
     @Path("/setzeProfilbild/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response setzeProfilbild(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -1058,8 +1072,8 @@ public class ChatWS {
     
     @POST
     @Path("/pin/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response pinChat(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -1079,8 +1093,8 @@ public class ChatWS {
     
     @POST
     @Path("/unpin/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response unPinChat(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -1098,17 +1112,46 @@ public class ChatWS {
         
     }
     
-    @GET
-    @Path("/getPinned/{id}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getPinned(@PathParam("id") int id){
-        Gson parser = new Gson();
-        Nutzer n = nutzerEJB.getCopyByIdListsNotNull(id);
-        List<Chat> l = n.getPinnedChats();
-        for(Chat c : l){
-            c.setAdminList(null);
-            c.setNutzerList(null);
+    @POST
+    @Path("/archive/{token}")
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response archiveChat(@PathParam("token") String token, String Daten) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
         }
-        return response.generiereAntwort(parser.toJson(l));
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+
+            chatEJB.archive(chatId, eigeneId);
+            
+            return response.generiereAntwort("true");
+        }
+        
     }
+    
+    @POST
+    @Path("/unarchive/{token}")
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response unArchiveChat(@PathParam("token") String token, String Daten) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+
+            chatEJB.unArchive(chatId, eigeneId);
+            
+            return response.generiereAntwort("true");
+        }
+        
+    }
+    
 }

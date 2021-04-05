@@ -162,7 +162,7 @@ public class Chat implements Serializable {
         this.ispinned = ispinned;
     }
 
-
+    
     @XmlTransient
     public List<Nutzer> getNutzerList() {
         return nutzerList;
