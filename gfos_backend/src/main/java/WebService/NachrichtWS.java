@@ -260,8 +260,8 @@ public class NachrichtWS {
      */
     @POST
     @Path("/add/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response send(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException {
         
         if(!verify(token)){
@@ -391,8 +391,8 @@ public class NachrichtWS {
      */
     @POST
     @Path("/delete/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response delete(String Daten, @PathParam("token") String token) {
         
         if(!verify(token)){
@@ -434,8 +434,8 @@ public class NachrichtWS {
     
     @POST
     @Path("/mark/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response markMessage(String Daten, @PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
@@ -462,8 +462,8 @@ public class NachrichtWS {
     
     @POST
     @Path("/unmark/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response unMarkMessage(String Daten, @PathParam("token") String token) {
         if(!verify(token)){
             return response.generiereFehler401("dentifrisse");

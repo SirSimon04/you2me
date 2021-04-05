@@ -413,10 +413,15 @@ public class NutzerWS {
             settingsEJB.add(s);
             return response.generiereAntwort("true");
     }
-    
+    /**
+     * Diese Methode ändert die Eintellungen des Nutzers.
+     * @param token Das Webtoken
+     * @param Daten Die neuen Einstellung
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/setSettings/{token}")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
     @Produces(MediaType.APPLICATION_JSON)
     public Response setSettings(@PathParam("token") String token, String Daten){
         if(!verify(token)){
@@ -434,7 +439,7 @@ public class NutzerWS {
                 
             }
             try{
-                self.getSetting().setLesebestaetigung(s.getLesebestaetigung());
+                self.getSetting().setLesebestätigung(s.getLesebestätigung());
             }
             catch(NullPointerException e){
                 
@@ -451,7 +456,7 @@ public class NutzerWS {
     
     @POST
     @Path("/testPost")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
     @Produces(MediaType.APPLICATION_JSON)
     public Response sendeFreundesAnfrage(String Daten){
     
@@ -467,8 +472,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/freundesAnfrage/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response sendeFreundesAnfrage(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -508,8 +513,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/loescheFreund/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response loescheFreund(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -550,8 +555,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/block/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response block(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -594,8 +599,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/unblock/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response unblock(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -634,8 +639,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON) 
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response login(String Daten) {
 //        Response r = response.generiereAntwort(Daten);
         Gson parser = new Gson();
@@ -697,8 +702,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/logout/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response logout(@PathParam("token") String token) {
            if(!verify(token)){
             return response.generiereAntwort("Bereits ausgeloggt");
@@ -742,8 +747,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/add")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response register(String Daten) throws IOException, MessagingException, AddressException, InterruptedException {
         
             System.out.println(Daten);
@@ -822,7 +827,7 @@ public class NutzerWS {
 
             Setting s = new Setting();
             s.setDarkmode(Boolean.TRUE);
-            s.setLesebestaetigung(Boolean.TRUE);
+            s.setLesebestätigung(Boolean.TRUE);
             s.setMailifimportant(Boolean.TRUE);
             s.setNutzer(nutzerInDbB);
             s.setNutzerid(nutzerInDbB.getId());
@@ -847,8 +852,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/verify")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response verifyPin(String Daten) {
         Gson parser = new Gson();
         JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
@@ -880,8 +885,8 @@ public class NutzerWS {
      */
     @POST
     @Path("/setzeProfilbild/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response setzeProfilbild(@PathParam("token") String token, String Daten) {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
@@ -966,8 +971,8 @@ public class NutzerWS {
      */
     @PUT
     @Path("/update/{token}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("token") String token, String Daten) throws IOException, MessagingException, AddressException, InterruptedException {
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
