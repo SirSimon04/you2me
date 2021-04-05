@@ -326,16 +326,16 @@
                   <v-container>
                     <v-row>
                       <v-col cols="4" md="2">
-                        <v-text-field v-model="PINeins"></v-text-field>
+                        <v-text-field v-model="PINeins" :rules="pinRules"></v-text-field>
                       </v-col>
                       <v-col cols="4" md="2">
-                        <v-text-field v-model="PINeins"></v-text-field>
+                        <v-text-field v-model="PINzwei" :rules="pinRules"></v-text-field>
+                      </v-col>
+                      <v-col cols="4" md="2" >
+                        <v-text-field v-model="PINdrei" :rules="pinRules"></v-text-field>
                       </v-col>
                       <v-col cols="4" md="2">
-                        <v-text-field v-model="PINeins"></v-text-field>
-                      </v-col>
-                      <v-col cols="4" md="2">
-                        <v-text-field v-model="PINeins"></v-text-field>
+                        <v-text-field v-model="PINvier" :rules="pinRules"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -346,7 +346,7 @@
   
               <v-card-actions>
               <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="PINrichtig = true">
+                <v-btn color="primary" text @click="controlpin()">
                   Bestätigen
                 </v-btn>
               </v-card-actions>
@@ -367,7 +367,9 @@
     }
 </style>
 <script>
+import { EventBus } from './EventBus.js';
   export default {
+    
     name: 'Registrieren',
     
     data(){
@@ -382,6 +384,11 @@
       hilfe_checkbox: false,
       firmenkontenakzeptieren: false,
       valid: false,
+      PINrichtig: false,
+      p1: 1,
+      p2: 1,
+      p3: 1,
+      p4: 1,
       passwordRules: [
       v => !!v || 'Dieses Feld ist erforderlich.',
       v => !v.contains('A') || 'Das Passwort muss einen Großbuchstaben enthalten.',
@@ -391,10 +398,22 @@
       v => !!v || 'Die E-Mail ist erforderlich.',
       v => /.+@.+/.test(v) || 'Bitte geben Sie eine reale E-Mail ein.',
     ], 
+      pinRules: [
+        v => !!v || 'Sie müssen alle Felder ausfüllen.',
+        v => v.length <= 1 || 'Dieses Feld kann nur eine Zahl enthalten.'
+      ]
+    
       
 
     }
+    },
+    mounted(){
+      function controlpin(){
+        if(this.PINeins === this.p1 && this.PINzwei === this.p2 && this.PINdrei === this.p3 && this.PINvier === this.p4){
+          this.PINrichtig = true;}
+      }
     }
     
   }
+  
 </script>
