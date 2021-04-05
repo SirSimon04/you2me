@@ -54,6 +54,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.ws.rs.core.Response;
 import static java.lang.Math.toIntExact;
+import java.util.Comparator;
 
 
 
@@ -390,6 +391,33 @@ public class NutzerWS {
             j.add("chatübersicht", parser.toJsonTree(jsonList));
             
             return response.generiereAntwort(parser.toJson(j));
+        }
+    }
+    
+    @GET
+    @Path("/getChannel/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChannel(@PathParam("token") String token, @PathParam("id") int id){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else{
+            
+            Gson parser = new Gson();
+            
+            Nutzer n = nutzerEJB.getById(id);
+            
+            List<Nachricht> l = nachrichtEJB.getCopyByChat(n.getChannel().getChatid());
+            
+            List<Nachricht> ll = new ArrayList<>();
+            
+            for(int x = l.size() - 1; x >= 0; x--){
+                ll.add(l.get(x));
+            }
+            
+            return response.generiereAntwort(parser.toJson(ll));
+            
+//            return response.generiereFehler406("false");
         }
     }
     
@@ -824,7 +852,7 @@ public class NutzerWS {
             returnObject.addProperty("id", nutzerInDbB.getId());
             returnObject.addProperty("benutzername", nutzerInDbB.getBenutzername());
             returnObject.addProperty("email", nutzerInDbB.getEmail());
-
+            //Einstellungen erstellen
             Setting s = new Setting();
             s.setDarkmode(Boolean.TRUE);
             s.setLesebestätigung(Boolean.TRUE);
@@ -834,6 +862,14 @@ public class NutzerWS {
             settingsEJB.add(s);
             nutzerInDbB.setSetting(s);
             
+            //eigenen Channel erstellen
+            Chat channel = new Chat();
+            channel.setIsgroup(false);
+            chatEJB.createChat(channel);
+//            nutzerEJB.fuegeChatHinzu(channel, nutzerInDbB);
+//            chatEJB.fuegeNutzerHinzu(channel, nutzerInDbB);
+            //Channel setzen
+            nutzerInDbB.setChannel(channel);
             return response.generiereAntwort(parser.toJson(returnObject));
 
 

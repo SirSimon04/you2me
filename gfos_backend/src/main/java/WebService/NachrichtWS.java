@@ -383,6 +383,40 @@ public class NachrichtWS {
         
     }
     
+    @POST
+    @Path("/sendInChannel/{token}")
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendInChannel(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException {
+        
+        if(!verify(token)){
+            return response.generiereFehler401("dentifrisse");
+        }
+        else {
+
+            Gson parser = new Gson();
+            try {
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
+
+                int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+
+                neueNachricht.setChatid(nutzerEJB.getById(eigeneId).getChannel().getChatid());
+                
+                nachrichtEJB.add(neueNachricht);
+                
+                return response.generiereAntwort("true");
+                
+            }catch(JsonSyntaxException e) {
+                return response.generiereFehler406("cacahuète");
+            }
+            catch(NullPointerException e){
+                return response.generiereFehler500("Chatid oder Senderid nicht vorhanden");
+            }
+            
+        }
+    }
+    
     /**
      * Diese Methode löscht eine Nachricht aus einem Chat. Das gilt für alle Nutzer.
      * @param Daten Die Daten zur Nachricht.
