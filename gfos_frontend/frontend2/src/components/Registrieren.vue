@@ -5,12 +5,8 @@
     <div style="width: 1000px; postion: relative; left: 100px;">
      <v-stepper v-model="e1" style="margin: 20px; max-width: 700px;  ">
      <div v-if="loginzeigen === true">
-      <v-stepper-header v-model="headeranzeigen" color="#5c7d9d">
-        <v-stepper-step
-          :complete="e1 > 1"
-          color ="#5c7d9d"
-          step="1"
-        >
+      <v-stepper-header v-model="headeranzeigen">
+        <v-stepper-step :complete="e1 > 1" color ="#5c7d9d" step="1">
           Benutzernamen erstellen
         </v-stepper-step>
   
@@ -136,100 +132,11 @@
             ></v-file-input>
             <div v-if="hilfe_checkbox === true"><v-card-text>Fügen Sie zur Ergänzung der Info ein Profilbild hinzu! Dieses Foto wird für alle Ihre Kontakte sichtbar sein.</v-card-text></div>
             </div>
-            <div v-if="companyaccount_checkbox === true">
-              <br>
-              <subheading>Firmendaten</subheading>
-            </div>
-            <div v-else>
-              <subheading></subheading>
-            </div>
-            <div v-if="companyaccount_checkbox === true">  
-            <v-text-field
-              v-model="firmenname"
-              :rules="nameRules"
-              :counter="25"
-              label="Firmenname*"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier den Namen der Firma ein.</v-card-text></div>
-            <v-text-field
-              v-model="inhabervorname"
-              :rules="nameRules"
-              :counter="25"
-              label="Vorname des Inhabers*"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Ihre Firma braucht einen Inhaber! Geben Sie hier bitte den Vornamen des Inhabers ein. Die Sichtbarkeit können Sie später in den Einstellungen anpassen.</v-card-text></div>
-            <v-text-field
-              v-model="inhabernachname"
-              :rules="nameRules"
-              :counter="25"
-              label="Nachname des Inhabers*"
-              required
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier den Nachnamen des Inhabers ein.</v-card-text></div>
-            <v-text-field
-              v-model="firmenpasswort"
-              :rules="passwordRules"
-              label="Passwort erstellen*"
-              required
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie ein Passwort für den Account</v-card-text></div>
-            <v-text-field
-              v-model="firma_sicherungsnummer_5"
-              :rules="numberRules"
-              :counter="5"
-              label="Sicherungsnummer erstellen*"
-              ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie eine 5-Stellige Sicherheitsnummer. Diese Nummer ergänzt das Passwort und sollte nicht öffentlich bekannt sein.</v-card-text></div>
-            <v-text-field
-              v-model="firmen_sicherungsnummer_10"
-              :rules="numberRules"
-              :counter="10"
-              label="Rückversicherungsnummer erstellen*"
-              ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte erstellen Sie eine 10-Stellige Rückversicherungsnummer. Diese wird gebraucht, wenn bei Registrierungsvorgängen die Anmeldedaten 3-Mal falsch eingeben werden.</v-card-text></div>
             
-            <v-text-field
-              v-model="firmenort"
-              :rules="nameRules"
-              :counter="45"
-              label="Ort*"
               
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte geben Sie hier ein, in welcher Stadt Ihre Firma beheimatet ist. Wenn Sie mehrere Aussenstellen, Filialien, etc. haben, geben Sie bitte die Stadt des Hauptsitzes an.</v-card-text></div>
-            <v-text-field
-              v-model="plz"
-              :rules="numberRules"
-              :counter="5"
-              label="PLZ*"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Bitte ergänzen Sie die Ortsangabe durch die Postleitzahl.</v-card-text></div>
-            <v-text-field
-              v-model="slogan"
-              :rules="nameRules"
-              :counter="256"
-              label="Slogan"
-              
-            ></v-text-field>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Wenn Sie möchten, können Sie der Firma hier einen Slogan geben.</v-card-text></div>
-            <v-file-input
-               truncate-length="15"
-               label="Firmenlogo"
-               v-model="firmenlogo"
-            ></v-file-input>
-            <div v-if="hilfe_checkbox === true && companyaccount_checkbox === true"><v-card-text>Hier können Sie ein Firmenlogo ergänzen.</v-card-text></div>
-            <div v-if="companyaccount_checkbox === false">
-              
-          </div>
-          </div>
-          <div v-if="firmenkontenakzeptieren === true">
-            <v-checkbox v-model="companyaccount_checkbox" label ="Ich möchte ein Firmenkonto erstellen."></v-checkbox>
-          </div>
+          
+          
+          
           <v-checkbox v-model="hilfe_checkbox" label ="Ich benötige Hilfe."></v-checkbox>
           <v-checkbox v-model="settings_checkbox" label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."></v-checkbox>
             
@@ -248,42 +155,11 @@
         </v-stepper-content>
   
         <v-stepper-content step="3">
-          <v-card
-            class="mb-12"
-            
-            max-height="500px"
-          >
+          <v-card class="mb-12" max-height="500px">
           
           <h4>Login</h4>
-          <div v-if="companyaccount_checkbox === true">
-            <v-text-field
-              v-model="firmenname"
-              :rules="nameRules"
-              :counter="25"
-              label="Firmenname"
-              required  
-            ></v-text-field>
-            <v-text-field
-              v-model="plz"
-              :rules="numberRules"
-              :counter="5"
-              label="Postleitzahl"
-            ></v-text-field>
-            <v-text-field
-              v-model="firmenpasswort"
-              :rules="passwordRules"
-              label="Passwort"
-              required
-            ></v-text-field>
-            
-            <v-text-field
-              v-model="firma_sicherungsnummer_5"
-              :rules="numberRules"
-              :counter="5"
-              label="Sicherungsnummer"
-              ></v-text-field>
-          </div>
-          <div v-else>
+          
+          
             <v-text-field
                 v-model="benutzername"
                 :rules="nameRules"
@@ -297,7 +173,7 @@
                 label="Passwort"
                 required
               ></v-text-field>
-          </div>
+          
           </v-card>
           <v-card-subtitle>Noch nicht angemeldet?</v-card-subtitle>
           <v-divider></v-divider>
@@ -309,7 +185,7 @@
           </v-btn>
           <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on" style =" position: relative; float: right; margin: 5px">Login</v-btn>
+              <v-btn dark v-bind="attrs" v-on="on" style =" position: relative; float: right; margin: 5px;">Login</v-btn>
             </template>
   
             <v-card>
@@ -318,27 +194,34 @@
               </v-card-title>
   
               <v-card-text>
-                <div v-if="PINrichtig === true">
-                  Sie sind nun ein registrierter Teil unseres Dienstes!
-                </div>
-                <div v-else>
+                
+                <div v-if="PINrichtig === false">
                   Bitte geben Sie Ihre Bestätigungs-PIN ein. Die Bestätigungs-PIN wurde Ihnen per Mail zugesandt.
+                  <v-card elevation="2" style="text-align: center; border-radius: 10px;">
                   <v-container>
-                    <v-row>
-                      <v-col cols="4" md="2">
-                        <v-text-field v-model="PINeins" :rules="pinRules"></v-text-field>
+                    <v-row align ="end">
+                      <v-col cols="1" md="2">
+                        <v-text-field  style="text-align: center;" v-model="PINeins" :rules="pinRules" center></v-text-field>
                       </v-col>
-                      <v-col cols="4" md="2">
+                      <v-col cols="1" md="2">
                         <v-text-field v-model="PINzwei" :rules="pinRules"></v-text-field>
                       </v-col>
-                      <v-col cols="4" md="2" >
+                      <v-col cols="1" md="2" >
                         <v-text-field v-model="PINdrei" :rules="pinRules"></v-text-field>
                       </v-col>
-                      <v-col cols="4" md="2">
+                      <v-col cols="1" md="2">
                         <v-text-field v-model="PINvier" :rules="pinRules"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
+                  
+                  </v-card>
+                  <div v-if="bestätigungshilfe === true">
+                    Was Sie vor sich sehen, ist eine 2-Faktor-Authentifizierung. Dies ist eine Sicherungsmethode des Messenger-Dienstes, der Registrierungen ohne Zugriff auf die angegebene E-Mail-Adresse verhindern soll. Dabei wir Ihnen auf die angegebene E-Mail-Adresse eine Mail mit einem Code gesendet. Bitte geben Sie diesen Code in die oben stehenden Felder ein. Beachten Sie, dass pro Feld nur eine Zahl des vierstelligen Codes vorgesehen ist.
+                  </div>
+                </div>
+                <div v-else>
+                  Sie sind nun ein registrierter Teil unseres Dienstes!
                 </div>
               </v-card-text>
   
@@ -346,9 +229,14 @@
   
               <v-card-actions>
               <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="controlpin()">
+              <div v-if="PINrichtig === false">
+                <v-btn color="primary" text position = "right" @click= "bestätigungshilfe = !bestätigungshilfe">
+                  Hilfe
+                </v-btn>
+                <v-btn color="primary" text v-on:click="printout()">
                   Bestätigen
                 </v-btn>
+              </div>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -385,33 +273,65 @@ import { EventBus } from './EventBus.js';
       firmenkontenakzeptieren: false,
       valid: false,
       PINrichtig: false,
-      p1: 1,
-      p2: 1,
-      p3: 1,
-      p4: 1,
+      p1: 1, //Muss über GET-Methode erfragt werden.
+      p2: 1, //Muss über GET-Methode erfragt werden.
+      p3: 1, //Muss über GET-Methode erfragt werden.
+      p4: 1, //Muss über GET-Methode erfragt werden.
+      bestätigungshilfe: false,
       passwordRules: [
-      v => !!v || 'Dieses Feld ist erforderlich.',
-      v => !v.contains('A') || 'Das Passwort muss einen Großbuchstaben enthalten.',
-      v => v.length <= 10 || 'Das Passwort muss kürzer als 15 Zeichen sein.',
+        v => !!v || 'Dieses Feld ist erforderlich.',
+        //v => !v.contains('A') || 'Das Passwort muss einen Großbuchstaben enthalten.',
+        v => v.length <= 15 || 'Das Passwort muss kürzer als 15 Zeichen sein.',
     ],
       emailRules: [
-      v => !!v || 'Die E-Mail ist erforderlich.',
-      v => /.+@.+/.test(v) || 'Bitte geben Sie eine reale E-Mail ein.',
+        v => !!v || 'Die E-Mail ist erforderlich.',
+        v => /.+@.+/.test(v) || 'Bitte geben Sie eine reale E-Mail ein.',
     ], 
       pinRules: [
         v => !!v || 'Sie müssen alle Felder ausfüllen.',
         v => v.length <= 1 || 'Dieses Feld kann nur eine Zahl enthalten.'
+        
       ]
+      
     
       
 
     }
     },
     mounted(){
+      var IP_ADDRESS = '91.49.179.104';
+      function printout(){
+        console.log("Knopf gedrückt.")
+      }
       function controlpin(){
         if(this.PINeins === this.p1 && this.PINzwei === this.p2 && this.PINdrei === this.p3 && this.PINvier === this.p4){
           this.PINrichtig = true;}
+        console.log(this.Pinrichtig)
       }
+
+      function submit() { //Einfach aus dem Chat.vue kopiert. Müsste angepasst werden.
+            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/login', {
+                mode: 'cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json', // Antwort von Server
+                    'Content-Type': 'text/plain', // Wird an den Server gesendet
+                },
+                body: JSON.stringify({
+                    benutzername: this.benutzername,
+                    passwort: this.passwort,
+                    vorname: this.vorname,
+                    nachname: this.nachname,
+                    email: this.email,
+                    info: this.email,
+                })
+            }).then(response => {
+                response.clone();
+                response.text().then(content => {
+                    console.warn(content);
+                }); 
+            });
+        }
     }
     
   }
