@@ -141,51 +141,10 @@
           <v-checkbox v-model="settings_checkbox" label ="Ich bin mit den Nutzungsbedingungen und der Datenschutzuerklärung einverstanden."></v-checkbox>
             
           </v-card>
-        <div v-if="settings_checkbox=== true">  
-         <v-btn color="primary" @click="e1 = 3">
-            Weiter
-          </v-btn>
-          </div>
-          
-          <v-btn text
-           @click="e1 = 1">
-            Zurück
-          </v-btn><br><br>
-          
-        </v-stepper-content>
-  
-        <v-stepper-content step="3">
-          <v-card class="mb-12" max-height="500px">
-          
-          <h4>Login</h4>
-          
-          
-            <v-text-field
-                v-model="benutzername"
-                :rules="nameRules"
-                :counter="20"
-                label="Benutzername"
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="passwort"
-                :rules="nameRules"
-                label="Passwort"
-                required
-              ></v-text-field>
-          
-          </v-card>
-          <v-card-subtitle>Noch nicht angemeldet?</v-card-subtitle>
-          <v-divider></v-divider>
-          
-          <v-btn text
-          position = "right"
-          @click= "e1 = 1, loginzeigen = true" style="margin: 5px">
-            Zur Anmeldung
-          </v-btn>
-          <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
+        <div v-if="settings_checkbox=== true">
+        <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn dark v-bind="attrs" v-on="on" style =" position: relative; float: right; margin: 5px;">Login</v-btn>
+              <v-btn color="primary" v-on="on" v-bind="attrs" @click="e1 = 3" onclick="window.submit();">Registrieren & Weiter</v-btn>
             </template>
   
             <v-card>
@@ -239,7 +198,47 @@
               </div>
               </v-card-actions>
             </v-card>
-          </v-dialog>
+          </v-dialog> 
+          </div>
+          
+          <v-btn text
+           @click="e1 = 1">
+            Zurück
+          </v-btn><br><br>
+          
+        </v-stepper-content>
+  
+        <v-stepper-content step="3">
+          <v-card class="mb-12" max-height="500px">
+          
+          <h4>Login</h4>
+          
+          
+            <v-text-field
+                v-model="benutzername"
+                :rules="nameRules"
+                :counter="20"
+                label="Benutzername"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="passwort"
+                :rules="nameRules"
+                label="Passwort"
+                required
+              ></v-text-field>
+          
+          </v-card>
+          <v-card-subtitle>Noch nicht angemeldet?</v-card-subtitle>
+          <v-divider></v-divider>
+          
+          <v-btn text
+          position = "right"
+          @click= "e1 = 1, loginzeigen = true" style="margin: 5px">
+            Zur Anmeldung
+          </v-btn>
+          <v-btn dark onclick = "login();" style =" position: relative; float: right; margin: 5px;">Login</v-btn>
+          
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -254,6 +253,7 @@
     justify-content: space-around;
     }
 </style>
+
 <script>
 import { EventBus } from './EventBus.js';
   export default {
@@ -299,7 +299,7 @@ import { EventBus } from './EventBus.js';
     }
     },
     mounted(){
-      var IP_ADDRESS = '91.49.179.104';
+       var IP_ADDRESS = 'fb1258db8832.ngrok.io';
       function printout(){
         console.log("Knopf gedrückt.")
       }
@@ -308,9 +308,10 @@ import { EventBus } from './EventBus.js';
           this.PINrichtig = true;}
         console.log(this.Pinrichtig)
       }
+  
 
       function submit() { //Einfach aus dem Chat.vue kopiert. Müsste angepasst werden.
-            fetch('http://' + IP_ADDRESS + ':8080/GFOS/daten/nutzer/login', {
+            fetch('http://' + '91.49.179.104' + ':8080/GFOS/daten/nutzer/login', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -324,6 +325,26 @@ import { EventBus } from './EventBus.js';
                     nachname: this.nachname,
                     email: this.email,
                     info: this.email,
+                })
+            }).then(response => {
+                response.clone();
+                response.text().then(content => {
+                    console.warn(content);
+                }); 
+            });
+        }
+        function login() { 
+            fetch('http://fb1258db8832.ngrok.io/GFOS/daten/nutzer/login', {
+                mode: 'cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json', // Antwort von Server
+                    'Content-Type': 'text/plain', // Wird an den Server gesendet
+                },
+                body: JSON.stringify({
+                    benutzername: 'Simon',
+                    passwort: 'test1234',
+                    
                 })
             }).then(response => {
                 response.clone();
