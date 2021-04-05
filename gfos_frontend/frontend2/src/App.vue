@@ -64,6 +64,11 @@ export default {
     }),
 
     mounted() {
+        var pressedKeys = [];
+        var commands = {
+            'sendMessage': ['Control', 'Enter'],
+        }
+
         EventBus.$on('OPENCHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = true;
             EventBus.$emit('LOADPROFILE', {'username': payload['username']});
@@ -72,11 +77,6 @@ export default {
         EventBus.$on('CLOSECHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = false;
         }); // EventBus.$on('CLOSECHATINFO')
-
-        var pressedKeys = [];
-        var commands = {
-            'sendMessage': ['Control', 'Enter'],
-        }
 
         function equals(array0, array1) {
             if (array0.length !== array1.length) return false;
@@ -101,4 +101,6 @@ export default {
 
     }
 };
+window.CURRENT_USER_ID = 2;
+
 </script>

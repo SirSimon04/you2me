@@ -95,7 +95,7 @@ export default {
 
     mounted() {
         window.IP_ADDRESS = 'fb1258db8832.ngrok.io';
-        window.CURRENT_USER_ID = -1;
+        //window.CURRENT_USER_ID = -1;
         window.CURRENT_CHAT_ID = -1;
         var messages = [];
 
@@ -184,7 +184,6 @@ export default {
                 }
                 response.clone();
                 response.json().then(data => {
-                    console.warn(data);
                     newest = data;
                     if (messages.length === 0) loadMsgs();
                     else if (messages[messages.length - 1]['nachrichtid'] !== newest['nachrichtid']) { // Trigger hier verändern bzw. hinzufügen, falls sich der Benutzer unbenennt / löscht
@@ -208,15 +207,15 @@ export default {
         });
 
         EventBus.$on('OPENCHAT', (payload) => {
+            console.log('removing interval');
             clearInterval(interval); // Stop current loading interval to not load multiple chats at the same time
 
-            window.CURRENT_USER_ID = payload['userid']; //set in cookie?
+            //window.CURRENT_USER_ID = payload['userid']; //set in cookie?
             window.CURRENT_CHAT_ID = payload['chatid'];
             messages = [];
 
             document.getElementById('chatcontainer').innerHTML = '';
 
-            // Nachrichten mit dieser Animation einfügen: https://www.w3schools.com/css/tryit.asp?filename=trycss3_animation_speed
             function loadMessages() { // Reload all messages (will be called if a newer message is available)
                 fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
                     if (response.status !== 200) {
@@ -225,7 +224,8 @@ export default {
                     }
                     response.clone();
                     response.json().then(msgs => {
-                        console.warn(msgs);
+                        var diff = msgs.length - messages.length;
+
                         var cc = document.getElementById('chatcontainer');
                         var isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
 
@@ -244,11 +244,10 @@ export default {
 
                         var fadeTime = 0;
                         var chatContainerWidth = cc.clientWidth;
-                        console.warn(chatContainerWidth);
                         var fadeAnim = setInterval(function() {
                             var elems = document.getElementsByClassName('singlemsgcontainer');
-                            for (i=0; i<elems.length; i++) {
-                                elem = elems[i];
+                            for (i=0; i<diff; i++) {
+                                elem = elems[elems.length-i-1];
                                 var fadeX = (1 - fadeTime) * -((elem.id == 'myMessage') ? chatContainerWidth : (chatContainerWidth / 2));
                                 elem.style = `
                                 position: relative;
@@ -296,7 +295,10 @@ export default {
                 });
             }
             
-            interval = setInterval(fetchIfNewest(loadMessages), 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
+            console.log('resetting fetch intervall');
+            interval = setInterval(function() {
+                fetchIfNewest(loadMessages);
+            }, 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
 
         }); // EventBus.$on('OPENCHAT')
 

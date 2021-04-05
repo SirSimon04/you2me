@@ -21,7 +21,7 @@ export default {
 
     mounted() {
         var IP_ADDRESS = 'fb1258db8832.ngrok.io';
-        var CURRENT_USER_ID = 2;
+        //var CURRENT_USER_ID = 2;
 
         var image_data = '';
         var groupIndicator = '';
@@ -33,7 +33,8 @@ export default {
 
         var chats = [];
 
-        fetch('http://' + IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + CURRENT_USER_ID + '/1').then(response => {
+        console.warn(window.CURRENT_USER_ID);
+        fetch('http://' + IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + window.CURRENT_USER_ID + '/1').then(response => {
             if (response.status !== 200) {
                 console.error('Code !== 200:' + response);
                 return null;
@@ -56,7 +57,7 @@ export default {
                     else {
                         var groupSender = '<span style="color: #48A1F4;">' + lastMessage['sender'] + ': </span>';
                         sender = (isGroup) ? groupSender : '';
-                        if (lastMessage['senderid'] === CURRENT_USER_ID) sender = '<span style="color: #48A1F4;">Ich: </span>'
+                        if (lastMessage['senderid'] === window.CURRENT_USER_ID) sender = '<span style="color: #48A1F4;">Ich: </span>'
                         sender = sender + lastMessage['inhalt'];
                     }
 
@@ -65,7 +66,7 @@ export default {
                     `
 
                     var elem = `
-                    <div onclick="window.openChat(` + chatid + ', ' + CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
+                    <div onclick="window.openChat(` + chatid + ', ' + window.CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
                         <img oncontextmenu="` + contextMenu + `return false;" style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + image_data + `" width="64" height="64">
                         <div class="v-card__text font-weight-medium subtitle-1">
                             ` + groupIndicator + `
