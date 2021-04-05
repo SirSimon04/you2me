@@ -42,8 +42,8 @@ export default {
             response.json().then(conts => {
                 console.log(conts);
                 document.getElementById('contactcontainer').innerHTML = '';
-                for (var i=0; i<conts.length; i++) {
-                    var data = conts[i];
+                for (var i=0; i<conts['normal'].length; i++) {
+                    var data = conts['normal'][i];
                     var chatid = data['chatid'];
                     var isGroup = data['isgroup'];
                     if (!isGroup) groupIndicator = '';
@@ -92,7 +92,7 @@ export default {
                     if (count > scrollValue) clearInterval(id);
                 }, 16);*/
 
-                chats = conts;
+                chats = conts['normal'];
             }).catch(error => {
                 console.error('An error occured while parsing the string:' + error);
             });
