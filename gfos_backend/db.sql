@@ -26,6 +26,8 @@ Create Table hatAngepinnt(nutzerId integer not null, chatId integer not null, fo
 
 Create Table hatArchiviert(nutzerId integer not null, chatId integer not null, foreign key(nutzerid) references Nutzer(id) on delete cascade, foreign key(chatId) references Chat(Chatid) on delete cascade);
 
+Create Table hatGeliked(nutzerId integer not null, nachrichtId integer not null, foreign key(nutzerid) references Nutzer(id) on delete cascade, foreign key(nachrichtid) references Nachricht(NachrichtId) on delete cascade);
+
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN, VERIFICATIONPIN, LASTONLINE, ISONLINE, MITGLIEDSEIT) VALUES ('MailAuth', NULL, NULL, 'simiquatsch1@gmail.com', 'Simi272727', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) VALUES ('Simon', NULL, NULL, 'se@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL); 
 INSERT INTO ROOT.NUTZER (BENUTZERNAME, VORNAME, NACHNAME, EMAIL, PASSWORDHASH, HANDYNUMMER, PROFILBILD, INFO, ISADMIN) VALUES ('Jet3141', NULL, NULL, 'jet@abc.de', 'db3b64d143fb02fe1f97a008a6364366a14ecdd5d84a98551bca8b4db4a81d3bfb7fbbbfb9a18f80a1ba6d74ce6e672abe16786820c8de282e1e7e4f092b6066', NULL, NULL, NULL, NULL);
