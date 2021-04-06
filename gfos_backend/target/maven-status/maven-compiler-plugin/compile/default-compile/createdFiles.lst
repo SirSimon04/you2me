@@ -3,6 +3,7 @@ Utilities/Tokenizer.class
 EJB/FotoEJB.class
 WebService/NutzerWS.class
 WebService/NachrichtWS.class
+Utilities/DateSorterChat.class
 Entity/Foto.class
 Application/App.class
 EJB/ChatEJB.class
@@ -16,7 +17,6 @@ Utilities/NameSorter.class
 Utilities/Mail$1.class
 WebService/ChatWS.class
 Utilities/Mail$3.class
-Utilities/DateSorter.class
 Utilities/Hasher.class
 Utilities/Mail.class
 Entity/Nutzer.class

@@ -83,6 +83,11 @@ public class Nachricht implements Serializable {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Nutzer> nutzerList;
+    @JoinTable(name = "HATGELIKED", joinColumns = {
+        @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
+        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
+    @ManyToMany
+    private List<Nutzer> likedBy;
     @JoinColumn(name = "FOTO", referencedColumnName = "ID")
     @ManyToOne
     private Foto foto;
@@ -186,6 +191,15 @@ public class Nachricht implements Serializable {
 
     public void setNutzerList(List<Nutzer> nutzerList) {
         this.nutzerList = nutzerList;
+    }
+    
+    @XmlTransient
+    public List<Nutzer> getLikedBy() {
+        return likedBy;
+    }
+
+    public void setLikedBy(List<Nutzer> likedBy) {
+        this.likedBy = likedBy;
     }
 
     public Foto getFoto() {

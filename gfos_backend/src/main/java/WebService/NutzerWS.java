@@ -415,6 +415,23 @@ public class NutzerWS {
                 ll.add(l.get(x));
             }
             
+            for(Nachricht na : ll){
+                na.setSender(null);
+                for(Nutzer nu : na.getLikedBy()){
+                    nu.setPasswordhash(null);
+                    nu.setAdminInGroups(null);
+                    nu.setOwnFriendList(null);
+                    nu.setOtherFriendList(null);
+                    nu.setPinnedChats(null);
+                    nu.setHatBlockiert(null);
+                    nu.setBlockiertVon(null);
+                    nu.setSetting(null);
+                    nu.setMarkedMessages(null);
+                    nu.setArchivedChats(null);
+
+                }
+            }
+            
             return response.generiereAntwort(parser.toJson(ll));
             
 //            return response.generiereFehler406("false");

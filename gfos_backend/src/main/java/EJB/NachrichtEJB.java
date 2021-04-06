@@ -108,6 +108,9 @@ public class NachrichtEJB {
             em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
+            for(Nutzer nu : n.getLikedBy()){
+                em.detach(nu);
+            }
             try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
             }
