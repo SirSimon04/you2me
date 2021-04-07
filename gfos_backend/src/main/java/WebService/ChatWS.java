@@ -259,6 +259,8 @@ public class ChatWS {
 
                 }
                 
+                jsonObject.add("isGroup", parser.toJsonTree(chatEJB.getById(chatId).getIsgroup()));
+                
                 return response.generiereAntwort(parser.toJson(jsonObject)); 
                 
            }
@@ -450,6 +452,7 @@ public class ChatWS {
                         ownChatListDB.add(c);
                     } 
                 }
+                System.out.println("Before first for");
  
                 List<Chat> pinnedChats = new ArrayList<>();
 
@@ -478,7 +481,6 @@ public class ChatWS {
                         nutzerList.remove(n);
 
                         Nutzer andererNutzer = nutzerList.get(0);
-
                         c.setName(andererNutzer.getBenutzername());
                         c.setProfilbild(andererNutzer.getProfilbild());
                         c.setBeschreibung(andererNutzer.getInfo());
@@ -513,7 +515,6 @@ public class ChatWS {
                     }
                     
                 }
-                
                 List<Chat> toRemove1 = new ArrayList<>();
                 for(Chat c : ownChatListDB){
                     if(self.getPinnedChats().contains(c)){
@@ -545,13 +546,11 @@ public class ChatWS {
                 
                 
                 List<Chat> archivedChats = new ArrayList<>();
-                
                 for(Chat c : ownChatListDB){
                     if(self.getArchivedChats().contains(c)){
                         archivedChats.add(c);
                     }
                 }
-                
                 returnListFinal.addAll(ownChatListDB);
                 
                 returnListFinal.removeAll(archivedChats);
@@ -567,7 +566,7 @@ public class ChatWS {
                 
                 
                 return response.generiereAntwort(parser.toJson(returnObject)); 
-//                return response.generiereAntwort("true");
+//                return response.generiereAntwort(parser.toJson(ownChatListDB));
             }
             catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler401("Id nicht vorhanden");

@@ -143,6 +143,25 @@ public class NachrichtEJB {
             Nachricht na = new Nachricht();
             return na;
         }
+        else if(nachrichtList.size() == 1){
+            Nachricht n = nachrichtList.get(0);
+            n.setNachrichtList(null);
+            n.setNutzerList(null);
+            
+            try{
+                n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
+                
+            }
+            catch(Exception e){
+                n.setSender("gelöschter Nutzer");
+            }
+            
+            if(nachrichtList.get(0).getDatumuhrzeit() < System.currentTimeMillis()){
+                return n;
+            }
+            return null;
+            
+        }
         else{
             for(Nachricht n : nachrichtList){
                 em.detach(n);

@@ -809,7 +809,7 @@ public class NutzerWS {
             String neuesPasswort = parser.fromJson((jsonObject.get("passwort")), String.class);
             String neueHandynummer = parser.fromJson((jsonObject.get("handynummer")), String.class);
             String neueInfo = parser.fromJson((jsonObject.get("info")), String.class);
-            
+           
            
             Nutzer neuerNutzer = new Nutzer();
             
