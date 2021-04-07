@@ -31,82 +31,82 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author simon
  */
 @Entity
-@Table(name = "NACHRICHT")
+@Table(name="NACHRICHT")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Nachricht.findAll", query = "SELECT n FROM Nachricht n"),
-    @NamedQuery(name = "Nachricht.findByNachrichtid", query = "SELECT n FROM Nachricht n WHERE n.nachrichtid = :nachrichtid"),
-    @NamedQuery(name = "Nachricht.findBySenderid", query = "SELECT n FROM Nachricht n WHERE n.senderid = :senderid"),
-    @NamedQuery(name = "Nachricht.findByChatid", query = "SELECT n FROM Nachricht n WHERE n.chatid = :chatid"),
-    @NamedQuery(name = "Nachricht.findByDatumuhrzeit", query = "SELECT n FROM Nachricht n WHERE n.datumuhrzeit = :datumuhrzeit"),
-    @NamedQuery(name = "Nachricht.findByInhalt", query = "SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt"),
-    @NamedQuery(name = "Nachricht.findBySender", query = "SELECT n FROM Nachricht n WHERE n.sender = :sender"),
-    @NamedQuery(name = "Nachricht.findByIsimportant", query = "SELECT n FROM Nachricht n WHERE n.isimportant = :isimportant"),
-    @NamedQuery(name = "Nachricht.findByReadbyall", query = "SELECT n FROM Nachricht n WHERE n.readbyall = :readbyall"),
-    @NamedQuery(name = "Nachricht.findByIsplanned", query = "SELECT n FROM Nachricht n WHERE n.isplanned = :isplanned")})
-public class Nachricht implements Serializable {
+    @NamedQuery(name="Nachricht.findAll", query="SELECT n FROM Nachricht n"),
+    @NamedQuery(name="Nachricht.findByNachrichtid", query="SELECT n FROM Nachricht n WHERE n.nachrichtid = :nachrichtid"),
+    @NamedQuery(name="Nachricht.findBySenderid", query="SELECT n FROM Nachricht n WHERE n.senderid = :senderid"),
+    @NamedQuery(name="Nachricht.findByChatid", query="SELECT n FROM Nachricht n WHERE n.chatid = :chatid"),
+    @NamedQuery(name="Nachricht.findByDatumuhrzeit", query="SELECT n FROM Nachricht n WHERE n.datumuhrzeit = :datumuhrzeit"),
+    @NamedQuery(name="Nachricht.findByInhalt", query="SELECT n FROM Nachricht n WHERE n.inhalt = :inhalt"),
+    @NamedQuery(name="Nachricht.findBySender", query="SELECT n FROM Nachricht n WHERE n.sender = :sender"),
+    @NamedQuery(name="Nachricht.findByIsimportant", query="SELECT n FROM Nachricht n WHERE n.isimportant = :isimportant"),
+    @NamedQuery(name="Nachricht.findByReadbyall", query="SELECT n FROM Nachricht n WHERE n.readbyall = :readbyall"),
+    @NamedQuery(name="Nachricht.findByIsplanned", query="SELECT n FROM Nachricht n WHERE n.isplanned = :isplanned")})
+public class Nachricht implements Serializable{
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "NACHRICHTID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Basic(optional=false)
+    @Column(name="NACHRICHTID")
     private Integer nachrichtid;
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Column(name = "SENDERID")
+    @Column(name="SENDERID")
     private int senderid;
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Column(name = "CHATID")
+    @Column(name="CHATID")
     private int chatid;
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Column(name = "DATUMUHRZEIT")
+    @Column(name="DATUMUHRZEIT")
     private long datumuhrzeit;
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Size(min = 1, max = 1024)
-    @Column(name = "INHALT")
+    @Size(min=1, max=1024)
+    @Column(name="INHALT")
     private String inhalt;
-    @Size(max = 50)
-    @Column(name = "SENDER")
+    @Size(max=50)
+    @Column(name="SENDER")
     private String sender;
-    @Column(name = "ISIMPORTANT")
+    @Column(name="ISIMPORTANT")
     private Boolean isimportant;
-    @Column(name = "READBYALL")
+    @Column(name="READBYALL")
     private Boolean readbyall;
-    @Column(name = "ISPLANNED")
+    @Column(name="ISPLANNED")
     private Boolean isplanned;
-    @Column(name = "COUNTLIKES")
+    @Column(name="COUNTLIKES")
     private Integer countlikes;
-    @JoinTable(name = "HATGELESEN", joinColumns = {
-        @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
-        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
+    @JoinTable(name="HATGELESEN", joinColumns={
+        @JoinColumn(name="NACHRICHTID", referencedColumnName="NACHRICHTID")}, inverseJoinColumns={
+        @JoinColumn(name="NUTZERID", referencedColumnName="ID")})
     @ManyToMany
     private List<Nutzer> nutzerList;
-    @JoinTable(name = "HATGELIKED", joinColumns = {
-        @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
-        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
+    @JoinTable(name="HATGELIKED", joinColumns={
+        @JoinColumn(name="NACHRICHTID", referencedColumnName="NACHRICHTID")}, inverseJoinColumns={
+        @JoinColumn(name="NUTZERID", referencedColumnName="ID")})
     @ManyToMany
     private List<Nutzer> likedBy;
-    @JoinColumn(name = "FOTO", referencedColumnName = "ID")
+    @JoinColumn(name="FOTO", referencedColumnName="ID")
     @ManyToOne
     private Foto foto;
-    @OneToMany(mappedBy = "antwortauf")
+    @OneToMany(mappedBy="antwortauf")
     private List<Nachricht> nachrichtList;
-    @JoinColumn(name = "ANTWORTAUF", referencedColumnName = "NACHRICHTID")
+    @JoinColumn(name="ANTWORTAUF", referencedColumnName="NACHRICHTID")
     @ManyToOne
     private Nachricht antwortauf;
 
-    public Nachricht() {
+    public Nachricht(){
     }
 
-    public Nachricht(Integer nachrichtid) {
+    public Nachricht(Integer nachrichtid){
         this.nachrichtid = nachrichtid;
     }
 
-    public Nachricht(Integer nachrichtid, int senderid, int chatid, long datumuhrzeit, String inhalt) {
+    public Nachricht(Integer nachrichtid, int senderid, int chatid, long datumuhrzeit, String inhalt){
         this.nachrichtid = nachrichtid;
         this.senderid = senderid;
         this.chatid = chatid;
@@ -114,151 +114,151 @@ public class Nachricht implements Serializable {
         this.inhalt = inhalt;
     }
 
-    public Integer getNachrichtid() {
+    public Integer getNachrichtid(){
         return nachrichtid;
     }
 
-    public void setNachrichtid(Integer nachrichtid) {
+    public void setNachrichtid(Integer nachrichtid){
         this.nachrichtid = nachrichtid;
     }
 
-    public int getSenderid() {
+    public int getSenderid(){
         return senderid;
     }
 
-    public void setSenderid(int senderid) {
+    public void setSenderid(int senderid){
         this.senderid = senderid;
     }
 
-    public int getChatid() {
+    public int getChatid(){
         return chatid;
     }
 
-    public void setChatid(int chatid) {
+    public void setChatid(int chatid){
         this.chatid = chatid;
     }
 
-    public long getDatumuhrzeit() {
+    public long getDatumuhrzeit(){
         return datumuhrzeit;
     }
 
-    public void setDatumuhrzeit(long datumuhrzeit) {
+    public void setDatumuhrzeit(long datumuhrzeit){
         this.datumuhrzeit = datumuhrzeit;
     }
 
-    public String getInhalt() {
+    public String getInhalt(){
         return inhalt;
     }
 
-    public void setInhalt(String inhalt) {
+    public void setInhalt(String inhalt){
         this.inhalt = inhalt;
     }
 
-    public String getSender() {
+    public String getSender(){
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(String sender){
         this.sender = sender;
     }
 
-    public Boolean getIsimportant() {
+    public Boolean getIsimportant(){
         return isimportant;
     }
 
-    public void setIsimportant(Boolean isimportant) {
+    public void setIsimportant(Boolean isimportant){
         this.isimportant = isimportant;
     }
 
-    public Boolean getReadbyall() {
+    public Boolean getReadbyall(){
         return readbyall;
     }
 
-    public void setReadbyall(Boolean readbyall) {
+    public void setReadbyall(Boolean readbyall){
         this.readbyall = readbyall;
     }
 
-    public Boolean getIsplanned() {
+    public Boolean getIsplanned(){
         return isplanned;
     }
 
-    public void setIsplanned(Boolean isplanned) {
+    public void setIsplanned(Boolean isplanned){
         this.isplanned = isplanned;
     }
 
-    public Integer getCountLikes() {
+    public Integer getCountLikes(){
         return countlikes;
     }
 
-    public void setCountLikes(Integer countlikes) {
+    public void setCountLikes(Integer countlikes){
         this.countlikes = countlikes;
     }
 
     @XmlTransient
-    public List<Nutzer> getNutzerList() {
+    public List<Nutzer> getNutzerList(){
         return nutzerList;
     }
 
-    public void setNutzerList(List<Nutzer> nutzerList) {
+    public void setNutzerList(List<Nutzer> nutzerList){
         this.nutzerList = nutzerList;
     }
 
     @XmlTransient
-    public List<Nutzer> getLikedBy() {
+    public List<Nutzer> getLikedBy(){
         return likedBy;
     }
 
-    public void setLikedBy(List<Nutzer> likedBy) {
+    public void setLikedBy(List<Nutzer> likedBy){
         this.likedBy = likedBy;
     }
 
-    public Foto getFoto() {
+    public Foto getFoto(){
         return foto;
     }
 
-    public void setFoto(Foto foto) {
+    public void setFoto(Foto foto){
         this.foto = foto;
     }
 
     @XmlTransient
-    public List<Nachricht> getNachrichtList() {
+    public List<Nachricht> getNachrichtList(){
         return nachrichtList;
     }
 
-    public void setNachrichtList(List<Nachricht> nachrichtList) {
+    public void setNachrichtList(List<Nachricht> nachrichtList){
         this.nachrichtList = nachrichtList;
     }
 
-    public Nachricht getAntwortauf() {
+    public Nachricht getAntwortauf(){
         return antwortauf;
     }
 
-    public void setAntwortauf(Nachricht antwortauf) {
+    public void setAntwortauf(Nachricht antwortauf){
         this.antwortauf = antwortauf;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         int hash = 0;
         hash += (nachrichtid != null ? nachrichtid.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object){
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Nachricht)) {
+        if(!(object instanceof Nachricht)){
             return false;
         }
         Nachricht other = (Nachricht) object;
-        if ((this.nachrichtid == null && other.nachrichtid != null) || (this.nachrichtid != null && !this.nachrichtid.equals(other.nachrichtid))) {
+        if((this.nachrichtid == null && other.nachrichtid != null) || (this.nachrichtid != null && !this.nachrichtid.equals(other.nachrichtid))){
             return false;
         }
         return true;
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "Entity.Nachricht[ nachrichtid=" + nachrichtid + " ]";
     }
 

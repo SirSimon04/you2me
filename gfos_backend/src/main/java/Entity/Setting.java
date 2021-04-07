@@ -23,101 +23,101 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author simon
  */
 @Entity
-@Table(name = "SETTING")
+@Table(name="SETTING")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Setting.findAll", query = "SELECT s FROM Setting s"),
-    @NamedQuery(name = "Setting.findByNutzerid", query = "SELECT s FROM Setting s WHERE s.nutzerid = :nutzerid"),
-    @NamedQuery(name = "Setting.findByDarkmode", query = "SELECT s FROM Setting s WHERE s.darkmode = :darkmode"),
-    @NamedQuery(name = "Setting.findByLesebest\u00e4tigung", query = "SELECT s FROM Setting s WHERE s.lesebest\u00e4tigung = :lesebest\u00e4tigung"),
-    @NamedQuery(name = "Setting.findByMailifimportant", query = "SELECT s FROM Setting s WHERE s.mailifimportant = :mailifimportant")})
-public class Setting implements Serializable {
+    @NamedQuery(name="Setting.findAll", query="SELECT s FROM Setting s"),
+    @NamedQuery(name="Setting.findByNutzerid", query="SELECT s FROM Setting s WHERE s.nutzerid = :nutzerid"),
+    @NamedQuery(name="Setting.findByDarkmode", query="SELECT s FROM Setting s WHERE s.darkmode = :darkmode"),
+    @NamedQuery(name="Setting.findByLesebest\u00e4tigung", query="SELECT s FROM Setting s WHERE s.lesebest\u00e4tigung = :lesebest\u00e4tigung"),
+    @NamedQuery(name="Setting.findByMailifimportant", query="SELECT s FROM Setting s WHERE s.mailifimportant = :mailifimportant")})
+public class Setting implements Serializable{
 
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Column(name = "NUTZERID")
+    @Column(name="NUTZERID")
     private Integer nutzerid;
-    @Column(name = "DARKMODE")
+    @Column(name="DARKMODE")
     private Boolean darkmode;
-    @Column(name = "LESEBEST\u00c4TIGUNG")
+    @Column(name="LESEBEST\u00c4TIGUNG")
     private Boolean lesebestätigung;
-    @Column(name = "MAILIFIMPORTANT")
+    @Column(name="MAILIFIMPORTANT")
     private Boolean mailifimportant;
-    @JoinColumn(name = "NUTZERID", referencedColumnName = "ID", insertable = false, updatable = false)
-    @OneToOne(optional = false)
+    @JoinColumn(name="NUTZERID", referencedColumnName="ID", insertable=false, updatable=false)
+    @OneToOne(optional=false)
     private Nutzer nutzer;
 
-    public Setting() {
+    public Setting(){
     }
 
-    public Setting(Integer nutzerid) {
+    public Setting(Integer nutzerid){
         this.nutzerid = nutzerid;
     }
 
-    public Integer getNutzerid() {
+    public Integer getNutzerid(){
         return nutzerid;
     }
 
-    public void setNutzerid(Integer nutzerid) {
+    public void setNutzerid(Integer nutzerid){
         this.nutzerid = nutzerid;
     }
 
-    public Boolean getDarkmode() {
+    public Boolean getDarkmode(){
         return darkmode;
     }
 
-    public void setDarkmode(Boolean darkmode) {
+    public void setDarkmode(Boolean darkmode){
         this.darkmode = darkmode;
     }
 
-    public Boolean getLesebestätigung() {
+    public Boolean getLesebestätigung(){
         return lesebestätigung;
     }
 
-    public void setLesebestätigung(Boolean lesebestätigung) {
+    public void setLesebestätigung(Boolean lesebestätigung){
         this.lesebestätigung = lesebestätigung;
     }
 
-    public Boolean getMailifimportant() {
+    public Boolean getMailifimportant(){
         return mailifimportant;
     }
 
-    public void setMailifimportant(Boolean mailifimportant) {
+    public void setMailifimportant(Boolean mailifimportant){
         this.mailifimportant = mailifimportant;
     }
 
-    public Nutzer getNutzer() {
+    public Nutzer getNutzer(){
         return nutzer;
     }
 
-    public void setNutzer(Nutzer nutzer) {
+    public void setNutzer(Nutzer nutzer){
         this.nutzer = nutzer;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         int hash = 0;
         hash += (nutzerid != null ? nutzerid.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object){
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Setting)) {
+        if(!(object instanceof Setting)){
             return false;
         }
         Setting other = (Setting) object;
-        if ((this.nutzerid == null && other.nutzerid != null) || (this.nutzerid != null && !this.nutzerid.equals(other.nutzerid))) {
+        if((this.nutzerid == null && other.nutzerid != null) || (this.nutzerid != null && !this.nutzerid.equals(other.nutzerid))){
             return false;
         }
         return true;
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "Entity.Setting[ nutzerid=" + nutzerid + " ]";
     }
 

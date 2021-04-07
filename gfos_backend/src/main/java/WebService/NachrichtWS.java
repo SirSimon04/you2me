@@ -54,7 +54,7 @@ import javax.ws.rs.core.Response;
 @Path("/nachricht")
 @Stateless
 @LocalBean
-public class NachrichtWS {
+public class NachrichtWS{
 
     @EJB
     private NachrichtEJB nachrichtEJB;
@@ -80,14 +80,14 @@ public class NachrichtWS {
      * @param token Das Webtoken
      * @return Boolean, ob der Token akzeptiert wurde
      */
-    public boolean verify(String token) {
-        if (tokenizer.isOn()) {
-            if (tokenizer.verifyToken(token).equals("")) {
+    public boolean verify(String token){
+        if(tokenizer.isOn()){
+            if(tokenizer.verifyToken(token).equals("")){
                 return false;
-            } else {
+            }else{
                 List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
-                for (Blacklist b : bl) {
-                    if (b.getToken().equals(token)) {
+                for(Blacklist b : bl){
+                    if(b.getToken().equals(token)){
                         return false;
                     }
                 }
@@ -96,7 +96,7 @@ public class NachrichtWS {
                 nutzerEJB.setOnline(token);
                 return true;
             }
-        } else {
+        }else{
             return true;
         }
 
@@ -111,11 +111,11 @@ public class NachrichtWS {
     @GET
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getAll(@PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
             //return "false";
-        } else {
+        }else{
             Gson parser = new Gson();
             List<Nachricht> alleNachrichten = nachrichtEJB.getAll();
             return response.generiereAntwort(parser.toJson(alleNachrichten));
@@ -137,20 +137,20 @@ public class NachrichtWS {
     @GET
     @Path("/chat/{id}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByChat(@PathParam("id") int chatid, @PathParam("token") String token, @PathParam("nutzerid") int nutzerid) {
-        if (!verify(token)) {
+    public Response getByChat(@PathParam("id") int chatid, @PathParam("token") String token, @PathParam("nutzerid") int nutzerid){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Nutzer self = nutzerEJB.getById(nutzerid);
             List<Nachricht> list = nachrichtEJB.getByChat(chatid);
             Chat c = chatEJB.getById(chatid);
-            for (Nachricht n : list) {
-                if (n.getDatumuhrzeit() < System.currentTimeMillis()) {
+            for(Nachricht n : list){
+                if(n.getDatumuhrzeit() < System.currentTimeMillis()){
 
-                    if (!n.getNutzerList().contains(self)) { //Nachricht wird von self gelesen
+                    if(!n.getNutzerList().contains(self)){ //Nachricht wird von self gelesen
                         n.getNutzerList().add(self);
                     }
-                    if (n.getNutzerList().size() == c.getNutzerList().size()) {
+                    if(n.getNutzerList().size() == c.getNutzerList().size()){
                         n.setReadbyall(Boolean.TRUE);
                     }
                 }
@@ -158,11 +158,11 @@ public class NachrichtWS {
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatid);
             List<Nachricht> newN = new ArrayList<>();
-            for (Nachricht n : nList) {
-                if (n.getDatumuhrzeit() > System.currentTimeMillis()) {
-                    if (n.getSenderid() != self.getId()) {
+            for(Nachricht n : nList){
+                if(n.getDatumuhrzeit() > System.currentTimeMillis()){
+                    if(n.getSenderid() != self.getId()){
                         newN.add(n);
-                    } else {
+                    }else{
                         n.setIsplanned(Boolean.TRUE);
                     }
                 }
@@ -186,10 +186,10 @@ public class NachrichtWS {
     @GET
     @Path("/chat/getNewest/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getNewest(@PathParam("id") int id, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getNewest(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
             Nachricht n = nachrichtEJB.getNewest(id);
             return response.generiereAntwort(parser.toJson(n));
@@ -210,10 +210,10 @@ public class NachrichtWS {
     @GET
     @Path("/info/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getInfo(@PathParam("id") int id, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getInfo(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Nachricht n = nachrichtEJB.getCopyById(id);
 
             List<Nutzer> gelesenVon = new ArrayList<>();
@@ -249,14 +249,14 @@ public class NachrichtWS {
     @Path("/add/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response send(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException {
+    public Response send(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
 
-        if (!verify(token)) {
+        if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
-        } else {
+        }else{
 
             Gson parser = new Gson();
-            try {
+            try{
                 int jsonAnswerId = 0;
                 JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
                 Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
@@ -264,16 +264,16 @@ public class NachrichtWS {
                 int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
                 int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class);
                 //Antwort auf eine andere Nachricht
-                try {
+                try{
                     jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
                     Nachricht nachrichtInDB = nachrichtEJB.getById(jsonAnswerId);
                     neueNachricht.setAntwortauf(nachrichtInDB);
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
 //                System.out.println(neueNachricht.getIsplanned());
                 //Foto verschicken
-                if (jsonPic != null) {
+                if(jsonPic != null){
                     Foto f = new Foto();
                     f.setBase64(jsonPic);
                     fotoEJB.add(f);
@@ -287,17 +287,17 @@ public class NachrichtWS {
                 Nutzer self = nutzerEJB.getById(senderId);
                 copy.getNutzerList().remove(self);
                 Nutzer other = copy.getNutzerList().get(0);
-                if (!c.getIsgroup()) {
-                    if (self.getHatBlockiert().contains(other)) {
+                if(!c.getIsgroup()){
+                    if(self.getHatBlockiert().contains(other)){
                         return response.generiereFehler406("Du hast diesen Nutzer blockiert");
                     }
-                    if (other.getHatBlockiert().contains(self)) {
+                    if(other.getHatBlockiert().contains(self)){
                         return response.generiereFehler406("Du bist von diesem Nutzer blockiert");
                     }
                 }
                 //wenn wichtig, dann mail versenden
-                try {
-                    if (neueNachricht.getIsimportant()) {
+                try{
+                    if(neueNachricht.getIsimportant()){
                         System.out.println("HIIIIIIIIIEEEEEEEEEEEEERRRRRRRR");
                         Chat cc = chatEJB.getCopyListsNotNull(neueNachricht.getChatid());
                         List<Nutzer> nList = cc.getNutzerList();
@@ -305,15 +305,15 @@ public class NachrichtWS {
                         Nutzer nutzer = nutzerEJB.getById(1);
                         String mailFrom = nutzer.getEmail();
                         String pw = nutzer.getPasswordhash();
-                        for (Nutzer n : nList) {
+                        for(Nutzer n : nList){
 //                            System.out.println(n.getSetting() == null);
                             Setting s = settingsEJB.getById(n.getId());
                             System.out.println(s.getMailifimportant());
 //                            System.out.println(n.getSetting().getMailifimportant());
 //                            if(n.getSetting().getMailifimportant()){
-                            if (s.getMailifimportant()) {
+                            if(s.getMailifimportant()){
                                 String msg = "";
-                                if (cc.getIsgroup()) {
+                                if(cc.getIsgroup()){
                                     msg += "<h2>Hallo " + n.getBenutzername() + ",</h2>"
                                             + "<p>in der Gruppe " + cc.getName() + " wurde von "
                                             + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
@@ -328,7 +328,7 @@ public class NachrichtWS {
                                             + "<h3>dein Disputatio-Team</h3>";
                                     mail.sendImportantMessage(mailFrom, pw, n.getEmail(), msg);
 
-                                } else {
+                                }else{
                                     msg += "<h2>Hallo " + n.getBenutzername() + ",</h2>"
                                             + "<p>"
                                             + nutzerEJB.getById(neueNachricht.getSenderid()).getBenutzername()
@@ -348,16 +348,16 @@ public class NachrichtWS {
 
 //                        }
                     }
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
                     response.generiereAntwort("Komisch");
                 }
 
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
-            } catch (JsonSyntaxException e) {
+            }catch(JsonSyntaxException e){
                 return response.generiereFehler406("cacahuète");
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
                 return response.generiereFehler500("Chatid oder Senderid nicht vorhanden");
             }
         }
@@ -381,11 +381,11 @@ public class NachrichtWS {
     @Path("/delete/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(String Daten, @PathParam("token") String token) {
+    public Response delete(String Daten, @PathParam("token") String token){
 
-        if (!verify(token)) {
+        if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
-        } else {
+        }else{
 
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
@@ -396,37 +396,37 @@ public class NachrichtWS {
 
             String username = tokenizer.getUser(token);
 
-            if (n.getSenderid() == 0) {
-                if (nutzerEJB.getByUsername(username).getChannel().getChatid() == n.getChatid()) {
+            if(n.getSenderid() == 0){
+                if(nutzerEJB.getByUsername(username).getChannel().getChatid() == n.getChatid()){
                     nachrichtEJB.delete(lNachrichtId);
                     return response.generiereAntwort("true");
-                } else {
+                }else{
                     return response.generiereFehler406("Keine Berechtigung");
                 }
             }
 
             List<Nutzer> l = chatEJB.getById(n.getChatid()).getNutzerList();
 
-            if (l.contains(self)) {
-                if (chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)) {
+            if(l.contains(self)){
+                if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
 
                     chatEJB.getById(n.getChatid()).setLetztenachricht(null);
 
                     nachrichtEJB.delete(lNachrichtId);
 
                     List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
-                    if (nList.size() != 0) {
+                    if(nList.size() != 0){
                         chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
                     }
 
                     return response.generiereAntwort("true");
 
-                } else {
+                }else{
 
                     nachrichtEJB.delete(lNachrichtId);
                     return response.generiereAntwort("true");
                 }
-            } else {
+            }else{
                 return response.generiereFehler406("Nicht im Chat");
             }
 
@@ -447,10 +447,10 @@ public class NachrichtWS {
     @Path("/mark/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response markMessage(String Daten, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response markMessage(String Daten, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
-        } else {
+        }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
@@ -459,10 +459,10 @@ public class NachrichtWS {
             Nachricht na = nachrichtEJB.getById(nId);
             Nutzer nu = nutzerEJB.getById(eigeneId);
 
-            try {
+            try{
                 nachrichtEJB.markiere(na, nu);
                 return response.generiereAntwort("true");
-            } catch (Exception e) {
+            }catch(Exception e){
                 return response.generiereFehler406("Fehler");
             }
 
@@ -481,10 +481,10 @@ public class NachrichtWS {
     @GET
     @Path("/getMarked/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getMarked(@PathParam("id") int id, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getMarked(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getMarkedMessages(id);
             return response.generiereAntwort(parser.toJson(nList));
@@ -508,14 +508,14 @@ public class NachrichtWS {
     @Path("/sendInChannel/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response sendInChannel(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException {
+    public Response sendInChannel(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
 
-        if (!verify(token)) {
+        if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
-        } else {
+        }else{
 
             Gson parser = new Gson();
-            try {
+            try{
                 JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
                 Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
 
@@ -527,9 +527,9 @@ public class NachrichtWS {
 
                 return response.generiereAntwort("true");
 
-            } catch (JsonSyntaxException e) {
+            }catch(JsonSyntaxException e){
                 return response.generiereFehler406("cacahuète");
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
                 return response.generiereFehler500("Chatid oder Senderid nicht vorhanden");
             }
 
@@ -548,10 +548,10 @@ public class NachrichtWS {
     @Path("/like/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response like(String Daten, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response like(String Daten, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("dentifrisse");
-        } else {
+        }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
@@ -560,18 +560,18 @@ public class NachrichtWS {
             Nachricht na = nachrichtEJB.getById(nId);
             Nutzer nu = nutzerEJB.getById(eigeneId);
 
-            try {
-                if (!na.getLikedBy().contains(nu)) {
+            try{
+                if(!na.getLikedBy().contains(nu)){
                     na.getLikedBy().add(nu);
                     na.setCountLikes(na.getLikedBy().size());
                     System.out.println(na.getLikedBy().size());
                     return response.generiereAntwort("true");
-                } else {
+                }else{
                     na.getLikedBy().remove(nu);
                     na.setCountLikes(na.getLikedBy().size());
                     return response.generiereFehler406("true");
                 }
-            } catch (Exception e) {
+            }catch(Exception e){
                 return response.generiereFehler406("Fehler");
             }
         }

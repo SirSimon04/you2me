@@ -23,7 +23,7 @@ import javax.persistence.PersistenceContext;
  * @author simon
  */
 @Stateless
-public class BlacklistEJB {
+public class BlacklistEJB{
 
     @PersistenceContext
     private EntityManager em;
@@ -34,7 +34,7 @@ public class BlacklistEJB {
      *
      * @param bl Das Token und die aktuelle Zeit.
      */
-    public void logOut(Blacklist bl) {
+    public void logOut(Blacklist bl){
         em.persist(bl);
     }
 
@@ -44,7 +44,7 @@ public class BlacklistEJB {
      *
      * @return
      */
-    public List<Blacklist> getAllBlacklisted() {
+    public List<Blacklist> getAllBlacklisted(){
         return em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
     }
 
@@ -53,7 +53,7 @@ public class BlacklistEJB {
      *
      * @param token Das Token
      */
-    public void deleteToken(String token) {
+    public void deleteToken(String token){
         em.remove(em.createNamedQuery(Blacklist.class.getSimpleName() + ".findByToken").setParameter("token", token).getSingleResult());
     }
 
@@ -62,9 +62,9 @@ public class BlacklistEJB {
      * nach dem Start des Programms und dann einmal pro Stunde geleert, um das
      * Überprüfen, ob sich Token in der Datenbank zu befinden, zu verschnellern
      */
-    public void clearBlacklist() {
+    public void clearBlacklist(){
         List<Blacklist> bl = em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
-        for (Blacklist b : bl) {
+        for(Blacklist b : bl){
             em.remove(b);
         }
     }

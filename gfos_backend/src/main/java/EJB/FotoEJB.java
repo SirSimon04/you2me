@@ -23,7 +23,7 @@ import javax.persistence.Query;
  * @author simon
  */
 @Stateless
-public class FotoEJB {
+public class FotoEJB{
 
     @PersistenceContext
     private EntityManager em;
@@ -33,7 +33,7 @@ public class FotoEJB {
      *
      * @return Eine Liste mit allen Fotos.
      */
-    public List<Foto> getAll() {
+    public List<Foto> getAll(){
         return em.createNamedQuery(Foto.class.getSimpleName() + ".findAll").getResultList();
     }
 
@@ -42,7 +42,7 @@ public class FotoEJB {
      *
      * @param neuesFoto Das neue Foto
      */
-    public void add(Foto neuesFoto) {
+    public void add(Foto neuesFoto){
         em.persist(neuesFoto);
     }
 
@@ -53,7 +53,7 @@ public class FotoEJB {
      * @param base64 Der Base64-String
      * @return Das Foto
      */
-    public Foto getByBase64(String base64) {
+    public Foto getByBase64(String base64){
         Query query = em.createNamedQuery(Foto.class.getSimpleName() + ".findByBase64");
         query.setParameter("base64", base64);
 

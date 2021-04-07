@@ -33,350 +33,350 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author simon
  */
 @Entity
-@Table(name = "NUTZER")
+@Table(name="NUTZER")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Nutzer.findAll", query = "SELECT n FROM Nutzer n"),
-    @NamedQuery(name = "Nutzer.findById", query = "SELECT n FROM Nutzer n WHERE n.id = :id"),
-    @NamedQuery(name = "Nutzer.findByBenutzername", query = "SELECT n FROM Nutzer n WHERE n.benutzername = :benutzername"),
-    @NamedQuery(name = "Nutzer.findByVorname", query = "SELECT n FROM Nutzer n WHERE n.vorname = :vorname"),
-    @NamedQuery(name = "Nutzer.findByNachname", query = "SELECT n FROM Nutzer n WHERE n.nachname = :nachname"),
-    @NamedQuery(name = "Nutzer.findByEmail", query = "SELECT n FROM Nutzer n WHERE n.email = :email"),
-    @NamedQuery(name = "Nutzer.findByPasswordhash", query = "SELECT n FROM Nutzer n WHERE n.passwordhash = :passwordhash"),
-    @NamedQuery(name = "Nutzer.findByHandynummer", query = "SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
-    @NamedQuery(name = "Nutzer.findByInfo", query = "SELECT n FROM Nutzer n WHERE n.info = :info"),
-    @NamedQuery(name = "Nutzer.findByIsadmin", query = "SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin"),
-    @NamedQuery(name = "Nutzer.findByVerificationpin", query = "SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin"),
-    @NamedQuery(name = "Nutzer.findByLastonline", query = "SELECT n FROM Nutzer n WHERE n.lastonline = :lastonline"),
-    @NamedQuery(name = "Nutzer.findByIsonline", query = "SELECT n FROM Nutzer n WHERE n.isonline = :isonline"),
-    @NamedQuery(name = "Nutzer.findByMitgliedseit", query = "SELECT n FROM Nutzer n WHERE n.mitgliedseit = :mitgliedseit")})
-public class Nutzer implements Serializable {
+    @NamedQuery(name="Nutzer.findAll", query="SELECT n FROM Nutzer n"),
+    @NamedQuery(name="Nutzer.findById", query="SELECT n FROM Nutzer n WHERE n.id = :id"),
+    @NamedQuery(name="Nutzer.findByBenutzername", query="SELECT n FROM Nutzer n WHERE n.benutzername = :benutzername"),
+    @NamedQuery(name="Nutzer.findByVorname", query="SELECT n FROM Nutzer n WHERE n.vorname = :vorname"),
+    @NamedQuery(name="Nutzer.findByNachname", query="SELECT n FROM Nutzer n WHERE n.nachname = :nachname"),
+    @NamedQuery(name="Nutzer.findByEmail", query="SELECT n FROM Nutzer n WHERE n.email = :email"),
+    @NamedQuery(name="Nutzer.findByPasswordhash", query="SELECT n FROM Nutzer n WHERE n.passwordhash = :passwordhash"),
+    @NamedQuery(name="Nutzer.findByHandynummer", query="SELECT n FROM Nutzer n WHERE n.handynummer = :handynummer"),
+    @NamedQuery(name="Nutzer.findByInfo", query="SELECT n FROM Nutzer n WHERE n.info = :info"),
+    @NamedQuery(name="Nutzer.findByIsadmin", query="SELECT n FROM Nutzer n WHERE n.isadmin = :isadmin"),
+    @NamedQuery(name="Nutzer.findByVerificationpin", query="SELECT n FROM Nutzer n WHERE n.verificationpin = :verificationpin"),
+    @NamedQuery(name="Nutzer.findByLastonline", query="SELECT n FROM Nutzer n WHERE n.lastonline = :lastonline"),
+    @NamedQuery(name="Nutzer.findByIsonline", query="SELECT n FROM Nutzer n WHERE n.isonline = :isonline"),
+    @NamedQuery(name="Nutzer.findByMitgliedseit", query="SELECT n FROM Nutzer n WHERE n.mitgliedseit = :mitgliedseit")})
+public class Nutzer implements Serializable{
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Basic(optional=false)
+    @Column(name="ID")
     private Integer id;
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "BENUTZERNAME")
+    @Size(min=1, max=50)
+    @Column(name="BENUTZERNAME")
     private String benutzername;
-    @Size(max = 50)
-    @Column(name = "VORNAME")
+    @Size(max=50)
+    @Column(name="VORNAME")
     private String vorname;
-    @Size(max = 50)
-    @Column(name = "NACHNAME")
+    @Size(max=50)
+    @Column(name="NACHNAME")
     private String nachname;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "EMAIL")
+    @Size(min=1, max=50)
+    @Column(name="EMAIL")
     private String email;
-    @Basic(optional = false)
+    @Basic(optional=false)
     @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "PASSWORDHASH")
+    @Size(min=1, max=255)
+    @Column(name="PASSWORDHASH")
     private String passwordhash;
-    @Size(max = 50)
-    @Column(name = "HANDYNUMMER")
+    @Size(max=50)
+    @Column(name="HANDYNUMMER")
     private String handynummer;
-    @Size(max = 256)
-    @Column(name = "INFO")
+    @Size(max=256)
+    @Column(name="INFO")
     private String info;
-    @Column(name = "ISADMIN")
+    @Column(name="ISADMIN")
     private Boolean isadmin;
-    @Column(name = "VERIFICATIONPIN")
+    @Column(name="VERIFICATIONPIN")
     private Integer verificationpin;
-    @Column(name = "LASTONLINE")
+    @Column(name="LASTONLINE")
     private BigInteger lastonline;
-    @Column(name = "ISONLINE")
+    @Column(name="ISONLINE")
     private Boolean isonline;
-    @Column(name = "MITGLIEDSEIT")
+    @Column(name="MITGLIEDSEIT")
     private Integer mitgliedseit;
-    @JoinTable(name = "BEFREUNDETMIT", joinColumns = {
-        @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
+    @JoinTable(name="BEFREUNDETMIT", joinColumns={
+        @JoinColumn(name="NUTZER1ID", referencedColumnName="ID")}, inverseJoinColumns={
+        @JoinColumn(name="NUTZER2ID", referencedColumnName="ID")})
     @ManyToMany
     private List<Nutzer> ownFriendList;
-    @ManyToMany(mappedBy = "ownFriendList")
+    @ManyToMany(mappedBy="ownFriendList")
     private List<Nutzer> otherFriendList;
-    @JoinTable(name = "HATANGEPINNT", joinColumns = {
-        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
+    @JoinTable(name="HATANGEPINNT", joinColumns={
+        @JoinColumn(name="NUTZERID", referencedColumnName="ID")}, inverseJoinColumns={
+        @JoinColumn(name="CHATID", referencedColumnName="CHATID")})
     @ManyToMany
     private List<Chat> pinnedChats;
-    @JoinTable(name = "HATMARKIERT", joinColumns = {
-        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")})
+    @JoinTable(name="HATMARKIERT", joinColumns={
+        @JoinColumn(name="NUTZERID", referencedColumnName="ID")}, inverseJoinColumns={
+        @JoinColumn(name="NACHRICHTID", referencedColumnName="NACHRICHTID")})
     @ManyToMany
     private List<Nachricht> markedMessages;
-    @JoinTable(name = "HATARCHIVIERT", joinColumns = {
-        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
+    @JoinTable(name="HATARCHIVIERT", joinColumns={
+        @JoinColumn(name="NUTZERID", referencedColumnName="ID")}, inverseJoinColumns={
+        @JoinColumn(name="CHATID", referencedColumnName="CHATID")})
     @ManyToMany
     private List<Chat> archivedChats;
-    @JoinTable(name = "HATBLOCKIERT", joinColumns = {
-        @JoinColumn(name = "NUTZER1ID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "NUTZER2ID", referencedColumnName = "ID")})
+    @JoinTable(name="HATBLOCKIERT", joinColumns={
+        @JoinColumn(name="NUTZER1ID", referencedColumnName="ID")}, inverseJoinColumns={
+        @JoinColumn(name="NUTZER2ID", referencedColumnName="ID")})
     @ManyToMany
     private List<Nutzer> hatBlockiert;
-    @ManyToMany(mappedBy = "hatBlockiert")
+    @ManyToMany(mappedBy="hatBlockiert")
     private List<Nutzer> blockiertVon;
 //    @ManyToMany(mappedBy = "nutzerList2")
 //    private List<Chat> chatList2;
-    @JoinTable(name = "ISADMIN", joinColumns = {
-        @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")}, inverseJoinColumns = {
-        @JoinColumn(name = "CHATID", referencedColumnName = "CHATID")})
+    @JoinTable(name="ISADMIN", joinColumns={
+        @JoinColumn(name="NUTZERID", referencedColumnName="ID")}, inverseJoinColumns={
+        @JoinColumn(name="CHATID", referencedColumnName="CHATID")})
     @ManyToMany
     private List<Chat> adminInGroups;
-    @JoinColumn(name = "CHANNEL", referencedColumnName = "CHATID")
+    @JoinColumn(name="CHANNEL", referencedColumnName="CHATID")
     @ManyToOne
     private Chat channel;
-    @JoinColumn(name = "PROFILBILD", referencedColumnName = "ID")
+    @JoinColumn(name="PROFILBILD", referencedColumnName="ID")
     @ManyToOne
     private Foto profilbild;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "nutzer")
+    @OneToOne(cascade=CascadeType.ALL, mappedBy="nutzer")
     private Setting setting;
 
-    public Nutzer() {
+    public Nutzer(){
     }
 
-    public Nutzer(Integer id) {
+    public Nutzer(Integer id){
         this.id = id;
     }
 
-    public Nutzer(Integer id, String benutzername, String email, String passwordhash) {
+    public Nutzer(Integer id, String benutzername, String email, String passwordhash){
         this.id = id;
         this.benutzername = benutzername;
         this.email = email;
         this.passwordhash = passwordhash;
     }
 
-    public Integer getId() {
+    public Integer getId(){
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Integer id){
         this.id = id;
     }
 
-    public String getBenutzername() {
+    public String getBenutzername(){
         return benutzername;
     }
 
-    public void setBenutzername(String benutzername) {
+    public void setBenutzername(String benutzername){
         this.benutzername = benutzername;
     }
 
-    public String getVorname() {
+    public String getVorname(){
         return vorname;
     }
 
-    public void setVorname(String vorname) {
+    public void setVorname(String vorname){
         this.vorname = vorname;
     }
 
-    public String getNachname() {
+    public String getNachname(){
         return nachname;
     }
 
-    public void setNachname(String nachname) {
+    public void setNachname(String nachname){
         this.nachname = nachname;
     }
 
-    public String getEmail() {
+    public String getEmail(){
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email){
         this.email = email;
     }
 
-    public String getPasswordhash() {
+    public String getPasswordhash(){
         return passwordhash;
     }
 
-    public void setPasswordhash(String passwordhash) {
+    public void setPasswordhash(String passwordhash){
         this.passwordhash = passwordhash;
     }
 
-    public String getHandynummer() {
+    public String getHandynummer(){
         return handynummer;
     }
 
-    public void setHandynummer(String handynummer) {
+    public void setHandynummer(String handynummer){
         this.handynummer = handynummer;
     }
 
-    public String getInfo() {
+    public String getInfo(){
         return info;
     }
 
-    public void setInfo(String info) {
+    public void setInfo(String info){
         this.info = info;
     }
 
-    public Boolean getIsadmin() {
+    public Boolean getIsadmin(){
         return isadmin;
     }
 
-    public void setIsadmin(Boolean isadmin) {
+    public void setIsadmin(Boolean isadmin){
         this.isadmin = isadmin;
     }
 
-    public Integer getVerificationpin() {
+    public Integer getVerificationpin(){
         return verificationpin;
     }
 
-    public void setVerificationpin(Integer verificationpin) {
+    public void setVerificationpin(Integer verificationpin){
         this.verificationpin = verificationpin;
     }
 
-    public BigInteger getLastonline() {
+    public BigInteger getLastonline(){
         return lastonline;
     }
 
-    public void setLastonline(BigInteger lastonline) {
+    public void setLastonline(BigInteger lastonline){
         this.lastonline = lastonline;
     }
 
-    public Boolean getIsonline() {
+    public Boolean getIsonline(){
         return isonline;
     }
 
-    public void setIsonline(Boolean isonline) {
+    public void setIsonline(Boolean isonline){
         this.isonline = isonline;
     }
 
-    public Integer getMitgliedseit() {
+    public Integer getMitgliedseit(){
         return mitgliedseit;
     }
 
-    public void setMitgliedseit(Integer mitgliedseit) {
+    public void setMitgliedseit(Integer mitgliedseit){
         this.mitgliedseit = mitgliedseit;
     }
 
     @XmlTransient
-    public List<Nutzer> getOwnFriendList() {
+    public List<Nutzer> getOwnFriendList(){
         return ownFriendList;
     }
 
-    public void setOwnFriendList(List<Nutzer> ownFriendList) {
+    public void setOwnFriendList(List<Nutzer> ownFriendList){
         this.ownFriendList = ownFriendList;
     }
 
     @XmlTransient
-    public List<Nutzer> getOtherFriendList() {
+    public List<Nutzer> getOtherFriendList(){
         return otherFriendList;
     }
 
-    public void setOtherFriendList(List<Nutzer> otherFriendList) {
+    public void setOtherFriendList(List<Nutzer> otherFriendList){
         this.otherFriendList = otherFriendList;
     }
 
     @XmlTransient
-    public List<Chat> getPinnedChats() {
+    public List<Chat> getPinnedChats(){
         return pinnedChats;
     }
 
-    public void setPinnedChats(List<Chat> pinnedChats) {
+    public void setPinnedChats(List<Chat> pinnedChats){
         this.pinnedChats = pinnedChats;
     }
 
     @XmlTransient
-    public List<Nachricht> getMarkedMessages() {
+    public List<Nachricht> getMarkedMessages(){
         return markedMessages;
     }
 
-    public void setMarkedMessages(List<Nachricht> markedMessages) {
+    public void setMarkedMessages(List<Nachricht> markedMessages){
         this.markedMessages = markedMessages;
     }
 
     @XmlTransient
-    public List<Chat> getArchivedChats() {
+    public List<Chat> getArchivedChats(){
         return archivedChats;
     }
 
-    public void setArchivedChats(List<Chat> archivedChats) {
+    public void setArchivedChats(List<Chat> archivedChats){
         this.archivedChats = archivedChats;
     }
 
     @XmlTransient
-    public List<Nutzer> getHatBlockiert() {
+    public List<Nutzer> getHatBlockiert(){
         return hatBlockiert;
     }
 
-    public void setHatBlockiert(List<Nutzer> hatBlockiert) {
+    public void setHatBlockiert(List<Nutzer> hatBlockiert){
         this.hatBlockiert = hatBlockiert;
     }
 
     @XmlTransient
-    public List<Nutzer> getBlockiertVon() {
+    public List<Nutzer> getBlockiertVon(){
         return blockiertVon;
     }
 
-    public void setBlockiertVon(List<Nutzer> blockiertVon) {
+    public void setBlockiertVon(List<Nutzer> blockiertVon){
         this.blockiertVon = blockiertVon;
     }
 
     @XmlTransient
-    public List<Chat> getAdminInGroups() {
+    public List<Chat> getAdminInGroups(){
         return adminInGroups;
     }
 
-    public void setAdminInGroups(List<Chat> adminInGroups) {
+    public void setAdminInGroups(List<Chat> adminInGroups){
         this.adminInGroups = adminInGroups;
     }
 
-    public Chat getChannel() {
+    public Chat getChannel(){
         return channel;
     }
 
-    public void setChannel(Chat channel) {
+    public void setChannel(Chat channel){
         this.channel = channel;
     }
 
-    public Foto getProfilbild() {
+    public Foto getProfilbild(){
         return profilbild;
     }
 
-    public void setProfilbild(Foto profilbild) {
+    public void setProfilbild(Foto profilbild){
         this.profilbild = profilbild;
     }
 
-    public Setting getSetting() {
+    public Setting getSetting(){
         return setting;
     }
 
-    public void setSetting(Setting setting) {
+    public void setSetting(Setting setting){
         this.setting = setting;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object){
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Nutzer)) {
+        if(!(object instanceof Nutzer)){
             return false;
         }
         Nutzer other = (Nutzer) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))){
             return false;
         }
         return true;
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "Entity.Nutzer[ id=" + id + " ]";
     }
 

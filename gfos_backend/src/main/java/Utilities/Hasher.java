@@ -14,7 +14,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 @LocalBean
-public class Hasher {
+public class Hasher{
 
     private static final int ITERATIONS = 10000;
     private static final int KEY_LENGTH = 512;
@@ -27,7 +27,7 @@ public class Hasher {
      * @param password Das Passwort
      * @return Der Hashwert
      */
-    public String checkPassword(String password) {
+    public String checkPassword(String password){
         return Hex.encodeHexString(hashPassword(password.toCharArray()));
     }
 
@@ -37,13 +37,13 @@ public class Hasher {
      * @param password Das Passwort
      * @return Der Hashwert
      */
-    private byte[] hashPassword(final char[] password) {
-        try {
+    private byte[] hashPassword(final char[] password){
+        try{
             SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
             PBEKeySpec spec = new PBEKeySpec(password, SALT.getBytes(), ITERATIONS, KEY_LENGTH);
             SecretKey key = secretKeyFactory.generateSecret(spec);
             return key.getEncoded();
-        } catch (Exception e) {
+        }catch(Exception e){
             return null;
         }
     }

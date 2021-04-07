@@ -56,7 +56,7 @@ import java.util.Iterator;
 @Path("/chat")
 @Stateless
 @LocalBean
-public class ChatWS {
+public class ChatWS{
 
     @EJB
     private NutzerEJB nutzerEJB;
@@ -84,14 +84,14 @@ public class ChatWS {
      * @param token Das Webtoken
      * @return Boolean, ob der Token akzeptiert wurde
      */
-    public boolean verify(String token) {
-        if (tokenizer.isOn()) {
-            if (tokenizer.verifyToken(token).equals("")) {
+    public boolean verify(String token){
+        if(tokenizer.isOn()){
+            if(tokenizer.verifyToken(token).equals("")){
                 return false;
-            } else {
+            }else{
                 List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
-                for (Blacklist b : bl) {
-                    if (b.getToken().equals(token)) {
+                for(Blacklist b : bl){
+                    if(b.getToken().equals(token)){
                         return false;
                     }
                 }
@@ -100,7 +100,7 @@ public class ChatWS {
                 nutzerEJB.setOnline(token);
                 return true;
             }
-        } else {
+        }else{
             return true;
         }
 
@@ -115,12 +115,12 @@ public class ChatWS {
     @GET
     @Path("/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getAll(@PathParam("token") String token){
+        if(!verify(token)){
             System.out.println(System.currentTimeMillis());
             System.out.println("LUL");
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             List<Chat> liste = chatEJB.getAllCopy();
 
             Gson parser = new Gson();
@@ -139,10 +139,10 @@ public class ChatWS {
     @GET
     @Path("/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getById(@PathParam("token") String token, @PathParam("id") int id) {
-        if (!verify(token)) {
+    public Response getById(@PathParam("token") String token, @PathParam("id") int id){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Chat c = chatEJB.getCopy(id);
 
             Gson parser = new Gson();
@@ -169,10 +169,10 @@ public class ChatWS {
     @GET
     @Path("/info/{chatid}/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id, @PathParam("chatid") int chatId) {
-        if (!verify(token)) {
+    public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id, @PathParam("chatid") int chatId){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
 
             Gson parser = new Gson();
 
@@ -183,7 +183,7 @@ public class ChatWS {
 
             Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
 
-            if (c.getIsgroup()) {
+            if(c.getIsgroup()){
 
                 self.setBlockiertVon(null);
                 self.setHatBlockiert(null);
@@ -193,7 +193,7 @@ public class ChatWS {
                 List<Nutzer> isAdmin = new ArrayList<>();
                 List<Nutzer> isNotAdmin = new ArrayList<>();
 
-                for (Nutzer nutzer : nutzerListe) {
+                for(Nutzer nutzer : nutzerListe){
                     nutzer.setAdminInGroups(null);
                     nutzer.setPasswordhash(null);
                     nutzer.setOtherFriendList(null);
@@ -202,9 +202,9 @@ public class ChatWS {
                     nutzer.setBlockiertVon(null);
                     nutzer.setSetting(null);
                     nutzer.setMarkedMessages(null);
-                    if (adminListe.contains(nutzer)) {
+                    if(adminListe.contains(nutzer)){
                         isAdmin.add(nutzer);
-                    } else {
+                    }else{
                         isNotAdmin.add(nutzer);
                     }
                 }
@@ -219,11 +219,11 @@ public class ChatWS {
                 self.setPinnedChats(null);
                 self.setSetting(null);
                 self.setMarkedMessages(null);
-                if (adminListe.contains(self)) {
+                if(adminListe.contains(self)){
                     self.setIsadmin(true);
                 }
 
-                for (Nutzer n : isAdmin) {
+                for(Nutzer n : isAdmin){
                     n.setIsadmin(true);
                 }
 //
@@ -238,22 +238,22 @@ public class ChatWS {
                 List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatId);
                 int anzahlNachrichten = nList.size();
                 int anzahlFotos = 0;
-                for (Nachricht n : nList) {
-                    if (n.getFoto() != null) {
+                for(Nachricht n : nList){
+                    if(n.getFoto() != null){
                         anzahlFotos += 1;
                     }
                 }
 
                 jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
                 jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
-                try {
+                try{
                     jsonObject.add("beschreibung", parser.toJsonTree(chatEJB.getById(chatId).getBeschreibung()));
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
-                try {
+                try{
                     jsonObject.add("profilbild", parser.toJsonTree(chatEJB.getById(chatId).getProfilbild().getBase64()));
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
 
@@ -261,30 +261,30 @@ public class ChatWS {
 
                 return response.generiereAntwort(parser.toJson(jsonObject));
 
-            } else {
+            }else{
                 JsonObject jsonObject = new JsonObject();
 
                 nutzerListe.remove(self);
                 Nutzer other = nutzerListe.get(0);
 
-                try {
-                    if (self.getHatBlockiert().contains(other)) {
+                try{
+                    if(self.getHatBlockiert().contains(other)){
                         jsonObject.add("blockiert", parser.toJsonTree(true));
-                    } else {
+                    }else{
                         jsonObject.add("blockiert", parser.toJsonTree(false));
                     }
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
 
-                try {
-                    if (self.getBlockiertVon().contains(other)) {
+                try{
+                    if(self.getBlockiertVon().contains(other)){
                         jsonObject.add("blockiertWorden", parser.toJsonTree(true));
                         return response.generiereAntwort(parser.toJson(jsonObject));
-                    } else {
+                    }else{
                         jsonObject.add("blockiertWorden", parser.toJsonTree(false));
                     }
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
 
@@ -301,9 +301,9 @@ public class ChatWS {
                 List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatId);
                 int anzahlNachrichten = 0;
                 int anzahlFotos = 0;
-                for (Nachricht n : nList) {
+                for(Nachricht n : nList){
                     anzahlNachrichten += 1;
-                    if (n.getFoto() != null) {
+                    if(n.getFoto() != null){
                         anzahlFotos += 1;
                     }
                 }
@@ -311,26 +311,26 @@ public class ChatWS {
                 jsonObject.add("anzahlNachrichten", parser.toJsonTree(anzahlNachrichten));
                 jsonObject.add("anzahlFotos", parser.toJsonTree(anzahlFotos));
 
-                try {
+                try{
                     jsonObject.add("beschreibung", parser.toJsonTree(other.getInfo()));
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
-                try {
+                try{
                     jsonObject.add("profilbild", parser.toJsonTree(other.getProfilbild()));
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
 //                TODO: gemeinsame Chatliste überarbeiten
                 List<Chat> allChats = chatEJB.getAllCopy();
                 List<Chat> listTogether = new ArrayList<>();
-                for (Chat chat : allChats) {
-                    if (chat.getNutzerList().contains(self) && chat.getNutzerList().contains(other)) {
+                for(Chat chat : allChats){
+                    if(chat.getNutzerList().contains(self) && chat.getNutzerList().contains(other)){
                         listTogether.add(chat);
                     }
                 }
 
-                for (Chat chat : listTogether) {
+                for(Chat chat : listTogether){
                     chat.setAdminList(null);
                     chat.setNutzerList(null);
                     chat.setLetztenachricht(null);
@@ -340,18 +340,18 @@ public class ChatWS {
                 listTogether.remove(chat);
                 Nutzer o = nutzerEJB.getById(other.getId());
                 jsonObject.add("gemeinsameChatListe", parser.toJsonTree(listTogether));
-                try {
-                    if (self.getHatBlockiert().contains(o)) {
+                try{
+                    if(self.getHatBlockiert().contains(o)){
                         jsonObject.add("isblocked", parser.toJsonTree(true));
                     }
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
-                try {
-                    if (o.getHatBlockiert().contains(self)) {
+                try{
+                    if(o.getHatBlockiert().contains(self)){
                         jsonObject.add("gotblocked", parser.toJsonTree(true));
                     }
-                } catch (NullPointerException e) {
+                }catch(NullPointerException e){
 
                 }
 
@@ -367,21 +367,21 @@ public class ChatWS {
     @GET
     @Path("/id/{chatid}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
-            try {
+        }else{
+            try{
                 Chat c = chatEJB.getCopy(chatid);
                 int length = 0;
 
-                for (Nutzer n : c.getNutzerList()) {
+                for(Nutzer n : c.getNutzerList()){
                     n.setPinnedChats(null);
                     length += 1;
                 }
 
                 System.out.println(length);
-                if (length == 2) {
+                if(length == 2){
                     List<Nutzer> nutzerList = c.getNutzerList();
                     Nutzer n = nutzerEJB.getCopyById(nutzerid);
                     nutzerList.remove(n);
@@ -396,7 +396,7 @@ public class ChatWS {
 
                 Gson parser = new Gson();
                 return response.generiereAntwort(parser.toJson(c));
-            } catch (EJBTransactionRolledbackException e) {
+            }catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler401("Id nicht vorhanden");
             }
 
@@ -420,18 +420,18 @@ public class ChatWS {
     @GET
     @Path("/nutzerid/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
-            try {
+        }else{
+            try{
                 List<Chat> ownChatListDB = new ArrayList<Chat>();
 
                 Nutzer self = nutzerEJB.getCopyByIdListsNotNull(nutzerid);
 
                 List<Chat> liste = chatEJB.getAllCopyListsNotNull();
-                for (Chat c : liste) {
-                    if (c.getNutzerList().contains(self)) {
+                for(Chat c : liste){
+                    if(c.getNutzerList().contains(self)){
                         ownChatListDB.add(c);
                     }
                 }
@@ -439,23 +439,23 @@ public class ChatWS {
 
                 List<Chat> pinnedChats = new ArrayList<>();
 
-                for (Chat c : ownChatListDB) {
+                for(Chat c : ownChatListDB){
                     //wenn eine neue Nachricht existiert, null setzn
-                    try {
+                    try{
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
                         c.getLetztenachricht().setSender(n.getSender());
                         c.setLetztenachricht(n);
-                    } catch (Exception e) {
+                    }catch(Exception e){
 
                     }
 //
-                    for (Nutzer n : c.getNutzerList()) {
+                    for(Nutzer n : c.getNutzerList()){
                         n.setPasswordhash(null);
                         n.setOtherFriendList(null);
                         n.setOwnFriendList(null);
                     }
                     //wenn Einzelchat, Infos des Anderen übernehmen
-                    if (!c.getIsgroup()) {
+                    if(!c.getIsgroup()){
                         // c.setAdminList(null);
                         List<Nutzer> nutzerList = c.getNutzerList();
                         Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -467,10 +467,10 @@ public class ChatWS {
                         c.setBeschreibung(andererNutzer.getInfo());
                         c.setNutzerList(null);
 
-                        if (self.getHatBlockiert().contains(andererNutzer)) {
+                        if(self.getHatBlockiert().contains(andererNutzer)){
                             c.setIsblocked(Boolean.TRUE);
                         }
-                        if (andererNutzer.getHatBlockiert().contains(self)) {
+                        if(andererNutzer.getHatBlockiert().contains(self)){
                             c.setGotblocked(Boolean.TRUE);
                         }
                     }
@@ -478,25 +478,25 @@ public class ChatWS {
                     c.setAdminList(null);
                     c.setNutzerList(null);
                     //anzahl neuer Nachrichten zählen
-                    try {
+                    try{
                         c.setNnew(0);
                         List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
-                        for (Nachricht n : nList) {
-                            if (!n.getNutzerList().contains(self)) {
-                                if (n.getDatumuhrzeit() < System.currentTimeMillis()) {
+                        for(Nachricht n : nList){
+                            if(!n.getNutzerList().contains(self)){
+                                if(n.getDatumuhrzeit() < System.currentTimeMillis()){
                                     c.setNnew(c.getNnew() + 1);
                                 }
 
                             }
                         }
-                    } catch (EJBTransactionRolledbackException e) {
+                    }catch(EJBTransactionRolledbackException e){
 
                     }
 
                 }
                 List<Chat> toRemove1 = new ArrayList<>();
-                for (Chat c : ownChatListDB) {
-                    if (self.getPinnedChats().contains(c)) {
+                for(Chat c : ownChatListDB){
+                    if(self.getPinnedChats().contains(c)){
                         c.setIspinned(Boolean.TRUE);
                         pinnedChats.add(c);
                         toRemove1.add(c);
@@ -508,8 +508,8 @@ public class ChatWS {
                 //alle Chats, die keine Nachricht enthalten, vor dem
                 //Sortieren entfernen und danach wieder einfügen
                 List<Chat> toRemove = new ArrayList<>();
-                for (Chat c : ownChatListDB) {
-                    if (c.getLetztenachricht() == null) {
+                for(Chat c : ownChatListDB){
+                    if(c.getLetztenachricht() == null){
                         toRemove.add(c);
                     }
                 }
@@ -524,8 +524,8 @@ public class ChatWS {
                 returnListFinal.addAll(pinnedChats);
 
                 List<Chat> archivedChats = new ArrayList<>();
-                for (Chat c : ownChatListDB) {
-                    if (self.getArchivedChats().contains(c)) {
+                for(Chat c : ownChatListDB){
+                    if(self.getArchivedChats().contains(c)){
                         archivedChats.add(c);
                     }
                 }
@@ -542,7 +542,7 @@ public class ChatWS {
 
                 return response.generiereAntwort(parser.toJson(returnObject));
 //                return response.generiereAntwort(parser.toJson(ownChatListDB));
-            } catch (EJBTransactionRolledbackException e) {
+            }catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler401("Id nicht vorhanden");
             }
         }
@@ -550,35 +550,35 @@ public class ChatWS {
     }
 
     //???
-    public List<Chat> getOwnChatlistByUserIdAsEntityList(int nutzerid) {
+    public List<Chat> getOwnChatlistByUserIdAsEntityList(int nutzerid){
 
-        try {
+        try{
             List<Chat> returnList = new ArrayList<Chat>();
 
             Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
 
             List<Chat> liste = chatEJB.getAll();
-            for (Chat c : liste) {
-                if (c.getNutzerList().contains(nutzer)) {
+            for(Chat c : liste){
+                if(c.getNutzerList().contains(nutzer)){
                     returnList.add(c);
                 }
             }
 
-            for (Chat c : returnList) {
-                try {
+            for(Chat c : returnList){
+                try{
                     Nachricht n = nachrichtEJB.getNewest(c.getChatid());
                     c.getLetztenachricht().setSender(n.getSender());
-                } catch (Exception e) {
+                }catch(Exception e){
 
                 }
 
-                for (Nutzer n : c.getNutzerList()) {
+                for(Nutzer n : c.getNutzerList()){
                     n.setPasswordhash(null);
                     n.setOtherFriendList(null);
                     n.setOwnFriendList(null);
                 }
 
-                if (!c.getIsgroup()) {
+                if(!c.getIsgroup()){
                     // c.setAdminList(null);
                     List<Nutzer> nutzerList = c.getNutzerList();
                     Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -597,8 +597,8 @@ public class ChatWS {
             }
 
             List<Chat> toRemove = new ArrayList<>();
-            for (Chat c : returnList) {
-                if (c.getLetztenachricht() == null) {
+            for(Chat c : returnList){
+                if(c.getLetztenachricht() == null){
                     toRemove.add(c);
                 }
             }
@@ -606,7 +606,7 @@ public class ChatWS {
             returnList.sort(new DateSorterChat());
             returnList.addAll(toRemove);
             return returnList;
-        } catch (EJBTransactionRolledbackException e) {
+        }catch(EJBTransactionRolledbackException e){
             return new ArrayList<>();
         }
     }
@@ -623,13 +623,13 @@ public class ChatWS {
     @Path("/createAsGroup/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createAsGroup(String Daten, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response createAsGroup(String Daten, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             System.out.println(Daten);
             Gson parser = new Gson();
-            try {
+            try{
                 JsonObject json = parser.fromJson(Daten, JsonObject.class);
                 Chat neuerChat = parser.fromJson(Daten, Chat.class);
                 neuerChat.setIsgroup(true);
@@ -637,13 +637,13 @@ public class ChatWS {
                 int eigeneId = parser.fromJson((json.get("eigeneId")), Integer.class);
                 System.out.println(eigeneId);
 
-                try {
+                try{
                     Thread.sleep(200);
-                } catch (Exception e) {
+                }catch(Exception e){
                 }
 
                 JsonArray arr = json.getAsJsonArray("benutzernamen");
-                for (int i = 0; i < arr.size(); i++) {
+                for(int i = 0; i < arr.size(); i++){
                     System.out.println(arr.get(i).getAsString());
                     Nutzer addedUser = nutzerEJB.getByUsername(arr.get(i).getAsString());
                     nutzerEJB.fuegeChatHinzu(neuerChat, addedUser);
@@ -655,7 +655,7 @@ public class ChatWS {
                 chatEJB.fuegeNutzerHinzu(neuerChat, self);
                 chatEJB.addAdmin(neuerChat, self);
                 return response.generiereAntwort("true");
-            } catch (JsonSyntaxException e) {
+            }catch(JsonSyntaxException e){
                 return response.generiereFehler406("Json falsch");
             }
         }
@@ -674,13 +674,13 @@ public class ChatWS {
     @Path("/createAsChat/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createAsChat(String Daten, @PathParam("token") String token) {
-        if (!verify(token)) {
+    public Response createAsChat(String Daten, @PathParam("token") String token){
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             System.out.println(Daten);
             Gson parser = new Gson();
-            try {
+            try{
 
                 JsonObject jsonTP = parser.fromJson(Daten, JsonObject.class);
                 String username = parser.fromJson((jsonTP.get("benutzername")), String.class);
@@ -700,28 +700,28 @@ public class ChatWS {
 
                 boolean test = true;
                 //Anfrage, ob schon vorhanden
-                for (Chat c : chatEJB.getAll()) {
+                for(Chat c : chatEJB.getAll()){
                     List<Nutzer> nutzerList = new ArrayList();
-                    for (Nutzer n : c.getNutzerList()) {
+                    for(Nutzer n : c.getNutzerList()){
                         nutzerList.add(n);
                     }
-                    if (nutzerList.size() == 2 && nutzerList.contains(self) && nutzerList.contains(other)) {
+                    if(nutzerList.size() == 2 && nutzerList.contains(self) && nutzerList.contains(other)){
                         test = false;
                     }
                 }
 
-                if (test) {
+                if(test){
                     chatEJB.fuegeNutzerHinzu(neuerChat, self);
                     chatEJB.fuegeNutzerHinzu(neuerChat, other);
 
                     return response.generiereAntwort("true");
-                } else {
+                }else{
                     chatEJB.delete(neuerChat);
                     return response.generiereFehler406("schon vorhanden");
                 }
-            } catch (JsonSyntaxException e) {
+            }catch(JsonSyntaxException e){
                 return response.generiereFehler401("Json falsch");
-            } catch (EJBTransactionRolledbackException e) {
+            }catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
@@ -748,14 +748,14 @@ public class ChatWS {
     @Path("/takepart/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response takePart(String Daten, @PathParam("token") String token) {
+    public Response takePart(String Daten, @PathParam("token") String token){
 
-        if (!verify(token)) {
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
 
-            try {
+            try{
                 JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
 
                 int chatid = parser.fromJson((jsonObject.get("chatid")), Integer.class);
@@ -765,10 +765,10 @@ public class ChatWS {
                 String username = parser.fromJson((jsonObject.get("benutzername")), String.class);
                 Nutzer addedUser = nutzerEJB.getCopyByUsername(username);
 
-                if (c.getAdminList().contains(self)) {
+                if(c.getAdminList().contains(self)){
 
-                    if (c.getIsgroup()) {
-                        if (!c.getNutzerList().contains(addedUser)) {
+                    if(c.getIsgroup()){
+                        if(!c.getNutzerList().contains(addedUser)){
                             System.out.println("ChatWs fuegeChatHinzu");
                             nutzerEJB.fuegeChatHinzu(c, addedUser);
 
@@ -776,22 +776,22 @@ public class ChatWS {
                             chatEJB.fuegeNutzerHinzu(c, addedUser);
 
                             return response.generiereAntwort("true");
-                        } else {
+                        }else{
                             return response.generiereFehler406("Nutzer schon hinzugefügt");
                         }
-                    } else {
+                    }else{
                         return response.generiereFehler406("Ist ein Chat, keine Gruppe");
                     }
 
-                } else {
+                }else{
                     return response.generiereFehler406("Du bist kein Admin");
                 }
 
-            } catch (JsonSyntaxException e) {
+            }catch(JsonSyntaxException e){
                 return response.generiereFehler406("JsonSyntaxException" + e);
-            } catch (EJBTransactionRolledbackException e) {
+            }catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
                 return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
@@ -811,14 +811,14 @@ public class ChatWS {
     @Path("/entferneNutzer/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response entferneNutzer(String Daten, @PathParam("token") String token) {
+    public Response entferneNutzer(String Daten, @PathParam("token") String token){
 
-        if (!verify(token)) {
+        if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
 
-            try {
+            try{
                 JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
                 int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
                 int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
@@ -828,17 +828,17 @@ public class ChatWS {
                 Nutzer other = nutzerEJB.getByUsername(jsonUsername);
                 Chat c = chatEJB.getById(jsonChatId);
 
-                if (self.equals(other)) {
+                if(self.equals(other)){
                     nutzerEJB.entferneChat(c, self);
                     chatEJB.entferneNutzer(c, self);
                     return response.generiereAntwort("true");
-                } else {
+                }else{
 
-                    if (c.getAdminList().contains(self)) {
+                    if(c.getAdminList().contains(self)){
 
-                        if (c.getIsgroup()) {
+                        if(c.getIsgroup()){
 
-                            if (c.getNutzerList().contains(other)) //Hier tritt der Fehler auf
+                            if(c.getNutzerList().contains(other)) //Hier tritt der Fehler auf
                             {
 
                                 nutzerEJB.entferneChat(c, other);
@@ -846,22 +846,22 @@ public class ChatWS {
                                 chatEJB.entferneNutzer(c, other);
 
                                 return response.generiereAntwort("true");
-                            } else {
+                            }else{
                                 return response.generiereFehler406("Nutzer nicht in der Gruppe");
                             }
-                        } else {
+                        }else{
                             return response.generiereFehler406("Ist ein Chat, keine Gruppe");
                         }
 
-                    } else {
+                    }else{
                         return response.generiereFehler406("Du bist kein Admin");
                     }
                 }
 //                 return response.generiereAntwort("true");
 
-            } catch (JsonSyntaxException e) {
+            }catch(JsonSyntaxException e){
                 return response.generiereFehler406("JsonSyntaxException" + e);
-            } catch (EJBTransactionRolledbackException e) {
+            }catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
             }
         }
@@ -872,10 +872,10 @@ public class ChatWS {
     @Path("/leave/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response leave(@PathParam("token") String token, String Daten) {
-        if (!verify(token)) {
+    public Response leave(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
-        } else {
+        }else{
 
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
@@ -884,9 +884,9 @@ public class ChatWS {
 
             Nutzer self = nutzerEJB.getById(jsonId);
             Chat c = chatEJB.getById(jsonChatId);
-            if (c.getAdminList().size() == 1 && c.getAdminList().contains(self)) {
+            if(c.getAdminList().size() == 1 && c.getAdminList().contains(self)){
                 return response.generiereFehler406("Einziger Admin");
-            } else {
+            }else{
                 nutzerEJB.entferneChat(c, self);
                 chatEJB.entferneNutzer(c, self);
                 return response.generiereAntwort("true");
@@ -908,10 +908,10 @@ public class ChatWS {
     @Path("/zuAdmin/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response macheZuAdmin(@PathParam("token") String token, String Daten) {
-        if (!verify(token)) {
+    public Response macheZuAdmin(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
-        } else {
+        }else{
 
             Gson parser = new Gson();
 
@@ -924,23 +924,23 @@ public class ChatWS {
             Nutzer other = nutzerEJB.getByUsername(jsonUsername);
             Chat c = chatEJB.getById(jsonChatId);
 
-            if (c.getAdminList().contains(self)) {
-                if (c.getAdminList().contains(other)) {
-                    if (c.getAdminList().size() == 1) {
+            if(c.getAdminList().contains(self)){
+                if(c.getAdminList().contains(other)){
+                    if(c.getAdminList().size() == 1){
                         return response.generiereFehler406("Einziger Admin");
                     }
-                    if (!c.getAdminList().contains(other)) {
+                    if(!c.getAdminList().contains(other)){
                         return response.generiereFehler406("Bereits kein Admin");
-                    } else {
+                    }else{
                         chatEJB.deleteAdmin(c, other);
                         return response.generiereAntwort("true");
                     }
-                } else {
+                }else{
                     chatEJB.addAdmin(c, other);
                     return response.generiereAntwort("true");
                 }
 
-            } else {
+            }else{
                 return response.generiereFehler406("Kein Admin");
             }
         }
@@ -959,10 +959,10 @@ public class ChatWS {
     @Path("/entferneAdmin/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response entferneAdmin(@PathParam("token") String token, String Daten) {
-        if (!verify(token)) {
+    public Response entferneAdmin(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
-        } else {
+        }else{
 
             Gson parser = new Gson();
 
@@ -974,18 +974,18 @@ public class ChatWS {
             Nutzer self = nutzerEJB.getById(jsonId);
             Nutzer other = nutzerEJB.getByUsername(jsonUsername);
             Chat c = chatEJB.getById(jsonChatId);
-            if (c.getAdminList().contains(self)) {
-                if (c.getAdminList().size() == 1) {
+            if(c.getAdminList().contains(self)){
+                if(c.getAdminList().size() == 1){
                     return response.generiereFehler406("Einziger Admin");
                 }
-                if (!c.getAdminList().contains(other)) {
+                if(!c.getAdminList().contains(other)){
                     return response.generiereFehler406("Bereits kein Admin");
-                } else {
+                }else{
                     chatEJB.deleteAdmin(c, other);
                     return response.generiereAntwort("true");
                 }
 
-            } else {
+            }else{
                 return response.generiereFehler406("Kein Admin");
             }
 
@@ -1006,10 +1006,10 @@ public class ChatWS {
     @Path("/setzeProfilbild/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setzeProfilbild(@PathParam("token") String token, String Daten) {
-        if (!verify(token)) {
+    public Response setzeProfilbild(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
 
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
@@ -1020,7 +1020,7 @@ public class ChatWS {
             Nutzer self = nutzerEJB.getById(eigeneId);
             Chat chat = chatEJB.getById(chatId);
 
-            if (chat.getAdminList().contains(self)) {
+            if(chat.getAdminList().contains(self)){
 
                 Foto f = new Foto();
                 f.setBase64(jsonPic);
@@ -1032,7 +1032,7 @@ public class ChatWS {
 
                 return response.generiereAntwort("true");
 
-            } else {
+            }else{
                 return response.generiereFehler401("Du bist kein Admin");
             }
 
@@ -1044,10 +1044,10 @@ public class ChatWS {
     @Path("/pin/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response pinChat(@PathParam("token") String token, String Daten) {
-        if (!verify(token)) {
+    public Response pinChat(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
@@ -1064,10 +1064,10 @@ public class ChatWS {
     @Path("/archive/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response archiveChat(@PathParam("token") String token, String Daten) {
-        if (!verify(token)) {
+    public Response archiveChat(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
-        } else {
+        }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);

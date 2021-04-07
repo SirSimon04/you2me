@@ -38,14 +38,14 @@ import java.math.BigInteger;
  */
 @Stateless
 @LocalBean
-public class NutzerEJB {
+public class NutzerEJB{
 
     @PersistenceContext
     private EntityManager em;
     @EJB
     private Tokenizer tokenizer;
 
-    public String[] getAuth() {
+    public String[] getAuth(){
         String[] returnStrings = new String[2];
         Nutzer n = this.getById(1);
         System.out.println(n);
@@ -60,7 +60,7 @@ public class NutzerEJB {
      *
      * @return
      */
-    public List<Nutzer> getAll() {
+    public List<Nutzer> getAll(){
         return em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
     }
 
@@ -73,10 +73,10 @@ public class NutzerEJB {
      *
      * @return Eine Liste mit allen Nutzern
      */
-    public List<Nutzer> getAllCopy() {
+    public List<Nutzer> getAllCopy(){
         List<Nutzer> nutzerList;
         nutzerList = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
-        for (Nutzer n : nutzerList) {
+        for(Nutzer n : nutzerList){
             em.detach(n);
             n.setPasswordhash(null);
             n.setAdminInGroups(null);
@@ -98,7 +98,7 @@ public class NutzerEJB {
      * @param id Die Id des gesuchten Nutzers.
      * @return Der Nutzer
      */
-    public Nutzer getById(int id) {
+    public Nutzer getById(int id){
         return em.find(Nutzer.class, id);
     }
 
@@ -112,7 +112,7 @@ public class NutzerEJB {
      * @param id
      * @return Der Nutzer
      */
-    public Nutzer getCopyById(int id) {
+    public Nutzer getCopyById(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
         n.setPasswordhash(null);
@@ -136,30 +136,30 @@ public class NutzerEJB {
      *
      * @return Der Nutzer
      */
-    public Nutzer getCopyByIdListsNotNull(int id) {
+    public Nutzer getCopyByIdListsNotNull(int id){
         Nutzer n = em.find(Nutzer.class, id);
         em.detach(n);
         n.setSetting(null);
-        for (Chat chat : n.getPinnedChats()) {
+        for(Chat chat : n.getPinnedChats()){
             em.detach(chat);
         }
-        for (Chat chat : n.getAdminInGroups()) {
+        for(Chat chat : n.getAdminInGroups()){
             em.detach(chat);
         }
 
-        for (Nutzer nutzer : n.getOwnFriendList()) {
+        for(Nutzer nutzer : n.getOwnFriendList()){
             em.detach(nutzer);
 //               nutzer.setSetting(null);
         }
-        for (Nutzer nu : n.getOtherFriendList()) {
+        for(Nutzer nu : n.getOtherFriendList()){
             em.detach(nu);
 //               nu.setSetting(null);
         }
-        for (Nutzer nutzer : n.getBlockiertVon()) {
+        for(Nutzer nutzer : n.getBlockiertVon()){
             em.detach(nutzer);
 //               nutzer.setSetting(null);
         }
-        for (Nutzer nutzer : n.getHatBlockiert()) {
+        for(Nutzer nutzer : n.getHatBlockiert()){
             em.detach(nutzer);
 //               nutzer.setSetting(null);
         }
@@ -176,24 +176,24 @@ public class NutzerEJB {
      * @param chatId Die Id des Chats.
      * @return Die Nutzerliste eines Chats.
      */
-    public List<Nutzer> getCopyByChatId(int chatId) {
+    public List<Nutzer> getCopyByChatId(int chatId){
         Chat c = em.find(Chat.class, chatId);
         List<Nutzer> nutzerList = c.getNutzerList();
-        for (Nutzer n : nutzerList) {
+        for(Nutzer n : nutzerList){
             em.detach(n);
             n.setSetting(null);
-            for (Chat chat : n.getPinnedChats()) {
+            for(Chat chat : n.getPinnedChats()){
                 em.detach(chat);
                 c.setNutzerList(null);
                 c.setAdminList(null);
             }
-            for (Chat chat : n.getAdminInGroups()) {
+            for(Chat chat : n.getAdminInGroups()){
                 em.detach(chat);
                 c.setNutzerList(null);
                 c.setAdminList(null);
             }
 
-            for (Nutzer nutzer : n.getOwnFriendList()) {
+            for(Nutzer nutzer : n.getOwnFriendList()){
                 em.detach(nutzer);
                 nutzer.setPinnedChats(null);
                 nutzer.setOwnFriendList(null);
@@ -202,7 +202,7 @@ public class NutzerEJB {
                 nutzer.setSetting(null);
                 n.setMarkedMessages(null);
             }
-            for (Nutzer nu : n.getOtherFriendList()) {
+            for(Nutzer nu : n.getOtherFriendList()){
                 em.detach(nu);
                 nu.setPinnedChats(null);
                 nu.setOwnFriendList(null);
@@ -211,7 +211,7 @@ public class NutzerEJB {
                 nu.setSetting(null);
                 n.setMarkedMessages(null);
             }
-            for (Nutzer nutzer : n.getBlockiertVon()) {
+            for(Nutzer nutzer : n.getBlockiertVon()){
                 em.detach(nutzer);
                 nutzer.setPinnedChats(null);
                 nutzer.setOwnFriendList(null);
@@ -220,7 +220,7 @@ public class NutzerEJB {
                 nutzer.setSetting(null);
                 n.setMarkedMessages(null);
             }
-            for (Nutzer nutzer : n.getHatBlockiert()) {
+            for(Nutzer nutzer : n.getHatBlockiert()){
                 em.detach(nutzer);
                 nutzer.setPinnedChats(null);
                 nutzer.setOwnFriendList(null);
@@ -239,13 +239,13 @@ public class NutzerEJB {
      * @param username Der Benutzername des gesuchten Nutzers.
      * @return Der Nutzer
      */
-    public Nutzer getByUsername(String username) {
+    public Nutzer getByUsername(String username){
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
-        try {
+        try{
             Nutzer n = (Nutzer) query.getSingleResult();
             return n;
-        } catch (Exception e) {
+        }catch(Exception e){
             return null;
         }
 
@@ -261,7 +261,7 @@ public class NutzerEJB {
      * @param username
      * @return Der Nutzer
      */
-    public Nutzer getCopyByUsername(String username) {
+    public Nutzer getCopyByUsername(String username){
 
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
@@ -289,24 +289,24 @@ public class NutzerEJB {
      * @param username Der Nutzername
      * @return Der Nutzer
      */
-    public Nutzer getCopyByUsernameListsNotNull(String username) {
+    public Nutzer getCopyByUsernameListsNotNull(String username){
 
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername");
         query.setParameter("benutzername", username);
 
         Nutzer n = (Nutzer) query.getSingleResult();
 
-        for (Chat chat : n.getPinnedChats()) {
+        for(Chat chat : n.getPinnedChats()){
             em.detach(chat);
         }
-        for (Chat chat : n.getAdminInGroups()) {
+        for(Chat chat : n.getAdminInGroups()){
             em.detach(chat);
         }
 
-        for (Nutzer nutzer : n.getOwnFriendList()) {
+        for(Nutzer nutzer : n.getOwnFriendList()){
             em.detach(nutzer);
         }
-        for (Nutzer nu : n.getOtherFriendList()) {
+        for(Nutzer nu : n.getOtherFriendList()){
             em.detach(nu);
         }
 
@@ -319,13 +319,13 @@ public class NutzerEJB {
      * @param mail Die E-Mail des gesuchten Nutzers.
      * @return Der Nutzer
      */
-    public Nutzer getByMail(String mail) {
+    public Nutzer getByMail(String mail){
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByEmail");
         query.setParameter("email", mail);
-        try {
+        try{
             Nutzer n = (Nutzer) query.getSingleResult();
             return n;
-        } catch (Exception e) {
+        }catch(Exception e){
             return null;
         }
 
@@ -341,7 +341,7 @@ public class NutzerEJB {
      * @param email Die E-Mail
      * @return Der Nutzer
      */
-    public Nutzer getCopyByEmail(String email) {
+    public Nutzer getCopyByEmail(String email){
 
         Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByEmail");
         query.setParameter("email", email);
@@ -349,19 +349,19 @@ public class NutzerEJB {
         Nutzer n = (Nutzer) query.getSingleResult();
         em.detach(n);
         n.setSetting(null);
-        for (Chat c : n.getPinnedChats()) {
+        for(Chat c : n.getPinnedChats()){
             em.detach(c);
             c.setNutzerList(null);
             c.setAdminList(null);
             n.setSetting(null);
         }
-        for (Chat c : n.getAdminInGroups()) {
+        for(Chat c : n.getAdminInGroups()){
             em.detach(c);
             c.setNutzerList(null);
             c.setAdminList(null);
             n.setSetting(null);
         }
-        for (Nutzer nutzer : n.getOwnFriendList()) {
+        for(Nutzer nutzer : n.getOwnFriendList()){
             em.detach(nutzer);
             nutzer.setPinnedChats(null);
             nutzer.setOwnFriendList(null);
@@ -370,7 +370,7 @@ public class NutzerEJB {
             n.setSetting(null);
             n.setMarkedMessages(null);
         }
-        for (Nutzer nutzer : n.getOtherFriendList()) {
+        for(Nutzer nutzer : n.getOtherFriendList()){
             em.detach(nutzer);
             em.detach(nutzer);
             nutzer.setPinnedChats(null);
@@ -389,7 +389,7 @@ public class NutzerEJB {
      *
      * @param neuerNutzer
      */
-    public void add(Nutzer neuerNutzer) {
+    public void add(Nutzer neuerNutzer){
         em.persist(neuerNutzer);
     }
 
@@ -400,7 +400,7 @@ public class NutzerEJB {
      * @param chat Der Chat, zu dem der Nutzer hinzugefügt werden soll
      * @param nutzer Der Nutzer
      */
-    public void fuegeChatHinzu(Chat chat, Nutzer nutzer) {
+    public void fuegeChatHinzu(Chat chat, Nutzer nutzer){
         System.out.println("nEJB fch");
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
         nutzerInDB.getPinnedChats().add(chat);
@@ -413,7 +413,7 @@ public class NutzerEJB {
      * @param chat Der Chat, asu dem der Nutzer entfernt werden soll-
      * @param nutzer
      */
-    public void entferneChat(Chat chat, Nutzer nutzer) {
+    public void entferneChat(Chat chat, Nutzer nutzer){
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
         nutzerInDB.getPinnedChats().remove(chat);
     }
@@ -425,7 +425,7 @@ public class NutzerEJB {
      * @param self Der eigene Nutzer
      * @param other Der andere Nutzer
      */
-    public void fuegeFreundHinzu(Nutzer self, Nutzer other) {
+    public void fuegeFreundHinzu(Nutzer self, Nutzer other){
         Nutzer selfInDB = em.find(Nutzer.class, self.getId());
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getOwnFriendList().add(other);
@@ -439,21 +439,21 @@ public class NutzerEJB {
      * @param self
      * @param other
      */
-    public void loescheFreund(Nutzer self, Nutzer other) {
+    public void loescheFreund(Nutzer self, Nutzer other){
         Nutzer selfInDB = em.find(Nutzer.class, self.getId());
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getOwnFriendList().remove(other);
         otherInDB.getOtherFriendList().remove(self);
     }
 
-    public void block(Nutzer self, Nutzer other) {
+    public void block(Nutzer self, Nutzer other){
         Nutzer selfInDB = em.find(Nutzer.class, self.getId());
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getHatBlockiert().add(other);
         otherInDB.getBlockiertVon().add(self);
     }
 
-    public void unblock(Nutzer self, Nutzer other) {
+    public void unblock(Nutzer self, Nutzer other){
         Nutzer selfInDB = em.find(Nutzer.class, self.getId());
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
         selfInDB.getHatBlockiert().remove(other);
@@ -466,11 +466,11 @@ public class NutzerEJB {
      * @param id Die id des zu löschenden Nutzers
      * @return Einen Boolean mit dem Status der Methode
      */
-    public boolean delete(int id) {
-        try {
+    public boolean delete(int id){
+        try{
             em.remove(this.getById(id));
             return true;
-        } catch (IllegalArgumentException e) {
+        }catch(IllegalArgumentException e){
             // Fehler: Objekt ist nicht persistiert
             return false;
         }
@@ -482,9 +482,9 @@ public class NutzerEJB {
      * @param aktualisierterNutzer Der Nutzer mit den neuen Daten
      * @return Ein Boolean mit dem Status der Methode
      */
-    public boolean update(Nutzer aktualisierterNutzer) {
+    public boolean update(Nutzer aktualisierterNutzer){
         int gesuchteId = aktualisierterNutzer.getId();
-        try {
+        try{
             Nutzer aktuellInDatenbank = this.getById(gesuchteId);
             aktuellInDatenbank.setVorname(aktualisierterNutzer.getVorname());
             aktuellInDatenbank.setNachname(aktualisierterNutzer.getNachname());
@@ -495,7 +495,7 @@ public class NutzerEJB {
             aktuellInDatenbank.setProfilbild(aktualisierterNutzer.getProfilbild());
             em.merge(aktuellInDatenbank);
             return true;
-        } catch (Exception e) {
+        }catch(Exception e){
             return false;
         }
     }
@@ -505,9 +505,9 @@ public class NutzerEJB {
      * zu der sie zuletzt online waren auf die aktuelle Zeit. Sie wird alle fünf
      * Minuten automatisch ausgeführt.
      */
-    public void setAllOffline() {
+    public void setAllOffline(){
         List<Nutzer> l = em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
-        for (Nutzer n : l) {
+        for(Nutzer n : l){
             n.setIsonline(false);
             BigInteger x = new BigInteger("" + System.currentTimeMillis());
             n.setLastonline(x);
@@ -522,7 +522,7 @@ public class NutzerEJB {
      *
      * @param token Das Token des Nutzers
      */
-    public void setOnline(String token) {
+    public void setOnline(String token){
         System.out.println(tokenizer.getUser(token));
         Nutzer n = (Nutzer) em.createNamedQuery(Nutzer.class.getSimpleName() + ".findByBenutzername").setParameter("benutzername", tokenizer.getUser(token)).getSingleResult();
         System.out.println(n.getIsonline());

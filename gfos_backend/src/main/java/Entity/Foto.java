@@ -26,69 +26,69 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author simon
  */
 @Entity
-@Table(name = "FOTO")
+@Table(name="FOTO")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Foto.findAll", query = "SELECT f FROM Foto f"),
-    @NamedQuery(name = "Foto.findById", query = "SELECT f FROM Foto f WHERE f.id = :id"),
-    @NamedQuery(name = "Foto.findByBase64", query = "SELECT f FROM Foto f WHERE f.base64 = :base64")})
-public class Foto implements Serializable {
+    @NamedQuery(name="Foto.findAll", query="SELECT f FROM Foto f"),
+    @NamedQuery(name="Foto.findById", query="SELECT f FROM Foto f WHERE f.id = :id"),
+    @NamedQuery(name="Foto.findByBase64", query="SELECT f FROM Foto f WHERE f.base64 = :base64")})
+public class Foto implements Serializable{
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Basic(optional=false)
+    @Column(name="ID")
     private Integer id;
-    @Size(max = 32000)
-    @Column(name = "BASE64")
+    @Size(max=32000)
+    @Column(name="BASE64")
     private String base64;
 
-    public Foto() {
+    public Foto(){
     }
 
-    public Foto(Integer id) {
+    public Foto(Integer id){
         this.id = id;
     }
 
-    public Integer getId() {
+    public Integer getId(){
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Integer id){
         this.id = id;
     }
 
-    public String getBase64() {
+    public String getBase64(){
         return base64;
     }
 
-    public void setBase64(String base64) {
+    public void setBase64(String base64){
         this.base64 = base64;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object){
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Foto)) {
+        if(!(object instanceof Foto)){
             return false;
         }
         Foto other = (Foto) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))){
             return false;
         }
         return true;
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "Entity.Foto[ id=" + id + " ]";
     }
 

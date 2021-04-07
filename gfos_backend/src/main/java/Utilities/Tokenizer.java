@@ -34,7 +34,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 @LocalBean
-public class Tokenizer {
+public class Tokenizer{
 
     private final String SECRET = "As7FA2df!-,.8Gg345ms/dh(65hj"; // TOPSECRET!
     private final long DT = 1200000; // Token 120 Sekunden gültig
@@ -46,8 +46,8 @@ public class Tokenizer {
      * @param username Der Benutzername eines Nutzers
      * @return Das neue Token
      */
-    public String createNewToken(String username) {
-        try {
+    public String createNewToken(String username){
+        try{
             long t = (System.currentTimeMillis() / DT) * DT;
             Algorithm algorithm = Algorithm.HMAC256(SECRET + t);
             String token = JWT.create()
@@ -55,7 +55,7 @@ public class Tokenizer {
                     .withSubject(username)
                     .sign(algorithm);
             return token;
-        } catch (JWTCreationException exception) {
+        }catch(JWTCreationException exception){
             return "JWT-Creation failed.";
         }
     }
@@ -67,8 +67,8 @@ public class Tokenizer {
      * @param token Das Webtoken
      * @return Neues Token oder Fehlermeldung
      */
-    public String verifyToken(String token) {
-        try {
+    public String verifyToken(String token){
+        try{
             long t = (System.currentTimeMillis() / DT) * DT;
             Algorithm algorithm = Algorithm.HMAC256(SECRET + t);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -76,8 +76,8 @@ public class Tokenizer {
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return token; // das gültige Token wieder zurückgeben.
-        } catch (JWTVerificationException ex1) {
-            try {
+        }catch(JWTVerificationException ex1){
+            try{
                 // Wenn altes Token gerade (innerhalb eines Zeitfensters von
                 // 2*DT) abgelaufen, automatisch um DT Milisekunden erneuern:
                 long t = (System.currentTimeMillis() / DT) * DT - DT;
@@ -87,7 +87,7 @@ public class Tokenizer {
                         .build();
                 DecodedJWT jwt = verifier.verify(token);
                 return this.createNewToken(jwt.getSubject());
-            } catch (JWTVerificationException ex2) {
+            }catch(JWTVerificationException ex2){
                 return ""; // altes Token zu lange (> 2*DT) abgelaufen
             }
         }
@@ -99,16 +99,16 @@ public class Tokenizer {
      * @param token Das Token
      * @return Der Benutzername
      */
-    public String getUser(String token) {
-        try {
+    public String getUser(String token){
+        try{
             DecodedJWT jwt = JWT.decode(token);
             return jwt.getSubject();
-        } catch (JWTDecodeException exception) {
+        }catch(JWTDecodeException exception){
             return "";
         }
     }
 
-    public boolean isOn() {
+    public boolean isOn(){
         return STATUS;
     }
 }

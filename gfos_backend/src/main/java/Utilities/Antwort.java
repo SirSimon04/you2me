@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @LocalBean
-public class Antwort {
+public class Antwort{
 
     /**
      * Diese Methode bildet mit dem gegebenem Wert ein Antwortobjekt für die
@@ -27,7 +27,7 @@ public class Antwort {
      * @param data Die zu übermittelnden Daten.
      * @return Reponseobjekt (200).
      */
-    public Response generiereAntwort(String data) {
+    public Response generiereAntwort(String data){
         return Response
                 .status(200)
                 .header("Access-Control-Allow-Origin", "*")
@@ -50,7 +50,7 @@ public class Antwort {
      * @param data Die zu übermittelnden Daten.
      * @return Reponseobjekt (401).
      */
-    public Response generiereFehler401(String data) {
+    public Response generiereFehler401(String data){
         return Response
                 .status(401)
                 .header("Access-Control-Allow-Origin", "*")
@@ -72,7 +72,7 @@ public class Antwort {
      * @param data Die zu übermittelnden Daten.
      * @return Reponseobjekt (406).
      */
-    public Response generiereFehler406(String data) {
+    public Response generiereFehler406(String data){
         return Response
                 .status(406)
                 .header("Access-Control-Allow-Origin", "*")
@@ -94,7 +94,7 @@ public class Antwort {
      * @param data Die zu übermittelnden Daten.
      * @return Reponseobjekt (500).
      */
-    public Response generiereFehler500(String data) {
+    public Response generiereFehler500(String data){
         return Response
                 .status(406)
                 .header("Access-Control-Allow-Origin", "*")

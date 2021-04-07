@@ -29,7 +29,7 @@ import javax.ejb.EJB;
  * @author simon
  */
 @Stateless
-public class NachrichtEJB {
+public class NachrichtEJB{
 
     @PersistenceContext
     private EntityManager em;
@@ -44,7 +44,7 @@ public class NachrichtEJB {
      *
      * @param neueNachricht Die Nachricht
      */
-    public void add(Nachricht neueNachricht) {
+    public void add(Nachricht neueNachricht){
         em.persist(neueNachricht);
     }
 
@@ -53,7 +53,7 @@ public class NachrichtEJB {
      *
      * @param id Die id der zu löschenden Nachricht.
      */
-    public void delete(int id) {
+    public void delete(int id){
         Nachricht n = getById(id);
         em.remove(n);
     }
@@ -63,15 +63,15 @@ public class NachrichtEJB {
      *
      * @return Eine Liste mit allen Nachrichten.
      */
-    public List<Nachricht> getAll() {
+    public List<Nachricht> getAll(){
         List<Nachricht> nachrichtList = em.createNamedQuery(Nachricht.class.getSimpleName() + ".findAll").getResultList();
-        for (Nachricht n : nachrichtList) {
+        for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
-            try {
+            try{
                 n.setSender(nutzerEJB.getCopyById(n.getSenderid()).getBenutzername());
-            } catch (Exception e) {
+            }catch(Exception e){
                 n.setSender("gelöschter Nutzer");
             }
         }
@@ -84,14 +84,14 @@ public class NachrichtEJB {
      * @param id Die Id der Nachricht.
      * @return Die Nachricht.
      */
-    public Nachricht getById(int id) {
+    public Nachricht getById(int id){
         return em.find(Nachricht.class, id);
     }
 
-    public Nachricht getCopyById(int id) {
+    public Nachricht getCopyById(int id){
         Nachricht n = em.find(Nachricht.class, id);
         em.detach(n);
-        for (Nutzer nutzer : n.getNutzerList()) {
+        for(Nutzer nutzer : n.getNutzerList()){
             em.detach(nutzer);
             nutzer.setPasswordhash(null);
             nutzer.setAdminInGroups(null);
@@ -116,18 +116,18 @@ public class NachrichtEJB {
      * @param id
      * @return
      */
-    public List<Nachricht> getCopyByChat(int id) {
+    public List<Nachricht> getCopyByChat(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
-        for (Nachricht n : nachrichtList) {
+        for(Nachricht n : nachrichtList){
             em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
-            for (Nutzer nu : n.getLikedBy()) {
+            for(Nutzer nu : n.getLikedBy()){
                 em.detach(nu);
             }
-            try {
+            try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
-            } catch (Exception e) {
+            }catch(Exception e){
                 n.setSender("gelöschter Nutzer");
             }
 
@@ -135,7 +135,7 @@ public class NachrichtEJB {
         return nachrichtList;
     }
 
-    public List<Nachricht> getByChat(int id) {
+    public List<Nachricht> getByChat(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         return nachrichtList;
     }
@@ -154,38 +154,38 @@ public class NachrichtEJB {
      * @param id
      * @return
      */
-    public Nachricht getNewest(int id) {
+    public Nachricht getNewest(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
-        if (nachrichtList.size() == 0) {
+        if(nachrichtList.size() == 0){
             Nachricht na = new Nachricht();
             return na;
-        } else if (nachrichtList.size() == 1) {
+        }else if(nachrichtList.size() == 1){
             Nachricht n = nachrichtList.get(0);
             n.setNachrichtList(null);
             n.setNutzerList(null);
 
-            try {
+            try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
 
-            } catch (Exception e) {
+            }catch(Exception e){
                 n.setSender("gelöschter Nutzer");
             }
 
-            if (nachrichtList.get(0).getDatumuhrzeit() < System.currentTimeMillis()) {
+            if(nachrichtList.get(0).getDatumuhrzeit() < System.currentTimeMillis()){
                 return n;
             }
             return null;
 
-        } else {
-            for (Nachricht n : nachrichtList) {
+        }else{
+            for(Nachricht n : nachrichtList){
                 em.detach(n);
                 n.setNachrichtList(null);
                 n.setNutzerList(null);
             }
 //            Nachricht n = nachrichtList.get(nachrichtList.size() - 1);
             Nachricht n = null;
-            for (int i = nachrichtList.size() - 1; i > 0; i--) {
-                if (nachrichtList.get(i).getDatumuhrzeit() < System.currentTimeMillis()) {
+            for(int i = nachrichtList.size() - 1; i > 0; i--){
+                if(nachrichtList.get(i).getDatumuhrzeit() < System.currentTimeMillis()){
                     n = nachrichtList.get(i);
                     break;
                 }
@@ -193,10 +193,10 @@ public class NachrichtEJB {
             em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
-            try {
+            try{
                 n.setSender(nutzerEJB.getById(n.getSenderid()).getBenutzername());
 
-            } catch (Exception e) {
+            }catch(Exception e){
                 n.setSender("gelöschter Nutzer");
             }
 
@@ -205,36 +205,36 @@ public class NachrichtEJB {
 
     }
 
-    public List<Nachricht> getOwnMessages(int id) {
+    public List<Nachricht> getOwnMessages(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery(Nachricht.class.getSimpleName() + ".findAll").getResultList();
         List<Nachricht> r = new ArrayList<>();
-        for (Nachricht n : nachrichtList) {
+        for(Nachricht n : nachrichtList){
             em.detach(n);
-            if (n.getSenderid() == id) {
+            if(n.getSenderid() == id){
                 r.add(n);
             }
         }
         return r;
     }
 
-    public List<Nachricht> getMarkedMessages(int id) {
+    public List<Nachricht> getMarkedMessages(int id){
         Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
         List<Nachricht> nList = self.getMarkedMessages();
-        for (Nachricht n : nList) {
+        for(Nachricht n : nList){
             em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
-            if (chatEJB.getById(n.getChatid()).getIsgroup()) {
+            if(chatEJB.getById(n.getChatid()).getIsgroup()){
                 n.setSender(nutzerEJB.getById(id).getBenutzername() + " |||| " + chatEJB.getById(n.getChatid()).getName());
             }
         }
         return nList;
     }
 
-    public void markiere(Nachricht na, Nutzer nu) {
-        if (nu.getMarkedMessages().contains(na)) {
+    public void markiere(Nachricht na, Nutzer nu){
+        if(nu.getMarkedMessages().contains(na)){
             nu.getMarkedMessages().remove(na);
-        } else {
+        }else{
             nu.getMarkedMessages().add(na);
         }
 

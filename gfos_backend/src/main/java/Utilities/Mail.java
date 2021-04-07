@@ -24,7 +24,7 @@ import javax.mail.internet.MimeMultipart;
  *
  * @author simon
  */
-public class Mail {
+public class Mail{
 
     /**
      * Die folgende Methode versendet die E-Mails an die Nutzer, in der sie
@@ -40,7 +40,7 @@ public class Mail {
      * @throws MessagingException
      * @throws InterruptedException
      */
-    public void sendVerificationPin(String mailFrom, String pw, String benutzername, String mailTo, int pin) throws IOException, AddressException, MessagingException, InterruptedException {
+    public void sendVerificationPin(String mailFrom, String pw, String benutzername, String mailTo, int pin) throws IOException, AddressException, MessagingException, InterruptedException{
         System.out.println("hello");
 
         Properties prop = new Properties();
@@ -50,9 +50,9 @@ public class Mail {
         prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(prop, new Authenticator() {
+        Session session = Session.getInstance(prop, new Authenticator(){
             @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
+            protected PasswordAuthentication getPasswordAuthentication(){
                 return new PasswordAuthentication(mailFrom, pw);
             }
         });
@@ -78,7 +78,7 @@ public class Mail {
 
     }
 
-    public void sendAccChanges(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException {
+    public void sendAccChanges(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException{
         System.out.println("hello");
 
         Properties prop = new Properties();
@@ -88,9 +88,9 @@ public class Mail {
         prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(prop, new Authenticator() {
+        Session session = Session.getInstance(prop, new Authenticator(){
             @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
+            protected PasswordAuthentication getPasswordAuthentication(){
                 return new PasswordAuthentication(mailFrom, pw);
             }
         });
@@ -113,7 +113,7 @@ public class Mail {
 
     }
 
-    public void sendImportantMessage(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException {
+    public void sendImportantMessage(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException{
         System.out.println("hello");
 
         Properties prop = new Properties();
@@ -123,9 +123,9 @@ public class Mail {
         prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(prop, new Authenticator() {
+        Session session = Session.getInstance(prop, new Authenticator(){
             @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
+            protected PasswordAuthentication getPasswordAuthentication(){
                 return new PasswordAuthentication(mailFrom, pw);
             }
         });

@@ -26,81 +26,81 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author simon
  */
 @Entity
-@Table(name = "BLACKLIST")
+@Table(name="BLACKLIST")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Blacklist.findAll", query = "SELECT b FROM Blacklist b"),
-    @NamedQuery(name = "Blacklist.findById", query = "SELECT b FROM Blacklist b WHERE b.id = :id"),
-    @NamedQuery(name = "Blacklist.findByToken", query = "SELECT b FROM Blacklist b WHERE b.token = :token"),
-    @NamedQuery(name = "Blacklist.findByTimestamp", query = "SELECT b FROM Blacklist b WHERE b.timestamp = :timestamp")})
-public class Blacklist implements Serializable {
+    @NamedQuery(name="Blacklist.findAll", query="SELECT b FROM Blacklist b"),
+    @NamedQuery(name="Blacklist.findById", query="SELECT b FROM Blacklist b WHERE b.id = :id"),
+    @NamedQuery(name="Blacklist.findByToken", query="SELECT b FROM Blacklist b WHERE b.token = :token"),
+    @NamedQuery(name="Blacklist.findByTimestamp", query="SELECT b FROM Blacklist b WHERE b.timestamp = :timestamp")})
+public class Blacklist implements Serializable{
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Basic(optional=false)
+    @Column(name="ID")
     private Integer id;
-    @Size(max = 200)
-    @Column(name = "TOKEN")
+    @Size(max=200)
+    @Column(name="TOKEN")
     private String token;
-    @Column(name = "TIMESTAMP")
+    @Column(name="TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
-    public Blacklist() {
+    public Blacklist(){
     }
 
-    public Blacklist(Integer id) {
+    public Blacklist(Integer id){
         this.id = id;
     }
 
-    public Integer getId() {
+    public Integer getId(){
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Integer id){
         this.id = id;
     }
 
-    public String getToken() {
+    public String getToken(){
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(String token){
         this.token = token;
     }
 
-    public Date getTimestamp() {
+    public Date getTimestamp(){
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Date timestamp){
         this.timestamp = timestamp;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(){
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object object){
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Blacklist)) {
+        if(!(object instanceof Blacklist)){
             return false;
         }
         Blacklist other = (Blacklist) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))){
             return false;
         }
         return true;
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         return "Entity.Blacklist[ id=" + id + " ]";
     }
 

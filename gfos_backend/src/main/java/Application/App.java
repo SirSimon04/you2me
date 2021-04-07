@@ -15,7 +15,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @ApplicationPath("daten")
-public class App extends Application {
+public class App extends Application{
 
     ScheduledExecutorService exec;
 
@@ -24,7 +24,7 @@ public class App extends Application {
     @EJB
     private NutzerEJB nutzerEJB;
 
-    public App() {
+    public App(){
         System.out.println(System.currentTimeMillis());
         System.out.println("App constructed");
         ScheduledExecutorService execService

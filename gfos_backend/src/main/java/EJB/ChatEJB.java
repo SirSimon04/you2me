@@ -21,7 +21,7 @@ import javax.persistence.PersistenceContext;
  * @author simon
  */
 @Stateless
-public class ChatEJB {
+public class ChatEJB{
 
     @PersistenceContext
     private EntityManager em;
@@ -31,7 +31,7 @@ public class ChatEJB {
      *
      * @return Eine Liste mit allen Chats.
      */
-    public List<Chat> getAll() {
+    public List<Chat> getAll(){
         return em.createNamedQuery(Chat.class.getSimpleName() + ".findAll").getResultList();
     }
 
@@ -42,12 +42,12 @@ public class ChatEJB {
      *
      * @return Der Chat
      */
-    public List<Chat> getAllCopy() {
+    public List<Chat> getAllCopy(){
         List<Chat> chatList;
         chatList = em.createNamedQuery(Chat.class.getSimpleName() + ".findAll").getResultList();
-        for (Chat c : chatList) {
+        for(Chat c : chatList){
             em.detach(c);
-            for (Nutzer n : c.getNutzerList()) {
+            for(Nutzer n : c.getNutzerList()){
                 em.detach(n);
                 n.setPinnedChats(null);
                 n.setAdminInGroups(null);
@@ -58,7 +58,7 @@ public class ChatEJB {
                 n.setSetting(null);
                 n.setMarkedMessages(null);
             }
-            for (Nutzer n : c.getAdminList()) {
+            for(Nutzer n : c.getAdminList()){
                 em.detach(n);
                 n.setPinnedChats(null);
                 n.setAdminInGroups(null);
@@ -69,11 +69,11 @@ public class ChatEJB {
                 n.setSetting(null);
                 n.setMarkedMessages(null);
             }
-            try {
+            try{
                 Nachricht letzteN = c.getLetztenachricht();
                 letzteN.setNachrichtList(null);
                 letzteN.setNutzerList(null);
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
 
             }
 
@@ -81,27 +81,27 @@ public class ChatEJB {
         return chatList;
     }
 
-    public List<Chat> getAllCopyListsNotNull() {
+    public List<Chat> getAllCopyListsNotNull(){
         List<Chat> chatList;
         chatList = em.createNamedQuery(Chat.class.getSimpleName() + ".findAll").getResultList();
-        for (Chat c : chatList) {
+        for(Chat c : chatList){
             em.detach(c);
-            for (Nutzer n : c.getNutzerList()) {
+            for(Nutzer n : c.getNutzerList()){
                 em.detach(n);
                 n.setSetting(null);
                 n.setMarkedMessages(null);
             }
-            for (Nutzer n : c.getAdminList()) {
+            for(Nutzer n : c.getAdminList()){
                 em.detach(n);
                 n.setBlockiertVon(null);
                 n.setMarkedMessages(null);
                 n.setSetting(null);
             }
-            try {
+            try{
                 Nachricht letzteN = c.getLetztenachricht();
                 letzteN.setNachrichtList(null);
                 letzteN.setNutzerList(null);
-            } catch (NullPointerException e) {
+            }catch(NullPointerException e){
 
             }
 
@@ -115,7 +115,7 @@ public class ChatEJB {
      * @param id Die Id des gesuchten Chats
      * @return Der gesuchte Chat
      */
-    public Chat getById(int id) {
+    public Chat getById(int id){
         return em.find(Chat.class, id);
     }
 
@@ -126,10 +126,10 @@ public class ChatEJB {
      *
      * @return Der Chat
      */
-    public Chat getCopy(int id) {
+    public Chat getCopy(int id){
         Chat c = em.find(Chat.class, id);
         em.detach(c);
-        for (Nutzer n : c.getNutzerList()) {
+        for(Nutzer n : c.getNutzerList()){
             em.detach(n);
             n.setPinnedChats(null);
             n.setAdminInGroups(null);
@@ -141,7 +141,7 @@ public class ChatEJB {
             n.setMarkedMessages(null);
 //            n.setSetting(null);
         }
-        for (Nutzer n : c.getAdminList()) {
+        for(Nutzer n : c.getAdminList()){
             em.detach(n);
             n.setPinnedChats(null);
             n.setAdminInGroups(null);
@@ -153,45 +153,45 @@ public class ChatEJB {
             n.setMarkedMessages(null);
 //            n.setSetting(null);
         }
-        try {
+        try{
             Nachricht letzteN = c.getLetztenachricht();
 //            em.detach(letzteN);
             letzteN.setNachrichtList(null);
             letzteN.setNutzerList(null);
-        } catch (Exception e) {
+        }catch(Exception e){
             System.out.println("nullpointer");
         }
 
         return c;
     }
 
-    public Chat getCopyListsNotNull(int id) {
+    public Chat getCopyListsNotNull(int id){
         Chat c = em.find(Chat.class, id);
         em.detach(c);
-        for (Nutzer n : c.getNutzerList()) {
+        for(Nutzer n : c.getNutzerList()){
             em.detach(n);
             n.setSetting(null);
         }
-        for (Nutzer n : c.getAdminList()) {
+        for(Nutzer n : c.getAdminList()){
             em.detach(n);
             n.setSetting(null);
         }
-        try {
+        try{
             Nachricht letzteN = c.getLetztenachricht();
             letzteN.setNachrichtList(null);
             letzteN.setNutzerList(null);
-        } catch (NullPointerException e) {
+        }catch(NullPointerException e){
 
         }
 
         return c;
     }
 
-    public List<Chat> getOwnChats(Nutzer self) {
+    public List<Chat> getOwnChats(Nutzer self){
         List<Chat> l = em.createNamedQuery(Chat.class.getSimpleName() + ".findAll").getResultList();
         List<Chat> r = new ArrayList<>();
-        for (Chat c : l) {
-            if (c.getNutzerList().contains(self)) {
+        for(Chat c : l){
+            if(c.getNutzerList().contains(self)){
                 r.add(c);
             }
         }
@@ -204,7 +204,7 @@ public class ChatEJB {
      * @param chat Der Chat, zu dem ein Nutzer hinzugefügt werden soll.
      * @param nutzer Der Nutzer, der zu einem Chat hinzugefügt werden soll.
      */
-    public void fuegeNutzerHinzu(Chat chat, Nutzer nutzer) {
+    public void fuegeNutzerHinzu(Chat chat, Nutzer nutzer){
         System.out.println("cEJB fnh");
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().add(nutzer);
@@ -216,7 +216,7 @@ public class ChatEJB {
      * @param chat Der Chat, aus dem der Nutzer entfernt werden soll.
      * @param nutzer Der Nutzer, der aus einem Chat entfernt werden soll.
      */
-    public void entferneNutzer(Chat chat, Nutzer nutzer) {
+    public void entferneNutzer(Chat chat, Nutzer nutzer){
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().remove(nutzer);
     }
@@ -227,7 +227,7 @@ public class ChatEJB {
      * @param chat Der Chat
      * @param nutzer Der Nutzer
      */
-    public void addAdmin(Chat chat, Nutzer nutzer) {
+    public void addAdmin(Chat chat, Nutzer nutzer){
         System.out.println("addAdmin");
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
@@ -241,7 +241,7 @@ public class ChatEJB {
      * @param chat Der Chat
      * @param nutzer Der Nutzer
      */
-    public void deleteAdmin(Chat chat, Nutzer nutzer) {
+    public void deleteAdmin(Chat chat, Nutzer nutzer){
         System.out.println("addAdmin");
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
@@ -254,7 +254,7 @@ public class ChatEJB {
      *
      * @param neuerChat
      */
-    public void createChat(Chat neuerChat) {
+    public void createChat(Chat neuerChat){
         em.persist(neuerChat);
     }
 
@@ -263,27 +263,27 @@ public class ChatEJB {
      *
      * @param c
      */
-    public void delete(Chat c) {
+    public void delete(Chat c){
         em.remove(c);
     }
 
-    public void pin(int chatId, int nutzerId) {
+    public void pin(int chatId, int nutzerId){
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
-        if (!nutzerInDB.getPinnedChats().contains(chatInDB)) {
+        if(!nutzerInDB.getPinnedChats().contains(chatInDB)){
             nutzerInDB.getPinnedChats().add(chatInDB);
-        } else {
+        }else{
             nutzerInDB.getPinnedChats().remove(chatInDB);
         }
 
     }
 
-    public void archive(int chatId, int nutzerId) {
+    public void archive(int chatId, int nutzerId){
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
-        if (!nutzerInDB.getArchivedChats().contains(chatInDB)) {
+        if(!nutzerInDB.getArchivedChats().contains(chatInDB)){
             nutzerInDB.getArchivedChats().add(chatInDB);
-        } else {
+        }else{
             nutzerInDB.getArchivedChats().remove(chatInDB);
         }
 

@@ -14,7 +14,7 @@ import Entity.Chat;
  * Diese Klasse ist für das sortieren der Chats in der eigenen Chatliste
  * vcerantwortlich.</p>
  */
-public class DateSorterChat implements Comparator<Chat> {
+public class DateSorterChat implements Comparator<Chat>{
 
     /**
      * Diese Methode vergleicht zwei Chats anhand des Datums der zuletzt
@@ -26,7 +26,7 @@ public class DateSorterChat implements Comparator<Chat> {
      * @return Int, welcher CHat zuerst kommt.
      */
     @Override
-    public int compare(Chat c1, Chat c2) {
+    public int compare(Chat c1, Chat c2){
         return Long.compare(c2.getLetztenachricht().getDatumuhrzeit(), c1.getLetztenachricht().getDatumuhrzeit());
     }
 }
