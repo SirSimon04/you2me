@@ -810,7 +810,6 @@ public class NutzerWS {
             String neueHandynummer = parser.fromJson((jsonObject.get("handynummer")), String.class);
             String neueInfo = parser.fromJson((jsonObject.get("info")), String.class);
             
-            Hasher hasher = new Hasher();
            
             Nutzer neuerNutzer = new Nutzer();
             
@@ -883,9 +882,6 @@ public class NutzerWS {
             Chat channel = new Chat();
             channel.setIsgroup(false);
             chatEJB.createChat(channel);
-//            nutzerEJB.fuegeChatHinzu(channel, nutzerInDbB);
-//            chatEJB.fuegeNutzerHinzu(channel, nutzerInDbB);
-            //Channel setzen
             nutzerInDbB.setChannel(channel);
             return response.generiereAntwort(parser.toJson(returnObject));
 
