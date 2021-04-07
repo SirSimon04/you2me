@@ -321,6 +321,7 @@ public class Nutzer implements Serializable {
     public void setBlockiertVon(List<Nutzer> blockiertVon) {
         this.blockiertVon = blockiertVon;
     }
+
     @XmlTransient
     public List<Chat> getAdminInGroups() {
         return adminInGroups;
@@ -378,5 +379,5 @@ public class Nutzer implements Serializable {
     public String toString() {
         return "Entity.Nutzer[ id=" + id + " ]";
     }
-    
+
 }

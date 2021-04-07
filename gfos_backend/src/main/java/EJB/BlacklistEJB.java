@@ -13,10 +13,13 @@ import javax.persistence.PersistenceContext;
 
 /**
  * <h1>Die Klasse zum Verwalten der Blacklist-Tokens in der Datenbank</h1>
- * <p>Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der Datenbank
- * bezogen auf Tokens, die der Blacklist hinzugefügt werden sollen. 
+ * <p>
+ * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
+ * Datenbank bezogen auf Tokens, die der Blacklist hinzugefügt werden sollen.
  * Das sind Token von Nutzern, deren Token nicht einfach abgelaufen ist, sondern
- * die sich bewusst aus dem System ausgeloggt haben. Die Daten werden bei Anfrage des Webservers übergeben.</p>
+ * die sich bewusst aus dem System ausgeloggt haben. Die Daten werden bei
+ * Anfrage des Webservers übergeben.</p>
+ *
  * @author simon
  */
 @Stateless
@@ -24,37 +27,44 @@ public class BlacklistEJB {
 
     @PersistenceContext
     private EntityManager em;
-    
+
     /**
-     * Diese Methode setzt ein Token auf die Blcklist. Das ist für den Fall, dass ein
-     * Nutezr sich ausloggt.
+     * Diese Methode setzt ein Token auf die Blcklist. Das ist für den Fall,
+     * dass ein Nutezr sich ausloggt.
+     *
      * @param bl Das Token und die aktuelle Zeit.
      */
-    public void logOut(Blacklist bl){
+    public void logOut(Blacklist bl) {
         em.persist(bl);
     }
+
     /**
-     * Diese Methode gibt alle Tokens, die sich auf der Blacklist befinden, mit ihrem zugehörigem Datum zurück.
-     * @return 
+     * Diese Methode gibt alle Tokens, die sich auf der Blacklist befinden, mit
+     * ihrem zugehörigem Datum zurück.
+     *
+     * @return
      */
-    public List<Blacklist> getAllBlacklisted(){
+    public List<Blacklist> getAllBlacklisted() {
         return em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
     }
+
     /**
      * Dese Methode löscht ein bestimmtes Token von der Blacklist.
+     *
      * @param token Das Token
      */
-    public void deleteToken(String token){
+    public void deleteToken(String token) {
         em.remove(em.createNamedQuery(Blacklist.class.getSimpleName() + ".findByToken").setParameter("token", token).getSingleResult());
     }
+
     /**
-     * Diese Methode löscht alle Token von der Blacklist. Sie wird 30 Sekuden 
-     * nach dem Start des Programms und dann einmal pro Stunde geleert, um das 
+     * Diese Methode löscht alle Token von der Blacklist. Sie wird 30 Sekuden
+     * nach dem Start des Programms und dann einmal pro Stunde geleert, um das
      * Überprüfen, ob sich Token in der Datenbank zu befinden, zu verschnellern
      */
-    public void clearBlacklist(){
+    public void clearBlacklist() {
         List<Blacklist> bl = em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
-        for(Blacklist b : bl){
+        for (Blacklist b : bl) {
             em.remove(b);
         }
     }

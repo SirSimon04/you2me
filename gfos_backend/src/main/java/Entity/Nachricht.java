@@ -185,12 +185,12 @@ public class Nachricht implements Serializable {
     public void setIsplanned(Boolean isplanned) {
         this.isplanned = isplanned;
     }
-    
-    public Integer getCountLikes(){
+
+    public Integer getCountLikes() {
         return countlikes;
     }
-    
-    public void setCountLikes(Integer countlikes){
+
+    public void setCountLikes(Integer countlikes) {
         this.countlikes = countlikes;
     }
 
@@ -202,7 +202,7 @@ public class Nachricht implements Serializable {
     public void setNutzerList(List<Nutzer> nutzerList) {
         this.nutzerList = nutzerList;
     }
-    
+
     @XmlTransient
     public List<Nutzer> getLikedBy() {
         return likedBy;
@@ -261,5 +261,5 @@ public class Nachricht implements Serializable {
     public String toString() {
         return "Entity.Nachricht[ nachrichtid=" + nachrichtid + " ]";
     }
-    
+
 }

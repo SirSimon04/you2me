@@ -15,28 +15,28 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @ApplicationPath("daten")
-public class App extends Application{
-    
+public class App extends Application {
+
     ScheduledExecutorService exec;
-    
+
     @EJB
     private BlacklistEJB blacklistEJB;
     @EJB
     private NutzerEJB nutzerEJB;
-    public App(){
+
+    public App() {
         System.out.println(System.currentTimeMillis());
         System.out.println("App constructed");
         ScheduledExecutorService execService
-                        =   Executors.newScheduledThreadPool(5);
+                = Executors.newScheduledThreadPool(5);
         execService.scheduleAtFixedRate(() -> {
             blacklistEJB.clearBlacklist();
             System.out.println("bl cleared");
         }, 30, 3600, TimeUnit.SECONDS);
-        
+
 //        execService.scheduleAtFixedRate(() -> {
 //            nutzerEJB.setAllOffline();
 //            System.out.println("all off");
 //        }, 300, 300, TimeUnit.SECONDS);
-        
     }
 }

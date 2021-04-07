@@ -103,5 +103,5 @@ public class Blacklist implements Serializable {
     public String toString() {
         return "Entity.Blacklist[ id=" + id + " ]";
     }
-    
+
 }

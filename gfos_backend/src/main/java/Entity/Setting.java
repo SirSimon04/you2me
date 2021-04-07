@@ -120,5 +120,5 @@ public class Setting implements Serializable {
     public String toString() {
         return "Entity.Setting[ nutzerid=" + nutzerid + " ]";
     }
-    
+
 }

@@ -6,20 +6,24 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+
 /**
-* <h1>Die Java-Klasse zum Hashen der Passwörter.</h1>
-* <p>Diese Klasse generiert die Hashwerte zu gegebenen Passwörterun.</p>
-*/
+ * <h1>Die Java-Klasse zum Hashen der Passwörter.</h1>
+ * <p>
+ * Diese Klasse generiert die Hashwerte zu gegebenen Passwörterun.</p>
+ */
 @Stateless
 @LocalBean
 public class Hasher {
+
     private static final int ITERATIONS = 10000;
     private static final int KEY_LENGTH = 512;
     private static final String SALT = "58g--fbgdf%§!bjds8b,AB.AF08?21nl"; //Zufällig
 
     /**
-     * Diese Methode gibt den berechneten Hashwert aus einem gegeben Passwort. Das wird dazu genutzt, um Passworteingaben
-     * des Frontends zu überprüfen.
+     * Diese Methode gibt den berechneten Hashwert aus einem gegeben Passwort.
+     * Das wird dazu genutzt, um Passworteingaben des Frontends zu überprüfen.
+     *
      * @param password Das Passwort
      * @return Der Hashwert
      */
@@ -29,6 +33,7 @@ public class Hasher {
 
     /**
      * Diese Methode hasht ein Passwort.
+     *
      * @param password Das Passwort
      * @return Der Hashwert
      */
@@ -38,9 +43,8 @@ public class Hasher {
             PBEKeySpec spec = new PBEKeySpec(password, SALT.getBytes(), ITERATIONS, KEY_LENGTH);
             SecretKey key = secretKeyFactory.generateSecret(spec);
             return key.getEncoded();
-        }
-        catch(Exception e) { 
+        } catch (Exception e) {
             return null;
-        }        
+        }
     }
 }
