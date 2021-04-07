@@ -1090,35 +1090,14 @@ public class ChatWS {
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
             int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
-
+            
             chatEJB.pin(chatId, eigeneId);
             
             return response.generiereAntwort("true");
         }
         
     }
-    
-    @POST
-    @Path("/unpin/{token}")
-    @Consumes(MediaType.TEXT_PLAIN) 
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response unPinChat(@PathParam("token") String token, String Daten) {
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }
-        else {
-            Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
-            int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
 
-            chatEJB.unpin(chatId, eigeneId);
-            
-            return response.generiereAntwort("true");
-        }
-        
-    }
-    
     @POST
     @Path("/archive/{token}")
     @Consumes(MediaType.TEXT_PLAIN) 
@@ -1140,25 +1119,5 @@ public class ChatWS {
         
     }
     
-    @POST
-    @Path("/unarchive/{token}")
-    @Consumes(MediaType.TEXT_PLAIN) 
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response unArchiveChat(@PathParam("token") String token, String Daten) {
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }
-        else {
-            Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int chatId =  parser.fromJson((jsonObject.get("chatid")), Integer.class);
-            int eigeneId =  parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
-
-            chatEJB.unArchive(chatId, eigeneId);
-            
-            return response.generiereAntwort("true");
-        }
-        
-    }
     
 }

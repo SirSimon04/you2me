@@ -610,6 +610,7 @@ public class NutzerWS {
             Gson parser = new Gson();
         
             try{
+                System.out.println(Daten);
                 JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
 
                 int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
@@ -617,19 +618,24 @@ public class NutzerWS {
 
                 String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
                 Nutzer other = nutzerEJB.getByUsername(andererName);
-
-                if(!self.getHatBlockiert().contains(other)){
-                    nutzerEJB.block(self, other);
-                    self.getHatBlockiert().add(other);
-                    other.getBlockiertVon().add(self);
-                    return response.generiereAntwort("true");      
+                try{
+                    if(!self.getHatBlockiert().contains(other)){
+                        nutzerEJB.block(self, other);
+                        self.getHatBlockiert().add(other);
+                        other.getBlockiertVon().add(self);
+                        return response.generiereAntwort("true");      
+                    }
+                    else{
+                        nutzerEJB.unblock(self, other);
+                        self.getHatBlockiert().remove(other);
+                        other.getBlockiertVon().remove(self);
+                        return response.generiereAntwort("true");  
+                    }
                 }
-                else{
-                    nutzerEJB.unblock(self, other);
-                    self.getHatBlockiert().remove(other);
-                    other.getBlockiertVon().remove(self);
-                    return response.generiereAntwort("true");  
+                catch(EJBTransactionRolledbackException e){
+                    return response.generiereAntwort("false");
                 }
+                
                     
                     
                     

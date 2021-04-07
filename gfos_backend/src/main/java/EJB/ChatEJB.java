@@ -254,27 +254,28 @@ public class ChatEJB {
     public void pin(int chatId, int nutzerId){
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
-        nutzerInDB.getPinnedChats().add(chatInDB);
+        if(!nutzerInDB.getPinnedChats().contains(chatInDB)){
+            nutzerInDB.getPinnedChats().add(chatInDB);
+        } 
+        else{
+            nutzerInDB.getPinnedChats().remove(chatInDB);
+        }
        
     }
-    
-    public void unpin(int chatId, int nutzerId){
-        Chat chatInDB = em.find(Chat.class, chatId);
-        Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
-        nutzerInDB.getPinnedChats().remove(chatInDB);
-    }
+   
     
     public void archive(int chatId, int nutzerId){
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
-        nutzerInDB.getArchivedChats().add(chatInDB);
+        if(!nutzerInDB.getArchivedChats().contains(chatInDB)){
+            nutzerInDB.getArchivedChats().add(chatInDB);
+        }
+        else{
+            nutzerInDB.getArchivedChats().remove(chatInDB);
+        }
+        
     }
-    
-    public void unArchive(int chatId, int nutzerId){
-        Chat chatInDB = em.find(Chat.class, chatId);
-        Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
-        nutzerInDB.getArchivedChats().remove(chatInDB);
-    }
+ 
     
     
             
