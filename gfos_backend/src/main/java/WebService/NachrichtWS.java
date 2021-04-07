@@ -397,7 +397,7 @@ public class NachrichtWS {
                 int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
 
                 neueNachricht.setChatid(nutzerEJB.getById(eigeneId).getChannel().getChatid());
-                
+                neueNachricht.setCountLikes(0);
                 nachrichtEJB.add(neueNachricht);
                 
                 return response.generiereAntwort("true");
@@ -537,52 +537,21 @@ public class NachrichtWS {
             try{
                 if(!na.getLikedBy().contains(nu)){
                     na.getLikedBy().add(nu);
+                    na.setCountLikes(na.getLikedBy().size());
+                    System.out.println(na.getLikedBy().size());
                     return response.generiereAntwort("true");
                 }
                 else{
-                    return response.generiereFehler406("Bereits Geliked");
-                }
-            }
-            catch(Exception e){
-                return response.generiereFehler406("Fehler");
-            }
-            
-        }
-    }
-    
-    @POST
-    @Path("/unlike/{token}")
-    @Consumes(MediaType.TEXT_PLAIN) 
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response unlike(String Daten, @PathParam("token") String token) {
-        if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
-        }
-        else {
-            Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
-            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
-            
-            Nachricht na = nachrichtEJB.getById(nId);
-            Nutzer nu = nutzerEJB.getById(eigeneId);
-            
-            try{
-                if(na.getLikedBy().contains(nu)){
                     na.getLikedBy().remove(nu);
-                    return response.generiereAntwort("true");
-                }
-                else{
-                    return response.generiereFehler406("Noch nicht Geliked");
+                    na.setCountLikes(na.getLikedBy().size());
+                    return response.generiereFehler406("true");
                 }
             }
             catch(Exception e){
                 return response.generiereFehler406("Fehler");
             }
-            
         }
     }
-    
 }
    
     

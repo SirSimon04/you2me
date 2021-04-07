@@ -78,6 +78,8 @@ public class Nachricht implements Serializable {
     private Boolean readbyall;
     @Column(name = "ISPLANNED")
     private Boolean isplanned;
+    @Column(name = "COUNTLIKES")
+    private Integer countlikes;
     @JoinTable(name = "HATGELESEN", joinColumns = {
         @JoinColumn(name = "NACHRICHTID", referencedColumnName = "NACHRICHTID")}, inverseJoinColumns = {
         @JoinColumn(name = "NUTZERID", referencedColumnName = "ID")})
@@ -182,6 +184,14 @@ public class Nachricht implements Serializable {
 
     public void setIsplanned(Boolean isplanned) {
         this.isplanned = isplanned;
+    }
+    
+    public Integer getCountLikes(){
+        return countlikes;
+    }
+    
+    public void setCountLikes(Integer countlikes){
+        this.countlikes = countlikes;
     }
 
     @XmlTransient
