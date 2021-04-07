@@ -25,11 +25,29 @@
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
             <Impressum v-show="app_vue_impressum_zeigen"/>
         </v-main>
+        <div class="text-center">
+            <v-btn
+                id="infoMessage"
+                hidden
+                dark
+                color="orange darken-2"
+                @click="infoMessage = true"
+            >
+                Open Snackbar
+            </v-btn>
+            <v-snackbar
+                v-model="infoMessage"
+                :timeout="infoMessageTimeout"
+            >
+                <pre style="color: white;">{{infoMessageContent}}</pre>
+            </v-snackbar>
+        </div>
     </v-app>
 </template>
 
 <script>
 import { EventBus } from './components/EventBus.js';
+import { ImageContainer } from './components/ImageContainer.js';
 import ChatInfo from './components/ChatInfo';
 import ChatListe from './components/ChatListe';
 import Registrieren from './components/Registrieren';
@@ -53,25 +71,75 @@ export default {
     },
     
     data: () => ({
+        infoMessage: false,
+        infoMessageContent: '',
+        infoMessageTimeout: 2000,
+
         welcome_vue_zeigen: false,
-        app_vue_registrieren_zeigen: true,
+        app_vue_registrieren_zeigen: false,
         app_vue_settings_zeigen: false,
-        app_vue_chatliste_zeigen: false,
-        app_vue_chat_zeigen: false,
+        app_vue_chatliste_zeigen: true,
+        app_vue_chat_zeigen: true,
         app_vue_chatinfo_zeigen: false,
         app_vue_impressum_zeigen: false,
         user: Registrieren.benutzername,
     }),
 
     mounted() {
+        console.warn('IC start');
+        //console.warn(ImageContainer);
+        let ic = new ImageContainer();
+        console.warn(ic);
+        console.warn('IC end');
+
         var pressedKeys = [];
         var commands = {
             'sendMessage': ['Control', 'Enter'],
         }
 
+        EventBus.$on('INFOMESSAGE', (payload) => {
+            this.infoMessageContent = payload['message'];
+            var count = 1;
+            for (var i=0; i<payload['message'].length; i++) {
+                if (payload['message'][i] === ' ') count++;
+            }
+            this.infoMessageTimeout = parseInt(count * 0.3 * 1000);
+            console.log(this.infoMessageTimeout);
+            document.getElementById('infoMessage').click();
+        });
+
         EventBus.$on('OPENCHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = true;
-            EventBus.$emit('LOADPROFILE', {'username': payload['username']});
+            // daten/chat/info/CHATID 4gruppe 56pn/NUTZERID/TOKEN
+            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/info/' + payload["chatid"] + '/' + window.CURRENT_USER_ID + '/1').then(response => {
+                response.clone();
+                response.json().then(data => {
+                    console.log(data);
+                    if (data['blockiertWorden']) {
+                        EventBus.$emit('LOADPROFILE', {
+                            'chatid': payload['chatid'],
+                            'username': payload['name'],
+                            'blocked': data['blockiert'],
+                            'blockedMe': true,
+                        });
+                    } else {
+                        EventBus.$emit('LOADPROFILE', {
+                            'chatid': payload['chatid'],
+                            'isGroup': data['isGroup'],
+                            'username': payload['name'],
+                            'profilepicture': payload['profilepicture'],
+                            'description': data['beschreibung'],
+                            'blocked': data['blockiert'],
+                            'blockedMe': false,
+                            'userdata': {
+                                'userlist': data['nutzerliste'],
+                                'user': data['nutzer'],
+                                'commonChatlist': data['gemeinsameChatListe']
+                            },
+                        });
+                    }
+                })
+            });
         }); // EventBus.$on('OPENCHATINFO')
 
         EventBus.$on('CLOSECHATINFO', (payload) => {
@@ -102,5 +170,6 @@ export default {
     }
 };
 window.CURRENT_USER_ID = 2;
+window.IP_ADDRESS = 'http://8eb652318604.ngrok.io';
 
 </script>

@@ -62,23 +62,6 @@
             </textarea>
             <img onclick="window.sendMessage();" style="position: relative; right: -4px; bottom: 4px;" width="32" height="32" id="sendMessage_Button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGfSURBVEiJrdQvTxxRFAXw32SzBr4FHggSi6hpUrMYiimQ9HOgIHj4FljEQoIEWoFD0CYkVa0rbYLlVcydzWM6s7M7MMkTc/+cc+49M69IKXnLpyiKIT7gMwZSSm9ysIQD/ESKM34t6BAjjPGM33jKCEavUXuIXwF0hU84ivenmGQ4r9pNnIfaRxxjOfL7AX4UkxyklPRRe40dLGQ1Ffh+TPKMpVaCKWpXGmon4PF+hfEk36H2Bru52g7w5crcrGai9iLU/sEJVjtW9wI8YschbpgTfInCB+xhcQZfmsAXYpWHtVpb+BHqT7E2L3jEd3JzX3gQa9rD92g+w/qs4JG7xvl/8VrRANu4C6BLbMwAvhK5zakEWUOhvAJuo/G+DbzN3KkEteb3+Ib7lnyjuTMTZCSpWlctt9tkbnWK6lPqeoqiuMVjSmmjFr/B35TSu8bGWSYIEaOYYj2LrbaZO9eKMuPvcJbFTtrMnZsgALdD8RoWlddKo7l9CQbKn/FU+WO2mtuLIEgq4AdcdNb3IBgq766p5vYmCJKP+DrN3Or8A60pb5tuGI4XAAAAAElFTkSuQmCC">
         </div>
-        <div class="text-center">
-            <v-btn
-                id="showEmptyMessageError"
-                hidden
-                dark
-                color="orange darken-2"
-                @click="emptyMessageError = true"
-            >
-                Open Snackbar
-            </v-btn>
-            <v-snackbar
-                v-model="emptyMessageError"
-                :timeout="emptyMessageErrorTimeout"
-            >
-                <pre style="color: white;">Nachricht darf nicht leer sein!</pre>
-            </v-snackbar>
-        </div>
     </v-container>
 </template>
 
@@ -89,18 +72,14 @@ export default {
     name: 'Chat',
 
     data: () => ({
-        emptyMessageError: false,
-        emptyMessageErrorTimeout: 2000,
     }),
 
     mounted() {
-        window.IP_ADDRESS = 'fb1258db8832.ngrok.io';
-        //window.CURRENT_USER_ID = -1;
         window.CURRENT_CHAT_ID = -1;
         var messages = [];
 
         function testPost() {
-            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nutzer/testPost', {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/testPost', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -122,7 +101,7 @@ export default {
         function sendMessage() {
             var content = document.getElementById('sendMessage_Area').text;
             var currentMillis = new Date.currentMillis;
-            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -143,7 +122,7 @@ export default {
         }
 
         function loginTest() {
-            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nutzer/login', {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/login', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -151,7 +130,7 @@ export default {
                     'Content-Type': 'text/plain', // Wird an den Server gesendet
                 },
                 body: JSON.stringify({
-                    benutzername: 'Simon',
+                    benutzername: 'SirSimon',
                     passwort: 'Test1234'
                 })
             }).then(response => {
@@ -177,7 +156,7 @@ export default {
             // Check for newest message and reload all messages if there is a newer one
             console.log('checking');
             var newest = null;
-            fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/getNewest/' + window.CURRENT_CHAT_ID + '/1').then(response => {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/getNewest/' + window.CURRENT_CHAT_ID + '/1').then(response => {
                 if (response.status !== 200) {
                     console.error('Code !== 200:' + response);
                     return null;
@@ -217,13 +196,14 @@ export default {
             document.getElementById('chatcontainer').innerHTML = '';
 
             function loadMessages() { // Reload all messages (will be called if a newer message is available)
-                fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
+                fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
                     if (response.status !== 200) {
                         console.error('Code !== 200:' + response);
                         return null;
                     }
                     response.clone();
                     response.json().then(msgs => {
+                        EventBus.$emit('RECEIVEDMESSAGE', {'message': msgs[msgs.length-1]});
                         var diff = msgs.length - messages.length;
 
                         var cc = document.getElementById('chatcontainer');
@@ -314,7 +294,7 @@ window.sendMessage = function sendMessage() {
     var content = document.getElementById('sendMessage_Area').value.trim();
     if (!window.canSend) return;
     if (content === '') {
-        document.getElementById('showEmptyMessageError').click();
+        EventBus.$emit('INFOMESSAGE', {'message': 'Nachricht darf nicht leer sein!'})
         return;
     }
     window.canSend = false;
@@ -377,7 +357,7 @@ window.sendMessage = function sendMessage() {
         }
     }, 10);
 
-    fetch('http://' + window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
+    fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
