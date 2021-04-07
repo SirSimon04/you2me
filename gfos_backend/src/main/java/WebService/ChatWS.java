@@ -265,27 +265,35 @@ public class ChatWS {
                 
            }
            else{
+               JsonObject jsonObject = new JsonObject();
+               
                nutzerListe.remove(self);
                Nutzer other = nutzerListe.get(0);
                
-               JsonObject jsonObject = new JsonObject();
+               try{
+                   if(self.getHatBlockiert().contains(other)){
+                        jsonObject.add("blockiert", parser.toJsonTree(true));
+                    }
+               }
+               catch(NullPointerException e){
+                   
+               }
                
                try{
                    if(self.getBlockiertVon().contains(other)){
-                       jsonObject.add("blockiertVon", parser.toJsonTree("true"));
+                       jsonObject.add("blockiertWorden", parser.toJsonTree(true));
+                       return response.generiereAntwort(parser.toJson(jsonObject)); 
                     }
                }
                catch(NullPointerException e){
                    
-               }
-               try{
-                   if(self.getHatBlockiert().contains(other)){
-                        jsonObject.add("blockiertWorden", parser.toJsonTree("true"));
-                    }
-               }
-               catch(NullPointerException e){
-                   
-               }
+               } 
+               
+               
+               
+               
+               
+               
                
                
                other.setPasswordhash(null);

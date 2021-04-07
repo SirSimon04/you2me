@@ -625,7 +625,10 @@ public class NutzerWS {
                     return response.generiereAntwort("true");      
                 }
                 else{
-                    return response.generiereAntwort("Bereits blockiert");
+                    nutzerEJB.unblock(self, other);
+                    self.getHatBlockiert().remove(other);
+                    other.getBlockiertVon().remove(self);
+                    return response.generiereAntwort("true");  
                 }
                     
                     
