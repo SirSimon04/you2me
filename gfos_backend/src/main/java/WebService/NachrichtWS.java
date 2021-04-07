@@ -432,29 +432,52 @@ public class NachrichtWS {
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
             int lNachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
             Nachricht n = nachrichtEJB.getById(lNachrichtId);
+            Nutzer self = nutzerEJB.getById(eigeneId);
             
-            if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
-                
-                chatEJB.getById(n.getChatid()).setLetztenachricht(null);
-                
-                nachrichtEJB.delete(lNachrichtId);
-                
-                List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
-                if(nList.size() != 0){
-                    chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
+            String username = tokenizer.getUser(token);
+            
+            if(n.getSenderid() == 0){
+                if(nutzerEJB.getByUsername(username).getChannel().getChatid() == n.getChatid()){
+                    nachrichtEJB.delete(lNachrichtId);
+                    return response.generiereAntwort("true");
                 }
+                else{
+                    return response.generiereFehler406("Keine Berechtigung");
+                }
+            }
+            
+            List<Nutzer> l = chatEJB.getById(n.getChatid()).getNutzerList();
+            
+            if(l.contains(self)){
+                if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
                 
-                return response.generiereAntwort("true");
-                
+                    chatEJB.getById(n.getChatid()).setLetztenachricht(null);
 
-                
+                    nachrichtEJB.delete(lNachrichtId);
+
+                    List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
+                    if(nList.size() != 0){
+                        chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
+                    }
+
+                    return response.generiereAntwort("true");
+
+
+
+                }
+                else{
+
+                    nachrichtEJB.delete(lNachrichtId);
+                    return response.generiereAntwort("true");
+                }
             }
             else{
-                    
-                nachrichtEJB.delete(lNachrichtId);
-                return response.generiereAntwort("true");
+                return response.generiereFehler406("Nicht im Chat");
             }
+            
+            
             
             
         }
