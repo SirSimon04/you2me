@@ -274,6 +274,9 @@ public class ChatWS {
                    if(self.getHatBlockiert().contains(other)){
                         jsonObject.add("blockiert", parser.toJsonTree(true));
                     }
+                   else{
+                       jsonObject.add("blockiert", parser.toJsonTree(false));
+                   }
                }
                catch(NullPointerException e){
                    
@@ -284,6 +287,9 @@ public class ChatWS {
                        jsonObject.add("blockiertWorden", parser.toJsonTree(true));
                        return response.generiereAntwort(parser.toJson(jsonObject)); 
                     }
+                   else{
+                       jsonObject.add("blockiertWorden", parser.toJsonTree(false));
+                   }
                }
                catch(NullPointerException e){
                    
@@ -928,6 +934,36 @@ public class ChatWS {
             }
             catch(EJBTransactionRolledbackException e){
                 return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+            }
+        }
+        
+    }
+    
+    
+    @POST
+    @Path("/leave/{token}")
+    @Consumes(MediaType.TEXT_PLAIN) 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response leave(@PathParam("token") String token, String Daten) {
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }
+        else {
+            
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+            int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
+            
+            Nutzer self = nutzerEJB.getById(jsonId);
+            Chat c = chatEJB.getById(jsonChatId);
+            if(c.getAdminList().size() == 1 && c.getAdminList().contains(self)){
+                return response.generiereFehler406("Einziger Admin");
+            }
+            else{
+                nutzerEJB.entferneChat(c, self); 
+                chatEJB.entferneNutzer(c, self);
+                return response.generiereAntwort("true");
             }
         }
         
