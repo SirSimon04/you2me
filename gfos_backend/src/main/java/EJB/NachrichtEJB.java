@@ -33,6 +33,8 @@ public class NachrichtEJB {
     
     @EJB
     private NutzerEJB nutzerEJB;
+    @EJB
+    private ChatEJB chatEJB;
     /**
      * Diese Methode fügt eine Nachricht in die Datenbank ein.
      * @param neueNachricht Die Nachricht
@@ -202,6 +204,20 @@ public class NachrichtEJB {
             }
         }
         return r;
+    }
+    
+    public List<Nachricht> getMarkedMessages(int id){
+        Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
+        List<Nachricht> nList = self.getMarkedMessages();
+        for(Nachricht n : nList){
+            em.detach(n);
+            n.setNachrichtList(null);
+            n.setNutzerList(null);
+            if(chatEJB.getById(n.getChatid()).getIsgroup()){
+                n.setSender(nutzerEJB.getById(id).getBenutzername() + " |||| " + chatEJB.getById(n.getChatid()).getName());
+            }
+        }
+        return nList;
     }
     
     public void markiere(Nachricht na, Nutzer nu){

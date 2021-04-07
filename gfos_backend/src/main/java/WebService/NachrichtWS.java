@@ -240,12 +240,7 @@ public class NachrichtWS {
         }
         else {
             Gson parser = new Gson();
-            Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
-            List<Nachricht> nList = self.getMarkedMessages();
-            for(Nachricht n : nList){
-                n.setNachrichtList(null);
-                n.setNutzerList(null);
-            }
+            List<Nachricht> nList = nachrichtEJB.getMarkedMessages(id);
             return response.generiereAntwort(parser.toJson(nList));
         }
     
