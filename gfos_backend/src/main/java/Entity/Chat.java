@@ -163,7 +163,6 @@ public class Chat implements Serializable {
         this.ispinned = ispinned;
     }
 
-
     @XmlTransient
     public List<Nutzer> getNutzerList() {
         return nutzerList;
@@ -222,5 +221,5 @@ public class Chat implements Serializable {
     public String toString() {
         return "Entity.Chat[ chatid=" + chatid + " ]";
     }
-    
+
 }

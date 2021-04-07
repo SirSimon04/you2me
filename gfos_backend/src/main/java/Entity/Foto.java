@@ -91,5 +91,5 @@ public class Foto implements Serializable {
     public String toString() {
         return "Entity.Foto[ id=" + id + " ]";
     }
-    
+
 }
