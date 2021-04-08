@@ -78,6 +78,20 @@ public class Mail{
 
     }
 
+    /**
+     * Diese Methode sendet eine E-Mail an einen Nutzer, um diesen über an seinem Account vorgenommene
+     * Änderungen zu informieren. Die neuen Nutzerinformationen stehen in der E-Mail. Diese Mail wird beim
+     * Aufrufen der Route zum Ändern des Accounts automatisch aufgerufen.
+     *
+     * @param mailFrom E-Mail zur Authentifizierung des SMTP-Servers
+     * @param pw Passwort zur Authentifizierung des SMTP-Servers
+     * @param mailTo E-Mail-Adresse des neu registrierten Benutzers
+     * @param msg Die Nachricht mit den neuen Nutzerinformationen.
+     * @throws IOException
+     * @throws AddressException
+     * @throws MessagingException
+     * @throws InterruptedException
+     */
     public void sendAccChanges(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException{
         System.out.println("hello");
 
@@ -113,6 +127,19 @@ public class Mail{
 
     }
 
+    /**
+     * Diese Methode sendet eine E-Mail an einen Nutzer, wenn in einem Chat, in dem er Mitglied ist, eine wichtige Nachricht gesendet wurde.
+     * Die E-Mail enthält diese Nachricht. Sie wird nur gesendet, wenn der Nutzer diese Option nicht in seinen Einstellungen ausgeschaltet hat.
+     *
+     * @param mailFrom E-Mail zur Authentifizierung des SMTP-Servers
+     * @param pw Passwort zur Authentifizierung des SMTP-Servers
+     * @param mailTo E-Mail-Adresse des neu registrierten Benutzers
+     * @param msg Die wichtige Nachricht.
+     * @throws IOException
+     * @throws AddressException
+     * @throws MessagingException
+     * @throws InterruptedException
+     */
     public void sendImportantMessage(String mailFrom, String pw, String mailTo, String msg) throws IOException, AddressException, MessagingException, InterruptedException{
         System.out.println("hello");
 

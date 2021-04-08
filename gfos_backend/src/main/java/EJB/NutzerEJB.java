@@ -45,6 +45,11 @@ public class NutzerEJB{
     @EJB
     private Tokenizer tokenizer;
 
+    /**
+     * Diese Methode gibt die Anmeldedaten für den SMTP-Server zurück, über den die E-Mails versandt werden.
+     *
+     * @return Die Anmeldedaten.
+     */
     public String[] getAuth(){
         String[] returnStrings = new String[2];
         Nutzer n = this.getById(1);
@@ -58,7 +63,7 @@ public class NutzerEJB{
     /**
      * Diese Methode gibt alle Nutzer zurück.
      *
-     * @return
+     * @return Die List emit allen Nutzern.
      */
     public List<Nutzer> getAll(){
         return em.createNamedQuery(Nutzer.class.getSimpleName() + ".findAll").getResultList();
@@ -398,7 +403,7 @@ public class NutzerEJB{
      * ob es sich um eine Gruppe oder einen Einzelchat handelt.
      *
      * @param chat Der Chat, zu dem der Nutzer hinzugefügt werden soll
-     * @param nutzer Der Nutzer
+     * @param nutzer Der Nutzer, der hinzugefügt werden soll.
      */
     public void fuegeChatHinzu(Chat chat, Nutzer nutzer){
         System.out.println("nEJB fch");
@@ -410,8 +415,8 @@ public class NutzerEJB{
      * Diese Methode entfernt einen Nutzer aus einem Chat. Dabei ist es egal, ob
      * es sich um eine Gruppe oder einen Einzelchat handelt.
      *
-     * @param chat Der Chat, asu dem der Nutzer entfernt werden soll-
-     * @param nutzer
+     * @param chat Der Chat, aus dem der Nutzer entfernt werden soll-
+     * @param nutzer Der Nutzer, der entfernt werden soll.
      */
     public void entferneChat(Chat chat, Nutzer nutzer){
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzer.getId());
@@ -420,7 +425,7 @@ public class NutzerEJB{
 
     /**
      * Diese Methode fügt einen Nutzer zu der eigenen Freundesliste hinzu, sowie
-     * den eigenen Nutzer in die Freundesliste des anderen Nutzers.
+     * den eigenen Nutzer in die andere Freundesliste des anderen Nutzers.
      *
      * @param self Der eigene Nutzer
      * @param other Der andere Nutzer
@@ -434,7 +439,7 @@ public class NutzerEJB{
 
     /**
      * Diese Methode entfernt einen Nutzer aus der eigenen Freundesliste, sowie
-     * den eigenen Nutzer aus der Freundesliste des anderen Nutzers.
+     * den eigenen Nutzer aus der anderen Freundesliste des anderen Nutzers.
      *
      * @param self
      * @param other
@@ -446,6 +451,13 @@ public class NutzerEJB{
         otherInDB.getOtherFriendList().remove(self);
     }
 
+    /**
+     * Diese Methode blockiert einen anderen Nutzer, so dass keine Nachrichten in dem Einzelchat mehr gesendet
+     * werden können.
+     *
+     * @param self Der eigene Nutzer.
+     * @param other Der andere Nutzer.
+     */
     public void block(Nutzer self, Nutzer other){
         Nutzer selfInDB = em.find(Nutzer.class, self.getId());
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());
@@ -453,6 +465,12 @@ public class NutzerEJB{
         otherInDB.getBlockiertVon().add(self);
     }
 
+    /**
+     * Diese Methode hebt die Blockierung eines anderen Nutzer auf, so dass in dem Einzelchat wieder Nachrichten gesendet werden können.
+     *
+     * @param self Der eigene Nutzer.
+     * @param other Der andere Nutzer.
+     */
     public void unblock(Nutzer self, Nutzer other){
         Nutzer selfInDB = em.find(Nutzer.class, self.getId());
         Nutzer otherInDB = em.find(Nutzer.class, other.getId());

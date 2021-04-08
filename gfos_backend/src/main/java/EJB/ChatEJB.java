@@ -81,6 +81,14 @@ public class ChatEJB{
         return chatList;
     }
 
+    /**
+     * Diese Methode gibt alle Chats zurück. Dabei wird die Verbindung jedes
+     * Chats zur Datenbank getrennt, das heißt die Chats können ohne Auswirkung
+     * auf die Datenbank verändert werden. Die Listen der Chats werden aber nicht geleert, es wird
+     * lediglich die Datenbankverbindung der Inhalte der Listen getrennt.
+     *
+     * @return Die Liste mit den Chats
+     */
     public List<Chat> getAllCopyListsNotNull(){
         List<Chat> chatList;
         chatList = em.createNamedQuery(Chat.class.getSimpleName() + ".findAll").getResultList();
@@ -165,6 +173,14 @@ public class ChatEJB{
         return c;
     }
 
+    /**
+     * Diese Methode gibt einen Chat anhand seiner Id zurück. Dabei wird die Verbindung des
+     * Chats zur Datenbank getrennt, das heißt der Chat kann ohne Auswirkung
+     * auf die Datenbank verändert werden. Die Listen des Chats werden aber nicht geleert, es wird
+     * lediglich die Datenbankverbindung der Inhalte der Listen getrennt.
+     *
+     * @return Der angefragte Chat.
+     */
     public Chat getCopyListsNotNull(int id){
         Chat c = em.find(Chat.class, id);
         em.detach(c);
@@ -187,6 +203,12 @@ public class ChatEJB{
         return c;
     }
 
+    /**
+     * Diese Methode gibt die eigenen Chats eines Nutzers zurück-
+     *
+     * @param self Der eigene Nutzer
+     * @return Die Liste mit den eigenen Chats.
+     */
     public List<Chat> getOwnChats(Nutzer self){
         List<Chat> l = em.createNamedQuery(Chat.class.getSimpleName() + ".findAll").getResultList();
         List<Chat> r = new ArrayList<>();
@@ -196,6 +218,24 @@ public class ChatEJB{
             }
         }
         return r;
+    }
+
+    /**
+     * Diese Methode fügt einen neuen Chat in die Datenbank ein.
+     *
+     * @param neuerChat
+     */
+    public void createChat(Chat neuerChat){
+        em.persist(neuerChat);
+    }
+
+    /**
+     * Diese Methode löscht einen Chat aus der Datenbank.
+     *
+     * @param c Der zu löschende Chat.
+     */
+    public void delete(Chat c){
+        em.remove(c);
     }
 
     /**
@@ -222,10 +262,10 @@ public class ChatEJB{
     }
 
     /**
-     * Diese Methode fügt einem Chat einen Administrator hinzul
+     * Diese Methode fügt einem Chat einen Administrator hinzu.
      *
-     * @param chat Der Chat
-     * @param nutzer Der Nutzer
+     * @param chat Der Chat.
+     * @param nutzer Der Nutzer.
      */
     public void addAdmin(Chat chat, Nutzer nutzer){
         System.out.println("addAdmin");
@@ -250,23 +290,12 @@ public class ChatEJB{
     }
 
     /**
-     * Diese Methode fügt einen neuen Chat in die Datenbank ein.
+     * Diese Methode pinnt einen Chat für einen Nutzer an. Hat der Nutzer den Chat bereits angepinnt,
+     * so wird diese Fixierung aufgehoben.
      *
-     * @param neuerChat
+     * @param chatId Die Id des zu anpinnenden Chats.
+     * @param nutzerId Die eigene Nutzerid.
      */
-    public void createChat(Chat neuerChat){
-        em.persist(neuerChat);
-    }
-
-    /**
-     * Diese Methode löscht einen Chat aus der Datenbank.
-     *
-     * @param c
-     */
-    public void delete(Chat c){
-        em.remove(c);
-    }
-
     public void pin(int chatId, int nutzerId){
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);
@@ -278,6 +307,13 @@ public class ChatEJB{
 
     }
 
+    /**
+     * Diese Methode archiviert einen Chat für einen Nutzer. Hat der Nutzer den Chat bereits archiviert, so wird
+     * die Archivierung aufgehoben.
+     *
+     * @param chatId Die Id des zu archivierenden Chats.
+     * @param nutzerId ie eigene Nutzerid.
+     */
     public void archive(int chatId, int nutzerId){
         Chat chatInDB = em.find(Chat.class, chatId);
         Nutzer nutzerInDB = em.find(Nutzer.class, nutzerId);

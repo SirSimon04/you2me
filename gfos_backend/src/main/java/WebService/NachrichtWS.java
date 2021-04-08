@@ -176,7 +176,7 @@ public class NachrichtWS{
 
     /**
      * Diese Methode liefert die neuste Nachricht aus einem Chat. Sie wird vom
-     * Client dazu genutzt, zu überprüfen, ob eine neue Nachircht im Chat
+     * Client dazu genutzt, zu überprüfen, ob eine neue Nachricht im Chat
      * vorhanden ist. Ist das der Fall, werden alle Nachrichten neu geladen.
      *
      * @param id Die Id des Chats
@@ -539,6 +539,7 @@ public class NachrichtWS{
     /**
      * Diese Methode fügt einer Nachricht einen Like hinzu. Sie ist nur auf
      * Nachrichten, die sich in einem Channel befinden, aufrufbar.
+     * Hat die Nachricht vom eigenen Nutzer schon einen Like erhalten, so wird dieser entfernt.
      *
      * @param Daten Die Daten zum eigenen Nutzer und zur Nachricht
      * @param token Das Webtoken

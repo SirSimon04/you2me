@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  * Der Webserver, der die Anfragen der Nutzer verarbeitet.
  */
@@ -159,7 +154,8 @@ public class ChatWS{
      * Status oder die Gruppenbeschreibung. Wenn es sich um eine Gruppe handelt,
      * wird die Nutzerliste nach folgendem Schema sortiert: Zuerst steht der
      * eigene Nutzer, dann die Administratoren der Gruppe und zuletzt die
-     * restlichen Nutzer.
+     * restlichen Nutzer. Handelt es sich um einen Einzelchat,
+     * werden die Informationen des anderen Nutzers übergeben.
      *
      * @param token Das Webtoken
      * @param id Die eigene Id
@@ -362,8 +358,16 @@ public class ChatWS{
 //        return response.generiereAntwort("true");
     }
 
-    // kann am Ende entfernt werden?
-    //wie die eigene Chatliste, aber nur für einen Chat
+    /**
+     * Diese Methode gibt einen CHat anhand seiner Id zurück.
+     * Falls es sich um einen Einzelchat handelt, werden als Chatinformationen
+     * die Informationen des anderen Nutzers übergeben.
+     *
+     * @param chatid Die Id des Chats.
+     * @param nutzerid Die eigene Id.
+     * @param token Das Webtoken.
+     * @return Der angefragte Chat.
+     */
     @GET
     @Path("/id/{chatid}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -549,74 +553,13 @@ public class ChatWS{
 
     }
 
-    //???
-    public List<Chat> getOwnChatlistByUserIdAsEntityList(int nutzerid){
-
-        try{
-            List<Chat> returnList = new ArrayList<Chat>();
-
-            Nutzer nutzer = nutzerEJB.getCopyById(nutzerid);
-
-            List<Chat> liste = chatEJB.getAll();
-            for(Chat c : liste){
-                if(c.getNutzerList().contains(nutzer)){
-                    returnList.add(c);
-                }
-            }
-
-            for(Chat c : returnList){
-                try{
-                    Nachricht n = nachrichtEJB.getNewest(c.getChatid());
-                    c.getLetztenachricht().setSender(n.getSender());
-                }catch(Exception e){
-
-                }
-
-                for(Nutzer n : c.getNutzerList()){
-                    n.setPasswordhash(null);
-                    n.setOtherFriendList(null);
-                    n.setOwnFriendList(null);
-                }
-
-                if(!c.getIsgroup()){
-                    // c.setAdminList(null);
-                    List<Nutzer> nutzerList = c.getNutzerList();
-                    Nutzer n = nutzerEJB.getCopyById(nutzerid);
-                    nutzerList.remove(n);
-
-                    Nutzer andererNutzer = nutzerList.get(0);
-
-                    c.setName(andererNutzer.getBenutzername());
-                    c.setProfilbild(andererNutzer.getProfilbild());
-                    c.setBeschreibung(andererNutzer.getInfo());
-                    c.setNutzerList(null);
-                }
-                c.setAdminList(null);
-                c.setNutzerList(null);
-
-            }
-
-            List<Chat> toRemove = new ArrayList<>();
-            for(Chat c : returnList){
-                if(c.getLetztenachricht() == null){
-                    toRemove.add(c);
-                }
-            }
-            returnList.removeAll(toRemove);
-            returnList.sort(new DateSorterChat());
-            returnList.addAll(toRemove);
-            return returnList;
-        }catch(EJBTransactionRolledbackException e){
-            return new ArrayList<>();
-        }
-    }
-
     /**
      * Die folgende Methode erstellt eine neue Gruppe mit den gegeben Daten.
+     * Dabei wird der eigene Nutzer als einziger Admin der Gruppe gesetzt.
      *
      * @param Daten Die Chatinformationen, die eigene Id und eine Liste aus
      * Nutzern, die hinzugefügt werden soll.
-     * @param token Das Webtoken
+     * @param token Das Webtoken.
      * @return Das Responseobjekt mit dem Status der Methode.
      */
     @POST
@@ -664,7 +607,7 @@ public class ChatWS{
 
     /**
      * Diese Methode erstellt einen neuen Einzelchat zwsichen dem eigenen Nutzer
-     * und einem anderem Nutzer.
+     * und einem gegebenen anderen Nutzer.
      *
      * @param Daten Die Informationen zur Identifizierung der beiden Nutzer.
      * @param token Das Webtoken
@@ -728,16 +671,9 @@ public class ChatWS{
 
     }
 
-    /*
-    Als erstes wird die Id des Chats angegeben, danach der Benutzername des Benutzers, der hinzugefügt wird
-    {
-        "chatid": 0,
-        "benutzername": "NoSkiller"
-    }
-     */
     /**
-     * Diese Methode fügt einen Nutzer zu einer Gruppe hinzu, dabei wird
-     * überprüft ob, man selbst ein Admin in der Gruppe ist.
+     * Diese Methode fügt einen Nutzer zu einer Gruppe hinzu. Das kann nur ausgeführt werden, falls man
+     * selbst ein Admin der Gruppe ist.
      *
      * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum
      * Chat.
@@ -748,7 +684,7 @@ public class ChatWS{
     @Path("/takepart/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response takePart(String Daten, @PathParam("token") String token){
+    public Response fuegeNutzerHinzu(String Daten, @PathParam("token") String token){
 
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
@@ -799,8 +735,8 @@ public class ChatWS{
     }
 
     /**
-     * Diese Methode entfernt einen Nutzer aus einer Gruppe, dabei wird
-     * überprüft ob, man selbst ein Admin in der Gruppe ist.
+     * Diese Methode entfernt einen Nutzer aus einer Gruppe. Das kann nur ausgeführt werden, falls man
+     * selbst ein Admin der Gruppe ist.
      *
      * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum
      * Chat.
@@ -868,6 +804,14 @@ public class ChatWS{
 
     }
 
+    /**
+     * Mit dieser Methode kann ein Nutzer eine Gruppe verlassen. Das ist aber nur möglich, wenn man selbst nicht der einzige Admin
+     * ist.
+     *
+     * @param token
+     * @param Daten
+     * @return
+     */
     @POST
     @Path("/leave/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -947,48 +891,60 @@ public class ChatWS{
     }
 
     /**
-     * Diese Methode entfernt den Adminstatus eines Nutzers. Dabei wird
-     * überprüft, ob man selbst ein Admin ist.
+     * Mit dieser Methode kann ein Nutzer einen Chat anpinnen, was bedeutet dass dieser Chat über den anderen
+     * in der eigenen Chatliste angezeigt wird. Die angepinnten Chats eines Nutzers werden dem Benutzernamen nach absteigend sortiert
+     * Hat ein Nutzer den angebenen Chat bereits angepinnt, wird die Fixierung des Chats aufgehoben.
      *
      * @param token Das Webtoken
-     * @param Daten Die Informationen zum eigenen und anderen Nutzer, sowie zum
-     * Chat.
-     * @return Das Responseobjekt mit dem Status der Methode
+     * @param Daten Die Daten zum Chat und dem eigenen Nutzer.
+     * @return Das Responseobjekt mit dem Status der Methode.
      */
     @POST
-    @Path("/entferneAdmin/{token}")
+    @Path("/pin/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response entferneAdmin(@PathParam("token") String token, String Daten){
+    public Response pinChat(@PathParam("token") String token, String Daten){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }else{
-
             Gson parser = new Gson();
-
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int jsonId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
-            int jsonChatId = parser.fromJson((jsonObject.get("chatId")), Integer.class);
-            String jsonUsername = parser.fromJson((jsonObject.get("andererBenutzername")), String.class);
+            int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
 
-            Nutzer self = nutzerEJB.getById(jsonId);
-            Nutzer other = nutzerEJB.getByUsername(jsonUsername);
-            Chat c = chatEJB.getById(jsonChatId);
-            if(c.getAdminList().contains(self)){
-                if(c.getAdminList().size() == 1){
-                    return response.generiereFehler406("Einziger Admin");
-                }
-                if(!c.getAdminList().contains(other)){
-                    return response.generiereFehler406("Bereits kein Admin");
-                }else{
-                    chatEJB.deleteAdmin(c, other);
-                    return response.generiereAntwort("true");
-                }
+            chatEJB.pin(chatId, eigeneId);
 
-            }else{
-                return response.generiereFehler406("Kein Admin");
-            }
+            return response.generiereAntwort("true");
+        }
 
+    }
+
+    /**
+     * Diese Methode archiviert einen Chat für einen Nutzer, das heißt der Chat wird nicht in der
+     * normalen Chatliste angezeigt, sondern ist in einer seperat anzeigbaren Liste vorhanden.
+     * Ist der angegebene Chat bereits archiviert, wird die Archivierung aufgehoben und der Chat
+     * wird wieder normal angezeigt.
+     *
+     * @param token Das Webtoken.
+     * @param Daten Die Daten zum Chat und eigenem Nutzer.
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
+    @POST
+    @Path("/archive/{token}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response archiveChat(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }else{
+            Gson parser = new Gson();
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+            int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+
+            chatEJB.archive(chatId, eigeneId);
+
+            return response.generiereAntwort("true");
         }
 
     }
@@ -1036,46 +992,6 @@ public class ChatWS{
                 return response.generiereFehler401("Du bist kein Admin");
             }
 
-        }
-
-    }
-
-    @POST
-    @Path("/pin/{token}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response pinChat(@PathParam("token") String token, String Daten){
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }else{
-            Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
-            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
-
-            chatEJB.pin(chatId, eigeneId);
-
-            return response.generiereAntwort("true");
-        }
-
-    }
-
-    @POST
-    @Path("/archive/{token}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response archiveChat(@PathParam("token") String token, String Daten){
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }else{
-            Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
-            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
-
-            chatEJB.archive(chatId, eigeneId);
-
-            return response.generiereAntwort("true");
         }
 
     }

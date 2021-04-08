@@ -114,7 +114,7 @@ public class NachrichtEJB{
      * im Sender der Nachricht deutlich.
      *
      * @param id
-     * @return
+     * @return Die Liste mit allen Nachrichten des Chats.
      */
     public List<Nachricht> getCopyByChat(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
@@ -205,6 +205,12 @@ public class NachrichtEJB{
 
     }
 
+    /**
+     * Diese Methode gibt alle Nachrichten zurück, die vom eigenen Nutzer gesendet wurden.
+     *
+     * @param id Die eigene Id
+     * @return Die Liste mit allen selbst gesendeten Nachrichten.
+     */
     public List<Nachricht> getOwnMessages(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery(Nachricht.class.getSimpleName() + ".findAll").getResultList();
         List<Nachricht> r = new ArrayList<>();
@@ -217,6 +223,12 @@ public class NachrichtEJB{
         return r;
     }
 
+    /**
+     * Diese Methode gibt alle Nachrichten zurück, die vom eigenen Nutzer markiert wurden.
+     *
+     * @param id Die eigene Id.
+     * @return Die Liste mit allen markierten Nachrichten.
+     */
     public List<Nachricht> getMarkedMessages(int id){
         Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
         List<Nachricht> nList = self.getMarkedMessages();
@@ -231,6 +243,12 @@ public class NachrichtEJB{
         return nList;
     }
 
+    /**
+     * Diese Methode markiert eine Nachricht für den eigenen Nutzer.
+     *
+     * @param na Die zu markierende Nachricht.
+     * @param nu Der eigene Nutzer.
+     */
     public void markiere(Nachricht na, Nutzer nu){
         if(nu.getMarkedMessages().contains(na)){
             nu.getMarkedMessages().remove(na);
