@@ -17,6 +17,7 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
+import Filter.Filter;
 import Utilities.Antwort;
 import Utilities.Mail;
 import Utilities.Tokenizer;
@@ -74,6 +75,8 @@ public class NachrichtWS{
 
     private Antwort response = new Antwort();
 
+    private Filter filter = new Filter();
+
     /**
      * Diese Methode verifiziert einen Token.
      *
@@ -125,19 +128,19 @@ public class NachrichtWS{
     }
 
     /**
-     * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück.
-     * Sobald ein Nutzer die neuen Nachrichten eines Chats lädt, bedeutet dass,
+     * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück. Sobald ein Nutzer die neuen Nachrichten eines Chats lädt, bedeutet dass,
      * das der Nutzer diese gelesen hat.
      *
      * @param chatid Die Id des Chats, aus dem die Nachrichten angezeigt werden
      * solln
      * @param token Das Webtoken
+     * @param nutzerid Die eigene Id.
      * @return Die Liste mit den Nachrichten.
      */
     @GET
     @Path("/chat/{id}/{nutzerid}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByChat(@PathParam("id") int chatid, @PathParam("token") String token, @PathParam("nutzerid") int nutzerid){
+    public Response getByChat(@PathParam("id") int chatid, @PathParam("token") String token, @PathParam("nutzerid") int nutzerid) throws IOException{
         if(!verify(token)){
             return response.generiereFehler401("Kein gültiges Token");
         }else{
@@ -168,6 +171,14 @@ public class NachrichtWS{
                 }
             }
             nList.removeAll(newN);
+
+            if(self.getSetting().getWordfilter()){
+                for(Nachricht n : nList){
+                    if(filter.isProfane(n.getInhalt())){
+                        n.setInhalt(filter.filter(n.getInhalt()));
+                    }
+                }
+            }
             //gucken, ob von jedem gelesen
             return response.generiereAntwort(parser.toJson(nList));
         }

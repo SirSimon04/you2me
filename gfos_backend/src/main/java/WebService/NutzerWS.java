@@ -17,6 +17,8 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
+import Filter.Filter;
+import Filter.Grawlox;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
 import Utilities.Antwort;
@@ -37,6 +39,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -88,6 +91,8 @@ public class NutzerWS{
     private Antwort response = new Antwort();
 
     private Mail mail = new Mail();
+
+    private final Filter filter = new Filter();
 
     /**
      * Diese Methode verifiziert einen Token.
@@ -530,7 +535,7 @@ public class NutzerWS{
 
             }
             try{
-                self.getSetting().setLesebestätigung(s.getLesebestätigung());
+                self.getSetting().setWordfilter(s.getWordfilter());
             }catch(NullPointerException e){
 
             }
@@ -733,7 +738,11 @@ public class NutzerWS{
 
             if(UserNameIsFree == null){
 //                System.out.println("Username free");
-                neuerNutzer.setBenutzername(neuerNutzername);
+                if(filter.isProfane(neuerNutzername)){
+                    return response.generiereFehler406("Benutzername nicht zulässig");
+                }else{
+                    neuerNutzer.setBenutzername(neuerNutzername);
+                }
             }else{
 //                System.out.println("Username not free");
                 return response.generiereFehler500("Benutzername bereits vergeben");
@@ -750,11 +759,19 @@ public class NutzerWS{
             neuerNutzer.setPasswordhash(hasher.checkPassword(neuesPasswort));
 
             if(neuerVorname != null){
-                neuerNutzer.setVorname(neuerVorname);
+                if(filter.isProfane(neuerVorname)){
+                    return response.generiereFehler406("Vorname nicht zulässig");
+                }else{
+                    neuerNutzer.setVorname(neuerVorname);
+                }
             }
 
-            if(neuerVorname != null){
-                neuerNutzer.setNachname(neuerNachname);
+            if(neuerNachname != null){
+                if(filter.isProfane(neuerNachname)){
+                    return response.generiereFehler406("Nachname nicht zulässig");
+                }else{
+                    neuerNutzer.setNachname(neuerNachname);
+                }
             }
 
             if(neueHandynummer != null){
@@ -762,6 +779,9 @@ public class NutzerWS{
             }
 
             if(neueInfo != null){
+                if(filter.isProfane(neueInfo)){
+                    response.generiereFehler406("Info nicht zulässig");
+                }
                 neuerNutzer.setInfo(neueInfo);
             }
 
@@ -785,7 +805,7 @@ public class NutzerWS{
             //Einstellungen erstellen
             Setting s = new Setting();
             s.setDarkmode(Boolean.TRUE);
-            s.setLesebestätigung(Boolean.TRUE);
+            s.setWordfilter(Boolean.TRUE);
             s.setMailifimportant(Boolean.TRUE);
             s.setNutzer(nutzerInDbB);
             s.setNutzerid(nutzerInDbB.getId());
@@ -919,17 +939,24 @@ public class NutzerWS{
                 if(nutzerInDB != null){
 
                     if(neuerNutzername != null){
-                        Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername);
 
-                        if(UserNameIsFree == null){
-                            nutzerInDB.setBenutzername(neuerNutzername);
-                            msg += "Dein neuer Benutzername: \"" + neuerNutzername + "\"</p><p>";
+                        if(filter.isProfane(neuerNutzername)){
+                            return response.generiereFehler406("Benutzername nicht zulässig");
                         }else{
-                            return response.generiereFehler500("Benutzername bereits vergeben");
+                            Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername);
+
+                            if(UserNameIsFree == null){
+                                nutzerInDB.setBenutzername(neuerNutzername);
+                                msg += "Dein neuer Benutzername: \"" + neuerNutzername + "\"</p><p>";
+                            }else{
+                                return response.generiereFehler500("Benutzername bereits vergeben");
+                            }
                         }
+
                     }
 
                     if(neueEmail != null){
+
                         Nutzer EmailIsFree = nutzerEJB.getByMail(neueEmail);
 
                         if(EmailIsFree == null){
@@ -938,16 +965,26 @@ public class NutzerWS{
                         }else{
                             return response.generiereFehler500("Benutzername bereits vergeben");
                         }
+
                     }
 
                     if(neuerVorname != null){
-                        nutzerInDB.setVorname(neuerVorname);
-                        msg += "Dein neuer Vorname: \"" + neuerVorname + "\"</p><p>";
+                        if(filter.isProfane(neuerVorname)){
+                            return response.generiereFehler406("Vorname nicht zulässig");
+                        }else{
+                            nutzerInDB.setVorname(neuerVorname);
+                            msg += "Dein neuer Vorname: \"" + neuerVorname + "\"</p><p>";
+                        }
+
                     }
 
-                    if(neuerVorname != null){
-                        nutzerInDB.setNachname(neuerNachname);
-                        msg += "Dein neuer Nachname: \"" + neuerNachname + "\"</p><p>";
+                    if(neuerNachname != null){
+                        if(filter.isProfane(neuerNachname)){
+                            return response.generiereFehler406("Nachname nicht zulässig");
+                        }else{
+                            nutzerInDB.setNachname(neuerNachname);
+                            msg += "Dein neuer Nachname: \"" + neuerNachname + "\"</p><p>";
+                        }
                     }
 
                     if(neuesPasswort != null){
@@ -960,8 +997,12 @@ public class NutzerWS{
                     }
 
                     if(neueInfo != null){
-                        nutzerInDB.setInfo(neueInfo);
-                        msg += "Deine neue Info: \"" + neueInfo + "\"</p><p>";
+                        if(filter.isProfane(neueInfo)){
+                            return response.generiereFehler406("Info nicht zulässig");
+                        }else{
+                            nutzerInDB.setInfo(neueInfo);
+                            msg += "Deine neue Info: \"" + neueInfo + "\"</p><p>";
+                        }
                     }
 
                     msg += "Falls du diese Änderungen vorgenommen hast, kannst du diese Mail ignorieren, wenn du diese Änderungen nicht vorgenommen hast, dann gibt es ein Sicherheitsproblem mit deinem Account und du solltst schnellstmöglich dein Passwort ändern!</p>"

@@ -8,7 +8,7 @@ CREATE TABLE CHAT (CHATID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WI
 
 CREATE TABLE NUTZER (ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1), BENUTZERNAME VARCHAR(50) NOT NULL, VORNAME VARCHAR(50), NACHNAME VARCHAR(50), EMAIL VARCHAR(50) NOT NULL, PASSWORDHASH VARCHAR(255) NOT NULL, HANDYNUMMER VARCHAR(50), PROFILBILD INTEGER, INFO VARCHAR(256), ISADMIN BOOLEAN, VERIFICATIONPIN INTEGER, LASTONLINE BIGINT, ISONLINE BOOLEAN, MITGLIEDSEIT INTEGER, channel integer, PRIMARY KEY (ID), foreign key(profilbild) references Foto(id), foreign key(channel) references Chat(chatId) on delete cascade);
 
-Create Table Setting( nutzerId int not null primary key, darkmode boolean, lesebestätigung boolean, mailIfImportant boolean, foreign Key(nutzerId) references Nutzer(id) on delete cascade );
+Create Table Setting( nutzerId int not null primary key, darkmode boolean, wordfilter boolean, mailIfImportant boolean, foreign Key(nutzerId) references Nutzer(id) on delete cascade );
 
 CREATE TABLE NIMMTTEIL (CHATID INTEGER NOT NULL, NUTZERID INTEGER NOT NULL, foreign key(chatId) references Chat(ChatId) on delete cascade, foreign key(nutzerId) references Nutzer(id) on delete cascade);
 
