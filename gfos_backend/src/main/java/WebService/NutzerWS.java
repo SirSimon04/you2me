@@ -117,26 +117,6 @@ public class NutzerWS{
 
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/mail")
-    public String mailTest(){
-        System.out.println("mailBegin");
-        try{
-            Nutzer n = nutzerEJB.getById(1);
-            String mailFrom = n.getEmail();
-            String pw = n.getPasswordhash();
-            mail.sendVerificationPin(mailFrom, pw, "SirSimon04", "simi@engelnetz.de", 1234);
-
-        }catch(Exception e){
-            System.out.println(e);
-            return "false";
-        }
-        System.out.println("mailEnd");
-        return "true";
-
-    }
-
     /**
      * Diese Methode gibt alle Nutzer zurück.
      *
@@ -241,9 +221,10 @@ public class NutzerWS{
     }
 
     /**
-     * Diese Methoden gibt die Listen eines Nutzers bezogen auf die Freunde
-     * zurück. Dabei gibt es jeweils eine für Freunde, austehende
+     * Diese Methoden gibt die Freundeslisten eines Nutzers zurück. Dabei gibt es jeweils eine für Freunde, austehende
      * Freundschaftanfragen und eingehende Freundschaftsanfragen.
+     * Außerdem werden die Freunde, deren Status online ist, in einer
+     * weiteren Liste angezeigt.
      *
      * @param id Die Id des Nutzers
      * @param token Das Webtoken
@@ -331,169 +312,6 @@ public class NutzerWS{
 
     }
 
-    @GET
-    @Path("/getSettings/{id}/{token}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getSettings(@PathParam("token") String token, @PathParam("id") int id){
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }else{
-            Gson parser = new Gson();
-            JsonObject j = new JsonObject();
-            j.add("settings", parser.toJsonTree(settingsEJB.getCopyById(id)));
-
-            //alle selbst gesendeten Nachrichten, Fotos, etc
-            int anzahlN = 0;
-            int anzahlF = 0;
-            List<Nachricht> nL = nachrichtEJB.getOwnMessages(id);
-            for(Nachricht n : nL){
-                anzahlN++;
-                if(n.getFoto() != null){
-                    anzahlF++;
-                }
-            }
-            j.add("anzahlSelbstGesendet", parser.toJsonTree(anzahlN));
-            j.add("anzahlFotosSelbstGesendet", parser.toJsonTree(anzahlF));
-
-            //für jeden eigenen Chat Liste mit Anzahl Nachrichten, Fotos, etc
-            Nutzer self = nutzerEJB.getById(id);
-            List<Chat> chatList = chatEJB.getOwnChats(self);
-            List<JsonObject> jsonList = new ArrayList<>();
-            for(Chat c : chatList){
-                JsonObject jO = new JsonObject();
-                int anzahlNa = 0;
-                int anzahlFo = 0;
-                List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
-                for(Nachricht nachricht : nList){
-                    anzahlNa++;
-                    if(nachricht.getFoto() != null){
-                        anzahlFo++;
-                    }
-                }
-                jO.add("id", parser.toJsonTree(c.getChatid()));
-                jO.add("anzahlNachrichten", parser.toJsonTree(anzahlNa));
-                jO.add("anzahlFotos", parser.toJsonTree(anzahlFo));
-                jsonList.add(jO);
-            }
-            j.add("chatübersicht", parser.toJsonTree(jsonList));
-
-            return response.generiereAntwort(parser.toJson(j));
-        }
-    }
-
-    @GET
-    @Path("/getChannel/{id}/{token}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getChannel(@PathParam("token") String token, @PathParam("id") int id){
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }else{
-
-            Gson parser = new Gson();
-
-            Nutzer n = nutzerEJB.getById(id);
-
-            List<Nachricht> l = nachrichtEJB.getCopyByChat(n.getChannel().getChatid());
-
-            List<Nachricht> ll = new ArrayList<>();
-
-            for(int x = l.size() - 1; x >= 0; x--){
-                ll.add(l.get(x));
-            }
-
-            for(Nachricht na : ll){
-                na.setSender(null);
-                for(Nutzer nu : na.getLikedBy()){
-                    nu.setPasswordhash(null);
-                    nu.setAdminInGroups(null);
-                    nu.setOwnFriendList(null);
-                    nu.setOtherFriendList(null);
-                    nu.setPinnedChats(null);
-                    nu.setHatBlockiert(null);
-                    nu.setBlockiertVon(null);
-                    nu.setSetting(null);
-                    nu.setMarkedMessages(null);
-                    nu.setArchivedChats(null);
-
-                }
-            }
-
-            return response.generiereAntwort(parser.toJson(ll));
-
-//            return response.generiereFehler406("false");
-        }
-    }
-
-    //zum manuellen hinzufügen von Einstellungen
-    //soll später automatisch beim registrieren passieren
-    @POST
-    @Path("/addSettings")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response settingsTest(String Daten){
-        Gson parser = new Gson();
-//        List<Setting> s = settingsEJB.getAll();
-//        return response.generiereAntwort(parser.toJson(s));
-//        return response.generiereAntwort("yep");
-        Setting s = parser.fromJson(Daten, Setting.class);
-
-        Nutzer self = nutzerEJB.getById(s.getNutzerid());
-        self.setSetting(s);
-        s.setNutzer(self);
-        s.setNutzerid(self.getId());
-        settingsEJB.add(s);
-        return response.generiereAntwort("true");
-    }
-
-    /**
-     * Diese Methode ändert die Eintellungen des Nutzers.
-     *
-     * @param token Das Webtoken
-     * @param Daten Die neuen Einstellung
-     * @return Das Responseobjekt mit dem Status der Methode.
-     */
-    @POST
-    @Path("/setSettings/{token}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response setSettings(@PathParam("token") String token, String Daten){
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }else{
-            Gson parser = new Gson();
-            Setting s = parser.fromJson(Daten, Setting.class);
-            Nutzer self = nutzerEJB.getById(s.getNutzerid());
-
-            try{
-                self.getSetting().setDarkmode(s.getDarkmode());
-            }catch(NullPointerException e){
-
-            }
-            try{
-                self.getSetting().setLesebestätigung(s.getLesebestätigung());
-            }catch(NullPointerException e){
-
-            }
-            try{
-                self.getSetting().setMailifimportant(s.getMailifimportant());
-            }catch(NullPointerException e){
-
-            }
-            return response.generiereAntwort("true");
-        }
-    }
-
-    @POST
-    @Path("/testPost")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response sendeFreundesAnfrage(String Daten){
-
-        System.out.println(Daten);
-        Gson parser = new Gson();
-        return response.generiereAntwort(parser.toJson("Success"));
-    }
-
     /**
      * Diese Methode sendet eine Freundschaftsanfrage an einen anderen Nutzer
      * und kann auch dafür genutzt werden, Freundschaftsanfragen anzunehmen.
@@ -579,6 +397,8 @@ public class NutzerWS{
     /**
      * Dise Methode blockiert einen anderen Nutzer, das heißt, dass die beiden
      * Nutzer sich gegenseitig keine Nachrichten mehr schicken können.
+     * Wenn der andere Nutzer schon blockiert ist, dann wird die Blockierung aufgehoben
+     * und die Nutzer können sich wieder Nachrichten schicken.
      *
      * @param token
      * @param Daten
@@ -626,46 +446,159 @@ public class NutzerWS{
     }
 
     /**
-     * Diese Methode entfernt die Blockierung eines anderen Nutzers, das heißt,
-     * dass die Nutzer sich wieder Nachrichten senden können.
+     * Diese Methode gibt die Einstellungen eines Nutzers zurück, sowie die Anzahl der selbst
+     * gesendeten Nachrichten und Fotos. Außerdem wird für jeden Chat und jede Gruppe, an der
+     * der Nutzer teilnimmt eine Übersicht angegeben, wie viele Nachrichten und Fotos
+     * in dem jeweiligen Chat beziehungsweise der Gruppe vorhanden sind
      *
-     * @param token Das Webtoken
-     * @param Daten Die Daten zum eigenen sowie anderen Nutzer
+     * @param token
+     * @param id
      * @return
      */
-    @POST
-    @Path("/unblock/{token}")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @GET
+    @Path("/getSettings/{id}/{token}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response unblock(@PathParam("token") String token, String Daten){
+    public Response getSettings(@PathParam("token") String token, @PathParam("id") int id){
         if(!verify(token)){
             return response.generiereFehler401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
+            JsonObject j = new JsonObject();
+            j.add("settings", parser.toJsonTree(settingsEJB.getCopyById(id)));
+
+            //alle selbst gesendeten Nachrichten, Fotos, etc
+            int anzahlN = 0;
+            int anzahlF = 0;
+            List<Nachricht> nL = nachrichtEJB.getOwnMessages(id);
+            for(Nachricht n : nL){
+                anzahlN++;
+                if(n.getFoto() != null){
+                    anzahlF++;
+                }
+            }
+            j.add("anzahlSelbstGesendet", parser.toJsonTree(anzahlN));
+            j.add("anzahlFotosSelbstGesendet", parser.toJsonTree(anzahlF));
+
+            //für jeden eigenen Chat Liste mit Anzahl Nachrichten, Fotos, etc
+            Nutzer self = nutzerEJB.getById(id);
+            List<Chat> chatList = chatEJB.getOwnChats(self);
+            List<JsonObject> jsonList = new ArrayList<>();
+            for(Chat c : chatList){
+                JsonObject jO = new JsonObject();
+                int anzahlNa = 0;
+                int anzahlFo = 0;
+                List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
+                for(Nachricht nachricht : nList){
+                    anzahlNa++;
+                    if(nachricht.getFoto() != null){
+                        anzahlFo++;
+                    }
+                }
+                jO.add("id", parser.toJsonTree(c.getChatid()));
+                jO.add("anzahlNachrichten", parser.toJsonTree(anzahlNa));
+                jO.add("anzahlFotos", parser.toJsonTree(anzahlFo));
+                jsonList.add(jO);
+            }
+            j.add("chatübersicht", parser.toJsonTree(jsonList));
+
+            return response.generiereAntwort(parser.toJson(j));
+        }
+    }
+
+    /**
+     * Diese Methode ändert die Eintellungen des Nutzers.
+     *
+     * @param token Das Webtoken
+     * @param Daten Die neuen Einstellung
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
+    @POST
+    @Path("/setSettings/{token}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response setSettings(@PathParam("token") String token, String Daten){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }else{
+            Gson parser = new Gson();
+            Setting s = parser.fromJson(Daten, Setting.class);
+            Nutzer self = nutzerEJB.getById(s.getNutzerid());
 
             try{
-                JsonObject jsonO = parser.fromJson(Daten, JsonObject.class);
+                self.getSetting().setDarkmode(s.getDarkmode());
+            }catch(NullPointerException e){
 
-                int eigeneId = parser.fromJson((jsonO.get("eigeneId")), Integer.class);
-                Nutzer self = nutzerEJB.getById(eigeneId);
-
-                String andererName = parser.fromJson((jsonO.get("andererNutzerName")), String.class);
-                Nutzer other = nutzerEJB.getByUsername(andererName);
-
-                nutzerEJB.unblock(self, other);
-                self.getHatBlockiert().remove(other);
-                other.getBlockiertVon().remove(self);
-
-                return response.generiereAntwort("true");
-            }catch(JsonSyntaxException e){
-                return response.generiereFehler406("Json wrong");
             }
+            try{
+                self.getSetting().setLesebestätigung(s.getLesebestätigung());
+            }catch(NullPointerException e){
+
+            }
+            try{
+                self.getSetting().setMailifimportant(s.getMailifimportant());
+            }catch(NullPointerException e){
+
+            }
+            return response.generiereAntwort("true");
+        }
+    }
+
+    /**
+     * Diese Methode gibt den persönliche Kanal eines Nutzers zurück. Dieser ist so aufgebaut,
+     * dass nur der Nutzer, dem der Kanal gehört, Nachrichten in diesem veröffentlichen kann.
+     * Den Nachrichten kann ein Like hinzugefügt werden, diese Methode gibt deshalb außerdem an,
+     * welche und wie viele Nutzer einer Nachricht einen Like hinzugefügt haben.
+     *
+     * @param token
+     * @param id
+     * @return
+     */
+    @GET
+    @Path("/getChannel/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getChannel(@PathParam("token") String token, @PathParam("id") int id){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }else{
+
+            Gson parser = new Gson();
+
+            Nutzer n = nutzerEJB.getById(id);
+
+            List<Nachricht> l = nachrichtEJB.getCopyByChat(n.getChannel().getChatid());
+
+            List<Nachricht> ll = new ArrayList<>();
+
+            for(int x = l.size() - 1; x >= 0; x--){
+                ll.add(l.get(x));
+            }
+
+            for(Nachricht na : ll){
+                na.setSender(null);
+                for(Nutzer nu : na.getLikedBy()){
+                    nu.setPasswordhash(null);
+                    nu.setAdminInGroups(null);
+                    nu.setOwnFriendList(null);
+                    nu.setOtherFriendList(null);
+                    nu.setPinnedChats(null);
+                    nu.setHatBlockiert(null);
+                    nu.setBlockiertVon(null);
+                    nu.setSetting(null);
+                    nu.setMarkedMessages(null);
+                    nu.setArchivedChats(null);
+
+                }
+            }
+
+            return response.generiereAntwort(parser.toJson(ll));
+
+//            return response.generiereFehler406("false");
         }
     }
 
     /**
      * Diese Methode realisiert den Login in das System und erstellt einen
-     * Token.
+     * Token, der einen gewissen Gültigkeitszeitraum hat.
      *
      * @param Daten Die Anmeldedaten des Nutzers, bestehend aus Nutzername und
      * Passwort
@@ -725,7 +658,8 @@ public class NutzerWS{
     }
 
     /**
-     * Diese Methode realisiert den Logout aus dem System.
+     * Diese Methode realisiert den Logout aus dem System und fügt das Token des Nutzers in
+     * die Blacklist ein, weswegen der Token nicht mehr zum Login genutzt werden kann.
      *
      * @param token Das Webtoken
      * @return Das Responseobjekt mit dem Status der Methode
@@ -767,7 +701,7 @@ public class NutzerWS{
 
     /**
      * Diese Methode fügt einen Nutzer in das System ein. Bevor dieser Nutzer
-     * sich aber einloggen kann, erhält er einen vierstelligen Pin per E-Mail,
+     * sich einloggen kann, erhält er einen vierstelligen Pin per E-Mail,
      * mit dem der Nutzer sein Konto erst freischalten muss.
      *
      * @param Daten Die Daten zum neuen Nutzer
@@ -874,7 +808,8 @@ public class NutzerWS{
 
     /**
      * Diese Methode schaltet einen neu registrierten Benutzer frei. Dafür muss
-     * dieser den zuvor per E-Mail erhaltenen Pin eingeben.
+     * dieser den zuvor per E-Mail erhaltenen Pin eingeben. Nach dem Aufrufen der Methode
+     * kann sich der Nutzer einloggen.
      *
      * @param Daten Die Informationen zum Nutzer und der per E-Mail erhaltene
      * Pin
@@ -946,48 +881,11 @@ public class NutzerWS{
     }
 
     /**
-     * Diese Methode löscht den eigenen Nutzer, dabei wird überprüft, ob die
-     * Person, von der die Anfrage kam, gleich dem zu löschenden Nutzer ist.
-     *
-     * @param id Die eigene ID
-     * @param token Das Webtoken
-     * @return Das Responseobjekt mit dem Status der Methode
-     */
-    @DELETE
-    @Path("/delete/{id}/{token}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response delete(@PathParam("id") int id, @PathParam("token") String token){
-        if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
-        }else{
-            String name = tokenizer.getUser(token);
-            if(nutzerEJB.getByUsername(name).equals(nutzerEJB.getById(id))){
-
-                if(nutzerEJB.delete(id)){
-                    Blacklist bl = new Blacklist();
-                    bl.setToken(token);
-
-                    Date date = new Date();
-                    bl.setTimestamp(date);
-                    blacklistEJB.logOut(bl);
-                    return response.generiereAntwort("true");
-                }else{
-                    return response.generiereFehler500("Fehler beim Löschen");
-
-                }
-
-            }else{
-                return response.generiereFehler406("Du hast nicht die nötige Berechtigung");
-            }
-        }
-    }
-
-    //funktioniert nur bei eingeschaltetem Tokenizer
-    /**
-     * Diese Methode aktualisiert die Nutzerinformationen.
+     * Diese Methode aktualisiert die Nutzerinformationen. Um den Nutzer zu verifizieren,
+     * muss dieser sein altes Passwort eingeben.
      *
      * @param token Das Webtoken
-     * @param Daten Die zu aktualisierenden Nutzerdaten
+     * @param Daten Die zu aktualisierenden Nutzerdaten sowie das eigene Passwort.
      * @return Das Responseobjekt mit dem Status der Methode
      */
     @PUT
@@ -1087,6 +985,44 @@ public class NutzerWS{
 
         }
 
+    }
+
+    /**
+     * Diese Methode löscht den eigenen Nutzer, dabei wird überprüft, ob die
+     * Person, von der die Anfrage kam, gleich dem zu löschenden Nutzer ist, um das Löschen von anderen Accounts
+     * zu unterbinden.
+     *
+     * @param id Die eigene Id
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode
+     */
+    @DELETE
+    @Path("/delete/{id}/{token}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response delete(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }else{
+            String name = tokenizer.getUser(token);
+            if(nutzerEJB.getByUsername(name).equals(nutzerEJB.getById(id))){
+
+                if(nutzerEJB.delete(id)){
+                    Blacklist bl = new Blacklist();
+                    bl.setToken(token);
+
+                    Date date = new Date();
+                    bl.setTimestamp(date);
+                    blacklistEJB.logOut(bl);
+                    return response.generiereAntwort("true");
+                }else{
+                    return response.generiereFehler500("Fehler beim Löschen");
+
+                }
+
+            }else{
+                return response.generiereFehler406("Du hast nicht die nötige Berechtigung");
+            }
+        }
     }
 
 }
