@@ -390,6 +390,38 @@ public class NutzerEJB{
     }
 
     /**
+     * Diese Methode sucht alle Nutzer, die den angegeben Namen in ihrem Nutzernamen
+     * enthalten, aus der Datenbank heraus. Dafür werden Prozentzeichen am Anfang und am Ende
+     * des eingebenen Namens hinzugefügt, um den SQL-Befehl korrekt ausführen zu können.
+     *
+     * @param name Der gesuchte Name
+     * @return Die gesuchte Nutzerliste
+     */
+    public List<Nutzer> searchCopy(String name){
+        name = "%" + name + "%";
+        System.out.println(name);
+        Query query = em.createNamedQuery(Nutzer.class.getSimpleName() + ".search");
+        query.setParameter("benutzername", name);
+
+        List<Nutzer> l = (List<Nutzer>) query.getResultList();
+
+        for(Nutzer n : l){
+            em.detach(n);
+            n.setPasswordhash(null);
+            n.setAdminInGroups(null);
+            n.setOwnFriendList(null);
+            n.setOtherFriendList(null);
+            n.setPinnedChats(null);
+            n.setHatBlockiert(null);
+            n.setBlockiertVon(null);
+            n.setSetting(null);
+            n.setMarkedMessages(null);
+        }
+
+        return l;
+    }
+
+    /**
      * Diese Methode registriert einen neuen Nutzer.
      *
      * @param neuerNutzer

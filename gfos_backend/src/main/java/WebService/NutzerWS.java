@@ -195,6 +195,33 @@ public class NutzerWS{
     }
 
     /**
+     * Diese Methode sucht nach Nutzern anhand ihres Benutzernamens und gibt diese
+     * zurück. Sie kann zum Beispiel beim Hinzufügen von Freunden genutzt werden.
+     *
+     * @param benutzername Der angefragte Benutzername
+     * @param token Das Webtoken
+     * @return Die Liste mit den gesuchten Nutzern
+     */
+    @GET
+    @Path("/search/{benutzername}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response search(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
+        if(!verify(token)){
+            return response.generiereFehler401("Ungültiges Token");
+        }else{
+            List<Nutzer> l = nutzerEJB.searchCopy(benutzername);
+            Gson parser = new Gson();
+            if(l.isEmpty()){
+                return response.generiereFehler406("Benutzername nicht vorhanden");
+            }else{
+                return response.generiereAntwort(parser.toJson(l));
+            }
+
+        }
+
+    }
+
+    /**
      * Diese Methode gibt den Benutzernamen eines Nutzers anhand seiner Id
      * zurück.
      *
