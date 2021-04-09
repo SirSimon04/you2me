@@ -185,11 +185,11 @@ public class NachrichtWS{
 
             if(self.getSetting().getWordfilter()){
                 for(Nachricht n : nList){
-                    if(!n.getIsFile()){
-                        if(filter.isProfane(n.getInhalt())){
-                            n.setInhalt(filter.filter(n.getInhalt()));
-                        }
+//                    if(!n.getIsFile()){
+                    if(filter.isProfane(n.getInhalt())){
+                        n.setInhalt(filter.filter(n.getInhalt()));
                     }
+//                    }
                 }
             }
             //gucken, ob von jedem gelesen
@@ -375,7 +375,6 @@ public class NachrichtWS{
                 }catch(NullPointerException e){
                     response.generiereAntwort("Komisch");
                 }
-                neueNachricht.setIsFile(false);
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");

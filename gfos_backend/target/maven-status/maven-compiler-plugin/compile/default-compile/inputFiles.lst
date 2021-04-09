@@ -3,9 +3,9 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Filter/ExaminationResult.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/SettingsEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/NameSorter.java
-/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Decoder/Base64_PDF.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/NutzerEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Chat.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/FileService/CreateFile.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Blacklist.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Filter/SwearWordData.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/FotoEJB.java
@@ -14,6 +14,7 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Mail.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Filter/MaxFinder.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Entity/Setting.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/FileService/ReadFile.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Hasher.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/DateSorterChat.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Filter/Grawlox.java
@@ -25,6 +26,7 @@
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Antwort.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/NachrichtEJB.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/EJB/ChatEJB.java
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/FileService/WriteToFile.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/testgfos2021/gfostest/resources/JavaEE8Resource.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Application/App.java
 /home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java/Utilities/Tokenizer.java
