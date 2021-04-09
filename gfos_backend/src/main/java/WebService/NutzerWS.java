@@ -5,6 +5,9 @@
  */
 package WebService;
 
+import FileService.CreateFile;
+import FileService.ReadFile;
+import FileService.WriteToFile;
 import EJB.BlacklistEJB;
 import EJB.ChatEJB;
 import EJB.FotoEJB;
@@ -120,6 +123,19 @@ public class NutzerWS{
             return true;
         }
 
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/test")
+    public boolean test(){
+        System.out.println("Hieeeerrererer");
+//        Base64_PDF conv = new Base64_PDF();
+//        conv.create();
+        CreateFile cf = new CreateFile();
+        WriteToFile write = new WriteToFile();
+        ReadFile read = new ReadFile();
+        return true;
     }
 
     /**
@@ -674,7 +690,7 @@ public class NutzerWS{
                     //return parser.toJson(jsonObject);
                     return response.generiereAntwort(parser.toJson(jsonObject));
                     //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
-//                return response.generiereAntwort("test");
+//                return response.generiereAntwort("create");
                 }else{
                     return response.generiereFehler406("PW falsch");
                 }

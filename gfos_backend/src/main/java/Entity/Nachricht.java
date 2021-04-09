@@ -80,6 +80,8 @@ public class Nachricht implements Serializable{
     private Boolean isplanned;
     @Column(name="COUNTLIKES")
     private Integer countlikes;
+    @Column(name="ISFILE")
+    private boolean isFile;
     @JoinTable(name="HATGELESEN", joinColumns={
         @JoinColumn(name="NACHRICHTID", referencedColumnName="NACHRICHTID")}, inverseJoinColumns={
         @JoinColumn(name="NUTZERID", referencedColumnName="ID")})
@@ -192,6 +194,14 @@ public class Nachricht implements Serializable{
 
     public void setCountLikes(Integer countlikes){
         this.countlikes = countlikes;
+    }
+
+    public void setIsFile(boolean isFile){
+        this.isFile = isFile;
+    }
+
+    public boolean getIsFile(){
+        return isFile;
     }
 
     @XmlTransient

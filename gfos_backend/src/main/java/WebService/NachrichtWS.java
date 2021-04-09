@@ -17,6 +17,9 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
+import FileService.CreateFile;
+import FileService.ReadFile;
+import FileService.WriteToFile;
 import Filter.Filter;
 import Utilities.Antwort;
 import Utilities.Mail;
@@ -43,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 
 /**
@@ -157,6 +162,12 @@ public class NachrichtWS{
                         n.setReadbyall(Boolean.TRUE);
                     }
                 }
+//                if(n.getIsFile()){
+//                    ReadFile read = new ReadFile();
+//                    String filename = n.getInhalt().substring(3, n.getInhalt().length() - 1);
+//                    String base64 = read.read(filename);
+//                    n.setInhalt(base64);
+//                }
             }
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatid);
@@ -174,8 +185,10 @@ public class NachrichtWS{
 
             if(self.getSetting().getWordfilter()){
                 for(Nachricht n : nList){
-                    if(filter.isProfane(n.getInhalt())){
-                        n.setInhalt(filter.filter(n.getInhalt()));
+                    if(!n.getIsFile()){
+                        if(filter.isProfane(n.getInhalt())){
+                            n.setInhalt(filter.filter(n.getInhalt()));
+                        }
                     }
                 }
             }
@@ -362,7 +375,7 @@ public class NachrichtWS{
                 }catch(NullPointerException e){
                     response.generiereAntwort("Komisch");
                 }
-
+                neueNachricht.setIsFile(false);
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
@@ -373,6 +386,58 @@ public class NachrichtWS{
             }
         }
 
+    }
+
+    @POST
+    @Path("/addFile/{token}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sendFile(String Daten, @PathParam("token") String token){
+        if(!verify(token)){
+            return response.generiereFehler401("dentifrisse");
+        }else{
+
+            Gson parser = new Gson();
+            try{
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
+                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
+                String jsonFilename = parser.fromJson((jsonObject.get("filename")), String.class);
+
+                //check if someone is blocked
+                Chat c = chatEJB.getById(chatId);
+                Chat copy = chatEJB.getCopyListsNotNull(chatId);
+                Nutzer self = nutzerEJB.getById(neueNachricht.getSenderid());
+                copy.getNutzerList().remove(self);
+                Nutzer other = copy.getNutzerList().get(0);
+                if(!c.getIsgroup()){
+                    if(self.getHatBlockiert().contains(other)){
+                        return response.generiereFehler406("Du hast diesen Nutzer blockiert");
+                    }
+                    if(other.getHatBlockiert().contains(self)){
+                        return response.generiereFehler406("Du bist von diesem Nutzer blockiert");
+                    }
+                }
+
+                String filename = "";
+                filename += neueNachricht.getSenderid() + "|" + neueNachricht.getDatumuhrzeit() + "|" + jsonFilename;
+
+                CreateFile create = new CreateFile();
+                create.create(filename);
+
+                WriteToFile write = new WriteToFile();
+                write.write(filename, neueNachricht.getInhalt());
+
+                neueNachricht.setInhalt("|||" + filename);
+                neueNachricht.setIsFile(true);
+                chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
+                nachrichtEJB.add(neueNachricht);
+
+                return response.generiereAntwort("true");
+            }catch(Exception e){
+                return response.generiereFehler500("Fehler");
+            }
+        }
     }
 
     /**
