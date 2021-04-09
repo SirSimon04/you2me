@@ -8,11 +8,14 @@ import EJB.ChatEJB;
 import EJB.FotoEJB;
 import EJB.NachrichtEJB;
 import EJB.NutzerEJB;
+import EJB.SettingsEJB;
 import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
+import Entity.Setting;
+import Filter.Filter;
 import Utilities.Antwort;
 import Utilities.Tokenizer;
 import Utilities.DateSorterChat;
@@ -34,6 +37,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ws.rs.core.Response;
@@ -71,7 +75,12 @@ public class ChatWS{
     @EJB
     private BlacklistEJB blacklistEJB;
 
+    @EJB
+    private SettingsEJB settingEJB;
+
     private Antwort response = new Antwort();
+
+    private Filter filter = new Filter();
 
     /**
      * Diese Methode verifiziert einen Token.
@@ -178,6 +187,8 @@ public class ChatWS{
             List<Nutzer> adminListe = c.getAdminList();
 
             Nutzer self = nutzerEJB.getCopyByIdListsNotNull(id);
+
+            Filter filter = new Filter();
 
             if(c.getIsgroup()){
 
@@ -433,24 +444,40 @@ public class ChatWS{
 
                 Nutzer self = nutzerEJB.getCopyByIdListsNotNull(nutzerid);
 
+                Setting selfSetting = settingEJB.getById(nutzerid);
+
                 List<Chat> liste = chatEJB.getAllCopyListsNotNull();
                 for(Chat c : liste){
                     if(c.getNutzerList().contains(self)){
                         ownChatListDB.add(c);
                     }
                 }
-                System.out.println("Before first for");
 
                 List<Chat> pinnedChats = new ArrayList<>();
 
                 for(Chat c : ownChatListDB){
+                    System.out.println("0");
                     //wenn eine neue Nachricht existiert, null setzn
                     try{
+
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
                         c.getLetztenachricht().setSender(n.getSender());
                         c.setLetztenachricht(n);
-                    }catch(Exception e){
+                        System.out.println("letzte Nachricht: " + n.getInhalt());
+                        if(selfSetting.getWordfilter()){
+                            System.out.println("1");
+                            if(filter.isProfane(n.getInhalt())){
+                                System.out.println("2");
+                                n.setInhalt(filter.filter(n.getInhalt()));
+                                System.out.println("3");
+                            }
+                        }
 
+                        System.out.println("letzte Nachricht gefiltert: " + n.getInhalt());
+                    }catch(IOException e){
+                        System.out.println("4");
+                    }catch(NullPointerException e){
+                        System.out.println("5");
                     }
 //
                     for(Nutzer n : c.getNutzerList()){
@@ -576,6 +603,7 @@ public class ChatWS{
                 JsonObject json = parser.fromJson(Daten, JsonObject.class);
                 Chat neuerChat = parser.fromJson(Daten, Chat.class);
                 neuerChat.setIsgroup(true);
+//                neuerChat.setIspinned(Boolean.FALSE);
                 chatEJB.createChat(neuerChat);
                 int eigeneId = parser.fromJson((json.get("eigeneId")), Integer.class);
                 System.out.println(eigeneId);
@@ -636,11 +664,13 @@ public class ChatWS{
 
                 Nutzer self = nutzerEJB.getCopyById(eigeneId);
                 Nutzer other = nutzerEJB.getCopyByUsername(username);
+//                neuerChat.setIspinned(Boolean.FALSE);
                 chatEJB.createChat(neuerChat);
 
                 nutzerEJB.fuegeChatHinzu(neuerChat, self);
                 nutzerEJB.fuegeChatHinzu(neuerChat, other);
-
+//                self.getPinnedChats().remove(neuerChat);
+//                other.getPinnedChats().remove(neuerChat);
                 boolean test = true;
                 //Anfrage, ob schon vorhanden
                 for(Chat c : chatEJB.getAll()){
