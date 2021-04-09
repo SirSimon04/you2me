@@ -77,7 +77,7 @@ export default {
 
         welcome_vue_zeigen: false,
         app_vue_registrieren_zeigen: false,
-        app_vue_settings_zeigen: false,
+        app_vue_settings_zeigen: true,
         app_vue_chatliste_zeigen: true,
         app_vue_chat_zeigen: true,
         app_vue_chatinfo_zeigen: false,
