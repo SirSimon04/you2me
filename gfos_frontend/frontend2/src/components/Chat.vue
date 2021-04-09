@@ -1,33 +1,6 @@
 <template>
     <v-container>
         <div id="chatcontainer">
-            <!--
-                Colors are not corrent. See in JS (current colors as seen in README)
-                This is outdated. Don't use this as a reference
-            
-            <div v-for="item in messages" :key="item" style="height: 100%;">
-                <div v-if="item.senderid === '3'" style="background-color: #2b5278; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative; left: 50%;">
-                    <v-list-item three-line>
-                        <v-list-item-content>
-                            <p style="color: white; white-space: pre-line;">{{item.inhalt}}</p>
-                            <v-list-item-subtitle style="color: white;">{{item.time}}</v-list-item-subtitle>
-                        </v-list-item-content>
-                    </v-list-item>
-                </div>
-                <div v-else style="background-color: #252d30; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;">
-                    <v-list-item three-line>
-                        <v-list-item-content>
-                            <div class="overline mb-2" style="color: white;">
-                                {{item.author}}
-                            </div>
-                            <p style="color: white; white-space: pre-line;">{{item.inhalt}}</p>
-                            <v-list-item-subtitle style="color: white;">{{item.time}}</v-list-item-subtitle>
-                        </v-list-item-content>
-                    </v-list-item>
-                </div>
-                <br>
-            </div>
-            -->
         </div>
         <div style="
                 background-color: rgb(27, 66, 104);
@@ -67,6 +40,7 @@
 
 <script>
 import { EventBus } from './EventBus.js';
+import { ImageContainer } from './ImageContainer.js';
 
 export default {
     name: 'Chat',
@@ -77,49 +51,7 @@ export default {
     mounted() {
         window.CURRENT_CHAT_ID = -1;
         var messages = [];
-
-        function testPost() {
-            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/testPost', {
-                mode: 'cors',
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'text/plain'
-                },
-                body: 'Hallo'/*JSON.stringify({
-                    test: 'Hallo'
-                })*/
-            }).then(response => {
-                response.clone();
-                console.warn(response);
-                response.text().then(content => {
-                    console.warn(content);
-                });
-            });
-        }
-
-        function sendMessage() {
-            var content = document.getElementById('sendMessage_Area').text;
-            var currentMillis = new Date.currentMillis;
-            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'text/plain'
-                },
-                body: JSON.stringify({
-                    senderid: window.CURRENT_USER_ID,
-                    inhalt: content,
-                    datumuhrzeit: currentMillis,
-                    chatid: window.CURRENT_CHAT_ID,
-                })
-            }).then(response => {
-                response.clone();
-                response.text().then(content => {
-                    console.warn(content);
-                }); 
-            });
-        }
+        var imageContainer = new ImageContainer();
 
         function loginTest() {
             fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/login', {
@@ -130,7 +62,7 @@ export default {
                     'Content-Type': 'text/plain', // Wird an den Server gesendet
                 },
                 body: JSON.stringify({
-                    benutzername: 'SirSimon',
+                    benutzername: 'Simon',
                     passwort: 'Test1234'
                 })
             }).then(response => {
@@ -154,7 +86,6 @@ export default {
 
         function fetchIfNewest(loadMsgs) {
             // Check for newest message and reload all messages if there is a newer one
-            console.log('checking');
             var newest = null;
             fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/getNewest/' + window.CURRENT_CHAT_ID + '/1').then(response => {
                 if (response.status !== 200) {
@@ -165,16 +96,23 @@ export default {
                 response.json().then(data => {
                     newest = data;
                     if (messages.length === 0) loadMsgs();
-                    else if (messages[messages.length - 1]['nachrichtid'] !== newest['nachrichtid']) { // Trigger hier verändern bzw. hinzufügen, falls sich der Benutzer unbenennt / löscht
-                        loadMsgs();
+                    else {
+                        var localNewest = null;
+                        for (var i=0; i<messages.length-1; i++) {
+                            localNewest = messages[messages.length - 1 - i];
+                            if (localNewest['isplanned'] === undefined) {
+                                break;
+                            }
+                        }
+                        if (localNewest['nachrichtid'] !== newest['nachrichtid']) {
+                            loadMsgs();
+                        }
                     }
                 }).catch(error => {
                     console.error('An error occured while parsing the string:' + error);
                 });
             });
         }
-
-        var interval = setInterval(function() {}, 1000);
         
         EventBus.$on('MYEVENT', (payload) => {
             console.log('THIS IS MY EVENT');
@@ -185,100 +123,18 @@ export default {
             document.getElementById('chatcontainer').style = 'overflow: auto; min-height: 400px; height: "' + payload["height"] + 'px"; max-height: ' + payload["height"] + 'px; background-color: #0E1621; border-radius: 15px; padding: 16px;';
         });
 
-        EventBus.$on('OPENCHAT', (payload) => {
-            console.log('removing interval');
-            clearInterval(interval); // Stop current loading interval to not load multiple chats at the same time
+        EventBus.$on('APP_INTERVAL', (payload) => {
+            if (window.CURRENT_CHAT_ID !== -1) {
+                fetchIfNewest(loadMessages);
+            }
+        });
 
+        EventBus.$on('OPENCHAT', (payload) => {
             //window.CURRENT_USER_ID = payload['userid']; //set in cookie?
             window.CURRENT_CHAT_ID = payload['chatid'];
             messages = [];
 
             document.getElementById('chatcontainer').innerHTML = '';
-
-            function loadMessages() { // Reload all messages (will be called if a newer message is available)
-                fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
-                    if (response.status !== 200) {
-                        console.error('Code !== 200:' + response);
-                        return null;
-                    }
-                    response.clone();
-                    response.json().then(msgs => {
-                        EventBus.$emit('RECEIVEDMESSAGE', {'message': msgs[msgs.length-1]});
-                        var diff = msgs.length - messages.length;
-
-                        var cc = document.getElementById('chatcontainer');
-                        var isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
-
-                        cc.innerHTML = '';
-                        // Write all single messages into the chatcontainer
-                        for (var i=0; i<msgs.length; i++) {
-                            var data = msgs[i];
-                            var elem = '';
-                            // Add icon for planned message (if sent by me: icon; if sent by other: show if date is not a future date)
-                            var date = new Date(data['datumuhrzeit']);
-                            var dateFormatted = fillStringZero(date.getHours(), 2) + ':' + fillStringZero(date.getMinutes(), 2);
-                            if (data['senderid'] === window.CURRENT_USER_ID) elem = '<div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;"><div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
-                            else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
-                            cc.innerHTML += elem;
-                        }
-
-                        var fadeTime = 0;
-                        var chatContainerWidth = cc.clientWidth;
-                        var fadeAnim = setInterval(function() {
-                            var elems = document.getElementsByClassName('singlemsgcontainer');
-                            for (i=0; i<diff; i++) {
-                                elem = elems[elems.length-i-1];
-                                var fadeX = (1 - fadeTime) * -((elem.id == 'myMessage') ? chatContainerWidth : (chatContainerWidth / 2));
-                                elem.style = `
-                                position: relative;
-                                left: ` + fadeX + `px;
-                                `;
-                            }
-                            fadeTime += 0.01;
-                            if (fadeTime > 1) clearInterval(fadeAnim);
-                        }, 10);
-
-                        function f(t, u8s) {
-                            var a = -1.25; // 4sec
-                            if (u8s) a = -0.078125; // 8sec
-                            
-                            var d = 2; // 4sec
-                            if (u8s) d = 4; // 8sec
-
-                            var e = 20; // Max px/s
-
-                            var pow = Math.pow((t - d), 4);
-                            // -1.25 * (x - 2)^4 + 20
-                            // -0.078125 * (x - 4)^4 + 20 if u8s
-                            return a * pow + e;
-                        }
-
-                        if (isBottom) {
-                            console.log('Is at bottom');
-                            var use8s = msgs.length - messages.length > 60;
-                            isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
-                            var time = 0;
-                            var scrollAnim = setInterval(function() {
-                                cc.scrollBy(0, f(time, use8s));
-
-                                time += 0.01;
-                                isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
-                                // Time should not exceed a value of 4 or 8
-                                if (isBottom || time > (use8s ? 8 : 4)) clearInterval(scrollAnim);
-                            }, 10);
-                        }
-
-                        messages = msgs;
-                    }).catch(error => {
-                        console.error('An error occured while parsing the string:' + error);
-                    });
-                });
-            }
-            
-            console.log('resetting fetch intervall');
-            interval = setInterval(function() {
-                fetchIfNewest(loadMessages);
-            }, 1000); // Set new interval after stopping old on EventBus.$on() to load only one chat at a time
 
         }); // EventBus.$on('OPENCHAT')
 
@@ -286,6 +142,111 @@ export default {
             console.log('EventBus: KSC_SENDMESSAGE calling function window.sendMessage();');
             window.sendMessage();
         }); // EventBus.$on('KSC_SENDMESSAGE');
+
+        function loadMessages() { // Reload all messages (will be called if a newer message is available)
+            console.log('loadMessages()');
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
+                if (response.status !== 200) {
+                    console.error('Code !== 200:' + response);
+                    return null;
+                }
+                response.clone();
+                response.json().then(msgs => {
+                    EventBus.$emit('RECEIVEDMESSAGE', {'message': msgs[msgs.length-1]});
+                    var diff = msgs.length - messages.length;
+
+                    var cc = document.getElementById('chatcontainer');
+                    var isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
+
+                    cc.innerHTML = '';
+                    // Write all single messages into the chatcontainer
+                    for (var i=0; i<msgs.length; i++) {
+                        var data = msgs[i];
+                        var elem = '';
+                        var date = new Date(data['datumuhrzeit']);
+                        var now = new Date();
+                        var dateFormatted = fillStringZero(date.getHours(), 2) + ':' + fillStringZero(date.getMinutes(), 2);
+                        if (parseInt(date.getTime() / 86400000) < parseInt(now.getTime() / 86400000)) {
+                            var extraDate = fillStringZero(date.getDate(), 2) + '.' + fillStringZero(date.getMonth() + 1, 2)
+                            if (parseInt(date.getFullYear()) < parseInt(now.getFullYear())) {
+                                extraDate += '.' + fillStringZero(date.getFullYear(), 2);
+                            }
+                            dateFormatted = extraDate + ' ' + dateFormatted;
+                        }
+                        if (data['senderid'] === window.CURRENT_USER_ID) {
+                            var plannedIcon = '';
+                            if (data['isplanned']) plannedIcon = '<img style="margin-right: 4px; position: relative; top: 4px;" height="16px" width="16px" src="' + imageContainer.getValue("CLOCK") + '">';
+                            var markedIcon = '';
+                            if (data['isMarked']) markedIcon = '<img style="z-index: 100; position: relative; float: right; bottom: -8px; right: 8px;" height="16px" width="16px" src="' + imageContainer.getValue("STAR") + '">'
+                            elem = `
+                            <div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;">
+                                ` + markedIcon + `
+                                <div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);">
+                                    <div tabindex="-1" class="v-list-item v-list-item--three-line theme--light">
+                                        <div class="v-list-item__content">
+                                            <p style="color: white; white-space: pre-line;">` + data['inhalt'] + `</p>
+                                            <div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">` + plannedIcon + dateFormatted + `</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>`;
+                        }
+                        else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
+                        cc.innerHTML += elem;
+                    }
+
+                    var fadeTime = 0;
+                    var chatContainerWidth = cc.clientWidth;
+                    var fadeAnim = setInterval(function() {
+                        var elems = document.getElementsByClassName('singlemsgcontainer');
+                        for (i=0; i<diff; i++) {
+                            var elem = elems[elems.length-i-1];
+                            var fadeX = (1 - fadeTime) * -((elem.id == 'myMessage') ? chatContainerWidth : (chatContainerWidth / 2));
+                            elem.style = `
+                            position: relative;
+                            left: ` + fadeX + `px;
+                            `;
+                        }
+                        fadeTime += 0.01;
+                        if (fadeTime > 1) clearInterval(fadeAnim);
+                    }, 10);
+
+                    function f(t, u8s) {
+                        var a = -1.25; // 4sec
+                        if (u8s) a = -0.078125; // 8sec
+                        
+                        var d = 2; // 4sec
+                        if (u8s) d = 4; // 8sec
+
+                        var e = 20; // Max px/s
+
+                        var pow = Math.pow((t - d), 4);
+                        // -1.25 * (x - 2)^4 + 20
+                        // -0.078125 * (x - 4)^4 + 20 if u8s
+                        return a * pow + e;
+                    }
+
+                    if (isBottom) {
+                        var use8s = msgs.length - messages.length > 60;
+                        isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
+                        var time = 0;
+                        var scrollAnim = setInterval(function() {
+                            cc.scrollBy(0, f(time, use8s));
+
+                            time += 0.01;
+                            isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
+                            // Time should not exceed a value of 4 or 8
+                            if (isBottom || time > (use8s ? 8 : 4)) clearInterval(scrollAnim);
+                        }, 10);
+                    }
+
+                    messages = msgs;
+                }).catch(error => {
+                    console.error('An error occured while parsing the string:' + error);
+                });
+            });
+        } // loadMessages()
     }, // mounted()
 }
 

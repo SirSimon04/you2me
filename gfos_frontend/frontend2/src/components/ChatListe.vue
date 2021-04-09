@@ -24,37 +24,27 @@ export default {
         var imageContainer = new ImageContainer();
 
         console.warn(window.CURRENT_USER_ID);
-        fetch(window.IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + window.CURRENT_USER_ID + '/1').then(response => {
-            if (response.status !== 200) {
-                console.error('Code !== 200:' + response);
-                return null;
-            }
-            response.clone();
-            response.json().then(conts => {
-                console.log(conts);
-                reloadList(conts);
-            }).catch(error => {
-                console.error('An error occured while parsing the string:' + error);
+
+        EventBus.$on('APP_INTERVAL', (payload) => {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + window.CURRENT_USER_ID + '/1').then(response => {
+                if (response.status !== 200) {
+                    console.error('Code !== 200:' + response);
+                    return null;
+                }
+                response.clone();
+                response.json().then(conts => {
+                    EventBus.$emit('RELOADCHAT', {});
+                    reloadList(conts);
+                }).catch(error => {
+                    console.error('An error occured while parsing the string:' + error);
+                });
             });
         });
 
-        /*EventBus.$on('RECEIVEDMESSAGE', (payload) => {
-            console.log(chats);
-            for (var i=0; i<window.chats.length; i++) {
-                if (window.chats[i]['chatid'] === payload['chatid']) {
-                    window.chats[i] = payload;
-                }
-            }
-            console.log(window.chats);
-            reloadList(window.chats);
-        });*/
-
         function reloadList(conts) {
-            console.error(conts);
             document.getElementById('contactcontainer').innerHTML = '';
             for (var i=0; i<conts['normal'].length; i++) {
                 var data = conts['normal'][i];
-                console.warn(data);
                 var chatid = data['chatid'];
                 var isGroup = data['isgroup'];
                 var lastMessage = data["letztenachricht"];
@@ -73,9 +63,11 @@ export default {
                 `
 
                 var profilePicture = (data['profilbild'] === undefined) ? imageContainer.getValue('USER') : data['profilbild']['base64'];
-                // Umschreiben
+                var pinnedIcon = (data['ispinned'] === undefined) ? '' : '<img style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px;" height="16px" width="16px" src="' + imageContainer.getValue("PIN") + '">'
+                var unreadBadge = (data['nnew'] === 0) ? '' : '<div style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px; width: 16px; height: 16px; background-color: pink; border-radius: 100%;">' + data["nnew"] + '</div>';
                 var elem = `
                 <div onclick="window.openChat(` + chatid + ', ' + window.CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
+                    ` + unreadBadge + pinnedIcon + `
                     <img oncontextmenu="` + contextMenu + `return false;" style="padding: 6px; position: relative; float: left; top: calc(50% - 32px); border-radius: 100%" src="` + profilePicture + `" width="64" height="64">
                     <div class="v-card__text font-weight-medium subtitle-1">
                         ` + ((isGroup) ? '<img style="margin-right: 4px; position: relative; float: left; top: 4px;" width="16px" height="16px" src="' + imageContainer.getValue("GROUP") + '">' : '') + `

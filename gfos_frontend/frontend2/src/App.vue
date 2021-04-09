@@ -77,7 +77,7 @@ export default {
 
         welcome_vue_zeigen: false,
         app_vue_registrieren_zeigen: false,
-        app_vue_settings_zeigen: true,
+        app_vue_settings_zeigen: false,
         app_vue_chatliste_zeigen: true,
         app_vue_chat_zeigen: true,
         app_vue_chatinfo_zeigen: false,
@@ -86,16 +86,22 @@ export default {
     }),
 
     mounted() {
-        console.warn('IC start');
-        //console.warn(ImageContainer);
-        let ic = new ImageContainer();
-        console.warn(ic);
-        console.warn('IC end');
-
+        var ALLOWED_KEYS = ['Control', 'Enter', 'Shift', 'Alt'];
         var pressedKeys = [];
         var commands = {
             'sendMessage': ['Control', 'Enter'],
         }
+
+        window.app_interval = setInterval(function() {}, 1000);
+
+        window.resetAppInterval = function() {
+            clearInterval(window.app_interval);
+            window.app_interval = setInterval(function() {
+                EventBus.$emit('APP_INTERVAL', {});
+            }, 1000);
+        }
+
+        window.resetAppInterval();
 
         EventBus.$on('INFOMESSAGE', (payload) => {
             this.infoMessageContent = payload['message'];
@@ -104,17 +110,14 @@ export default {
                 if (payload['message'][i] === ' ') count++;
             }
             this.infoMessageTimeout = parseInt(count * 0.3 * 1000);
-            console.log(this.infoMessageTimeout);
             document.getElementById('infoMessage').click();
-        });
+        }); // EventBus.$on('INFOMESSAGE')
 
         EventBus.$on('OPENCHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = true;
-            // daten/chat/info/CHATID 4gruppe 56pn/NUTZERID/TOKEN
             fetch(window.IP_ADDRESS + '/GFOS/daten/chat/info/' + payload["chatid"] + '/' + window.CURRENT_USER_ID + '/1').then(response => {
                 response.clone();
                 response.json().then(data => {
-                    console.log(data);
                     if (data['blockiertWorden']) {
                         EventBus.$emit('LOADPROFILE', {
                             'chatid': payload['chatid'],
@@ -154,22 +157,29 @@ export default {
                 }
             }
             return true;
-        }
+        } // equals(a0, a1)
 
         window.addEventListener("keydown", function (event) {
             if (pressedKeys.includes(event.key)) return;
-            if (equals(pressedKeys, commands['sendMessage'])) {
-                EventBus.$emit('KSC_SENDMESSAGE', {});
+            for (var i=0; i<ALLOWED_KEYS.length; i++) {
+                if (event.key === ALLOWED_KEYS[i]) {
+                    pressedKeys.push(event.key);
+                    console.log(pressedKeys);
+                    if (equals(pressedKeys, commands['sendMessage'])) {
+                        EventBus.$emit('KSC_SENDMESSAGE', {});
+                    }
+                    break;
+                }
             }
-        }, true);
+        }, true); // window.addEventListener("keydown")
 
         window.addEventListener("keyup", function (event) {
             pressedKeys = pressedKeys.filter(e => e !== event.key);
-        }, true);
+        }, true); // window.addEventListener("keyup")
 
     }
 };
 window.CURRENT_USER_ID = 2;
-window.IP_ADDRESS = 'http://8eb652318604.ngrok.io';
+window.IP_ADDRESS = 'http://32c89ff52568.ngrok.io';
 
 </script>
