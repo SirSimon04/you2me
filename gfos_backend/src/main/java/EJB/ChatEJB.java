@@ -7,6 +7,7 @@ import Entity.Nachricht;
 import Entity.Nutzer;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +26,9 @@ public class ChatEJB{
 
     @PersistenceContext
     private EntityManager em;
+
+    @EJB
+    private NachrichtEJB nachrichtEJB;
 
     /**
      * Diese Methode gibt alle Chats zurück.
@@ -106,9 +110,12 @@ public class ChatEJB{
                 n.setSetting(null);
             }
             try{
-                Nachricht letzteN = c.getLetztenachricht();
-                letzteN.setNachrichtList(null);
-                letzteN.setNutzerList(null);
+//                em.detach(c.getLetztenachricht());
+//                Nachricht letzteN = c.getLetztenachricht();
+//                em.detach(letzteN);
+//                letzteN.setNachrichtList(null);
+//                letzteN.setNutzerList(null);
+                c.setLetztenachricht(nachrichtEJB.testGetById(c.getLetztenachricht().getNachrichtid()));
             }catch(NullPointerException e){
 
             }

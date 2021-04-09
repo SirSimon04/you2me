@@ -194,7 +194,7 @@ public class NachrichtWS{
 //                    }
                 }
             }
-
+            //gucke, ob markiert
             if(nList.size() > 1){
                 Collections.sort(nList, (Nachricht z1, Nachricht z2) -> {
                     if(z1.getDatumuhrzeit() > z2.getDatumuhrzeit()){
@@ -306,14 +306,10 @@ public class NachrichtWS{
                 int jsonAnswerId = 0;
                 JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
                 );
-                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class
-                );
-                String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class
-                );
-                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class
-                );
-                int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class
-                );
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
+                String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
+                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
+                int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class);
                 //Antwort auf eine andere Nachricht
                 try{
                     jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class
@@ -333,13 +329,14 @@ public class NachrichtWS{
                     Foto fotoInDB = fotoEJB.getByBase64(jsonPic);
                     neueNachricht.setFoto(fotoInDB);
                 }
-                //check if someone is blocked
                 Chat c = chatEJB.getById(chatId);
-                Chat copy = chatEJB.getCopyListsNotNull(chatId);
                 Nutzer self = nutzerEJB.getById(senderId);
-                copy.getNutzerList().remove(self);
-                Nutzer other = copy.getNutzerList().get(0);
                 if(!c.getIsgroup()){
+                    //check if someone is blockeds
+                    Chat copy = chatEJB.getCopyListsNotNull(chatId);
+
+                    copy.getNutzerList().remove(self);
+                    Nutzer other = copy.getNutzerList().get(0);
                     if(self.getHatBlockiert().contains(other)){
                         return response.generiereFehler406("Du hast diesen Nutzer blockiert");
                     }
@@ -403,7 +400,8 @@ public class NachrichtWS{
                 }catch(NullPointerException e){
                     response.generiereAntwort("Komisch");
                 }
-                chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
+//                chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
+                neueNachricht.setIsplanned(Boolean.FALSE);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");
             }catch(JsonSyntaxException e){

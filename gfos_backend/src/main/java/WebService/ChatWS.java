@@ -456,8 +456,8 @@ public class ChatWS{
                 List<Chat> pinnedChats = new ArrayList<>();
 
                 for(Chat c : ownChatListDB){
-                    System.out.println("0");
-                    //wenn eine neue Nachricht existiert, null setzn
+//                    System.out.println("0");
+//                    wenn eine neue Nachricht existiert, null setzn
                     try{
 
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
@@ -479,6 +479,7 @@ public class ChatWS{
                     }
                     //wenn Einzelchat, Infos des Anderen übernehmen
                     if(!c.getIsgroup()){
+                        System.out.println(c.getChatid() + "Hierrr");
                         // c.setAdminList(null);
                         List<Nutzer> nutzerList = c.getNutzerList();
                         Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -504,23 +505,20 @@ public class ChatWS{
                     try{
                         System.out.println("Start" + c.getChatid());
                         c.setNnew(0);
-                        List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
+                        List<Nachricht> nList = nachrichtEJB.getDetachedByChat(c.getChatid());
                         for(Nachricht n : nList){
-                            System.out.println(n.getNutzerList().contains(self));
                             if(!n.getNutzerList().contains(self)){
                                 if(n.getDatumuhrzeit() < System.currentTimeMillis()){
                                     c.setNnew(c.getNnew() + 1);
                                 }
-
                             }
-
                         }
                         System.out.println("end");
                     }catch(EJBTransactionRolledbackException e){
 
                     }
-
                 }
+//
                 List<Chat> toRemove1 = new ArrayList<>();
                 for(Chat c : ownChatListDB){
                     if(self.getPinnedChats().contains(c)){

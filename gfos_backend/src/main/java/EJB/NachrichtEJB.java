@@ -100,6 +100,14 @@ public class NachrichtEJB{
         return n;
     }
 
+    public Nachricht testGetById(int id){
+        Nachricht n = em.find(Nachricht.class, id);
+        em.detach(n);
+        n.setNachrichtList(null);
+        n.setNutzerList(null);
+        return n;
+    }
+
     /**
      * Diese Methode gibt alle Nachrichten eines Chats zurück. Dabei wird der
      * Benutzername des Senders aus der Id des Senders ermittelt. Das geschieht
@@ -136,6 +144,14 @@ public class NachrichtEJB{
         return nachrichtList;
     }
 
+    public List<Nachricht> getDetachedByChat(int id){
+        List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
+        for(Nachricht n : nachrichtList){
+            em.detach(n);
+        }
+        return nachrichtList;
+    }
+
     /**
      * Diese Methode gibt die neueste Nachricht aus einem Chat zurück. Dabei
      * wird der Benutzername des Senders aus der Id des Senders ermittelt. Das
@@ -157,6 +173,7 @@ public class NachrichtEJB{
             return na;
         }else if(nachrichtList.size() == 1){
             Nachricht n = nachrichtList.get(0);
+            em.detach(n);
             n.setNachrichtList(null);
             n.setNutzerList(null);
 
