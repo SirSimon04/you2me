@@ -18,7 +18,7 @@ import javax.persistence.Query;
  * <p>
  * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
  * Datenbank bezogen auf die Fotos. Die Daten werden bei Anfrage des Webservers
- * übergeben.</p>
+ * übergeben. Die Fotos selbst werden in der Datenbank als Base64-Strings gespeichert.</p>
  *
  * @author simon
  */

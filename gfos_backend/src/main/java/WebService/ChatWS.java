@@ -463,21 +463,13 @@ public class ChatWS{
                         Nachricht n = nachrichtEJB.getNewest(c.getChatid());
                         c.getLetztenachricht().setSender(n.getSender());
                         c.setLetztenachricht(n);
-                        System.out.println("letzte Nachricht: " + n.getInhalt());
                         if(selfSetting.getWordfilter()){
-                            System.out.println("1");
                             if(filter.isProfane(n.getInhalt())){
-                                System.out.println("2");
                                 n.setInhalt(filter.filter(n.getInhalt()));
-                                System.out.println("3");
                             }
                         }
-
-                        System.out.println("letzte Nachricht gefiltert: " + n.getInhalt());
                     }catch(IOException e){
-                        System.out.println("4");
                     }catch(NullPointerException e){
-                        System.out.println("5");
                     }
 //
                     for(Nutzer n : c.getNutzerList()){
@@ -510,16 +502,20 @@ public class ChatWS{
                     c.setNutzerList(null);
                     //anzahl neuer Nachrichten zählen
                     try{
+                        System.out.println("Start" + c.getChatid());
                         c.setNnew(0);
                         List<Nachricht> nList = nachrichtEJB.getByChat(c.getChatid());
                         for(Nachricht n : nList){
+                            System.out.println(n.getNutzerList().contains(self));
                             if(!n.getNutzerList().contains(self)){
                                 if(n.getDatumuhrzeit() < System.currentTimeMillis()){
                                     c.setNnew(c.getNnew() + 1);
                                 }
 
                             }
+
                         }
+                        System.out.println("end");
                     }catch(EJBTransactionRolledbackException e){
 
                     }
@@ -840,7 +836,7 @@ public class ChatWS{
      *
      * @param token
      * @param Daten
-     * @return
+     * @return Das responseobjekt mit dem Statsu der Methode.
      */
     @POST
     @Path("/leave/{token}")

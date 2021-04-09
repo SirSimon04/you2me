@@ -1,7 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Diese Klassen sind für das Filtern von unangebrachten Nachrichten
+ * zuständig.
  */
 package Filter;
 
@@ -9,6 +8,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * <h1>Die Klasse zum Filtern von Nachrichten</h1>
+ * <p>
+ * Diese Klasse beinhaltet alle Methoden, die von den Webserviceklassen
+ * aufgerufen wird, falls ein Nutzer seinen Schimpfwortfilter in den Einstellungen aktiviert hat.</p>
  *
  * @author simon
  */
@@ -22,11 +25,26 @@ public class Filter{
 
     }
 
+    /**
+     * Diese Methode filtert einen eingegebenen Text. Das bedeutet, dass Wörter,
+     * die in der Liste mit verbotenen Wörtern stehen, mit Sternchen überschrieben werden.
+     *
+     * @param s Der zu filternde Text
+     * @return Den gefilterten Text
+     * @throws IOException
+     */
     public String filter(String s) throws IOException{
         Grawlox grawlox = Grawlox.createFromDefault(this.file);
         return grawlox.filter(s);
     }
 
+    /**
+     * Diese Methode überprüft, ob ein Text ein nicht zugelassenes Wort enthält.
+     *
+     * @param s Der zu überprüfende Text
+     * @return Der Status, ob ein verbotenes Wort vorhanden ist.
+     * @throws IOException
+     */
     public boolean isProfane(String s) throws IOException{
         Grawlox grawlox = Grawlox.createFromDefault(this.file);
         return grawlox.isProfane(s);

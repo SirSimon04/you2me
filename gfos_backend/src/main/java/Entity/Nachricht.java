@@ -82,6 +82,8 @@ public class Nachricht implements Serializable{
     private Integer countlikes;
     @Column(name="ISFILE")
     private boolean isFile;
+    @Column(name="isMarked")
+    private boolean isMarked;
     @JoinTable(name="HATGELESEN", joinColumns={
         @JoinColumn(name="NACHRICHTID", referencedColumnName="NACHRICHTID")}, inverseJoinColumns={
         @JoinColumn(name="NUTZERID", referencedColumnName="ID")})
@@ -202,6 +204,14 @@ public class Nachricht implements Serializable{
 
     public boolean getIsFile(){
         return isFile;
+    }
+
+    public boolean getIsmarked(){
+        return isMarked;
+    }
+
+    public void setIsMarked(boolean isMarked){
+        this.isMarked = isMarked;
     }
 
     @XmlTransient

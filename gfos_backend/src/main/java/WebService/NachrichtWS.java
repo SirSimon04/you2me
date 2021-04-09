@@ -43,6 +43,8 @@ import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -134,7 +136,7 @@ public class NachrichtWS{
 
     /**
      * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück. Sobald ein Nutzer die neuen Nachrichten eines Chats lädt, bedeutet dass,
-     * das der Nutzer diese gelesen hat.
+     * das der Nutzer diese gelesen hat. Die nachrichten werden dem Datum nach absteigend sortiert.
      *
      * @param chatid Die Id des Chats, aus dem die Nachrichten angezeigt werden
      * solln
@@ -192,6 +194,26 @@ public class NachrichtWS{
 //                    }
                 }
             }
+
+            if(nList.size() > 1){
+                Collections.sort(nList, (Nachricht z1, Nachricht z2) -> {
+                    if(z1.getDatumuhrzeit() > z2.getDatumuhrzeit()){
+                        return 1;
+                    }
+                    if(z1.getDatumuhrzeit() < z2.getDatumuhrzeit()){
+                        return -1;
+                    }
+                    return 0;
+                });
+            }
+
+            List<Nachricht> markedMessages = self.getMarkedMessages();
+            for(Nachricht n : nList){
+                if(markedMessages.contains(n)){
+                    n.setIsMarked(true);
+                }
+            }
+
             //gucken, ob von jedem gelesen
             return response.generiereAntwort(parser.toJson(nList));
         }
@@ -282,14 +304,20 @@ public class NachrichtWS{
             Gson parser = new Gson();
             try{
                 int jsonAnswerId = 0;
-                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
-                String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class);
-                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
-                int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class);
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+                );
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class
+                );
+                String jsonPic = parser.fromJson((jsonObject.get("base64")), String.class
+                );
+                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class
+                );
+                int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class
+                );
                 //Antwort auf eine andere Nachricht
                 try{
-                    jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class);
+                    jsonAnswerId = parser.fromJson((jsonObject.get("answerId")), Integer.class
+                    );
                     Nachricht nachrichtInDB = nachrichtEJB.getById(jsonAnswerId);
                     neueNachricht.setAntwortauf(nachrichtInDB);
                 }catch(NullPointerException e){
@@ -398,10 +426,14 @@ public class NachrichtWS{
 
             Gson parser = new Gson();
             try{
-                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
-                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class);
-                String jsonFilename = parser.fromJson((jsonObject.get("filename")), String.class);
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+                );
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class
+                );
+                int chatId = parser.fromJson((jsonObject.get("chatid")), Integer.class
+                );
+                String jsonFilename = parser.fromJson((jsonObject.get("filename")), String.class
+                );
 
                 //check if someone is blocked
                 Chat c = chatEJB.getById(chatId);
@@ -463,9 +495,12 @@ public class NachrichtWS{
         }else{
 
             Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int lNachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
-            int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+            );
+            int lNachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class
+            );
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class
+            );
             Nachricht n = nachrichtEJB.getById(lNachrichtId);
             Nutzer self = nutzerEJB.getById(eigeneId);
 
@@ -527,9 +562,12 @@ public class NachrichtWS{
             return response.generiereFehler401("dentifrisse");
         }else{
             Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
-            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+            );
+            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class
+            );
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class
+            );
 
             Nachricht na = nachrichtEJB.getById(nId);
             Nutzer nu = nutzerEJB.getById(eigeneId);
@@ -591,10 +629,13 @@ public class NachrichtWS{
 
             Gson parser = new Gson();
             try{
-                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class);
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+                );
+                Nachricht neueNachricht = parser.fromJson(Daten, Nachricht.class
+                );
 
-                int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class);
+                int eigeneId = parser.fromJson((jsonObject.get("eigeneId")), Integer.class
+                );
 
                 neueNachricht.setChatid(nutzerEJB.getById(eigeneId).getChannel().getChatid());
                 neueNachricht.setCountLikes(0);
@@ -629,9 +670,12 @@ public class NachrichtWS{
             return response.generiereFehler401("dentifrisse");
         }else{
             Gson parser = new Gson();
-            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
-            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
-            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class);
+            JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+            );
+            int nId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class
+            );
+            int eigeneId = parser.fromJson((jsonObject.get("eigeneid")), Integer.class
+            );
 
             Nachricht na = nachrichtEJB.getById(nId);
             Nutzer nu = nutzerEJB.getById(eigeneId);

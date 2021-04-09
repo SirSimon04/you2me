@@ -5,13 +5,8 @@
  */
 package EJB;
 
-import javax.ejb.Stateless;
 import Entity.Nachricht;
-import Entity.Nutzer;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -111,7 +106,8 @@ public class NachrichtEJB{
      * aus dem Grund, dass der Benutzername des Senders nicht bei jeder
      * Nachricht gespeichert werden soll und ein Nutzer seinen Benutzernamen
      * ändern kann. Existiert der Nutzer nicht mehr in der Datenbank, wird das
-     * im Sender der Nachricht deutlich.
+     * im Namen des Senders der Nachricht deutlich, dieser wird dann auf "gelöschter Nutzer"
+     * gesetzt.
      *
      * @param id
      * @return Die Liste mit allen Nachrichten des Chats.

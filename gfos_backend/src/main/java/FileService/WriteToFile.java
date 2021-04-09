@@ -8,11 +8,23 @@ package FileService;
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;  // Import the IOException class to handle errors
 
+/**
+ * <h1>Die Klasse zum Schreiben in Dateien</h1>
+ *
+ * @author simon
+ */
 public class WriteToFile{
 
     public WriteToFile(){
     }
 
+    /**
+     * Diese Mtehode schreibt einen gegebenen Text in eine vorhandene Datei.
+     *
+     * @param filename Die Datei, in die etwas geschrieben werden soll
+     * @param data Der Inhalt, der in die Datei geschrieben werden soll
+     * @return Status der Methode
+     */
     public boolean write(String filename, String data){
         try{
             System.out.println("Writing...");

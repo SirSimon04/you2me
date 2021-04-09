@@ -29,7 +29,7 @@ public class BlacklistEJB{
     private EntityManager em;
 
     /**
-     * Diese Methode setzt ein Token auf die Blcklist. Das ist für den Fall,
+     * Diese Methode setzt ein Token auf die Blacklist. Das ist für den Fall,
      * dass ein Nutezr sich ausloggt.
      *
      * @param bl Das Token und die aktuelle Zeit.
@@ -42,7 +42,7 @@ public class BlacklistEJB{
      * Diese Methode gibt alle Tokens, die sich auf der Blacklist befinden, mit
      * ihrem zugehörigem Datum zurück.
      *
-     * @return
+     * @return Alle Tokens auf der Blacklist
      */
     public List<Blacklist> getAllBlacklisted(){
         return em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();
@@ -59,8 +59,8 @@ public class BlacklistEJB{
 
     /**
      * Diese Methode löscht alle Token von der Blacklist. Sie wird 30 Sekuden
-     * nach dem Start des Programms und dann einmal pro Stunde geleert, um das
-     * Überprüfen, ob sich Token in der Datenbank zu befinden, zu verschnellern
+     * nach dem Start des Programms und dann einmal pro Stunde aufgerufen, um das
+     * Überprüfen, ob sich ein bestimmtest Token in der Datenbank befindet, zu verschnellern.
      */
     public void clearBlacklist(){
         List<Blacklist> bl = em.createNamedQuery(Blacklist.class.getSimpleName() + ".findAll").getResultList();

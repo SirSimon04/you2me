@@ -223,7 +223,7 @@ public class ChatEJB{
     /**
      * Diese Methode fügt einen neuen Chat in die Datenbank ein.
      *
-     * @param neuerChat
+     * @param neuerChat Der hinzuzufügende Chat
      */
     public void createChat(Chat neuerChat){
         em.persist(neuerChat);

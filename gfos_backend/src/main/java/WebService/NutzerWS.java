@@ -125,19 +125,6 @@ public class NutzerWS{
 
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/test")
-    public boolean test(){
-        System.out.println("Hieeeerrererer");
-//        Base64_PDF conv = new Base64_PDF();
-//        conv.create();
-        CreateFile cf = new CreateFile();
-        WriteToFile write = new WriteToFile();
-        ReadFile read = new ReadFile();
-        return true;
-    }
-
     /**
      * Diese Methode gibt alle Nutzer zurück.
      *
@@ -448,9 +435,9 @@ public class NutzerWS{
      * Wenn der andere Nutzer schon blockiert ist, dann wird die Blockierung aufgehoben
      * und die Nutzer können sich wieder Nachrichten schicken.
      *
-     * @param token
-     * @param Daten
-     * @return
+     * @param token Das Webtoken
+     * @param Daten Die Daten zum eigenen sowie anderen Nutzer.
+     * @return Das Responseobjekt mir de Status der Methode.
      */
     @POST
     @Path("/block/{token}")
@@ -499,9 +486,9 @@ public class NutzerWS{
      * der Nutzer teilnimmt eine Übersicht angegeben, wie viele Nachrichten und Fotos
      * in dem jeweiligen Chat beziehungsweise der Gruppe vorhanden sind
      *
-     * @param token
-     * @param id
-     * @return
+     * @param token Das Webtoken
+     * @param id Die eigene Id
+     * @return Die eigenen Einstellungen
      */
     @GET
     @Path("/getSettings/{id}/{token}")
@@ -597,9 +584,9 @@ public class NutzerWS{
      * Den Nachrichten kann ein Like hinzugefügt werden, diese Methode gibt deshalb außerdem an,
      * welche und wie viele Nutzer einer Nachricht einen Like hinzugefügt haben.
      *
-     * @param token
-     * @param id
-     * @return
+     * @param token Das Webtoken
+     * @param id Die Id des angefragten Nutzers
+     * @return Alle Nachrichten aus dem Channel des Nutzers
      */
     @GET
     @Path("/getChannel/{id}/{token}")
@@ -748,12 +735,13 @@ public class NutzerWS{
     }
 
     /**
-     * Diese Methode fügt einen Nutzer in das System ein. Bevor dieser Nutzer
+     * Diese Methode fügt einen Nutzer in das System ein.Bevor dieser Nutzer
      * sich einloggen kann, erhält er einen vierstelligen Pin per E-Mail,
      * mit dem der Nutzer sein Konto erst freischalten muss.
      *
      * @param Daten Die Daten zum neuen Nutzer
      * @return Das Responseobjekt mit den Nutzerinformationen und dem Webtoken
+     * @throws java.io.IOException
      */
     @POST
     @Path("/add")
@@ -876,7 +864,7 @@ public class NutzerWS{
      *
      * @param Daten Die Informationen zum Nutzer und der per E-Mail erhaltene
      * Pin
-     * @return
+     * @return Das Responseobjekt mit dem Status der Methode.
      */
     @POST
     @Path("/verify")
