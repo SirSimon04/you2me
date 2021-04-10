@@ -482,7 +482,6 @@ public class ChatWS{
                     }
                     //wenn Einzelchat, Infos des Anderen übernehmen
                     if(!c.getIsgroup()){
-                        System.out.println(c.getChatid() + "Hierrr");
                         // c.setAdminList(null);
                         List<Nutzer> nutzerList = c.getNutzerList();
                         Nutzer n = nutzerEJB.getCopyById(nutzerid);
@@ -506,7 +505,6 @@ public class ChatWS{
                     c.setNutzerList(null);
                     //anzahl neuer Nachrichten zählen
                     try{
-                        System.out.println("Start" + c.getChatid());
                         c.setNnew(0);
                         List<Nachricht> nList = nachrichtEJB.getDetachedByChat(c.getChatid());
                         for(Nachricht n : nList){
@@ -516,7 +514,6 @@ public class ChatWS{
                                 }
                             }
                         }
-                        System.out.println("end");
                     }catch(EJBTransactionRolledbackException e){
 
                     }
