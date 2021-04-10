@@ -468,6 +468,9 @@ public class ChatWS{
                                 n.setInhalt(filter.filter(n.getInhalt()));
                             }
                         }
+                        if(n.getIsFile()){
+                            n.setInhalt(n.getInhalt().substring(n.getInhalt().lastIndexOf("|") + 1, n.getInhalt().length()));
+                        }
                     }catch(IOException e){
                     }catch(NullPointerException e){
                     }
