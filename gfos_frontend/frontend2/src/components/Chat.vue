@@ -101,7 +101,7 @@ export default {
                         var localNewest = null;
                         for (var i=0; i<messages.length-1; i++) {
                             localNewest = messages[messages.length - 1 - i];
-                            if (localNewest['isplanned'] === undefined) {
+                            if (localNewest['isplanned'] === false) {
                                 break;
                             }
                         }
