@@ -134,6 +134,24 @@ public class NachrichtWS{
 
     }
 
+    @GET
+    @Path("/{id}/{token}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getById(@PathParam("id") int id, @PathParam("token") String token){
+        if(!verify(token)){
+            return response.generiereFehler401("Kein gültiges Token");
+        }else{
+            Nachricht n = nachrichtEJB.getCopyByIdTest(id);
+
+            ReadFile read = new ReadFile();
+            String filename = n.getInhalt().substring(3, n.getInhalt().length());
+            String base64 = read.read(filename);
+            n.setInhalt(base64);
+            Gson parser = new Gson();
+            return response.generiereAntwort(parser.toJson(n));
+        }
+    }
+
     /**
      * Diese Methode liefert alle Nachrichten eines bestimmten Chats zurück. Sobald ein Nutzer die neuen Nachrichten eines Chats lädt, bedeutet dass,
      * das der Nutzer diese gelesen hat. Die nachrichten werden dem Datum nach absteigend sortiert.
@@ -164,12 +182,7 @@ public class NachrichtWS{
                         n.setReadbyall(Boolean.TRUE);
                     }
                 }
-//                if(n.getIsFile()){
-//                    ReadFile read = new ReadFile();
-//                    String filename = n.getInhalt().substring(3, n.getInhalt().length() - 1);
-//                    String base64 = read.read(filename);
-//                    n.setInhalt(base64);
-//                }
+
             }
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getCopyByChat(chatid);
@@ -181,6 +194,13 @@ public class NachrichtWS{
                     }else{
                         n.setIsplanned(Boolean.TRUE);
                     }
+                }
+
+                if(n.getIsFile()){
+                    ReadFile read = new ReadFile();
+                    String filename = n.getInhalt().substring(n.getInhalt().lastIndexOf("|") + 1, n.getInhalt().length());
+                    n.setInhalt(filename);
+//                    n.setInhalt("haha");;
                 }
             }
             nList.removeAll(newN);
@@ -400,7 +420,7 @@ public class NachrichtWS{
                 }catch(NullPointerException e){
                     response.generiereAntwort("Komisch");
                 }
-//                chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
+                chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 neueNachricht.setIsplanned(Boolean.FALSE);
                 nachrichtEJB.add(neueNachricht);
                 return response.generiereAntwort("validé");

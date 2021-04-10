@@ -100,6 +100,14 @@ public class NachrichtEJB{
         return n;
     }
 
+    public Nachricht getCopyByIdTest(int id){
+        Nachricht n = em.find(Nachricht.class, id);
+        em.detach(n);
+        n.setNutzerList(null);
+        n.setNachrichtList(null);
+        return n;
+    }
+
     public Nachricht testGetById(int id){
         Nachricht n = em.find(Nachricht.class, id);
         em.detach(n);
