@@ -646,6 +646,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(String Daten){
 //        Response r = response.generiereAntwort(Daten);
+        System.out.println("login");
         Gson parser = new Gson();
         try{
             //getting the name of the body
@@ -679,16 +680,16 @@ public class NutzerWS{
                     //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
 //                return response.generiereAntwort("create");
                 }else{
-                    return response.generiereFehler406("PW falsch");
+                    return response.generiereFehler406("passwordWrong");
                 }
             }else{
-                return response.generiereFehler406("Du musst dich erst verifizieren");
+                return response.generiereFehler406(parser.toJson("verify"));
             }
 
         }catch(JsonSyntaxException e){
             return response.generiereFehler406("Json wrong");
         }catch(EJBTransactionRolledbackException e){
-            return response.generiereFehler406(e.toString());
+            return response.generiereFehler406("usernameWrong");
         }
     }
 
@@ -880,7 +881,24 @@ public class NutzerWS{
         try{
             if(n.getVerificationpin() == pin){
                 n.setVerificationpin(null);
-                return response.generiereAntwort("true");
+                JsonObject returnObject = new JsonObject();
+                returnObject.addProperty("id", n.getId());
+                returnObject.addProperty("benutzername", n.getBenutzername());
+                returnObject.addProperty("email", n.getEmail());
+                String token = tokenizer.createNewToken(n.getBenutzername());
+
+                List<Blacklist> bl = blacklistEJB.getAllBlacklisted();
+                for(Blacklist b : bl){
+                    if(b.getToken().equals(token)){
+                        blacklistEJB.deleteToken(token);
+                    }
+                }
+                returnObject.addProperty("token", token);
+                n.setIsonline(Boolean.TRUE);
+                //return parser.toJson(jsonObject);
+                return response.generiereAntwort(parser.toJson(returnObject));
+//
+//                return response.generiereAntwort("true");
             }else{
                 return response.generiereFehler406("Falscher Pin");
             }
