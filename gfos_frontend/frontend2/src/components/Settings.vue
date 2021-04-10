@@ -2,8 +2,8 @@
   <v-container>
     <div v-if="darkmode === true">
       <v-card max-width="calc(50%)"  dark>
-        <v-card-title style ="font-size: 20px; margin: 15px; position: relative; top: 13px;">Brightmode</v-card-title>
-          <v-container>
+        <v-card-title style ="font-size: calc(100%); margin: 5px; position: relative; top: 13px;">Brightmode</v-card-title>
+          <v-container >
             <v-row align ="end">
               <v-col cols="1" md="6">
                 <v-btn style="height: 65px; width: 65px;" dark @click="darkmode= !darkmode">
