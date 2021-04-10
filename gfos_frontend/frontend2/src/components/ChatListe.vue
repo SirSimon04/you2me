@@ -26,7 +26,8 @@ export default {
         console.warn(window.CURRENT_USER_ID);
 
         EventBus.$on('APP_INTERVAL', (payload) => {
-            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + window.CURRENT_USER_ID + '/1').then(response => {
+            if (window.CURRENT_USER_ID === -1) return;
+            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/nutzerid/' + window.CURRENT_USER_ID + '/' + window.CURRENT_TOKEN).then(response => {
                 if (response.status !== 200) {
                     console.error('Code !== 200:' + response);
                     return null;
@@ -63,8 +64,8 @@ export default {
                 `
 
                 var profilePicture = (data['profilbild'] === undefined) ? imageContainer.getValue('USER') : data['profilbild']['base64'];
-                var pinnedIcon = (data['ispinned'] === undefined) ? '' : '<img style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px;" height="16px" width="16px" src="' + imageContainer.getValue("PIN") + '">'
-                var unreadBadge = (data['nnew'] === 0) ? '' : '<div style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px; width: 16px; height: 16px; background-color: pink; border-radius: 100%;">' + data["nnew"] + '</div>';
+                var pinnedIcon = (data['ispinned'] === undefined) ? '' : '<img style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px;" height="24px" width="24px" src="' + imageContainer.getValue("PIN") + '">'
+                var unreadBadge = (data['nnew'] === 0) ? '' : '<div style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px; width: 24px; height: 24px; background-color: pink; border-radius: 100%;">' + data["nnew"] + '</div>';
                 var elem = `
                 <div onclick="window.openChat(` + chatid + ', ' + window.CURRENT_USER_ID + `);" class="mx-auto v-card v-sheet theme--light" style="height: 80px; max-width: 400px; background-color: rgb(23, 33, 43); border-radius: 0px;">
                     ` + unreadBadge + pinnedIcon + `

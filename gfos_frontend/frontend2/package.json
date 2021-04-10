@@ -10,9 +10,9 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "eventbus": "0.0.3",
-    "vue": "^2.6.11",
+    "vue": "^2.6.12",
     "vue-types": "^2.0.3",
-    "vuetify": "^2.4.0"
+    "vuetify": "^2.4.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -40,8 +40,8 @@
       "parser": "babel-eslint"
     },
     "rules": {
-        "no-unused-vars": "off",
-        "no-unused-labels": "off"
+      "no-unused-vars": "off",
+      "no-unused-labels": "off"
     }
   },
   "browserslist": [
@@ -49,6 +49,8 @@
     "last 2 versions",
     "not dead"
   ],
-  "_id": "frontend2@0.1.0",
-  "readme": "ERROR: No README data found!"
+  "main": "babel.config.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

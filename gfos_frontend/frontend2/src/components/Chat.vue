@@ -73,7 +73,7 @@ export default {
             });
         }
 
-        loginTest();
+        // loginTest();
 
         function fillStringZero(string, length) {
             string = string.toString();
@@ -86,8 +86,9 @@ export default {
 
         function fetchIfNewest(loadMsgs) {
             // Check for newest message and reload all messages if there is a newer one
+            if (window.CURRENT_USER_ID === -1 || window.CURRENT_TOKEN == '') return;
             var newest = null;
-            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/getNewest/' + window.CURRENT_CHAT_ID + '/1').then(response => {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/getNewest/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_TOKEN).then(response => {
                 if (response.status !== 200) {
                     console.error('Code !== 200:' + response);
                     return null;
@@ -104,7 +105,7 @@ export default {
                                 break;
                             }
                         }
-                        if (localNewest['nachrichtid'] !== newest['nachrichtid']) {
+                        if (localNewest !== null && localNewest['nachrichtid'] !== newest['nachrichtid']) {
                             loadMsgs();
                         }
                     }
@@ -144,8 +145,9 @@ export default {
         }); // EventBus.$on('KSC_SENDMESSAGE');
 
         function loadMessages() { // Reload all messages (will be called if a newer message is available)
+            if (window.CURRENT_USER_ID === -1 || window.CURRENT_TOKEN == '') return;
             console.log('loadMessages()');
-            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/1').then(response => {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/chat/' + window.CURRENT_CHAT_ID + '/' + window.CURRENT_USER_ID + '/' + window.CURRENT_TOKEN).then(response => {
                 if (response.status !== 200) {
                     console.error('Code !== 200:' + response);
                     return null;
@@ -177,11 +179,11 @@ export default {
                             var plannedIcon = '';
                             if (data['isplanned']) plannedIcon = '<img style="margin-right: 4px; position: relative; top: 4px;" height="16px" width="16px" src="' + imageContainer.getValue("CLOCK") + '">';
                             var markedIcon = '';
-                            if (data['isMarked']) markedIcon = '<img style="z-index: 100; position: relative; float: right; bottom: -8px; right: 8px;" height="16px" width="16px" src="' + imageContainer.getValue("STAR") + '">'
+                            if (data['isMarked']) markedIcon = '<img style="z-index: 100; position: relative; float: right; bottom: -16px; right: 16px;" height="16px" width="16px" src="' + imageContainer.getValue("STAR") + '">'
                             elem = `
                             <div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;">
                                 ` + markedIcon + `
-                                <div style="background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);">
+                                <div style="padding: 12px; background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);">
                                     <div tabindex="-1" class="v-list-item v-list-item--three-line theme--light">
                                         <div class="v-list-item__content">
                                             <p style="color: white; white-space: pre-line;">` + data['inhalt'] + `</p>
@@ -192,7 +194,7 @@ export default {
                                 <br>
                             </div>`;
                         }
-                        else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
+                        else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="padding: 12px; background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
                         cc.innerHTML += elem;
                     }
 
@@ -252,6 +254,8 @@ export default {
 
 window.canSend = true;
 window.sendMessage = function sendMessage() {
+    if (window.CURRENT_USER_ID === -1 || window.CURRENT_TOKEN == '') return;
+
     var content = document.getElementById('sendMessage_Area').value.trim();
     if (!window.canSend) return;
     if (content === '') {
@@ -318,7 +322,7 @@ window.sendMessage = function sendMessage() {
         }
     }, 10);
 
-    fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/add/1', {
+    fetch(window.IP_ADDRESS + '/GFOS/daten/nachricht/add/' + window.CURRENT_TOKEN, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

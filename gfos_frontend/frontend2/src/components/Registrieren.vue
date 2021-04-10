@@ -21,8 +21,8 @@
         <v-divider></v-divider>
   
         <v-stepper-step step="3" color ="#5c7d9d" >
-          <div v-if="e1 === 1 || e1 === 2" style="color: grey">Login</div>
-          <div v-else style= "color: white">Login</div>
+          <div v-if="e1 === 1 || e1 === 2" style="color: grey">LoginA</div>
+          <div v-else style= "color: white">LoginB</div>
         </v-stepper-step>
       </v-stepper-header>
       </div>
@@ -153,65 +153,7 @@
             
           </v-card>
         <div v-if="settings_checkbox=== true">
-        <v-dialog transition="dialog-bottom-transition" max-width="600" style="colour: black">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn dark v-on="on" v-bind="attrs" @click="e1 = 3" onclick="window.submit();">Registrieren & Weiter</v-btn>
-            </template>
-  
-            <v-card style="background-color: #0E1621">
-              <div style="background-color: black;">
-              <v-card-title  style ="color: white; background-color: #0E1621" >
-                Bestätigen  
-              </v-card-title>
-              </div>
-  
-              <v-card-text>
-                
-                <div v-if="PINrichtig === false" >
-                  <div style="color: white">Bitte geben Sie Ihre Bestätigungs-PIN ein. Die Bestätigungs-PIN wurde Ihnen per Mail zugesandt.</div>
-                  <v-card elevation="2" style="text-align: center; border-radius: 10px; background-color: #17212B">
-                  <v-container>
-                    <v-row align ="end">
-                      <v-col cols="1" md="2">
-                        <v-text-field  style="text-align: center;" v-model="PINeins" :rules="pinRules" center dark></v-text-field>
-                      </v-col>
-                      <v-col cols="1" md="2">
-                        <v-text-field v-model="PINzwei" :rules="pinRules" dark></v-text-field>
-                      </v-col>
-                      <v-col cols="1" md="2" >
-                        <v-text-field v-model="PINdrei" :rules="pinRules" dark></v-text-field>
-                      </v-col>
-                      <v-col cols="1" md="2">
-                        <v-text-field v-model="PINvier" :rules="pinRules" dark></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  
-                  </v-card>
-                  <div v-if="bestätigungshilfe === true" style="color: white">
-                    Was Sie vor sich sehen, ist eine 2-Faktor-Authentifizierung. Dies ist eine Sicherungsmethode des Messenger-Dienstes, der Registrierungen ohne Zugriff auf die angegebene E-Mail-Adresse verhindern soll. Dabei wir Ihnen auf die angegebene E-Mail-Adresse eine Mail mit einem Code gesendet. Bitte geben Sie diesen Code in die oben stehenden Felder ein. Beachten Sie, dass pro Feld nur eine Zahl des vierstelligen Codes vorgesehen ist.
-                  </div>
-                </div>
-                <div v-else>
-                  Sie sind nun ein registrierter Teil unseres Dienstes!
-                </div>
-              </v-card-text>
-  
-              <v-divider></v-divider>
-  
-              <v-card-actions>
-              <v-spacer></v-spacer>
-              <div v-if="PINrichtig === false">
-                <v-btn color="white" text position = "right" @click= "bestätigungshilfe = !bestätigungshilfe">
-                  Hilfe
-                </v-btn>
-                <v-btn color="#444bab" dark  v-on:click="printout()">
-                  Bestätigen
-                </v-btn>
-              </div>
-              </v-card-actions>
-            </v-card>
-          </v-dialog> 
+        <v-btn dark @click="e1 = 3; submit();">Registrieren & Weiter</v-btn>
           </div>
           
           <v-btn text
@@ -224,7 +166,7 @@
         <v-stepper-content step="3">
           <v-card class="mb-12" max-height="500px" style="background-color: #202b36;">
           
-          <h4 style = "color: white">Login</h4>
+          <h4 style = "color: white">LoginC</h4>
           
           
             <v-text-field
@@ -252,12 +194,66 @@
           @click= "e1 = 1, loginzeigen = true" style="margin: 5px; color: white">
             Zur Anmeldung
           </v-btn>
-          <v-btn dark color= "#444bab" onclick = "login();" style =" position: relative; float: right; margin: 5px;" elevation = "10">Login</v-btn>
+          <v-btn dark color= "#444bab" @click="login();" style =" position: relative; float: right; margin: 5px;" elevation = "10">LoginD</v-btn>
           
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
     </div>
+
+        <!-- Bestätigungs-Pin -->
+        <v-dialog v-model="verifyPin" transition="dialog-bottom-transition" max-width="600" style="colour: black">
+            <template>
+                <v-card style="background-color: #0E1621">
+                    <div style="background-color: black;">
+                        <v-card-title  style ="color: white; background-color: #0E1621" >
+                        BestätigenA
+                        </v-card-title>
+                    </div>
+
+                    <v-card-text>
+                        <div style="color: white">Bitte geben Sie Ihre Bestätigungs-PIN ein. Die Bestätigungs-PIN wurde Ihnen per Mail zugesandt.</div>
+                        <v-card elevation="2" style="text-align: center; border-radius: 10px; background-color: #17212B">
+                            <v-container>
+                                <v-row align ="end">
+                                    <v-col cols="1" md="2">
+                                        <v-text-field  style="text-align: center;" v-model="PINeins" :rules="pinRules" center dark></v-text-field>
+                                    </v-col>
+                                    <v-col cols="1" md="2">
+                                        <v-text-field v-model="PINzwei" :rules="pinRules" dark></v-text-field>
+                                    </v-col>
+                                    <v-col cols="1" md="2" >
+                                        <v-text-field v-model="PINdrei" :rules="pinRules" dark></v-text-field>
+                                    </v-col>
+                                    <v-col cols="1" md="2">
+                                        <v-text-field v-model="PINvier" :rules="pinRules" dark></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                    
+                        </v-card>
+                        <div v-if="bestätigungshilfe === true" style="color: white">
+                        Was Sie vor sich sehen, ist eine 2-Faktor-Authentifizierung. Dies ist eine Sicherungsmethode des Messenger-Dienstes, der Registrierungen ohne Zugriff auf die angegebene E-Mail-Adresse verhindern soll. Dabei wir Ihnen auf die angegebene E-Mail-Adresse eine Mail mit einem Code gesendet. Bitte geben Sie diesen Code in die oben stehenden Felder ein. Beachten Sie, dass pro Feld nur eine Zahl des vierstelligen Codes vorgesehen ist.
+                        </div>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <div>
+                            <v-btn color="white" text position = "right" @click= "bestätigungshilfe = !bestätigungshilfe">
+                                Hilfe
+                            </v-btn>
+                            <v-btn color="#444bab" dark  v-on:click="verify()">
+                                Bestätigen
+                            </v-btn>
+                        </div>
+                    </v-card-actions>
+                </v-card>
+            </template>
+        </v-dialog>
+
     </v-container>
 
 </template>
@@ -277,6 +273,7 @@ import { EventBus } from './EventBus.js';
     
     data(){
       return {
+        verifyPin: false,
       e1: 3,
       headeranzeigen: false,
       checkbox: true,
@@ -287,11 +284,6 @@ import { EventBus } from './EventBus.js';
       hilfe_checkbox: false,
       firmenkontenakzeptieren: false,
       valid: false,
-      PINrichtig: false,
-      p1: 1, //Muss über GET-Methode erfragt werden.
-      p2: 1, //Muss über GET-Methode erfragt werden.
-      p3: 1, //Muss über GET-Methode erfragt werden.
-      p4: 1, //Muss über GET-Methode erfragt werden.
       bestätigungshilfe: false,
       passwordRules: [
         v => !!v || 'Dieses Feld ist erforderlich.',
@@ -307,26 +299,42 @@ import { EventBus } from './EventBus.js';
         v => v.length <= 1 || 'Dieses Feld kann nur eine Zahl enthalten.'
         
       ]
-      
-    
-      
-
     }
     },
     mounted(){
-       var IP_ADDRESS = 'fb1258db8832.ngrok.io';
-      function printout(){
-        console.log("Knopf gedrückt.")
-      }
-      function controlpin(){
-        if(this.PINeins === this.p1 && this.PINzwei === this.p2 && this.PINdrei === this.p3 && this.PINvier === this.p4){
-          this.PINrichtig = true;}
-        console.log(this.Pinrichtig)
-      }
-  
+    },
 
-      function submit() { //Einfach aus dem Chat.vue kopiert. Müsste angepasst werden.
-            fetch('http://' + '91.49.179.104' + ':8080/GFOS/daten/nutzer/login', {
+    methods: {
+        login() {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/login', {
+                mode: 'cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json', // Antwort von Server
+                    'Content-Type': 'text/plain', // Wird an den Server gesendet
+                },
+                body: JSON.stringify({
+                    benutzername: this.benutzername,
+                    passwort: this.passwort,
+                })
+            }).then(response => {
+                response.clone();
+                response.json().then(content => {
+                    console.log(content);
+                    if (content['id'] !== undefined) {
+                        console.log('vor LOGIN');
+                        EventBus.$emit('LOGIN', {content});
+                    } else if (content === 'verify') {
+                        this.verifyPin = true;
+                    } else {
+                        console.log('Falsche Anmeldedaten!');
+                    }
+                }); 
+            });
+        },
+        submit() {
+            console.log('submit() is called;');
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/add', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -343,13 +351,19 @@ import { EventBus } from './EventBus.js';
                 })
             }).then(response => {
                 response.clone();
-                response.text().then(content => {
+                response.json().then(content => {
                     console.warn(content);
                 }); 
             });
-        }
-        function login() { 
-            fetch('http://fb1258db8832.ngrok.io/GFOS/daten/nutzer/login', {
+        },
+        verify() {
+            console.log('verify() is called;');
+            console.log('' + this.PINeins + this.PINzwei + this.PINdrei + this.PINvier);
+            if (this.PINeins === undefined || this.PINzwei === undefined || this.PINdrei === undefined || this.PINvier === undefined) {
+                console.log('Du musst jedes Feld ausfüllen!');
+                return;
+            }
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/verify', {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -357,14 +371,17 @@ import { EventBus } from './EventBus.js';
                     'Content-Type': 'text/plain', // Wird an den Server gesendet
                 },
                 body: JSON.stringify({
-                    benutzername: 'Simon',
-                    passwort: 'test1234',
-                    
+                    name: this.benutzername,
+                    pin: '' + this.PINeins + this.PINzwei + this.PINdrei + this.PINvier
                 })
             }).then(response => {
                 response.clone();
-                response.text().then(content => {
+                response.json().then(content => {
                     console.warn(content);
+                    if (content['id'] !== undefined) {
+                        this.verifyPin = false;
+                        EventBus.$emit('LOGIN', {content});
+                    }
                 }); 
             });
         }

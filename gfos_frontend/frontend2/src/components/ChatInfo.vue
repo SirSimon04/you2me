@@ -110,7 +110,8 @@ export default {
 
     methods: {
         blockUser(username) {
-            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/block/1', {
+            if (window.CURRENT_USER_ID === -1 || window.CURRENT_TOKEN == '') return;
+            fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/block/' + window.CURRENT_TOKEN, {
                 mode: 'cors',
                 method: 'POST',
                 headers: {
@@ -132,7 +133,8 @@ export default {
         },
 
         leaveGroup() {
-            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/leave/1', {
+            if (window.CURRENT_USER_ID === -1 || window.CURRENT_TOKEN == '') return;
+            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/leave/' + window.CURRENT_TOKEN, {
                 mode: 'cors',
                 method: 'POST',
                 headers: {

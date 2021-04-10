@@ -76,7 +76,7 @@ export default {
         infoMessageTimeout: 2000,
 
         welcome_vue_zeigen: false,
-        app_vue_registrieren_zeigen: false,
+        app_vue_registrieren_zeigen: true,
         app_vue_settings_zeigen: false,
         app_vue_chatliste_zeigen: true,
         app_vue_chat_zeigen: true,
@@ -113,9 +113,16 @@ export default {
             document.getElementById('infoMessage').click();
         }); // EventBus.$on('INFOMESSAGE')
 
+        EventBus.$on('LOGIN', (payload) => {
+            console.warn(payload['content']['id']);
+            window.CURRENT_USER_ID = payload['content']['id'];
+            window.CURRENT_TOKEN = payload['content']['token'];
+            this.app_vue_registrieren_zeigen = false;
+        }); // EventBus.$on('LOGIN')
+
         EventBus.$on('OPENCHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = true;
-            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/info/' + payload["chatid"] + '/' + window.CURRENT_USER_ID + '/1').then(response => {
+            fetch(window.IP_ADDRESS + '/GFOS/daten/chat/info/' + payload["chatid"] + '/' + window.CURRENT_USER_ID + '/' + window.CURRENT_TOKEN).then(response => {
                 response.clone();
                 response.json().then(data => {
                     if (data['blockiertWorden']) {
@@ -179,7 +186,9 @@ export default {
 
     }
 };
-window.CURRENT_USER_ID = 2;
-window.IP_ADDRESS = 'http://32c89ff52568.ngrok.io';
+window.CURRENT_USER_ID = -1;
+window.CURRENT_TOKEN = '';
+window.IP_ADDRESS = 'http://078286736c27.ngrok.io';
+
 
 </script>
