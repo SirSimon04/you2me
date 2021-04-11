@@ -2,7 +2,7 @@
 <template >
 
     <v-container>
-    <div style="width: 1000px; postion: relative; left: 100px;">
+    <div class="mx-auto" max-width="1000px">
      <v-stepper v-model="e1" style="margin: 20px; max-width: 700px; background-color: #202b36;">
      <div v-if="loginzeigen === true">
       <v-stepper-header v-model="headeranzeigen" style="background-color: #182533; color: grey">
@@ -214,7 +214,7 @@
                     <v-card-text>
                         <div style="color: white">Bitte geben Sie Ihre Bestätigungs-PIN ein. Die Bestätigungs-PIN wurde Ihnen per Mail zugesandt.</div>
                         <v-card elevation="2" style="text-align: center; border-radius: 10px; background-color: #17212B">
-                            <v-container>
+                            <v-container class="mx-auto">
                                 <v-row align ="end">
                                     <v-col cols="1" md="2">
                                         <v-text-field  style="text-align: center;" v-model="PINeins" :rules="pinRules" center dark></v-text-field>
