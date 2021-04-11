@@ -5,9 +5,6 @@
  */
 package WebService;
 
-import FileService.CreateFile;
-import FileService.ReadFile;
-import FileService.WriteToFile;
 import EJB.BlacklistEJB;
 import EJB.ChatEJB;
 import EJB.FotoEJB;
@@ -21,7 +18,6 @@ import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
 import Filter.Filter;
-import Filter.Grawlox;
 import Utilities.Hasher;
 import Utilities.Tokenizer;
 import Utilities.Antwort;
@@ -42,25 +38,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.JsonObject;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import javax.ejb.EJBException;
 import javax.ejb.EJBTransactionRolledbackException;
-import javax.ejb.TransactionRolledbackLocalException;
-import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
-import javax.servlet.ServletException;
 import javax.ws.rs.core.Response;
 import static java.lang.Math.toIntExact;
-import java.util.Comparator;
 
 /**
  * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nutzer</h1>

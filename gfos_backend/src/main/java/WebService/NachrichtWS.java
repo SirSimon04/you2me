@@ -17,11 +17,9 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
-import FileService.CreateFile;
-import FileService.ReadFile;
-import FileService.WriteToFile;
 import Filter.Filter;
 import Utilities.Antwort;
+import Utilities.FileService;
 import Utilities.Mail;
 import Utilities.Tokenizer;
 import com.google.gson.Gson;
@@ -143,9 +141,9 @@ public class NachrichtWS{
         }else{
             Nachricht n = nachrichtEJB.getCopyByIdTest(id);
 
-            ReadFile read = new ReadFile();
+            FileService file = new FileService();
             String filename = n.getInhalt().substring(3, n.getInhalt().length());
-            String base64 = read.read(filename);
+            String base64 = file.read(filename);
             n.setInhalt(base64);
             Gson parser = new Gson();
             return response.generiereAntwort(parser.toJson(n));
@@ -197,7 +195,6 @@ public class NachrichtWS{
                 }
 
                 if(n.getIsFile()){
-                    ReadFile read = new ReadFile();
                     String filename = n.getInhalt().substring(n.getInhalt().lastIndexOf("|") + 1, n.getInhalt().length());
                     n.setInhalt(filename);
 //                    n.setInhalt("haha");;
@@ -471,11 +468,13 @@ public class NachrichtWS{
                 String filename = "";
                 filename += neueNachricht.getSenderid() + "|" + neueNachricht.getDatumuhrzeit() + "|" + jsonFilename;
 
-                CreateFile create = new CreateFile();
-                create.create(filename);
-
-                WriteToFile write = new WriteToFile();
-                write.write(filename, neueNachricht.getInhalt());
+                FileService file = new FileService();
+                file.create(filename);
+                file.write(filename, neueNachricht.getInhalt());
+//                CreateFile create = new CreateFile();
+//                create.create(filename);
+//                WriteToFile write = new WriteToFile();
+//                write.write(filename, neueNachricht.getInhalt());
 
                 neueNachricht.setInhalt("|||" + filename);
                 neueNachricht.setIsFile(true);
