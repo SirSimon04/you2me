@@ -59,16 +59,26 @@ export default {
                     sender = sender + lastMessage['inhalt'];
                 }
 
-                var contextMenu = `
-                window.openInfo(` + chatid + `, '` + data["name"] + `');
-                `
+                var contextMenu = `window.openInfo(` + chatid + `, '` + data["name"] + `');`
+
+                var unreadBadgeText = '' + data['nnew'];
+                if (data['nnew'] >= 100) unreadBadgeText = '99+';
+
+                var unreadBadgeTextSize = 16;
+                if (data['nnew'] >= 10) unreadBadgeTextSize = 14;
+                if (data['nnew'] >= 100) unreadBadgeTextSize = 12;
+
+                var unreadBadgeTextOffset = 0;
+                if (data['nnew'] >= 10) unreadBadgeTextOffset = 3;
+                if (data['nnew'] >= 100) unreadBadgeTextOffset = 4;
+
 
                 var profilePicture = (data['profilbild'] === undefined) ? imageContainer.getValue('USER') : data['profilbild']['base64'];
                 var pinnedIcon = (data['ispinned'] === undefined) ? '' : '<img style="z-index: 100; position: relative; float: right; top: calc(50% - 4px); right: 8px;" height="24px" width="24px" src="' + imageContainer.getValue("PIN") + '">'
                 var unreadBadge = (data['nnew'] === 0) ? '' : `
-                <div >
-                    <div style="z-index: 100; position: relative; float: right; top: calc(50% - 24px); left: -8px; width: 24px; height: 24px; background-color: pink; border-radius: 100%;">
-                        <div style="position: relative; left: 7px;">` + data["nnew"] + `</div>
+                <div style="z-index: 100; position: relative; float: right; top: 36px; left: -8px; width: 24px; height: 24px; margin-left: 8px; background-color: pink; border-radius: 100%;">
+                    <div style="position: relative; left: 7px;">
+                        <span style="position: relative; left: -` + unreadBadgeTextOffset + `px; font-size: ` + unreadBadgeTextSize + `px;">` + unreadBadgeText + `</span>
                     </div>
                 </div>
                 `;
