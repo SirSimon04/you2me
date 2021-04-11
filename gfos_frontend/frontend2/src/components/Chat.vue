@@ -105,7 +105,7 @@ export default {
                                 break;
                             }
                         }
-                        if (localNewest !== null && localNewest['nachrichtid'] !== newest['nachrichtid']) {
+                        if (localNewest !== null && (localNewest['nachrichtid'] !== newest['nachrichtid'] || localNewest['readbyall'] !== newest['readbyall'] || localNewest['inhalt'] !== newest['inhalt'])) {
                             loadMsgs();
                         }
                     }
@@ -176,6 +176,8 @@ export default {
                             dateFormatted = extraDate + ' ' + dateFormatted;
                         }
                         if (data['senderid'] === window.CURRENT_USER_ID) {
+                            var readByAllIcon = '';
+                            if (data['readbyall'] !== undefined) readByAllIcon = '<img style="margin-right: 4px; position: relative; top: 2px;" height="16px" width="16px" src="' + imageContainer.getValue("VIEW") + '">';
                             var plannedIcon = '';
                             if (data['isplanned']) plannedIcon = '<img style="margin-right: 4px; position: relative; top: 4px;" height="16px" width="16px" src="' + imageContainer.getValue("CLOCK") + '">';
                             var markedIcon = '';
@@ -187,7 +189,7 @@ export default {
                                     <div tabindex="-1" class="v-list-item v-list-item--three-line theme--light">
                                         <div class="v-list-item__content">
                                             <p style="color: white; white-space: pre-line;">` + data['inhalt'] + `</p>
-                                            <div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">` + plannedIcon + dateFormatted + `</div>
+                                            <div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">` + readByAllIcon + plannedIcon + dateFormatted + `</div>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +213,13 @@ export default {
                             `;
                         }
                         fadeTime += 0.01;
-                        if (fadeTime > 1) clearInterval(fadeAnim);
+                        if (fadeTime > 1) {
+                            elem.style = `
+                            position: relative;
+                            left: 0px;
+                            `;
+                            clearInterval(fadeAnim);
+                        }
                     }, 10);
 
                     function f(t, u8s) {
@@ -229,12 +237,23 @@ export default {
                         return a * pow + e;
                     }
 
+                    function fE(t, count) {
+                        return 1.0625 * Math.pow((t - (count / 18)), 2) + count;
+                    }
+
                     if (isBottom) {
-                        var use8s = msgs.length - messages.length > 60;
+                        var scrollDiff = msgs.length - messages.length;
+                        var use8s = scrollDiff > 60;
                         isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
                         var time = 0;
                         var scrollAnim = setInterval(function() {
-                            cc.scrollBy(0, f(time, use8s));
+                            if (scrollDiff < 73) {
+                                cc.scrollBy(0, f(time, use8s));
+                                console.log('scrollDiff < 73: ' + f(time, use8s));
+                            } else {
+                                cc.scrollBy(0, fE(time, scrollDiff));
+                                console.log('scrollDiff >= 73: ' + fE(time, scrollDiff));
+                            }
 
                             time += 0.01;
                             isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
