@@ -24,6 +24,7 @@ WebService/ChatWS.class
 Filter/Grawlox.class
 Utilities/Mail$3.class
 Utilities/Hasher.class
+Utilities/FileService.class
 Utilities/Mail.class
 FileService/CreateFile.class
 Entity/Nutzer.class
