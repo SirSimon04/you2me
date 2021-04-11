@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * <h1>Die Klasse zum Verwalten der Chats in der Datenbank</h1>
+ * <h1>Die Klasse zum Verwalten der Chats in der Datenbank.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
  * Datenbank bezogen auf die Chats. Die Daten werden bei Anfrage des Webservers
@@ -115,7 +115,7 @@ public class ChatEJB{
 //                em.detach(letzteN);
 //                letzteN.setNachrichtList(null);
 //                letzteN.setNutzerList(null);
-                c.setLetztenachricht(nachrichtEJB.testGetById(c.getLetztenachricht().getNachrichtid()));
+                c.setLetztenachricht(nachrichtEJB.getCopyByIdListsNull(c.getLetztenachricht().getNachrichtid()));
             }catch(NullPointerException e){
 
             }
@@ -211,7 +211,7 @@ public class ChatEJB{
     }
 
     /**
-     * Diese Methode gibt die eigenen Chats eines Nutzers zurück-
+     * Diese Methode gibt die eigenen Chats eines Nutzers zurück.
      *
      * @param self Der eigene Nutzer
      * @return Die Liste mit den eigenen Chats.
@@ -251,7 +251,7 @@ public class ChatEJB{
      * @param chat Der Chat, zu dem ein Nutzer hinzugefügt werden soll.
      * @param nutzer Der Nutzer, der zu einem Chat hinzugefügt werden soll.
      */
-    public void fuegeNutzerHinzu(Chat chat, Nutzer nutzer){
+    public void addUser(Chat chat, Nutzer nutzer){
         System.out.println("cEJB fnh");
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().add(nutzer);
@@ -263,7 +263,7 @@ public class ChatEJB{
      * @param chat Der Chat, aus dem der Nutzer entfernt werden soll.
      * @param nutzer Der Nutzer, der aus einem Chat entfernt werden soll.
      */
-    public void entferneNutzer(Chat chat, Nutzer nutzer){
+    public void removeUser(Chat chat, Nutzer nutzer){
         Chat chatInDB = em.find(Chat.class, chat.getChatid());
         chatInDB.getNutzerList().remove(nutzer);
     }

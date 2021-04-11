@@ -17,11 +17,11 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
-import Filter.Filter;
-import Utilities.Antwort;
-import Utilities.FileService;
-import Utilities.Mail;
-import Utilities.Tokenizer;
+import Service.Filter;
+import Service.Antwort;
+import Service.FileService;
+import Service.Mail;
+import Service.Tokenizer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.List;
@@ -51,7 +51,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 
 /**
- * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nachrichten</h1>
+ * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nachrichten.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden des Webservers bezogen auf das Objekt
  * der Nachrichten für das Bearbeiten und Ausgeben der Daten und stellt damit
@@ -121,12 +121,12 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll(@PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
             //return "false";
         }else{
             Gson parser = new Gson();
             List<Nachricht> alleNachrichten = nachrichtEJB.getAll();
-            return response.generiereAntwort(parser.toJson(alleNachrichten));
+            return response.generateAnswer(parser.toJson(alleNachrichten));
             //return "true";
         }
 
@@ -137,16 +137,16 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
-            Nachricht n = nachrichtEJB.getCopyByIdTest(id);
+            Nachricht n = nachrichtEJB.getCopyByIdListsNull(id);
 
             FileService file = new FileService();
             String filename = n.getInhalt().substring(3, n.getInhalt().length());
             String base64 = file.read(filename);
             n.setInhalt(base64);
             Gson parser = new Gson();
-            return response.generiereAntwort(parser.toJson(n));
+            return response.generateAnswer(parser.toJson(n));
         }
     }
 
@@ -165,7 +165,7 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getByChat(@PathParam("id") int chatid, @PathParam("token") String token, @PathParam("nutzerid") int nutzerid) throws IOException{
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Nutzer self = nutzerEJB.getById(nutzerid);
             List<Nachricht> list = nachrichtEJB.getByChat(chatid);
@@ -230,7 +230,7 @@ public class NachrichtWS{
                 }
             }
 
-            return response.generiereAntwort(parser.toJson(nList));
+            return response.generateAnswer(parser.toJson(nList));
         }
 
     }
@@ -249,11 +249,11 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNewest(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Gson parser = new Gson();
             Nachricht n = nachrichtEJB.getNewest(id);
-            return response.generiereAntwort(parser.toJson(n));
+            return response.generateAnswer(parser.toJson(n));
         }
     }
 
@@ -273,7 +273,7 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getInfo(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Nachricht n = nachrichtEJB.getCopyById(id);
 
@@ -288,8 +288,8 @@ public class NachrichtWS{
             jsonObject.add("gelesenVon", parser.toJsonTree(gelesenVon));
             jsonObject.add("nichtgelesenVon", parser.toJsonTree(nichtGelesenVon));
 
-            return response.generiereAntwort(parser.toJson(jsonObject));
-//                return response.generiereAntwort(parser.toJson(nachrichtEJB.getCopyById(id)));
+            return response.generateAnswer(parser.toJson(jsonObject));
+//                return response.generateAnswer(parser.toJson(nachrichtEJB.getCopyById(id)));
 
         }
     }
@@ -313,7 +313,7 @@ public class NachrichtWS{
     public Response send(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
 
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
 
             Gson parser = new Gson();
@@ -353,10 +353,10 @@ public class NachrichtWS{
                     copy.getNutzerList().remove(self);
                     Nutzer other = copy.getNutzerList().get(0);
                     if(self.getHatBlockiert().contains(other)){
-                        return response.generiereFehler406("Du hast diesen Nutzer blockiert");
+                        return response.generateError406("Du hast diesen Nutzer blockiert");
                     }
                     if(other.getHatBlockiert().contains(self)){
-                        return response.generiereFehler406("Du bist von diesem Nutzer blockiert");
+                        return response.generateError406("Du bist von diesem Nutzer blockiert");
                     }
                 }
                 //wenn wichtig, dann mail versenden
@@ -413,30 +413,43 @@ public class NachrichtWS{
 //                        }
                     }
                 }catch(NullPointerException e){
-                    response.generiereAntwort("Komisch");
+                    response.generateAnswer("Komisch");
                 }
                 neueNachricht.setIsFile(false);
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 neueNachricht.setIsplanned(Boolean.FALSE);
                 nachrichtEJB.add(neueNachricht);
-                return response.generiereAntwort("validé");
+                return response.generateAnswer("validé");
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("cacahuète");
+                return response.generateError406("cacahuète");
             }catch(NullPointerException e){
-                return response.generiereFehler500("Chatid oder Senderid nicht vorhanden");
+                return response.generateError500("Chatid oder Senderid nicht vorhanden");
             }
         }
 
     }
 
+    /**
+     * Diese Methode bearbeitet eine Nachricht. Dabei wird geprüft, ob die Nachricht von einem selbst gesendet
+     * wurde, die Nachricht kann nur bearbeitet werden, wenn das der Fall ist. Der Status der Nachricht wird
+     * auf bearbeitet gesetzt, um hinterher zu kennzeichnen, dass die Nachircht bearbeitet wurde.
+     *
+     * @param Daten Die Daten zur Nachricht und einem selbst
+     * @param token Das Webtoken
+     * @return Das Responseobjekt mit dem Status der Methode.
+     * @throws IOException
+     * @throws MessagingException
+     * @throws AddressException
+     * @throws InterruptedException
+     */
     @POST
     @Path("/edit/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response edit(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
+    public Response editMessage(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
 
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
 
             Gson parser = new Gson();
@@ -452,24 +465,33 @@ public class NachrichtWS{
                 if(n.getSenderid() == senderId){
                     n.setIsEdited(true);
                     n.setInhalt(inhalt);
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }else{
-                    return response.generiereAntwort("Nicht deine Nachricht");
+                    return response.generateAnswer("Nicht deine Nachricht");
                 }
 
             }catch(NullPointerException e){
-                return response.generiereAntwort("Fehler");
+                return response.generateAnswer("Fehler");
             }
         }
     }
 
+    /**
+     * Diese Nachricht sendet eine Datei in einen Chat. Sie wird in Form eines Base-64-Strings übergeben.
+     * Dieser Base64-String wird in eine Datei geschrieben, aus welcher der String wieder ausgelesen
+     * werden kann.
+     *
+     * @param Daten Die Daten zur Datei und zur Nachricht.
+     * @param token Das Webtoken.
+     * @return Das Responseobjekt mit dem Status der Methode.
+     */
     @POST
     @Path("/addFile/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response sendFile(String Daten, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
 
             Gson parser = new Gson();
@@ -491,10 +513,10 @@ public class NachrichtWS{
                 Nutzer other = copy.getNutzerList().get(0);
                 if(!c.getIsgroup()){
                     if(self.getHatBlockiert().contains(other)){
-                        return response.generiereFehler406("Du hast diesen Nutzer blockiert");
+                        return response.generateError406("Du hast diesen Nutzer blockiert");
                     }
                     if(other.getHatBlockiert().contains(self)){
-                        return response.generiereFehler406("Du bist von diesem Nutzer blockiert");
+                        return response.generateError406("Du bist von diesem Nutzer blockiert");
                     }
                 }
 
@@ -514,9 +536,9 @@ public class NachrichtWS{
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 nachrichtEJB.add(neueNachricht);
 
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
             }catch(Exception e){
-                return response.generiereFehler500("Fehler");
+                return response.generateError500("Fehler");
             }
         }
     }
@@ -541,7 +563,7 @@ public class NachrichtWS{
     public Response delete(String Daten, @PathParam("token") String token){
 
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
 
             Gson parser = new Gson();
@@ -559,9 +581,9 @@ public class NachrichtWS{
             if(n.getSenderid() == 0){
                 if(nutzerEJB.getByUsername(username).getChannel().getChatid() == n.getChatid()){
                     nachrichtEJB.delete(lNachrichtId);
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }else{
-                    return response.generiereFehler406("Keine Berechtigung");
+                    return response.generateError406("Keine Berechtigung");
                 }
             }
 
@@ -580,18 +602,18 @@ public class NachrichtWS{
                             chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
                         }
 
-                        return response.generiereAntwort("true");
+                        return response.generateAnswer("true");
 
                     }else{
 
                         nachrichtEJB.delete(lNachrichtId);
-                        return response.generiereAntwort("true");
+                        return response.generateAnswer("true");
                     }
                 }else{
-                    return response.generiereFehler406("Nicht im Chat");
+                    return response.generateError406("Nicht im Chat");
                 }
             }else{
-                return response.generiereAntwort("Nicht deine Nachricht");
+                return response.generateAnswer("Nicht deine Nachricht");
             }
 
         }
@@ -613,7 +635,7 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response markMessage(String Daten, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
@@ -627,10 +649,10 @@ public class NachrichtWS{
             Nutzer nu = nutzerEJB.getById(eigeneId);
 
             try{
-                nachrichtEJB.markiere(na, nu);
-                return response.generiereAntwort("true");
+                nachrichtEJB.markMessage(na, nu);
+                return response.generateAnswer("true");
             }catch(Exception e){
-                return response.generiereFehler406("Fehler");
+                return response.generateError406("Fehler");
             }
 
         }
@@ -650,11 +672,11 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMarked(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Gson parser = new Gson();
             List<Nachricht> nList = nachrichtEJB.getMarkedMessages(id);
-            return response.generiereAntwort(parser.toJson(nList));
+            return response.generateAnswer(parser.toJson(nList));
         }
 
     }
@@ -678,7 +700,7 @@ public class NachrichtWS{
     public Response sendInChannel(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
 
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
 
             Gson parser = new Gson();
@@ -695,12 +717,12 @@ public class NachrichtWS{
                 neueNachricht.setCountLikes(0);
                 nachrichtEJB.add(neueNachricht);
 
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
 
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("cacahuète");
+                return response.generateError406("cacahuète");
             }catch(NullPointerException e){
-                return response.generiereFehler500("Chatid oder Senderid nicht vorhanden");
+                return response.generateError500("Chatid oder Senderid nicht vorhanden");
             }
 
         }
@@ -721,7 +743,7 @@ public class NachrichtWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response like(String Daten, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("dentifrisse");
+            return response.generateError401("dentifrisse");
         }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
@@ -739,14 +761,14 @@ public class NachrichtWS{
                     na.getLikedBy().add(nu);
                     na.setCountLikes(na.getLikedBy().size());
                     System.out.println(na.getLikedBy().size());
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }else{
                     na.getLikedBy().remove(nu);
                     na.setCountLikes(na.getLikedBy().size());
-                    return response.generiereFehler406("true");
+                    return response.generateError406("true");
                 }
             }catch(Exception e){
-                return response.generiereFehler406("Fehler");
+                return response.generateError406("Fehler");
             }
         }
     }

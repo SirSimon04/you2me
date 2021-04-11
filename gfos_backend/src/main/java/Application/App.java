@@ -1,3 +1,6 @@
+/**
+ * <h1>Der Startpunkt der Applikation</h1>
+ */
 package Application;
 
 import EJB.BlacklistEJB;
@@ -9,6 +12,12 @@ import javax.ejb.EJB;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+/**
+ * <h1>Diese Methode startet den Server und enthält die Threads, die automatisch immer nach bestimmten Zeiten ausgeführt werden
+ * ausgeführt werden.</h1>
+ *
+ * @author simon
+ */
 @ApplicationPath("daten")
 public class App extends Application{
 
@@ -33,9 +42,9 @@ public class App extends Application{
             System.out.println("bl cleared");
         }, 30, 3600, TimeUnit.SECONDS);
 
-//        execService.scheduleAtFixedRate(() -> {
-//            nutzerEJB.setAllOffline();
-//            System.out.println("all off");
-//        }, 300, 300, TimeUnit.SECONDS);
+        execService.scheduleAtFixedRate(() -> {
+            nutzerEJB.setAllOffline();
+            System.out.println("all off");
+        }, 30, 300, TimeUnit.SECONDS);
     }
 }

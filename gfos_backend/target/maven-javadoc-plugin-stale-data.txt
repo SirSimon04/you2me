@@ -1,0 +1,58 @@
+/usr/lib/jvm/java-8-openjdk-amd64/jre/../bin/javadoc
+@options
+@packages
+-classpath
+'/home/simon/.m2/repository/com/google/code/gson/gson/2.8.2/gson-2.8.2.jar:/home/simon/.m2/repository/javax/javaee-endorsed-api/7.0/javaee-endorsed-api-7.0.jar:/home/simon/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/simon/.m2/repository/com/auth0/java-jwt/3.12.0/java-jwt-3.12.0.jar:/home/simon/.m2/repository/javax/javaee-api/8.0/javaee-api-8.0.jar:/home/simon/.m2/repository/com/sun/mail/javax.mail/1.6.0/javax.mail-1.6.0.jar:/home/simon/.m2/repository/javax/mail/mail/1.4.7/mail-1.4.7.jar:/home/simon/.m2/repository/javax/activation/activation/1.1.1/activation-1.1.1.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2021. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'GFOS 1.0 API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' '/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'GFOS 1.0 API'
+Filter
+Entity
+testgfos2021.gfostest.resources
+testgfos2021.gfostest
+Application
+WebService
+Utilities
+EJB
+/home/simon/.m2/repository/com/google/code/gson/gson/2.8.2/gson-2.8.2.jar = 1611263916676
+/home/simon/.m2/repository/javax/javaee-endorsed-api/7.0/javaee-endorsed-api-7.0.jar = 1611422160537
+/home/simon/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar = 1611045509714
+/home/simon/.m2/repository/com/auth0/java-jwt/3.12.0/java-jwt-3.12.0.jar = 1615040996258
+/home/simon/.m2/repository/javax/javaee-api/8.0/javaee-api-8.0.jar = 1611236150212
+/home/simon/.m2/repository/com/sun/mail/javax.mail/1.6.0/javax.mail-1.6.0.jar = 1611236150072
+/home/simon/.m2/repository/javax/mail/mail/1.4.7/mail-1.4.7.jar = 1616862210994
+/home/simon/.m2/repository/javax/activation/activation/1.1.1/activation-1.1.1.jar = 1616864004230
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/src/main/java = 1618143864968
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/help-doc.html = 1618169570156
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/index-all.html = 1618169570104
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/index.html = 1618169570128
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/script.js = 1618169570176
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/constant-values.html = 1618169569772
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/deprecated-list.html = 1618169570116
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/serialized-form.html = 1618169569800
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/overview-frame.html = 1618169569660
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/allclasses-frame.html = 1618169570120
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/overview-tree.html = 1618169570004
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/stylesheet.css = 1618169570172
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/overview-summary.html = 1618169570144
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/package-list = 1618169569656
+/home/simon/Dokumente/Programmieren/Projekte/gfos_messenger/gfos_backend/target/site/apidocs/allclasses-noframe.html = 1618169570128

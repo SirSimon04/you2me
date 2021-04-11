@@ -1,5 +1,5 @@
 /**
- * Der Webserver, der die Anfragen der Nutzer verarbeitet.
+ * <h1>Der Webserver, der die Anfragen der Nutzer verarbeitet.</h1>
  */
 package WebService;
 
@@ -15,11 +15,11 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
-import Filter.Filter;
-import Utilities.Antwort;
-import Utilities.Tokenizer;
-import Utilities.DateSorterChat;
-import Utilities.NameSorter;
+import Service.Filter;
+import Service.Antwort;
+import Service.Tokenizer;
+import Service.DateSorterChat;
+import Service.NameSorter;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -45,7 +45,7 @@ import java.math.BigInteger;
 import java.util.Iterator;
 
 /**
- * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Chats</h1>
+ * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Chats.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden des Webservers bezogen auf das Objekt
  * des Chats für das Bearbeiten und Ausgeben der Daten und stellt damit die
@@ -123,12 +123,12 @@ public class ChatWS{
         if(!verify(token)){
             System.out.println(System.currentTimeMillis());
             System.out.println("LUL");
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             List<Chat> liste = chatEJB.getAllCopy();
 
             Gson parser = new Gson();
-            return response.generiereAntwort(parser.toJson(liste));
+            return response.generateAnswer(parser.toJson(liste));
         }
 
     }
@@ -145,14 +145,14 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("token") String token, @PathParam("id") int id){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Chat c = chatEJB.getCopy(id);
 
             Gson parser = new Gson();
             System.out.println(c);
 //            System.out.println(c.getLetztenachricht());
-            return response.generiereAntwort(parser.toJson(c));
+            return response.generateAnswer(parser.toJson(c));
         }
 
     }
@@ -176,7 +176,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChatInfo(@PathParam("token") String token, @PathParam("id") int id, @PathParam("chatid") int chatId){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
 
             Gson parser = new Gson();
@@ -266,7 +266,7 @@ public class ChatWS{
 
                 jsonObject.add("isGroup", parser.toJsonTree(chatEJB.getById(chatId).getIsgroup()));
 
-                return response.generiereAntwort(parser.toJson(jsonObject));
+                return response.generateAnswer(parser.toJson(jsonObject));
 
             }else{
                 JsonObject jsonObject = new JsonObject();
@@ -287,7 +287,7 @@ public class ChatWS{
                 try{
                     if(self.getBlockiertVon().contains(other)){
                         jsonObject.add("blockiertWorden", parser.toJsonTree(true));
-                        return response.generiereAntwort(parser.toJson(jsonObject));
+                        return response.generateAnswer(parser.toJson(jsonObject));
                     }else{
                         jsonObject.add("blockiertWorden", parser.toJsonTree(false));
                     }
@@ -362,11 +362,11 @@ public class ChatWS{
 
                 }
 
-                return response.generiereAntwort(parser.toJson(jsonObject));
+                return response.generateAnswer(parser.toJson(jsonObject));
             }
 
         }
-//        return response.generiereAntwort("true");
+//        return response.generateAnswer("true");
     }
 
     /**
@@ -384,7 +384,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getByChatId(@PathParam("chatid") int chatid, @PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             try{
                 Chat c = chatEJB.getCopy(chatid);
@@ -410,9 +410,9 @@ public class ChatWS{
                 }
 
                 Gson parser = new Gson();
-                return response.generiereAntwort(parser.toJson(c));
+                return response.generateAnswer(parser.toJson(c));
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler401("Id nicht vorhanden");
+                return response.generateError401("Id nicht vorhanden");
             }
 
         }
@@ -437,7 +437,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOwnChatlistByUserId(@PathParam("nutzerid") int nutzerid, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             try{
                 List<Chat> ownChatListDB = new ArrayList<Chat>();
@@ -565,10 +565,10 @@ public class ChatWS{
                 returnObject.add("normal", parser.toJsonTree(returnListFinal));
                 returnObject.add("archived", parser.toJsonTree(archivedChats));
 
-                return response.generiereAntwort(parser.toJson(returnObject));
-//                return response.generiereAntwort(parser.toJson(ownChatListDB));
+                return response.generateAnswer(parser.toJson(returnObject));
+//                return response.generateAnswer(parser.toJson(ownChatListDB));
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler401("Id nicht vorhanden");
+                return response.generateError401("Id nicht vorhanden");
             }
         }
 
@@ -589,7 +589,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response createAsGroup(String Daten, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             System.out.println(Daten);
             Gson parser = new Gson();
@@ -612,16 +612,16 @@ public class ChatWS{
                     System.out.println(arr.get(i).getAsString());
                     Nutzer addedUser = nutzerEJB.getByUsername(arr.get(i).getAsString());
                     nutzerEJB.fuegeChatHinzu(neuerChat, addedUser);
-                    chatEJB.fuegeNutzerHinzu(neuerChat, addedUser);
+                    chatEJB.addUser(neuerChat, addedUser);
 
                 }
                 Nutzer self = nutzerEJB.getById(eigeneId);
                 nutzerEJB.fuegeChatHinzu(neuerChat, self);
-                chatEJB.fuegeNutzerHinzu(neuerChat, self);
+                chatEJB.addUser(neuerChat, self);
                 chatEJB.addAdmin(neuerChat, self);
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("Json falsch");
+                return response.generateError406("Json falsch");
             }
         }
 
@@ -641,7 +641,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response createAsChat(String Daten, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             System.out.println(Daten);
             Gson parser = new Gson();
@@ -678,18 +678,18 @@ public class ChatWS{
                 }
 
                 if(test){
-                    chatEJB.fuegeNutzerHinzu(neuerChat, self);
-                    chatEJB.fuegeNutzerHinzu(neuerChat, other);
+                    chatEJB.addUser(neuerChat, self);
+                    chatEJB.addUser(neuerChat, other);
 
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }else{
                     chatEJB.delete(neuerChat);
-                    return response.generiereFehler406("schon vorhanden");
+                    return response.generateError406("schon vorhanden");
                 }
             }catch(JsonSyntaxException e){
-                return response.generiereFehler401("Json falsch");
+                return response.generateError401("Json falsch");
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+                return response.generateError406("ID oder Benutzername nicht vorhanden");
             }
         }
 
@@ -708,10 +708,10 @@ public class ChatWS{
     @Path("/takepart/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response fuegeNutzerHinzu(String Daten, @PathParam("token") String token){
+    public Response addUser(String Daten, @PathParam("token") String token){
 
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -733,26 +733,26 @@ public class ChatWS{
                             nutzerEJB.fuegeChatHinzu(c, addedUser);
 
                             System.out.println("Chatws fuegeNutzerhinzu");
-                            chatEJB.fuegeNutzerHinzu(c, addedUser);
+                            chatEJB.addUser(c, addedUser);
 
-                            return response.generiereAntwort("true");
+                            return response.generateAnswer("true");
                         }else{
-                            return response.generiereFehler406("Nutzer schon hinzugefügt");
+                            return response.generateError406("Nutzer schon hinzugefügt");
                         }
                     }else{
-                        return response.generiereFehler406("Ist ein Chat, keine Gruppe");
+                        return response.generateError406("Ist ein Chat, keine Gruppe");
                     }
 
                 }else{
-                    return response.generiereFehler406("Du bist kein Admin");
+                    return response.generateError406("Du bist kein Admin");
                 }
 
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("JsonSyntaxException" + e);
+                return response.generateError406("JsonSyntaxException" + e);
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+                return response.generateError406("ID oder Benutzername nicht vorhanden");
             }catch(NullPointerException e){
-                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+                return response.generateError406("ID oder Benutzername nicht vorhanden");
             }
         }
 
@@ -771,10 +771,10 @@ public class ChatWS{
     @Path("/entferneNutzer/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response entferneNutzer(String Daten, @PathParam("token") String token){
+    public Response removeUser(String Daten, @PathParam("token") String token){
 
         if(!verify(token)){
-            return response.generiereFehler401("Kein gültiges Token");
+            return response.generateError401("Kein gültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -790,8 +790,8 @@ public class ChatWS{
 
                 if(self.equals(other)){
                     nutzerEJB.entferneChat(c, self);
-                    chatEJB.entferneNutzer(c, self);
-                    return response.generiereAntwort("true");
+                    chatEJB.removeUser(c, self);
+                    return response.generateAnswer("true");
                 }else{
 
                     if(c.getAdminList().contains(self)){
@@ -803,26 +803,26 @@ public class ChatWS{
 
                                 nutzerEJB.entferneChat(c, other);
 
-                                chatEJB.entferneNutzer(c, other);
+                                chatEJB.removeUser(c, other);
 
-                                return response.generiereAntwort("true");
+                                return response.generateAnswer("true");
                             }else{
-                                return response.generiereFehler406("Nutzer nicht in der Gruppe");
+                                return response.generateError406("Nutzer nicht in der Gruppe");
                             }
                         }else{
-                            return response.generiereFehler406("Ist ein Chat, keine Gruppe");
+                            return response.generateError406("Ist ein Chat, keine Gruppe");
                         }
 
                     }else{
-                        return response.generiereFehler406("Du bist kein Admin");
+                        return response.generateError406("Du bist kein Admin");
                     }
                 }
-//                 return response.generiereAntwort("true");
+//                 return response.generateAnswer("true");
 
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("JsonSyntaxException" + e);
+                return response.generateError406("JsonSyntaxException" + e);
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("ID oder Benutzername nicht vorhanden");
+                return response.generateError406("ID oder Benutzername nicht vorhanden");
             }
         }
 
@@ -842,7 +842,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response leave(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
 
             Gson parser = new Gson();
@@ -853,11 +853,11 @@ public class ChatWS{
             Nutzer self = nutzerEJB.getById(jsonId);
             Chat c = chatEJB.getById(jsonChatId);
             if(c.getAdminList().size() == 1 && c.getAdminList().contains(self)){
-                return response.generiereFehler406("Einziger Admin");
+                return response.generateError406("Einziger Admin");
             }else{
                 nutzerEJB.entferneChat(c, self);
-                chatEJB.entferneNutzer(c, self);
-                return response.generiereAntwort("true");
+                chatEJB.removeUser(c, self);
+                return response.generateAnswer("true");
             }
         }
 
@@ -876,9 +876,9 @@ public class ChatWS{
     @Path("/zuAdmin/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response macheZuAdmin(@PathParam("token") String token, String Daten){
+    public Response promoteToAdmin(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
 
             Gson parser = new Gson();
@@ -895,21 +895,21 @@ public class ChatWS{
             if(c.getAdminList().contains(self)){
                 if(c.getAdminList().contains(other)){
                     if(c.getAdminList().size() == 1){
-                        return response.generiereFehler406("Einziger Admin");
+                        return response.generateError406("Einziger Admin");
                     }
                     if(!c.getAdminList().contains(other)){
-                        return response.generiereFehler406("Bereits kein Admin");
+                        return response.generateError406("Bereits kein Admin");
                     }else{
                         chatEJB.deleteAdmin(c, other);
-                        return response.generiereAntwort("true");
+                        return response.generateAnswer("true");
                     }
                 }else{
                     chatEJB.addAdmin(c, other);
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }
 
             }else{
-                return response.generiereFehler406("Kein Admin");
+                return response.generateError406("Kein Admin");
             }
         }
     }
@@ -929,7 +929,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response pinChat(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
@@ -938,7 +938,7 @@ public class ChatWS{
 
             chatEJB.pin(chatId, eigeneId);
 
-            return response.generiereAntwort("true");
+            return response.generateAnswer("true");
         }
 
     }
@@ -959,7 +959,7 @@ public class ChatWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response archiveChat(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
             JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class);
@@ -968,7 +968,7 @@ public class ChatWS{
 
             chatEJB.archive(chatId, eigeneId);
 
-            return response.generiereAntwort("true");
+            return response.generateAnswer("true");
         }
 
     }
@@ -986,9 +986,9 @@ public class ChatWS{
     @Path("/setzeProfilbild/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setzeProfilbild(@PathParam("token") String token, String Daten){
+    public Response setProfilpic(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -1010,10 +1010,10 @@ public class ChatWS{
 
                 chat.setProfilbild(fotoInDB);
 
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
 
             }else{
-                return response.generiereFehler401("Du bist kein Admin");
+                return response.generateError401("Du bist kein Admin");
             }
 
         }

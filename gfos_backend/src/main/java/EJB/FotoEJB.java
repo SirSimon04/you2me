@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- * <h1>Die Klasse zum Verwalten der Fotos in der Datenbank</h1>
+ * <h1>Die Klasse zum Verwalten der Fotos in der Datenbank.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
  * Datenbank bezogen auf die Fotos. Die Daten werden bei Anfrage des Webservers

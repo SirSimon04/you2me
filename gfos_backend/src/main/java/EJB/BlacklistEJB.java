@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 /**
- * <h1>Die Klasse zum Verwalten der Blacklist-Tokens in der Datenbank</h1>
+ * <h1>Die Klasse zum Verwalten der Blacklist-Tokens in der Datenbank.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
  * Datenbank bezogen auf Tokens, die der Blacklist hinzugefügt werden sollen.
@@ -30,7 +30,7 @@ public class BlacklistEJB{
 
     /**
      * Diese Methode setzt ein Token auf die Blacklist. Das ist für den Fall,
-     * dass ein Nutezr sich ausloggt.
+     * dass ein Nutzer sich ausloggt.
      *
      * @param bl Das Token und die aktuelle Zeit.
      */

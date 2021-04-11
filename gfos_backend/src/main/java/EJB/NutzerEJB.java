@@ -1,17 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- * Die Datenbankzugriffsschicht.
+ * <h>Die Datenbankzugriffsschicht.</h1>
  */
 package EJB;
 
 import Entity.Blacklist;
 import Entity.Chat;
 import Entity.Nutzer;
-import Utilities.Tokenizer;
+import Service.Tokenizer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,7 +23,7 @@ import javax.persistence.Query;
 import java.math.BigInteger;
 
 /**
- * <h1>Die Klasse zum Verwalten der Nutzer in der Datenbank</h1>
+ * <h1>Die Klasse zum Verwalten der Nutzer in der Datenbank.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
  * Datenbank bezogen auf die Nutzer. Die Daten werden bei Anfrage des Webservers

@@ -17,11 +17,11 @@ import Entity.Foto;
 import Entity.Nachricht;
 import Entity.Nutzer;
 import Entity.Setting;
-import Filter.Filter;
-import Utilities.Hasher;
-import Utilities.Tokenizer;
-import Utilities.Antwort;
-import Utilities.Mail;
+import Service.Filter;
+import Service.Hasher;
+import Service.Tokenizer;
+import Service.Antwort;
+import Service.Mail;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.ejb.EJB;
@@ -49,7 +49,7 @@ import javax.ws.rs.core.Response;
 import static java.lang.Math.toIntExact;
 
 /**
- * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nutzer</h1>
+ * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nutzer.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden des Webservers bezogen auf das Objekt
  * des Nutzers für das Bearbeiten und Ausgeben der Daten und stellt damit die
@@ -122,11 +122,11 @@ public class NutzerWS{
     @Path("/{token}")
     public Response getAll(@PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             List<Nutzer> liste = nutzerEJB.getAllCopy();
             Gson parser = new Gson();
-            return response.generiereAntwort(parser.toJson(liste));
+            return response.generateAnswer(parser.toJson(liste));
 
         }
 
@@ -144,14 +144,14 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getById(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             try{
                 Nutzer n = nutzerEJB.getCopyById(id);
                 Gson parser = new Gson();
-                return response.generiereAntwort(parser.toJson(n));
+                return response.generateAnswer(parser.toJson(n));
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("Id nicht vorhanden");
+                return response.generateError406("Id nicht vorhanden");
             }
 
         }
@@ -170,14 +170,14 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getByUsername(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             try{
                 Nutzer n = nutzerEJB.getCopyByUsername(benutzername);
                 Gson parser = new Gson();
-                return response.generiereAntwort(parser.toJson(n));
+                return response.generateAnswer(parser.toJson(n));
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("Benutzername nicht vorhanden");
+                return response.generateError406("Benutzername nicht vorhanden");
             }
         }
 
@@ -196,14 +196,14 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@PathParam("benutzername") String benutzername, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             List<Nutzer> l = nutzerEJB.searchCopy(benutzername);
             Gson parser = new Gson();
             if(l.isEmpty()){
-                return response.generiereFehler406("Benutzername nicht vorhanden");
+                return response.generateError406("Benutzername nicht vorhanden");
             }else{
-                return response.generiereAntwort(parser.toJson(l));
+                return response.generateAnswer(parser.toJson(l));
             }
 
         }
@@ -223,7 +223,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsernameById(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             try{
                 Gson parser = new Gson();
@@ -233,9 +233,9 @@ public class NutzerWS{
                 Nutzer nutzer = new Nutzer();
                 nutzer.setBenutzername(n.getBenutzername());  //nötig, damit nur der Benutzername bekannt ist
 
-                return response.generiereAntwort(parser.toJson(nutzer));
+                return response.generateAnswer(parser.toJson(nutzer));
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("Id nicht vorhanden");
+                return response.generateError406("Id nicht vorhanden");
             }
         }
 
@@ -257,7 +257,7 @@ public class NutzerWS{
     public Response getFriendList(@PathParam("id") int id, @PathParam("token") String token){
 
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -328,7 +328,7 @@ public class NutzerWS{
             jsonObject.add("onlineFriends", parser.toJsonTree(onlineFriends));
             jsonObject.add("blockedUser", parser.toJsonTree(blockedUser));
 
-            return response.generiereAntwort(parser.toJson(jsonObject));
+            return response.generateAnswer(parser.toJson(jsonObject));
         }
 
     }
@@ -347,7 +347,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response sendeFreundesAnfrage(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -362,12 +362,12 @@ public class NutzerWS{
 
                 if(!self.getOwnFriendList().contains(other)){
                     nutzerEJB.fuegeFreundHinzu(self, other);
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }else{
-                    return response.generiereFehler406("Bereits befreundet");
+                    return response.generateError406("Bereits befreundet");
                 }
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("Json wrong");
+                return response.generateError406("Json wrong");
 
             }
         }
@@ -387,7 +387,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response loescheFreund(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -408,9 +408,9 @@ public class NutzerWS{
                 other.getOwnFriendList().remove(self);
                 other.getOtherFriendList().remove(self);
 
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("Json wrong");
+                return response.generateError406("Json wrong");
             }
         }
     }
@@ -431,7 +431,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response block(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -449,19 +449,19 @@ public class NutzerWS{
                         nutzerEJB.block(self, other);
                         self.getHatBlockiert().add(other);
                         other.getBlockiertVon().add(self);
-                        return response.generiereAntwort("true");
+                        return response.generateAnswer("true");
                     }else{
                         nutzerEJB.unblock(self, other);
                         self.getHatBlockiert().remove(other);
                         other.getBlockiertVon().remove(self);
-                        return response.generiereAntwort("true");
+                        return response.generateAnswer("true");
                     }
                 }catch(EJBTransactionRolledbackException e){
-                    return response.generiereAntwort("false");
+                    return response.generateAnswer("false");
                 }
 
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("Json wrong");
+                return response.generateError406("Json wrong");
             }
         }
     }
@@ -481,7 +481,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSettings(@PathParam("token") String token, @PathParam("id") int id){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
             JsonObject j = new JsonObject();
@@ -522,7 +522,7 @@ public class NutzerWS{
             }
             j.add("chatübersicht", parser.toJsonTree(jsonList));
 
-            return response.generiereAntwort(parser.toJson(j));
+            return response.generateAnswer(parser.toJson(j));
         }
     }
 
@@ -539,7 +539,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response setSettings(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
             Setting s = parser.fromJson(Daten, Setting.class);
@@ -560,7 +560,7 @@ public class NutzerWS{
             }catch(NullPointerException e){
 
             }
-            return response.generiereAntwort("true");
+            return response.generateAnswer("true");
         }
     }
 
@@ -579,7 +579,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChannel(@PathParam("token") String token, @PathParam("id") int id){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
 
             Gson parser = new Gson();
@@ -611,9 +611,9 @@ public class NutzerWS{
                 }
             }
 
-            return response.generiereAntwort(parser.toJson(ll));
+            return response.generateAnswer(parser.toJson(ll));
 
-//            return response.generiereFehler406("false");
+//            return response.generateError406("false");
         }
     }
 
@@ -631,7 +631,7 @@ public class NutzerWS{
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(String Daten){
-//        Response r = response.generiereAntwort(Daten);
+//        Response r = response.generateAnswer(Daten);
         System.out.println("login");
         Gson parser = new Gson();
         try{
@@ -662,20 +662,20 @@ public class NutzerWS{
                     jsonObject.addProperty("token", token);
                     dbNutzer.setIsonline(Boolean.TRUE);
                     //return parser.toJson(jsonObject);
-                    return response.generiereAntwort(parser.toJson(jsonObject));
+                    return response.generateAnswer(parser.toJson(jsonObject));
                     //return "  {\"token\": \"" + tokenizer.createNewToken(dbNutzer.getBenutzername()) + "\" }  ";
-//                return response.generiereAntwort("create");
+//                return response.generateAnswer("create");
                 }else{
-                    return response.generiereFehler406("passwordWrong");
+                    return response.generateError406("passwordWrong");
                 }
             }else{
-                return response.generiereFehler406(parser.toJson("verify"));
+                return response.generateError406(parser.toJson("verify"));
             }
 
         }catch(JsonSyntaxException e){
-            return response.generiereFehler406("Json wrong");
+            return response.generateError406("Json wrong");
         }catch(EJBTransactionRolledbackException e){
-            return response.generiereFehler406("usernameWrong");
+            return response.generateError406("usernameWrong");
         }
     }
 
@@ -692,7 +692,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response logout(@PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereAntwort("Bereits ausgeloggt");
+            return response.generateAnswer("Bereits ausgeloggt");
         }else{
             Gson parser = new Gson();
             try{
@@ -709,12 +709,12 @@ public class NutzerWS{
                 BigInteger x = new BigInteger("" + System.currentTimeMillis());
                 n.setLastonline(x);
 
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
 
             }catch(JsonSyntaxException e){
-                return response.generiereFehler406("Json wrong");
+                return response.generateError406("Json wrong");
             }catch(EJBTransactionRolledbackException e){
-                return response.generiereFehler406("kp");
+                return response.generateError406("kp");
             }
 
         }
@@ -757,13 +757,13 @@ public class NutzerWS{
             if(UserNameIsFree == null){
 //                System.out.println("Username free");
                 if(filter.isProfane(neuerNutzername)){
-                    return response.generiereFehler406("Benutzername nicht zulässig");
+                    return response.generateError406("Benutzername nicht zulässig");
                 }else{
                     neuerNutzer.setBenutzername(neuerNutzername);
                 }
             }else{
 //                System.out.println("Username not free");
-                return response.generiereFehler500("Benutzername bereits vergeben");
+                return response.generateError500("Benutzername bereits vergeben");
             }
 
             Nutzer EmailIsFree = nutzerEJB.getByMail(neueEmail);
@@ -771,14 +771,14 @@ public class NutzerWS{
             if(EmailIsFree == null){
                 neuerNutzer.setEmail(neueEmail);
             }else{
-                return response.generiereFehler500("Email bereits vergeben");
+                return response.generateError500("Email bereits vergeben");
             }
 
             neuerNutzer.setPasswordhash(hasher.checkPassword(neuesPasswort));
 
             if(neuerVorname != null){
                 if(filter.isProfane(neuerVorname)){
-                    return response.generiereFehler406("Vorname nicht zulässig");
+                    return response.generateError406("Vorname nicht zulässig");
                 }else{
                     neuerNutzer.setVorname(neuerVorname);
                 }
@@ -786,7 +786,7 @@ public class NutzerWS{
 
             if(neuerNachname != null){
                 if(filter.isProfane(neuerNachname)){
-                    return response.generiereFehler406("Nachname nicht zulässig");
+                    return response.generateError406("Nachname nicht zulässig");
                 }else{
                     neuerNutzer.setNachname(neuerNachname);
                 }
@@ -798,7 +798,7 @@ public class NutzerWS{
 
             if(neueInfo != null){
                 if(filter.isProfane(neueInfo)){
-                    response.generiereFehler406("Info nicht zulässig");
+                    response.generateError406("Info nicht zulässig");
                 }
                 neuerNutzer.setInfo(neueInfo);
             }
@@ -835,10 +835,10 @@ public class NutzerWS{
             channel.setIsgroup(false);
             chatEJB.createChat(channel);
             nutzerInDbB.setChannel(channel);
-            return response.generiereAntwort(parser.toJson(returnObject));
+            return response.generateAnswer(parser.toJson(returnObject));
 
         }catch(JsonSyntaxException e){
-            return response.generiereFehler406("Json falsch");
+            return response.generateError406("Json falsch");
         }
         //return "";
 
@@ -882,14 +882,14 @@ public class NutzerWS{
                 returnObject.addProperty("token", token);
                 n.setIsonline(Boolean.TRUE);
                 //return parser.toJson(jsonObject);
-                return response.generiereAntwort(parser.toJson(returnObject));
+                return response.generateAnswer(parser.toJson(returnObject));
 //
-//                return response.generiereAntwort("true");
+//                return response.generateAnswer("true");
             }else{
-                return response.generiereFehler406("Falscher Pin");
+                return response.generateError406("Falscher Pin");
             }
         }catch(Exception e){
-            return response.generiereFehler500("Fehler");
+            return response.generateError500("Fehler");
         }
 
     }
@@ -905,9 +905,9 @@ public class NutzerWS{
     @Path("/setzeProfilbild/{token}")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setzeProfilbild(@PathParam("token") String token, String Daten){
+    public Response setProfilpic(@PathParam("token") String token, String Daten){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -926,9 +926,9 @@ public class NutzerWS{
 
                 self.setProfilbild(fotoInDB);
 
-                return response.generiereAntwort("true");
+                return response.generateAnswer("true");
             }else{
-                return response.generiereFehler406("ID nicht vorhanden");
+                return response.generateError406("ID nicht vorhanden");
             }
 
         }
@@ -949,7 +949,7 @@ public class NutzerWS{
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("token") String token, String Daten) throws IOException, MessagingException, AddressException, InterruptedException{
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             Gson parser = new Gson();
 
@@ -976,7 +976,7 @@ public class NutzerWS{
                     if(neuerNutzername != null){
 
                         if(filter.isProfane(neuerNutzername)){
-                            return response.generiereFehler406("Benutzername nicht zulässig");
+                            return response.generateError406("Benutzername nicht zulässig");
                         }else{
                             Nutzer UserNameIsFree = nutzerEJB.getByUsername(neuerNutzername);
 
@@ -984,7 +984,7 @@ public class NutzerWS{
                                 nutzerInDB.setBenutzername(neuerNutzername);
                                 msg += "Dein neuer Benutzername: \"" + neuerNutzername + "\"</p><p>";
                             }else{
-                                return response.generiereFehler500("Benutzername bereits vergeben");
+                                return response.generateError500("Benutzername bereits vergeben");
                             }
                         }
 
@@ -998,14 +998,14 @@ public class NutzerWS{
                             nutzerInDB.setEmail(neueEmail);
                             msg += "Deine neue E-Mail: \"" + neueEmail + "\"</p><p>";
                         }else{
-                            return response.generiereFehler500("Benutzername bereits vergeben");
+                            return response.generateError500("Benutzername bereits vergeben");
                         }
 
                     }
 
                     if(neuerVorname != null){
                         if(filter.isProfane(neuerVorname)){
-                            return response.generiereFehler406("Vorname nicht zulässig");
+                            return response.generateError406("Vorname nicht zulässig");
                         }else{
                             nutzerInDB.setVorname(neuerVorname);
                             msg += "Dein neuer Vorname: \"" + neuerVorname + "\"</p><p>";
@@ -1015,7 +1015,7 @@ public class NutzerWS{
 
                     if(neuerNachname != null){
                         if(filter.isProfane(neuerNachname)){
-                            return response.generiereFehler406("Nachname nicht zulässig");
+                            return response.generateError406("Nachname nicht zulässig");
                         }else{
                             nutzerInDB.setNachname(neuerNachname);
                             msg += "Dein neuer Nachname: \"" + neuerNachname + "\"</p><p>";
@@ -1033,7 +1033,7 @@ public class NutzerWS{
 
                     if(neueInfo != null){
                         if(filter.isProfane(neueInfo)){
-                            return response.generiereFehler406("Info nicht zulässig");
+                            return response.generateError406("Info nicht zulässig");
                         }else{
                             nutzerInDB.setInfo(neueInfo);
                             msg += "Deine neue Info: \"" + neueInfo + "\"</p><p>";
@@ -1049,14 +1049,14 @@ public class NutzerWS{
                     String pw = n.getPasswordhash();
                     mail.sendAccChanges(mailFrom, pw, nutzerInDB.getEmail(), msg);
 
-                    return response.generiereAntwort(tokenizer.createNewToken(neuerNutzername));
+                    return response.generateAnswer(tokenizer.createNewToken(neuerNutzername));
 
                 }else{
-                    return response.generiereFehler401("Id nicht vorhanden");
+                    return response.generateError401("Id nicht vorhanden");
                 }
 
             }else{
-                return response.generiereFehler406("PW falsch");
+                return response.generateError406("PW falsch");
             }
 
         }
@@ -1077,7 +1077,7 @@ public class NutzerWS{
     @Produces(MediaType.TEXT_PLAIN)
     public Response delete(@PathParam("id") int id, @PathParam("token") String token){
         if(!verify(token)){
-            return response.generiereFehler401("Ungültiges Token");
+            return response.generateError401("Ungültiges Token");
         }else{
             String name = tokenizer.getUser(token);
             if(nutzerEJB.getByUsername(name).equals(nutzerEJB.getById(id))){
@@ -1089,14 +1089,14 @@ public class NutzerWS{
                     Date date = new Date();
                     bl.setTimestamp(date);
                     blacklistEJB.logOut(bl);
-                    return response.generiereAntwort("true");
+                    return response.generateAnswer("true");
                 }else{
-                    return response.generiereFehler500("Fehler beim Löschen");
+                    return response.generateError500("Fehler beim Löschen");
 
                 }
 
             }else{
-                return response.generiereFehler406("Du hast nicht die nötige Berechtigung");
+                return response.generateError406("Du hast nicht die nötige Berechtigung");
             }
         }
     }

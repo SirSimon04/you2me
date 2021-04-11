@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import javax.ejb.EJB;
 
 /**
- * <h1>Die Klasse zum Verwalten der Nachrichten in der Datenbank</h1>
+ * <h1>Die Klasse zum Verwalten der Nachrichten in der Datenbank.</h1>
  * <p>
  * Diese Klasse beinhaltet alle Methoden zur Verknüpfung des Webservices mit der
  * Datenbank bezogen auf die Nachrichten. Die Daten werden bei Anfrage des
@@ -83,6 +83,13 @@ public class NachrichtEJB{
         return em.find(Nachricht.class, id);
     }
 
+    /**
+     * Diese Nachricht gibt eine Nachricht anhand ihrer Id zurück.
+     * Dabei wird die Datenbankverbindung der Nachricht sowie die der Nutzer in der Nutzerliste der Nachricht getrennt.
+     *
+     * @param id Die Id der Nachricht.
+     * @return Die Nachricht.
+     */
     public Nachricht getCopyById(int id){
         Nachricht n = em.find(Nachricht.class, id);
         em.detach(n);
@@ -100,19 +107,18 @@ public class NachrichtEJB{
         return n;
     }
 
-    public Nachricht getCopyByIdTest(int id){
+    /**
+     * Diese Methode gibt eine Nachricht anhand ihrer Id zurück. Dabei wird die
+     * Datenbankverbindung der Nachricht getrennt und die beiden Listen der Nachricht werden geleert.
+     *
+     * @param id Die Id der Nachricht.
+     * @return Das Nachricht.
+     */
+    public Nachricht getCopyByIdListsNull(int id){
         Nachricht n = em.find(Nachricht.class, id);
         em.detach(n);
         n.setNutzerList(null);
         n.setNachrichtList(null);
-        return n;
-    }
-
-    public Nachricht testGetById(int id){
-        Nachricht n = em.find(Nachricht.class, id);
-        em.detach(n);
-        n.setNachrichtList(null);
-        n.setNutzerList(null);
         return n;
     }
 
@@ -147,11 +153,24 @@ public class NachrichtEJB{
         return nachrichtList;
     }
 
+    /**
+     * Diese Methode gibt alle Nachrichten eines bestimmten Chats zurück.
+     *
+     * @param id Die Id des Chats.
+     * @return Eine Liste mit allen Nachrichten.
+     */
     public List<Nachricht> getByChat(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         return nachrichtList;
     }
 
+    /**
+     * Diese Methode gibt alle Nachrichten eines CHats zurück.
+     * Dabei wird die Datenbankverbindung aller Nachrichten getrennt.
+     *
+     * @param id Die Id des Chats.
+     * @return Eine Liste mit allen Nachrichten.
+     */
     public List<Nachricht> getDetachedByChat(int id){
         List<Nachricht> nachrichtList = em.createNamedQuery("Nachricht.findByChatid").setParameter("chatid", id).getResultList();
         for(Nachricht n : nachrichtList){
@@ -270,7 +289,7 @@ public class NachrichtEJB{
      * @param na Die zu markierende Nachricht.
      * @param nu Der eigene Nutzer.
      */
-    public void markiere(Nachricht na, Nutzer nu){
+    public void markMessage(Nachricht na, Nutzer nu){
         if(nu.getMarkedMessages().contains(na)){
             nu.getMarkedMessages().remove(na);
         }else{
