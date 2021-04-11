@@ -188,7 +188,7 @@ export default {
 };
 window.CURRENT_USER_ID = -1;
 window.CURRENT_TOKEN = '';
-window.IP_ADDRESS = 'http://078286736c27.ngrok.io';
+window.IP_ADDRESS = 'http://d7d57d75faa5.ngrok.io';
 
 
 </script>
