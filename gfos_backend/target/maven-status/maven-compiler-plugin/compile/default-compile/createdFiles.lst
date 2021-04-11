@@ -5,7 +5,6 @@ EJB/FotoEJB.class
 WebService/NutzerWS.class
 WebService/NachrichtWS.class
 Filter/ExaminationResult.class
-FileService/ReadFile.class
 Utilities/DateSorterChat.class
 Entity/Foto.class
 Application/App.class
@@ -16,7 +15,6 @@ Entity/Blacklist.class
 Utilities/Antwort.class
 testgfos2021/gfostest/resources/JavaEE8Resource.class
 testgfos2021/gfostest/JAXRSConfiguration.class
-FileService/WriteToFile.class
 Filter/SwearWordData.class
 Utilities/NameSorter.class
 Utilities/Mail$1.class
@@ -26,7 +24,6 @@ Utilities/Mail$3.class
 Utilities/Hasher.class
 Utilities/FileService.class
 Utilities/Mail.class
-FileService/CreateFile.class
 Entity/Nutzer.class
 Entity/Chat.class
 EJB/SettingsEJB.class

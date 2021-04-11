@@ -211,7 +211,6 @@ public class NachrichtWS{
 //                    }
                 }
             }
-            //gucke, ob markiert
             if(nList.size() > 1){
                 Collections.sort(nList, (Nachricht z1, Nachricht z2) -> {
                     if(z1.getDatumuhrzeit() > z2.getDatumuhrzeit()){
@@ -231,7 +230,6 @@ public class NachrichtWS{
                 }
             }
 
-            //gucken, ob von jedem gelesen
             return response.generiereAntwort(parser.toJson(nList));
         }
 
@@ -417,6 +415,7 @@ public class NachrichtWS{
                 }catch(NullPointerException e){
                     response.generiereAntwort("Komisch");
                 }
+                neueNachricht.setIsFile(false);
                 chatEJB.getById(chatId).setLetztenachricht(neueNachricht);
                 neueNachricht.setIsplanned(Boolean.FALSE);
                 nachrichtEJB.add(neueNachricht);
@@ -428,6 +427,40 @@ public class NachrichtWS{
             }
         }
 
+    }
+
+    @POST
+    @Path("/edit/{token}")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response edit(String Daten, @PathParam("token") String token) throws IOException, MessagingException, AddressException, InterruptedException{
+
+        if(!verify(token)){
+            return response.generiereFehler401("dentifrisse");
+        }else{
+
+            Gson parser = new Gson();
+            try{
+                JsonObject jsonObject = parser.fromJson(Daten, JsonObject.class
+                );
+                int nachrichtId = parser.fromJson((jsonObject.get("nachrichtid")), Integer.class);
+                int senderId = parser.fromJson((jsonObject.get("senderid")), Integer.class);
+                String inhalt = parser.fromJson((jsonObject.get("inhalt")), String.class);
+
+                Nachricht n = nachrichtEJB.getById(nachrichtId);
+
+                if(n.getSenderid() == senderId){
+                    n.setIsEdited(true);
+                    n.setInhalt(inhalt);
+                    return response.generiereAntwort("true");
+                }else{
+                    return response.generiereAntwort("Nicht deine Nachricht");
+                }
+
+            }catch(NullPointerException e){
+                return response.generiereAntwort("Fehler");
+            }
+        }
     }
 
     @POST
@@ -532,29 +565,33 @@ public class NachrichtWS{
                 }
             }
 
-            List<Nutzer> l = chatEJB.getById(n.getChatid()).getNutzerList();
+            if(n.getSenderid() == eigeneId){
+                List<Nutzer> l = chatEJB.getById(n.getChatid()).getNutzerList();
 
-            if(l.contains(self)){
-                if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
+                if(l.contains(self)){
+                    if(chatEJB.getById(n.getChatid()).getLetztenachricht().equals(n)){
 
-                    chatEJB.getById(n.getChatid()).setLetztenachricht(null);
+                        chatEJB.getById(n.getChatid()).setLetztenachricht(null);
 
-                    nachrichtEJB.delete(lNachrichtId);
+                        nachrichtEJB.delete(lNachrichtId);
 
-                    List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
-                    if(nList.size() != 0){
-                        chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
+                        List<Nachricht> nList = nachrichtEJB.getCopyByChat(n.getChatid());
+                        if(nList.size() != 0){
+                            chatEJB.getById(n.getChatid()).setLetztenachricht(nList.get(nList.size() - 1));
+                        }
+
+                        return response.generiereAntwort("true");
+
+                    }else{
+
+                        nachrichtEJB.delete(lNachrichtId);
+                        return response.generiereAntwort("true");
                     }
-
-                    return response.generiereAntwort("true");
-
                 }else{
-
-                    nachrichtEJB.delete(lNachrichtId);
-                    return response.generiereAntwort("true");
+                    return response.generiereFehler406("Nicht im Chat");
                 }
             }else{
-                return response.generiereFehler406("Nicht im Chat");
+                return response.generiereAntwort("Nicht deine Nachricht");
             }
 
         }
