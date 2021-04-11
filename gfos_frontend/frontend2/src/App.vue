@@ -76,8 +76,8 @@ export default {
         infoMessageTimeout: 2000,
 
         welcome_vue_zeigen: false,
-        app_vue_registrieren_zeigen: false,
-        app_vue_settings_zeigen: true,
+        app_vue_registrieren_zeigen: true,
+        app_vue_settings_zeigen: false,
         app_vue_chatliste_zeigen: true,
         app_vue_chat_zeigen: true,
         app_vue_chatinfo_zeigen: false,
@@ -188,7 +188,7 @@ export default {
 };
 window.CURRENT_USER_ID = -1;
 window.CURRENT_TOKEN = '';
-window.IP_ADDRESS = 'http://d7d57d75faa5.ngrok.io';
+window.IP_ADDRESS = 'http://339220729d3e.ngrok.io';
 
 
 </script>

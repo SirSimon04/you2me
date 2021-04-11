@@ -1,5 +1,12 @@
 <template>
-    <v-container>
+    <v-container id="chatWindowContainer">
+        <div id="Test" style="position: absolute; visibility: hidden; height: auto; width: auto; white-space: nowrap;"></div>
+        
+        <div id='messageDropdownBox' style="display: none; text-align: center;">
+            <v-btn id='editMessageButton' depressed color="primary" style="margin: 4px; color: white; width: 216px">Bearbeiten</v-btn><br>
+            <v-btn id='deleteMessageButton' depressed color="error" style="margin: 4px; color: white; width: 216px">Löschen</v-btn><br>
+            <v-btn id='informationMessageButton' depressed color="success" style="margin: 4px; color: white; width: 216px">Informationen</v-btn><br>
+        </div>
         <div id="chatcontainer">
         </div>
         <div style="
@@ -33,7 +40,7 @@
                 wrap="hard"
             >
             </textarea>
-            <img onclick="window.sendMessage();" style="position: relative; right: -4px; bottom: 4px;" width="32" height="32" id="sendMessage_Button" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAGfSURBVEiJrdQvTxxRFAXw32SzBr4FHggSi6hpUrMYiimQ9HOgIHj4FljEQoIEWoFD0CYkVa0rbYLlVcydzWM6s7M7MMkTc/+cc+49M69IKXnLpyiKIT7gMwZSSm9ysIQD/ESKM34t6BAjjPGM33jKCEavUXuIXwF0hU84ivenmGQ4r9pNnIfaRxxjOfL7AX4UkxyklPRRe40dLGQ1Ffh+TPKMpVaCKWpXGmon4PF+hfEk36H2Bru52g7w5crcrGai9iLU/sEJVjtW9wI8YschbpgTfInCB+xhcQZfmsAXYpWHtVpb+BHqT7E2L3jEd3JzX3gQa9rD92g+w/qs4JG7xvl/8VrRANu4C6BLbMwAvhK5zakEWUOhvAJuo/G+DbzN3KkEteb3+Ib7lnyjuTMTZCSpWlctt9tkbnWK6lPqeoqiuMVjSmmjFr/B35TSu8bGWSYIEaOYYj2LrbaZO9eKMuPvcJbFTtrMnZsgALdD8RoWlddKo7l9CQbKn/FU+WO2mtuLIEgq4AdcdNb3IBgq766p5vYmCJKP+DrN3Or8A60pb5tuGI4XAAAAAElFTkSuQmCC">
+            <img id="sendMessage_Button" onclick="window.sendMessage();" style="position: relative; right: -4px; bottom: 4px;" width="32" height="32" src="">
         </div>
     </v-container>
 </template>
@@ -52,6 +59,8 @@ export default {
         window.CURRENT_CHAT_ID = -1;
         var messages = [];
         var imageContainer = new ImageContainer();
+
+        document.getElementById('sendMessage_Button').src = imageContainer.getValue('SEND');
 
         function loginTest() {
             fetch(window.IP_ADDRESS + '/GFOS/daten/nutzer/login', {
@@ -114,11 +123,6 @@ export default {
                 });
             });
         }
-        
-        EventBus.$on('MYEVENT', (payload) => {
-            console.log('THIS IS MY EVENT');
-            console.log(payload);
-        });
 
         EventBus.$on('CHANGEHEIGHT', (payload) => {
             document.getElementById('chatcontainer').style = 'overflow: auto; min-height: 400px; height: "' + payload["height"] + 'px"; max-height: ' + payload["height"] + 'px; background-color: #0E1621; border-radius: 15px; padding: 16px;';
@@ -160,6 +164,34 @@ export default {
                     var cc = document.getElementById('chatcontainer');
                     var isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
 
+                    function getWidth(string) {
+                        var fontSize = 12;
+                        var testElem = document.getElementById("Test");
+                        testElem.textContent = string;
+                        testElem.style.fontSize = fontSize;
+                        var height = (testElem.clientHeight + 1);
+                        var width = (testElem.clientWidth + 1);
+                        testElem.textContent = '';
+                        return [width, height];
+                    }
+
+                    function cropText(text) {
+                        var visibleWidth = getWidth(text)[0];
+                        var cropped = '';
+                        var lastCrop = '';
+                        var charCount = 0;
+                        for (var visI=0; visI<Math.ceil(visibleWidth / 376); visI++) {
+                            lastCrop = '';
+                            while (getWidth(lastCrop)[0] < 376) {
+                                lastCrop += text[charCount];
+                                charCount++;
+                                if (text[charCount] === undefined) break;
+                            }
+                            cropped += lastCrop + '\n';
+                        }
+                        return cropped;
+                    }
+
                     cc.innerHTML = '';
                     // Write all single messages into the chatcontainer
                     for (var i=0; i<msgs.length; i++) {
@@ -175,6 +207,7 @@ export default {
                             }
                             dateFormatted = extraDate + ' ' + dateFormatted;
                         }
+
                         if (data['senderid'] === window.CURRENT_USER_ID) {
                             var readByAllIcon = '';
                             if (data['readbyall'] !== undefined) readByAllIcon = '<img style="margin-right: 4px; position: relative; top: 2px;" height="16px" width="16px" src="' + imageContainer.getValue("VIEW") + '">';
@@ -185,10 +218,10 @@ export default {
                             elem = `
                             <div id="myMessage" class="singlemsgcontainer" style="height: 100%; left: -400px;">
                                 ` + markedIcon + `
-                                <div style="padding: 12px; background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);">
-                                    <div tabindex="-1" class="v-list-item v-list-item--three-line theme--light">
-                                        <div class="v-list-item__content">
-                                            <p style="color: white; white-space: pre-line;">` + data['inhalt'] + `</p>
+                                <div id="visibleMessage" oncontextmenu="window.openMessageDropdown(` + data['nachrichtid'] + `);return false;" style="padding: 12px; background-color: #2B5278; border-width: 1px; border-style: solid; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; max-width: 400px; height: auto; position: relative; right: calc(-100% + 400px);">
+                                    <div tabindex="-1" class="v-list-item v-list-item--three-line theme--light" style="width: 100%;">
+                                        <div class="v-list-item__content" style="width: 100%;">
+                                            <p style="color: white;">` + cropText(data['inhalt']) + `</p>
                                             <div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">` + readByAllIcon + plannedIcon + dateFormatted + `</div>
                                         </div>
                                     </div>
@@ -196,7 +229,20 @@ export default {
                                 <br>
                             </div>`;
                         }
-                        else elem = '<div id="otherMessage" class="singlemsgcontainer" style="height: 100%;"><div style="padding: 12px; background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;"><div tabindex="-1" class="v-list-item v-list-item--three-line theme--light"><div class="v-list-item__content"><div class="overline mb-2" style="color: white;">' + data["sender"] + '</div><p style="color: white; white-space: pre-line;">' + data["inhalt"] + '</p><div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">' + dateFormatted + '</div></div></div></div><br></div>';
+                        else elem = `
+                        <div id="otherMessage" class="singlemsgcontainer" style="height: 100%;">
+                            <div id="visibleMessage" style="padding: 12px; background-color: #182533; border-width: 1px; border-style: solid; border-radius: 15px; max-width: 400px; height: auto; position: relative;">
+                                <div tabindex="-1" class="v-list-item v-list-item--three-line theme--light">
+                                    <div class="v-list-item__content">
+                                        <div class="overline mb-2" style="color: white;">` + data["sender"] + `</div>
+                                        <p style="color: white; white-space: pre-line;">` + cropText(data["inhalt"]) + `</p>
+                                        <div class="v-list-item__subtitle" style="color: white; margin-top: 6px;">` + dateFormatted + `</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        </div>`;
+
                         cc.innerHTML += elem;
                     }
 
@@ -204,8 +250,9 @@ export default {
                     var chatContainerWidth = cc.clientWidth;
                     var fadeAnim = setInterval(function() {
                         var elems = document.getElementsByClassName('singlemsgcontainer');
+                        var elem = null;
                         for (i=0; i<diff; i++) {
-                            var elem = elems[elems.length-i-1];
+                            elem = elems[elems.length-i-1];
                             var fadeX = (1 - fadeTime) * -((elem.id == 'myMessage') ? chatContainerWidth : (chatContainerWidth / 2));
                             elem.style = `
                             position: relative;
@@ -213,7 +260,7 @@ export default {
                             `;
                         }
                         fadeTime += 0.01;
-                        if (fadeTime > 1) {
+                        if (fadeTime > 1 && elem !== null) {
                             elem.style = `
                             position: relative;
                             left: 0px;
@@ -241,18 +288,18 @@ export default {
                         return 1.0625 * Math.pow((t - (count / 18)), 2) + count;
                     }
 
+                    // Animation starts from top again, fix this!
                     if (isBottom) {
                         var scrollDiff = msgs.length - messages.length;
+                        console.log(scrollDiff);
                         var use8s = scrollDiff > 60;
                         isBottom = cc.scrollTop - (cc.scrollHeight - cc.offsetHeight) == 0;
                         var time = 0;
                         var scrollAnim = setInterval(function() {
                             if (scrollDiff < 73) {
                                 cc.scrollBy(0, f(time, use8s));
-                                console.log('scrollDiff < 73: ' + f(time, use8s));
                             } else {
                                 cc.scrollBy(0, fE(time, scrollDiff));
-                                console.log('scrollDiff >= 73: ' + fE(time, scrollDiff));
                             }
 
                             time += 0.01;
@@ -270,8 +317,40 @@ export default {
         } // loadMessages()
     }, // mounted()
 }
-
+window.mouseX = 0;
+window.mouseY = 0;
 window.canSend = true;
+
+document.onmousemove = function onMouseMove(event) {
+    event = event || window.event;
+    window.mouseX = event.pageX;
+    window.mouseY = event.pageY;
+}
+
+window.openMessageDropdown = function(messageId) {
+    console.log(messageId);
+    var dropdown = document.getElementById('messageDropdownBox');
+    var chatWindowRect = document.getElementById('chatWindowContainer').getBoundingClientRect();
+    var messageRect = document.getElementById('myMessage').querySelector('#visibleMessage').getBoundingClientRect();
+    var mouseXInChat = window.mouseX - chatWindowRect.x;
+    
+    dropdown.style = `
+    padding: 16px;
+    z-index: 101;
+    background-color: rgba(16, 16, 32, 0.85);
+    width: 256px;
+    height: ` + (128 + 36) + `px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 15px;
+    position: absolute;
+    left: ` + (mouseXInChat - 100) + `px;
+    top: ` + (window.mouseY - 32) + `px;
+    display: ` + ((dropdown.style.display === 'block') ? 'none' : 'block') + `;
+    `;
+}
+
 window.sendMessage = function sendMessage() {
     if (window.CURRENT_USER_ID === -1 || window.CURRENT_TOKEN == '') return;
 

@@ -112,7 +112,7 @@ window.addContact = function(totalHeight) {
 
 window.openChat = function(chatid, userid) {
     window.addContact(document.getElementById('contactcontainer').clientHeight);
-    console.log(chatid);
+    (chatid);
     // Open chat with given chatId
     EventBus.$emit('OPENCHAT', {'chatid': chatid, 'userid': userid});
 }
