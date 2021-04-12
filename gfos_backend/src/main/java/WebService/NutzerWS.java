@@ -23,6 +23,7 @@ import Service.Tokenizer;
 import Service.Antwort;
 import Service.Mail;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -277,6 +278,10 @@ public class NutzerWS{
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
                 n.setSetting(null);
+                n.setChannel(null);
+                n.setArchivedChats(null);
+                n.setMarkedMessages(null);
+                n.setPasswordhash(null);
             }
 
             List<Nutzer> otherFriendListDB = self.getOtherFriendList();
@@ -288,6 +293,10 @@ public class NutzerWS{
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
                 n.setSetting(null);
+                n.setChannel(null);
+                n.setArchivedChats(null);
+                n.setMarkedMessages(null);
+                n.setPasswordhash(null);
             }
 
             for(Nutzer n : self.getHatBlockiert()){
@@ -298,6 +307,10 @@ public class NutzerWS{
                 n.setHatBlockiert(null);
                 n.setBlockiertVon(null);
                 n.setSetting(null);
+                n.setChannel(null);
+                n.setArchivedChats(null);
+                n.setMarkedMessages(null);
+                n.setPasswordhash(null);
             }
 
             List<Nutzer> friends = new ArrayList<>();

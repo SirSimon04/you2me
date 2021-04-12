@@ -24,6 +24,7 @@
             <Settings v-show ="app_vue_settings_zeigen"></Settings>
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
             <Impressum v-show="app_vue_impressum_zeigen"/>
+            <FriendList></FriendList>
         </v-main>
         <div class="text-center">
             <v-btn
@@ -55,6 +56,7 @@ import Chat from './components/Chat';
 import Settings from './components/Settings';
 import Welcome from './components/Welcome';
 import Impressum from './components/Impressum';
+import FriendList from './components/FriendList';
 
 
 export default {
@@ -68,6 +70,8 @@ export default {
         Welcome,
         ChatInfo,
         Impressum,
+        FriendList,
+        
     },
     
     data: () => ({
@@ -76,10 +80,10 @@ export default {
         infoMessageTimeout: 2000,
 
         welcome_vue_zeigen: false,
-        app_vue_registrieren_zeigen: true,
+        app_vue_registrieren_zeigen: false,
         app_vue_settings_zeigen: false,
-        app_vue_chatliste_zeigen: true,
-        app_vue_chat_zeigen: true,
+        app_vue_chatliste_zeigen: false,
+        app_vue_chat_zeigen: false,
         app_vue_chatinfo_zeigen: false,
         app_vue_impressum_zeigen: false,
         user: Registrieren.benutzername,
@@ -188,7 +192,7 @@ export default {
 };
 window.CURRENT_USER_ID = -1;
 window.CURRENT_TOKEN = '';
-window.IP_ADDRESS = 'http://339220729d3e.ngrok.io';
+window.IP_ADDRESS = 'http://localhost:8080';
 
 
 </script>
