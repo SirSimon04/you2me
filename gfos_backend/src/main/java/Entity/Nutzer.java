@@ -97,6 +97,10 @@ public class Nutzer implements Serializable{
     private Boolean isonline;
     @Column(name="MITGLIEDSEIT")
     private Integer mitgliedseit;
+    @Column(name="HASCHAT")
+    private boolean hasChat;
+    @Column(name="LASTONLINESTRING")
+    private String lastOnlineString;
     @JoinTable(name="BEFREUNDETMIT", joinColumns={
         @JoinColumn(name="NUTZER1ID", referencedColumnName="ID")}, inverseJoinColumns={
         @JoinColumn(name="NUTZER2ID", referencedColumnName="ID")})
@@ -258,6 +262,22 @@ public class Nutzer implements Serializable{
 
     public void setMitgliedseit(Integer mitgliedseit){
         this.mitgliedseit = mitgliedseit;
+    }
+
+    public boolean getHasChat(){
+        return hasChat;
+    }
+
+    public void setHasChat(boolean hasChat){
+        this.hasChat = hasChat;
+    }
+
+    public String getLastOnlineString(){
+        return lastOnlineString;
+    }
+
+    public void setLastOnlineString(String lastOnlineString){
+        this.lastOnlineString = lastOnlineString;
     }
 
     @XmlTransient

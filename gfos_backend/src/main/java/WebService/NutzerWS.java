@@ -48,6 +48,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.ws.rs.core.Response;
 import static java.lang.Math.toIntExact;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * <h1>Der Webserver für die Datenverarbeitung, bezogen auf die Nutzer.</h1>
@@ -269,6 +271,8 @@ public class NutzerWS{
 //                n.set
 //            }
 
+            Date now = new Date(System.currentTimeMillis());
+
             List<Nutzer> ownFriendListDB = self.getOwnFriendList();
             for(Nutzer n : ownFriendListDB){
                 n.setAdminInGroups(null);
@@ -282,6 +286,29 @@ public class NutzerWS{
                 n.setArchivedChats(null);
                 n.setMarkedMessages(null);
                 n.setPasswordhash(null);
+                List<Chat> chats = chatEJB.getOwnChats(n);
+                for(Chat c : chats){
+                    if(c.getNutzerList().size() == 2 && c.getNutzerList().contains(self) && c.getNutzerList().contains(n)){
+                        n.setHasChat(true);
+                    }
+                }
+                Date lastOnlineDate = new Date(n.getLastonline().longValue());
+                DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                System.out.println(simple.format(now).substring(0, 6));
+                System.out.println(simple.format(now).substring(7, 11));
+                System.out.println(simple.format(now).substring(12, 17));
+                String lastOnlineString = "";
+                String nowDate = simple.format(now);
+                String lastOnline = simple.format(lastOnlineDate);
+                if(!nowDate.substring(0, 6).equals(lastOnline.substring(0, 6))){
+                    lastOnlineString += lastOnline.substring(0, 6) + " ";
+                }
+                if(!nowDate.substring(7, 11).equals(lastOnline.substring(7, 11))){
+                    lastOnlineString += lastOnline.substring(7, 11) + " ";
+                }
+                lastOnlineString += lastOnline.substring(12, 17);
+                n.setLastOnlineString(lastOnlineString);
+
             }
 
             List<Nutzer> otherFriendListDB = self.getOtherFriendList();
@@ -313,16 +340,17 @@ public class NutzerWS{
                 n.setPasswordhash(null);
             }
 
-            List<Nutzer> friends = new ArrayList<>();
+            List<Nutzer> offlineFriends = new ArrayList<>();
             List<Nutzer> friendRequests = new ArrayList<>();
             List<Nutzer> pendingRequests = new ArrayList<>();
             List<Nutzer> onlineFriends = new ArrayList<>();
             List<Nutzer> blockedUser = self.getHatBlockiert();
             for(Nutzer n : ownFriendListDB){
                 if(otherFriendListDB.contains(n)){
-                    friends.add(n);
                     if(n.getIsonline()){
                         onlineFriends.add(n);
+                    }else{
+                        offlineFriends.add(n);
                     }
                 }else{
                     pendingRequests.add(n);
@@ -334,11 +362,13 @@ public class NutzerWS{
                     friendRequests.add(n);
                 }
             }
+            List<Nutzer> returnFriends = new ArrayList<>();
+            returnFriends.addAll(onlineFriends);
+            returnFriends.addAll(offlineFriends);
 
-            jsonObject.add("friendList", parser.toJsonTree(friends));
+            jsonObject.add("friendList", parser.toJsonTree(returnFriends));
             jsonObject.add("friendRequests", parser.toJsonTree(friendRequests));
             jsonObject.add("pendingRequests", parser.toJsonTree(pendingRequests));
-            jsonObject.add("onlineFriends", parser.toJsonTree(onlineFriends));
             jsonObject.add("blockedUser", parser.toJsonTree(blockedUser));
 
             return response.generateAnswer(parser.toJson(jsonObject));
