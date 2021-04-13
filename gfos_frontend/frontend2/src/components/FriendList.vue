@@ -333,18 +333,99 @@
                                     </span>
                                 </v-card-title>
                                 <v-card-text>
-                                    <v-form>
-                                        <v-container>
-                                            <v-text-field
-                                            filled
-                                            rounded
-                                            dark
-                                            label="Nach Nutzern suchen"
+                                    <v-container>
+                                    
+                                        <v-text-field
+                                        label="Nutzer suchen"
+                                        color="primary"
+                                        v-model="input"
+                                        filled
+                                        dark
+                                        >
+                                    
+                                        <template v-slot:append>
+                                    
+                                            <v-btn
+                                            small
+                                            color="primary"
+                                            show
                                             >
+                                            
+                                                <v-icon color="grey lighten-1">mdi-magnify</v-icon>
+                                            </v-btn>
+                                            
+                                        </template>
+                                            
+                                        </v-text-field>
+                                        
+                                    </v-container>
 
-                                            </v-text-field>
-                                        </v-container>
-                                    </v-form>
+                                    
+                                    <v-list 
+                                        rounded
+                                        color="#202b36"
+                                        min-height="200px"
+                                        max-height="200px"
+                                        min-width="600"
+                                        class="overflow-y-auto"
+                                        width="536px"
+                                        >
+                                        <v-list-item-group
+                                            v-model="model"
+                                            dark
+                                            color="blue"
+                                        >
+                                            <v-list-item
+                                            v-for="(item, i) in searchResults.results"
+                                            :key="i"
+                                            >
+                                                <v-list-item-avatar>
+                                                    <div v-if="item.profilbild === undefined">
+                                                        <v-img 
+                                                        src='data:image/png;base64,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'
+                                                        ></v-img>
+                                                    </div>
+                                                    <div v-else>
+                                                        <v-img
+                                                        :src="item.profilbild.base64"
+                                                        ></v-img>
+                                                    </div>
+                                                </v-list-item-avatar>
+
+                                                <v-list-item-content>
+                                                <v-list-item-title v-text="item.benutzername"></v-list-item-title>
+                                                </v-list-item-content>
+                                               
+                                                <v-spacer>
+                                                </v-spacer>
+                                                    
+                                                
+
+                                                <v-list-item-action>
+                                                    <v-tooltip bottom>
+                                                        <template v-slot:activator="{ on, attrs }">
+                                                            <v-btn 
+                                                            icon
+                                                            v-bind="attrs"
+                                                            v-on="on"
+                                                            >
+                                                                <v-img
+                                                                height="36px"
+                                                                width="36px"
+                                                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAJcwAACXMB+Yg9ogAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAL2SURBVFiFxZdLSFRhFMd/55uZm1ppb1wUZGC0iB5GUUngo6KawkiUqBBpEW2iXbVJooKyRbSMFilSFhqRmIaUNgRWtDArokWQQS97LHpoOTr3nhbOhFmD906T87+b+73O78/l+849n+BSG1t3ZobDEhShCGWxGuaKMgVAhc/i8FJFukXoGCDQ0lly/pubuDLWhOKrFfMRPYjodiDDpd/vCJeMcapvbql/npCBVQ1l6RkT0o6huh/wuwSP1hBwxs7yV4UKawdcG1jXvCPXts1VgYUJgkfrvt9mW1vphXdjGljbVLHUwWkTZWaS4DG9RkywvaTucVwD65p35NqO6fwP8F8m7IB/eShY2xvrMLGXgtuVaY5jGv8jHGC2f8i+vqqhLP0PA76v9nGUxV6izUqfzqz06Z4cKLosw0o7FGsLRI+acZ7icbcfyNsDwKmuc55MAH12wJ8bCtb2Dn8B0YNe4QAm+iSgSSYSqQIwG1t3ZkaTzLhKlIr8pt2TTTgsQdxnuGRqYpqGNxkRilIAH5ZIkfG685MqZZFByEmZAZjnBzLjja7OzqN4Tn7c1QumzAPg8PJ9cee0v+rkbm9XvOGshM5QMiXF13Z9BGYksvhQ3l4ATnadTZT/waD0JLo6CXphVKQ7hQYeGRE6UkVXkXZjhweuA/0p4Pc74YEbJlTe2IdwebzpitSHyhv7DIAxTjXDBeR4adDY9kmIFiTR0vmM1yjvf3zi/Y9PnumKnL5VWv8CRtQAdpa/yvclsgZY6TZQzbMrnuGg9yZYU4/EWr8VpQUtldm+IfsB6JwEIrvRW/WZFR1b6t7EOn5LxaFgbS8im4HXyWfLK0E3jIT/YQCgvaTusTUYyAPuJA+u9+yAb8WtrRefjB7568/oRnnNR8uauh7kKP+WIwZRPWFZ0wpH3gVGaszLaUFLZbaJRKpEqQAmugT3I1yUiFMd2+3xNKaBX0Yayib5LCsIUiiwRCEHhq/nwGeBHtCHqNyODIVbQ+WNfW7i/gT/EPLBy30p5gAAAABJRU5ErkJggg=="
+                                                                >
+                                                                </v-img>
+                                                            </v-btn>
+                                                        </template>
+                                                        <span>
+                                                            Freundschaftsanfrage an {{ item.benutzername }} senden
+                                                        </span> 
+                                                    </v-tooltip>
+                                                </v-list-item-action>
+
+                                            </v-list-item>
+                                        </v-list-item-group>
+                                    </v-list>
                                 </v-card-text>
                                 </v-card>
                             </v-tab-item>
@@ -448,6 +529,130 @@ import { ImageContainer } from './ImageContainer.js';
           1618265995952,
           1618265995952,
       ],
+      searchResults: {
+           "results": [
+            {
+            "id": 3,
+            "benutzername": "Jet3141",
+            "email": "2@engelnetz.de",
+            "verificationpin": 6742,
+            "lastonline": 1618314436284,
+            "isonline": true,
+            "mitgliedseit": 1618311578,
+            "hasChat": false,
+            "lastOnlineString": "13:47"
+            },
+            {
+            "id": 4,
+            "benutzername": "NoSkiller",
+            "email": "3@engelnetz.de",
+            "verificationpin": 2287,
+            "lastonline": 1617795442000,
+            "isonline": false,
+            "mitgliedseit": 1618311585,
+            "hasChat": true,
+            "lastOnlineString": "07 Apr 13:37",
+            "profilbild": {
+            "id": 1,
+            "base64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJBSURBVFiF7ZbNTxNBGIefd9payrbQ0gIlYIgYG2Pxg0BQgVi9eOHAgcSLEjHK/+Cf4M27N2M8GmICMTFqgvHmxZAQD3ARRKqJcqAR2O3ueLF1q2vTAlsu/E4z707meTJfWcGV2cXNaRF5AHTiT/Ii+v5Ef+JxqSClxvxSIW05xVUg5BO8FEsIHp84G/0KECxXi+YplAoB7O5afN7Ik2pL0BIzWF3fwLKKeyaKCD1dacLhEEBIO2YGqBQQEdG/2yuf1ph/ucBA/2nGLg7wbO41xeLeBQDGr+fIZvrKrDK31Hi+uHlFiyzsi1JjROvcxLnEWwDVCGC1BL2Kix+XmZ17xdCFLNdGh3n46AnFOs/A1dFhciODexPIZvpITk3SFm8l0hRm5tZk3YewPZmoaZynQCAQoDvdUe53pNrqgtcTT4G19TzvPyxxorebbOYkL968w7adqhP19nQxeP7MwQhEmppIJlqJGQZKKZLxOLZjV52oJWZU/W6EQAlsmTUIpJJxciND5f7YpYGqk9eSVLMQVLBl6or6oV/DI4EjgSOBhglo7V33fIj8yLefmj+/IYcgoARPgYZtQXuzkDb+NWjYCmyZGnWYW/Bj27vuq4BpORS2TRzXFVCwE40EvvguYNsO+e+FCnhAiY4Z4Xs3BjtWXEL+ZMe0veBT05c7n7rH+SbgfneUiI5Gwrf/hoNrC7TW3i/FPqNEtBENT93xgINrBULBY8uA5Qf87n/gFQLj2WheRM8A+YOBU4gagZvV4AC/ANekoKtCcBgNAAAAAElFTkSuQmCC"
+            },
+            
+            },
+            {
+            "id": 3,
+            "benutzername": "Jet3141",
+            "email": "2@engelnetz.de",
+            "verificationpin": 6742,
+            "lastonline": 1618314436284,
+            "isonline": true,
+            "mitgliedseit": 1618311578,
+            "hasChat": false,
+            "lastOnlineString": "13:47"
+            },
+            {
+            "id": 4,
+            "benutzername": "NoSkiller",
+            "email": "3@engelnetz.de",
+            "verificationpin": 2287,
+            "lastonline": 1617795442000,
+            "isonline": false,
+            "mitgliedseit": 1618311585,
+            "hasChat": true,
+            "lastOnlineString": "07 Apr 13:37",
+            "profilbild": {
+            "id": 1,
+            "base64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJBSURBVFiF7ZbNTxNBGIefd9payrbQ0gIlYIgYG2Pxg0BQgVi9eOHAgcSLEjHK/+Cf4M27N2M8GmICMTFqgvHmxZAQD3ARRKqJcqAR2O3ueLF1q2vTAlsu/E4z707meTJfWcGV2cXNaRF5AHTiT/Ii+v5Ef+JxqSClxvxSIW05xVUg5BO8FEsIHp84G/0KECxXi+YplAoB7O5afN7Ik2pL0BIzWF3fwLKKeyaKCD1dacLhEEBIO2YGqBQQEdG/2yuf1ph/ucBA/2nGLg7wbO41xeLeBQDGr+fIZvrKrDK31Hi+uHlFiyzsi1JjROvcxLnEWwDVCGC1BL2Kix+XmZ17xdCFLNdGh3n46AnFOs/A1dFhciODexPIZvpITk3SFm8l0hRm5tZk3YewPZmoaZynQCAQoDvdUe53pNrqgtcTT4G19TzvPyxxorebbOYkL968w7adqhP19nQxeP7MwQhEmppIJlqJGQZKKZLxOLZjV52oJWZU/W6EQAlsmTUIpJJxciND5f7YpYGqk9eSVLMQVLBl6or6oV/DI4EjgSOBhglo7V33fIj8yLefmj+/IYcgoARPgYZtQXuzkDb+NWjYCmyZGnWYW/Bj27vuq4BpORS2TRzXFVCwE40EvvguYNsO+e+FCnhAiY4Z4Xs3BjtWXEL+ZMe0veBT05c7n7rH+SbgfneUiI5Gwrf/hoNrC7TW3i/FPqNEtBENT93xgINrBULBY8uA5Qf87n/gFQLj2WheRM8A+YOBU4gagZvV4AC/ANekoKtCcBgNAAAAAElFTkSuQmCC"
+            },
+            
+            },
+            {
+            "id": 3,
+            "benutzername": "Jet3141",
+            "email": "2@engelnetz.de",
+            "verificationpin": 6742,
+            "lastonline": 1618314436284,
+            "isonline": true,
+            "mitgliedseit": 1618311578,
+            "hasChat": false,
+            "lastOnlineString": "13:47"
+            },
+            {
+            "id": 4,
+            "benutzername": "NoSkiller",
+            "email": "3@engelnetz.de",
+            "verificationpin": 2287,
+            "lastonline": 1617795442000,
+            "isonline": false,
+            "mitgliedseit": 1618311585,
+            "hasChat": true,
+            "lastOnlineString": "07 Apr 13:37",
+            "profilbild": {
+            "id": 1,
+            "base64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJBSURBVFiF7ZbNTxNBGIefd9payrbQ0gIlYIgYG2Pxg0BQgVi9eOHAgcSLEjHK/+Cf4M27N2M8GmICMTFqgvHmxZAQD3ARRKqJcqAR2O3ueLF1q2vTAlsu/E4z707meTJfWcGV2cXNaRF5AHTiT/Ii+v5Ef+JxqSClxvxSIW05xVUg5BO8FEsIHp84G/0KECxXi+YplAoB7O5afN7Ik2pL0BIzWF3fwLKKeyaKCD1dacLhEEBIO2YGqBQQEdG/2yuf1ph/ucBA/2nGLg7wbO41xeLeBQDGr+fIZvrKrDK31Hi+uHlFiyzsi1JjROvcxLnEWwDVCGC1BL2Kix+XmZ17xdCFLNdGh3n46AnFOs/A1dFhciODexPIZvpITk3SFm8l0hRm5tZk3YewPZmoaZynQCAQoDvdUe53pNrqgtcTT4G19TzvPyxxorebbOYkL968w7adqhP19nQxeP7MwQhEmppIJlqJGQZKKZLxOLZjV52oJWZU/W6EQAlsmTUIpJJxciND5f7YpYGqk9eSVLMQVLBl6or6oV/DI4EjgSOBhglo7V33fIj8yLefmj+/IYcgoARPgYZtQXuzkDb+NWjYCmyZGnWYW/Bj27vuq4BpORS2TRzXFVCwE40EvvguYNsO+e+FCnhAiY4Z4Xs3BjtWXEL+ZMe0veBT05c7n7rH+SbgfneUiI5Gwrf/hoNrC7TW3i/FPqNEtBENT93xgINrBULBY8uA5Qf87n/gFQLj2WheRM8A+YOBU4gagZvV4AC/ANekoKtCcBgNAAAAAElFTkSuQmCC"
+            },
+            
+            },
+            {
+            "id": 3,
+            "benutzername": "Jet3141",
+            "email": "2@engelnetz.de",
+            "verificationpin": 6742,
+            "lastonline": 1618314436284,
+            "isonline": true,
+            "mitgliedseit": 1618311578,
+            "hasChat": false,
+            "lastOnlineString": "13:47"
+            },
+            {
+            "id": 4,
+            "benutzername": "NoSkiller",
+            "email": "3@engelnetz.de",
+            "verificationpin": 2287,
+            "lastonline": 1617795442000,
+            "isonline": false,
+            "mitgliedseit": 1618311585,
+            "hasChat": true,
+            "lastOnlineString": "07 Apr 13:37",
+            "profilbild": {
+            "id": 1,
+            "base64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAJBSURBVFiF7ZbNTxNBGIefd9payrbQ0gIlYIgYG2Pxg0BQgVi9eOHAgcSLEjHK/+Cf4M27N2M8GmICMTFqgvHmxZAQD3ARRKqJcqAR2O3ueLF1q2vTAlsu/E4z707meTJfWcGV2cXNaRF5AHTiT/Ii+v5Ef+JxqSClxvxSIW05xVUg5BO8FEsIHp84G/0KECxXi+YplAoB7O5afN7Ik2pL0BIzWF3fwLKKeyaKCD1dacLhEEBIO2YGqBQQEdG/2yuf1ph/ucBA/2nGLg7wbO41xeLeBQDGr+fIZvrKrDK31Hi+uHlFiyzsi1JjROvcxLnEWwDVCGC1BL2Kix+XmZ17xdCFLNdGh3n46AnFOs/A1dFhciODexPIZvpITk3SFm8l0hRm5tZk3YewPZmoaZynQCAQoDvdUe53pNrqgtcTT4G19TzvPyxxorebbOYkL968w7adqhP19nQxeP7MwQhEmppIJlqJGQZKKZLxOLZjV52oJWZU/W6EQAlsmTUIpJJxciND5f7YpYGqk9eSVLMQVLBl6or6oV/DI4EjgSOBhglo7V33fIj8yLefmj+/IYcgoARPgYZtQXuzkDb+NWjYCmyZGnWYW/Bj27vuq4BpORS2TRzXFVCwE40EvvguYNsO+e+FCnhAiY4Z4Xs3BjtWXEL+ZMe0veBT05c7n7rH+SbgfneUiI5Gwrf/hoNrC7TW3i/FPqNEtBENT93xgINrBULBY8uA5Qf87n/gFQLj2WheRM8A+YOBU4gagZvV4AC/ANekoKtCcBgNAAAAAElFTkSuQmCC"
+            },
+            
+            }
+        ],
+        "friendRequests": [
+            {
+            "id": 6,
+            "benutzername": "Maxx Mustermann",
+            "email": "1@3.de",
+            "verificationpin": 7977,
+            "lastonline": 1618314436284,
+            "isonline": false,
+            "mitgliedseit": 1618312665,
+            "hasChat": false
+            }
+        ],
+      },
       allFriends:  {
         "friendList": [
             {
