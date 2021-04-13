@@ -25,6 +25,9 @@
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
             <Impressum v-show="app_vue_impressum_zeigen"/>
             <FriendList></FriendList>
+            <v-btn style="z-index: 2000; position: absolute; left: calc(100% - 112px); top: calc(100% - 96px);" class="mx-2" fab dark color="indigo" @click="newChat();">
+                <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
         </v-main>
         <div class="text-center">
             <v-btn
