@@ -1,12 +1,8 @@
 <template>
-    <v-container id='contactcontainer'>
-        <!--<v-hover>
-            <v-card slot-scope="{ hover }" :style="`background-color: ${hover ? '#202B36' : '#17212B'}`" class="mx-auto" height="100px" max-width="400px">
-                <v-card-text class="font-weight-medium mt-12 text-center subtitle-1">
-                    CONTENT
-                </v-card-text>
-            </v-card>
-        </v-hover>-->
+    <v-container>
+        <v-container id='contactcontainer'>
+        </v-container>
+        
     </v-container>
 </template>
 
@@ -99,6 +95,13 @@ export default {
             }
 
             window.chats = conts['normal'];
+        }
+    },
+
+    methods: {
+        newChat() {
+            console.log('NEWCHAT Event');
+            EventBus.$emit('NEWCHAT', {});
         }
     }
 }
