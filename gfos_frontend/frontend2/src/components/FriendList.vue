@@ -25,7 +25,7 @@
                                         color="#202b36"
                                         min-height="400px"
                                         max-height="400px"
-                                        min-width="600px"
+                                        min-width="628"
                                         class="overflow-y-auto"
                                         width="536px"
                                         >
@@ -143,7 +143,7 @@
                                         min-height="400px"
                                         max-height="400px"
                                         class="overflow-y-auto"
-                                        width="536px"
+                                        width="628"
                                         >
                                     <v-list-item-group
                                         v-model="model"
@@ -224,7 +224,7 @@
                                         min-height="400px"
                                         max-height="400px"
                                         class="overflow-y-auto"
-                                        width="536px"
+                                        width="628"
                                         >
                                     <v-list-item-group
                                         v-model="model"
@@ -311,6 +311,41 @@
                                         </v-list-item>
                                     </v-list-item-group>
                                     </v-list>
+                                </v-card>
+                            </v-tab-item>
+
+                            <v-tab>
+                                <v-icon color="grey lighten-1">mdi-account-search</v-icon>
+                            </v-tab>
+                            <v-tab-item>
+                                <v-card
+                                width="628"
+                                min-height="400"
+                                max-height="400"
+                                color="#202b36"
+                                >
+                                <v-card-title
+                                >
+                                    <span
+                                    style="color:white"
+                                    >
+                                        Freunde hinzufügen
+                                    </span>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-form>
+                                        <v-container>
+                                            <v-text-field
+                                            filled
+                                            rounded
+                                            dark
+                                            label="Nach Nutzern suchen"
+                                            >
+
+                                            </v-text-field>
+                                        </v-container>
+                                    </v-form>
+                                </v-card-text>
                                 </v-card>
                             </v-tab-item>
 
