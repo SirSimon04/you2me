@@ -856,6 +856,7 @@ public class NutzerWS{
             mail.sendVerificationPin(mailFrom, pw, neuerNutzername, neueEmail, random_int);
 
             neuerNutzer.setMitgliedseit(toIntExact((System.currentTimeMillis() / 1000)));
+            neuerNutzer.setIsonline(Boolean.FALSE);
 
             nutzerEJB.add(neuerNutzer);
             Nutzer nutzerInDbB = nutzerEJB.getByUsername(neuerNutzername);

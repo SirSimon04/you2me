@@ -12,6 +12,8 @@
         
         <v-main>
 
+            
+
             <v-tabs
             v-model="tab"
             background-color="primary"
@@ -29,16 +31,24 @@
                     >
                         <v-layout row wrap >
                         <v-flex xs5>
-                            <ChatListe style="position: relative; float: left; left: 0; top: 0;"></ChatListe>
+                        <ChatListe style="position: relative; float: left; left: 0; top: 0;"></ChatListe>
+                        
                         </v-flex>
                         <v-flex>
                             <Chat style="position: relative; float: right; right: 0; top: 0;"></Chat>
                         </v-flex>
-                        <ChatInfo v-show="app_vue_chatinfo_zeigen"></ChatInfo>
                     </v-layout>
-                    
+                        
                     </v-card>
                     
+                    <v-overlay
+                    :absolute="true"
+                    :value="overlay"
+                    absolute: true
+                    >
+                    <ChatInfo v-show="app_vue_chatinfo_zeigen"
+                    ></ChatInfo>
+                    </v-overlay>
                 </v-tab-item>
 
                 <v-tab>
@@ -48,6 +58,7 @@
                 <v-tab-item>
                     <v-card
                     color="#17212B"
+                    height="2000px"
                     >
                         <FriendList/>
                     </v-card>
@@ -67,8 +78,15 @@
                 </v-tab-item>
 
             </v-tabs>
+ 
+            
+
+            <NachrichtenInfo v-show="app_vue_chatinfo_zeigen"
+            ></NachrichtenInfo>
+            
 
             
+
             <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
             <Impressum v-show="app_vue_impressum_zeigen"/>
@@ -104,6 +122,7 @@ import Settings from './components/Settings';
 import Welcome from './components/Welcome';
 import Impressum from './components/Impressum';
 import FriendList from './components/FriendList';
+import NachrichtenInfo from './components/NachrichtenInfo';
 
 
 export default {
@@ -118,6 +137,7 @@ export default {
         ChatInfo,
         Impressum,
         FriendList,
+        NachrichtenInfo,
         
     },
     
@@ -136,6 +156,8 @@ export default {
         app_vue_freundesliste_zeigen:false,
         app_vue_navbar_zeigen: false,
         user: Registrieren.benutzername,
+
+        overlay: false,
     }),
 
     mounted() {
@@ -175,6 +197,7 @@ export default {
         }); // EventBus.$on('LOGIN')
 
         EventBus.$on('OPENCHATINFO', (payload) => {
+            this.overlay = true;
             this.app_vue_chatinfo_zeigen = true;
             fetch(window.IP_ADDRESS + '/GFOS/daten/chat/info/' + payload["chatid"] + '/' + window.CURRENT_USER_ID + '/' + window.CURRENT_TOKEN).then(response => {
                 response.clone();
@@ -208,6 +231,7 @@ export default {
 
         EventBus.$on('CLOSECHATINFO', (payload) => {
             this.app_vue_chatinfo_zeigen = false;
+            this.overlay = false;
         }); // EventBus.$on('CLOSECHATINFO')
 
         function equals(array0, array1) {
