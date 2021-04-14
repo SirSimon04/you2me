@@ -11,23 +11,67 @@
         </v-app-bar>
         
         <v-main>
-            <v-layout row wrap >
-                <v-flex xs5>
-                    <ChatListe style="position: relative; float: left; left: 0; top: 0;" v-show="app_vue_chatliste_zeigen"></ChatListe>
-                </v-flex>
-                <v-flex>
-                    <Chat style="position: relative; float: right; right: 0; top: 0;" v-show="app_vue_chat_zeigen"></Chat>
-                </v-flex>
-            </v-layout>
-            <ChatInfo v-show="app_vue_chatinfo_zeigen"></ChatInfo>
+
+            <v-tabs
+            v-model="tab"
+            background-color="primary"
+            dark
+            grow
+            v-show="app_vue_navbar_zeigen"
+            >
+                <v-tab>
+                    Chats
+                </v-tab>
+                <v-tab-item>
+                    <v-card
+                    color="#17212B"
+                    height="2000px"
+                    >
+                        <v-layout row wrap >
+                        <v-flex xs5>
+                            <ChatListe style="position: relative; float: left; left: 0; top: 0;"></ChatListe>
+                        </v-flex>
+                        <v-flex>
+                            <Chat style="position: relative; float: right; right: 0; top: 0;"></Chat>
+                        </v-flex>
+                        <ChatInfo v-show="app_vue_chatinfo_zeigen"></ChatInfo>
+                    </v-layout>
+                    
+                    </v-card>
+                    
+                </v-tab-item>
+
+                <v-tab>
+                    Freunde
+                </v-tab>
+
+                <v-tab-item>
+                    <v-card
+                    color="#17212B"
+                    >
+                        <FriendList/>
+                    </v-card>
+                    
+                </v-tab-item>
+
+                <v-tab>
+                    Einstellungen
+                </v-tab>
+
+                <v-tab-item>
+                    <v-card
+                    color="#17212B"
+                    >
+                        <Settings/>
+                    </v-card>
+                </v-tab-item>
+
+            </v-tabs>
+
+            
             <Registrieren v-show ="app_vue_registrieren_zeigen"></Registrieren>
-            <Settings v-show ="app_vue_settings_zeigen"></Settings>
             <Welcome v-show="welcome_vue_zeigen"></Welcome>
             <Impressum v-show="app_vue_impressum_zeigen"/>
-            <FriendList></FriendList>
-            <v-btn style="z-index: 2000; position: absolute; left: calc(100% - 112px); top: calc(100% - 96px);" class="mx-2" fab dark color="indigo" @click="newChat();">
-                <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
         </v-main>
         <div class="text-center">
             <v-btn
@@ -76,20 +120,21 @@ export default {
         FriendList,
         
     },
-    //comment
-    //comment
+    
     data: () => ({
         infoMessage: false,
         infoMessageContent: '',
         infoMessageTimeout: 2000,
 
         welcome_vue_zeigen: false,
-        app_vue_registrieren_zeigen: false,
+        app_vue_registrieren_zeigen: true,
         app_vue_settings_zeigen: false,
-        app_vue_chatliste_zeigen: false,
+        app_vue_chatliste_zeigen: true,
         app_vue_chat_zeigen: false,
         app_vue_chatinfo_zeigen: false,
         app_vue_impressum_zeigen: false,
+        app_vue_freundesliste_zeigen:false,
+        app_vue_navbar_zeigen: false,
         user: Registrieren.benutzername,
     }),
 
@@ -126,6 +171,7 @@ export default {
             window.CURRENT_USER_ID = payload['content']['id'];
             window.CURRENT_TOKEN = payload['content']['token'];
             this.app_vue_registrieren_zeigen = false;
+            this.app_vue_navbar_zeigen = true;
         }); // EventBus.$on('LOGIN')
 
         EventBus.$on('OPENCHATINFO', (payload) => {

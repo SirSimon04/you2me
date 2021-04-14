@@ -183,6 +183,7 @@
                 label="Passwort"
                 required
                 dark
+                @keydown.enter="login();"
               ></v-text-field>
           
           </v-card>
