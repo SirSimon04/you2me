@@ -76,7 +76,7 @@ export default {
         FriendList,
         
     },
-    
+    //comment
     data: () => ({
         infoMessage: false,
         infoMessageContent: '',
