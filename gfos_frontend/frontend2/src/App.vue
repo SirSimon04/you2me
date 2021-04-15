@@ -38,17 +38,10 @@
                             <Chat style="position: relative; float: right; right: 0; top: 0;"></Chat>
                         </v-flex>
                     </v-layout>
-                        
+                    
                     </v-card>
                     
-                    <v-overlay
-                    :absolute="true"
-                    :value="overlay"
-                    absolute: true
-                    >
-                    <ChatInfo v-show="app_vue_chatinfo_zeigen"
-                    ></ChatInfo>
-                    </v-overlay>
+                    
                 </v-tab-item>
 
                 <v-tab>
@@ -81,9 +74,11 @@
  
             
 
-            <NachrichtenInfo v-show="app_vue_chatinfo_zeigen"
+            <NachrichtenInfo v-show="false"
             ></NachrichtenInfo>
-            
+
+            <ChatInfo v-show="app_vue_chatinfo_zeigen"
+            ></ChatInfo>
 
             
 
@@ -155,9 +150,8 @@ export default {
         app_vue_impressum_zeigen: false,
         app_vue_freundesliste_zeigen:false,
         app_vue_navbar_zeigen: false,
+        app_vue_nachrichteninfo_zeigen: true,
         user: Registrieren.benutzername,
-
-        overlay: false,
     }),
 
     mounted() {
@@ -197,7 +191,7 @@ export default {
         }); // EventBus.$on('LOGIN')
 
         EventBus.$on('OPENCHATINFO', (payload) => {
-            this.overlay = true;
+            console.log("Openchatinfo");
             this.app_vue_chatinfo_zeigen = true;
             fetch(window.IP_ADDRESS + '/GFOS/daten/chat/info/' + payload["chatid"] + '/' + window.CURRENT_USER_ID + '/' + window.CURRENT_TOKEN).then(response => {
                 response.clone();
@@ -230,8 +224,12 @@ export default {
         }); // EventBus.$on('OPENCHATINFO')
 
         EventBus.$on('CLOSECHATINFO', (payload) => {
+            console.log("Closechatinfo");
             this.app_vue_chatinfo_zeigen = false;
-            this.overlay = false;
+        }); // EventBus.$on('CLOSECHATINFO')
+
+        EventBus.$on('CLOSEMESSAGEINFO', (payload) => {
+            this.app_vue_nachrichteninfo_zeigen = false;
         }); // EventBus.$on('CLOSECHATINFO')
 
         function equals(array0, array1) {

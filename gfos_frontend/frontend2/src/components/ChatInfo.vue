@@ -80,6 +80,7 @@ export default {
     }),
 
     mounted() {
+        console.log("moin")
         var imageContainer = new ImageContainer();
 
         
@@ -160,6 +161,7 @@ export default {
 }
 
 window.closeInfo = function() {
+    console.log("close info");
     EventBus.$emit('CLOSECHATINFO', {});
 }
 
