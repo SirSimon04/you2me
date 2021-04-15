@@ -72,7 +72,9 @@
 
             </v-tabs>
  
-            
+            <v-spacer
+            >
+            </v-spacer>
 
             <NachrichtenInfo v-show="false"
             ></NachrichtenInfo>
