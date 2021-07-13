@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1080228780114",
+    "project_id": "disputatio-a1039",
+    "storage_bucket": "disputatio-a1039.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080228780114:android:c7eeb6d4e96f472518678b",
+        "android_client_info": {
+          "package_name": "com.engelsimon.flutter_dispuatio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080228780114-tv37ltn5cgoaqda1ofkhenuh66jkfaob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDywrhrhItOHlqiLx0qeyduAPXRVQpQCTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080228780114-tv37ltn5cgoaqda1ofkhenuh66jkfaob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1080228780114:android:eff8b06fc87f8ab518678b",
+        "android_client_info": {
+          "package_name": "com.engelsimon.flutter_dispuatio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1080228780114-tv37ltn5cgoaqda1ofkhenuh66jkfaob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDywrhrhItOHlqiLx0qeyduAPXRVQpQCTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080228780114-tv37ltn5cgoaqda1ofkhenuh66jkfaob.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
