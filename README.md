@@ -1,36 +1,16 @@
-# gfos_messenger
-The messenger for the GFOS-Contest
+# flutter_dispuatio
 
-## Database
-Name: db; <br />
-User: root; <br />
-Password: root; <br />
+The App for the Dispuatio Application
 
+## Getting Started
 
-### Colors:
-#### App-Background:
-App #17212B <br />
-#### Chatlist-Background:
-Chatlist #17212B <br />
-Chatlist-Selected #202B36 <br />
-#### Chat-Background:
-Chat #0E1621 <br />
-Chat-Message #2B5278 <br />
-Chat-Message-Other #182533 <br />
-#### Font-Colors
-Sent-By-Color #48A1F4 <br />
-Message-Color #7F91A4 <br />
+This project is a starting point for a Flutter application.
 
-### Links
-Colors: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmspoweruser.com%2Fwp-content%2Fuploads%2F2020%2F07%2Fdark-mode-whatsapp-web-2.jpg&f=1&nofb=1 <br />
-Database: https://cdn.discordapp.com/attachments/801474474158325760/804453683517587486/unknown.png
+A few resources to get you started if this is your first Flutter project:
 
-### TODO
-Chat:
-    3. Bilder verschicken
-    (4. Dateien verschicken)
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-
-
-
-
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
