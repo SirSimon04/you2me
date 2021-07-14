@@ -7,6 +7,7 @@ import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/marked_messages/marked_messages.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as time_ago;
 import 'package:platform_list_tile/platform_list_tile.dart';
@@ -85,7 +86,8 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: AssetImage("assets/user.png"),
+                          image: NetworkImage(
+                              GeneralUserService.getOtherUserFotoUrl(chat)),
                         ),
                       ),
                     ),

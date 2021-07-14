@@ -6,7 +6,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/widgets/clickable_appbar.dart';
+import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as time_ago;
 
@@ -55,9 +57,9 @@ getChatAppBar(chat, context) {
             } else {
               return Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage("assets/user.png"),
-                  ),
+                  UserProfilePic(
+                      isOnline: snapshot.data["isonline"],
+                      url: GeneralUserService.getOtherUserFotoUrl(chat)),
                   SizedBox(
                     width: 20,
                   ),

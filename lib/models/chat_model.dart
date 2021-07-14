@@ -14,6 +14,7 @@ class ChatModel {
   final int userCount; //TODO: replace with memberlist
   final List<String> members;
   List<String> writing;
+  final List<String> fotoUrls;
 
   ChatModel({
     required this.name,
@@ -28,6 +29,7 @@ class ChatModel {
     required this.writing,
     required this.isArchived,
     required this.isPinned,
+    required this.fotoUrls,
   });
 
   static ChatModel getEmptyChat() {
@@ -44,6 +46,7 @@ class ChatModel {
       lastMessageDate: Timestamp.now(),
       lastMessageSenderId: "",
       lastMessageSender: "",
+      fotoUrls: [],
     );
   }
 

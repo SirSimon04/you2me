@@ -34,7 +34,7 @@ class ChatFirebaseService {
       "pinnedby": [],
       "name": "${doc["name"]} + ${_auth.currentUser?.displayName}",
       "writing": [],
-      "fotourls": [url1, url2],
+      "fotourls": [url1, url2], //Important: url on same place as members
     });
 
     await _firestore.collection("user").doc(_auth.currentUser?.uid).update({

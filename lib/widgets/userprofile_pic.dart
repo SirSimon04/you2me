@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class UserProfilePic extends StatelessWidget {
-  UserProfilePic({required this.isOnline});
+  UserProfilePic({required this.isOnline, required this.url});
 
+  final String url;
   final bool isOnline;
 
   @override
@@ -10,7 +11,7 @@ class UserProfilePic extends StatelessWidget {
     return Stack(
       children: [
         CircleAvatar(
-          backgroundImage: AssetImage("assets/user.png"),
+          backgroundImage: NetworkImage(url),
         ),
         if (isOnline)
           Positioned(

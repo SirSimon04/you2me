@@ -64,20 +64,24 @@ class ChatListStreamBuilder extends StatelessWidget {
                 List users = doc["members"];
                 return ChatListTile(
                   ChatModel(
-                    name:
-                        doc["isgroup"] ? doc["name"] : getName(doc["members"]),
-                    isGroup: doc["isgroup"],
-                    uid: doc.id,
-                    userCount: users.length,
-                    lastMessageSender: doc["lastmessagesendername"],
-                    lastMessageSenderId: doc["lastmessagesenderid"],
-                    lastMessageDate: doc["lastmessagedate"],
-                    lastMessageText: doc["lastmessagetext"],
-                    members: List<String>.from(doc["members"]),
-                    writing: List<String>.from(doc["writing"]),
-                    isArchived: isArchiveOpen,
-                    isPinned: doc["pinnedby"].contains(_auth.currentUser?.uid),
-                  ),
+                      name: doc["isgroup"]
+                          ? doc["name"]
+                          : getName(doc["members"]),
+                      isGroup: doc["isgroup"],
+                      uid: doc.id,
+                      userCount: users.length,
+                      lastMessageSender: doc["lastmessagesendername"],
+                      lastMessageSenderId: doc["lastmessagesenderid"],
+                      lastMessageDate: doc["lastmessagedate"],
+                      lastMessageText: doc["lastmessagetext"],
+                      members: List<String>.from(doc["members"]),
+                      writing: List<String>.from(doc["writing"]),
+                      isArchived: isArchiveOpen,
+                      isPinned:
+                          doc["pinnedby"].contains(_auth.currentUser?.uid),
+                      fotoUrls: List<String>.from(
+                        doc["fotourls"],
+                      )),
                 );
               }).toList(),
               areItemsTheSame: (a, b) => a.chat.uid == b.chat.uid,

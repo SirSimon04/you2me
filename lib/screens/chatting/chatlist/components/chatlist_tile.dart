@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/chat_screen.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_slidable_actions.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/widgets/fill_outlined_button.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -58,8 +59,8 @@ class _ChatListTileState extends State<ChatListTile> {
         minVerticalPadding: kChatListTileHeight,
         enableFeedback: true,
         leading: UserProfilePic(
-          isOnline: false,
-        ), //TODO: Check whether the user is online
+            isOnline: true,
+            url: GeneralUserService.getOtherUserFotoUrl(widget.chat)),
         title: Text(widget.chat.name),
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

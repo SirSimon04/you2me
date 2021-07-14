@@ -60,6 +60,7 @@ class _FriendListsState extends State<FriendLists>
                               subtitle: Text(doc["info"]),
                               leading: UserProfilePic(
                                 isOnline: doc["isonline"],
+                                url: doc["fotourl"],
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
