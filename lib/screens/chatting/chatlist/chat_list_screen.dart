@@ -11,6 +11,7 @@ import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_appbar_extension.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_divider.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_streambuilder.dart';
+import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/fill_outlined_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -58,8 +59,15 @@ class _ChatListState extends State<ChatList>
     // _push.sendMessage();
   }
 
+  void test() async {
+    String url =
+        await UserFirebaseService.getFotoUrlbyUid(_auth.currentUser?.uid ?? "");
+    print(url);
+  }
+
   @override
   Widget build(BuildContext context) {
+    test();
     super.build(context);
     // print("UID ist " + _auth.currentUser!.uid);
     // print(_auth.currentUser!.displayName);

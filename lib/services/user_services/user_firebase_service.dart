@@ -91,6 +91,8 @@ class UserFirebaseService {
         "lastonline": Timestamp.now(),
         "bio": "Hallo, ich wünsche einen guten Tag!",
         "hasChatWith": [],
+        "fotorul":
+            "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a,"
       });
     }
   }
@@ -133,5 +135,13 @@ class UserFirebaseService {
 
   static Future<void> deleteAccount() async {
     await _auth.currentUser?.delete();
+  }
+
+  static Future<String> getFotoUrlbyUid(String uid) async {
+    String url =
+        await _firestore.collection("user").doc(uid).get().then((value) {
+      return value.get("fotourl");
+    });
+    return url;
   }
 }

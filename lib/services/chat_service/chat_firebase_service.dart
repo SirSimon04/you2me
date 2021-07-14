@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 
 class ChatFirebaseService {
   ChatFirebaseService();
@@ -10,6 +11,9 @@ class ChatFirebaseService {
 
   ///@param doc is the user from firestore
   static Future<void> createChat(var doc) async {
+    String url1 =
+        await UserFirebaseService.getFotoUrlbyUid(_auth.currentUser?.uid ?? "");
+    String url2 = await UserFirebaseService.getFotoUrlbyUid(doc.id);
     await _firestore.collection("chat").add({
       "isgroup": false,
       "lastmessagedate": DateTime.now(),
@@ -30,6 +34,7 @@ class ChatFirebaseService {
       "pinnedby": [],
       "name": "${doc["name"]} + ${_auth.currentUser?.displayName}",
       "writing": [],
+      "fotourls": [url1, url2],
     });
 
     await _firestore.collection("user").doc(_auth.currentUser?.uid).update({
