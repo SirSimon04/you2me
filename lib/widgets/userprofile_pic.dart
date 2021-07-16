@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class UserProfilePic extends StatelessWidget {
@@ -11,7 +12,7 @@ class UserProfilePic extends StatelessWidget {
     return Stack(
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage(url),
+          backgroundImage: CachedNetworkImageProvider(url),
         ),
         if (isOnline)
           Positioned(

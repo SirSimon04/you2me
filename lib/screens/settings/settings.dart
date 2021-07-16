@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -47,7 +48,8 @@ class _SettingsState extends State<Settings>
             subtitle: Text("Hey there, I'm using Disputatio"),
             leading: CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(_auth.currentUser?.photoURL ?? ""),
+              backgroundImage:
+                  CachedNetworkImageProvider(_auth.currentUser?.photoURL ?? ""),
             ),
             trailing: IconButton(
               icon: Icon(FontAwesomeIcons.userEdit),

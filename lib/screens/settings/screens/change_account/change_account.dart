@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -96,8 +97,8 @@ class _ChangeAccountState extends State<ChangeAccount> {
               Stack(
                 children: [
                   CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(_auth.currentUser?.photoURL ?? ""),
+                    backgroundImage: CachedNetworkImageProvider(
+                        _auth.currentUser?.photoURL ?? ""),
                     radius: MediaQuery.of(context).size.width * 0.25,
                   ),
                   Positioned(

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -81,7 +82,8 @@ class _ChatListState extends State<ChatList>
         decoration: BoxDecoration(
           image: gmOn
               ? DecorationImage(
-                  image: NetworkImage(_auth.currentUser?.photoURL ?? ""),
+                  image: CachedNetworkImageProvider(
+                      _auth.currentUser?.photoURL ?? ""),
                   fit: BoxFit.cover,
                 )
               : null,

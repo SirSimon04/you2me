@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,7 +87,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: NetworkImage(
+                          image: CachedNetworkImageProvider(
                               GeneralUserService.getOtherUserFotoUrl(chat)),
                         ),
                       ),

@@ -59,7 +59,7 @@ class _ChatListTileState extends State<ChatListTile> {
         minVerticalPadding: kChatListTileHeight,
         enableFeedback: true,
         leading: UserProfilePic(
-            isOnline: true,
+            isOnline: false,
             url: GeneralUserService.getOtherUserFotoUrl(widget.chat)),
         title: Text(widget.chat.name),
         subtitle: Row(
