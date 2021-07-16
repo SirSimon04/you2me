@@ -1,14 +1,18 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/screens/login/login_screen.dart';
+import 'package:flutter_dispuatio/services/general_services/firebase_storage_service.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/loader.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChangeAccount extends StatefulWidget {
   const ChangeAccount({Key? key}) : super(key: key);
@@ -29,6 +33,47 @@ class _ChangeAccountState extends State<ChangeAccount> {
 
   bool _isLoading = false;
 
+  final picker = ImagePicker();
+
+  Future getImageFromCam() async {
+    File imageFile = File(await ImagePicker()
+        .getImage(source: ImageSource.camera)
+        .then((pickedFile) => pickedFile!.path));
+
+    Navigator.of(context).pop();
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    String url = await FireBaseStorageService.uploadImage(imageFile);
+
+    UserFirebaseService.changePhotoUrl(url).then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+  Future getImageFromGallery() async {
+    File imageFile = File(await ImagePicker()
+        .getImage(source: ImageSource.gallery)
+        .then((pickedFile) => pickedFile!.path));
+    Navigator.of(context).pop();
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    String url = await FireBaseStorageService.uploadImage(imageFile);
+
+    UserFirebaseService.changePhotoUrl(url).then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +90,77 @@ class _ChangeAccountState extends State<ChangeAccount> {
         children: [
           Column(
             children: [
+              SizedBox(
+                height: 30,
+              ),
+              Stack(
+                children: [
+                  CircleAvatar(
+                    backgroundImage:
+                        NetworkImage(_auth.currentUser?.photoURL ?? ""),
+                    radius: MediaQuery.of(context).size.width * 0.25,
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        border: Border.all(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          width: 3,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(
+                            MediaQuery.of(context).size.width * 0.01),
+                        child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          icon: Icon(
+                            Icons.add_a_photo,
+                            size: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                          onPressed: () {
+                            if (Platform.isIOS) {
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => CupertinoActionSheet(),
+                              );
+                            } else {
+                              showAdaptiveActionSheet(
+                                context: context,
+                                actions: [
+                                  BottomSheetAction(
+                                    title: Text(
+                                      "Fotomediathek",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    onPressed: getImageFromGallery,
+                                    trailing:
+                                        Icon(FontAwesomeIcons.solidImages),
+                                  ),
+                                  BottomSheetAction(
+                                      title: Text(
+                                        "Foto aufnehmen",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onPressed: getImageFromCam,
+                                      trailing: Icon(FontAwesomeIcons.camera)),
+                                ],
+                                cancelAction: CancelAction(
+                                  title: const Text('Schließen'),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
               SizedBox(
                 height: 30,
               ),

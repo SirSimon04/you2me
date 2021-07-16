@@ -47,7 +47,7 @@ class _SettingsState extends State<Settings>
             subtitle: Text("Hey there, I'm using Disputatio"),
             leading: CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage("assets/user.png"),
+              backgroundImage: NetworkImage(_auth.currentUser?.photoURL ?? ""),
             ),
             trailing: IconButton(
               icon: Icon(FontAwesomeIcons.userEdit),

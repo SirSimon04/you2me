@@ -144,4 +144,8 @@ class UserFirebaseService {
     });
     return url;
   }
+
+  static Future<void> changePhotoUrl(String url) async {
+    await _auth.currentUser?.updatePhotoURL(url);
+  }
 }
