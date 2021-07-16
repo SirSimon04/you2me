@@ -123,6 +123,8 @@ class UserFirebaseService {
 
   static Future<void> changeUserName(String newName) async {
     await _auth.currentUser?.updateDisplayName(newName);
+
+    //TODO: change chat member list
   }
 
   static Future<void> changeMail(String newEmail) async {
@@ -146,6 +148,34 @@ class UserFirebaseService {
   }
 
   static Future<void> changePhotoUrl(String url) async {
+    _firestore.collection("user").doc(_auth.currentUser?.uid).update({
+      "fotourl": url,
+    });
+
+    var snapshots = await _firestore
+        .collection("chat")
+        .where("members",
+            arrayContains: ((_auth.currentUser?.uid ?? "") +
+                "|" +
+                (_auth.currentUser?.displayName ?? "")))
+        .get();
+
+    print((_auth.currentUser?.uid ?? "") +
+        "|" +
+        (_auth.currentUser?.displayName ?? "asdf"));
+    print(snapshots.size.toString() + " ist die größe");
+
+    for (var doc in snapshots.docs) {
+      print("in for snapshots.docs");
+      await doc.reference.update(({
+        "fotourls": FieldValue.arrayRemove([_auth.currentUser?.photoURL]),
+      }));
+
+      await doc.reference.update(({
+        "fotourls": FieldValue.arrayUnion([url]),
+      }));
+    }
+
     await _auth.currentUser?.updatePhotoURL(url);
   }
 }
