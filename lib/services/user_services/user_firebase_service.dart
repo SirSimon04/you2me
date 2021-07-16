@@ -122,9 +122,34 @@ class UserFirebaseService {
   }
 
   static Future<void> changeUserName(String newName) async {
-    await _auth.currentUser?.updateDisplayName(newName);
-
     //TODO: change chat member list
+
+    var snapshots = await _firestore
+        .collection("chat")
+        .where("members",
+            arrayContains: ((_auth.currentUser?.uid ?? "") +
+                "|" +
+                (_auth.currentUser?.displayName ?? "")))
+        .get();
+
+    for (var doc in snapshots.docs) {
+      await doc.reference.update({
+        "members": FieldValue.arrayRemove(
+          [
+            ((_auth.currentUser?.uid ?? "") +
+                "|" +
+                (_auth.currentUser?.displayName ?? "")),
+          ],
+        ),
+      });
+
+      await doc.reference.update({
+        "members": FieldValue.arrayUnion(
+            [(_auth.currentUser?.uid ?? "") + "|" + (newName)])
+      });
+    }
+
+    await _auth.currentUser?.updateDisplayName(newName);
   }
 
   static Future<void> changeMail(String newEmail) async {
