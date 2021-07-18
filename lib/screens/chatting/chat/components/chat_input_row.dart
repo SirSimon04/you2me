@@ -1,3 +1,4 @@
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -98,23 +99,44 @@ class _ChatInputRowState extends State<ChatInputRow> {
               SizedBox(
                 width: kDefaultPadding / 2,
               ),
-              SizedBox(
-                height: 24,
-                width: 24,
-                child: FocusedMenuHolder(
-                  menuItems: getLeftContextMenuActions(
-                    camera: getImageFromCam,
-                    pic: getImageFromGallery,
-                  ),
-                  onPressed: () {},
-                  openWithTap: true,
-                  animateMenuItems: false,
-                  bottomOffsetHeight: 10.0,
-                  menuOffset: 10.0,
-                  child: Icon(
-                    FontAwesomeIcons.plus,
-                  ),
+              IconButton(
+                icon: Icon(
+                  FontAwesomeIcons.plus,
                 ),
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onPressed: () {
+                  if (Platform.isIOS) {
+                    showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) => CupertinoActionSheet(),
+                    );
+                  } else {
+                    showAdaptiveActionSheet(
+                      context: context,
+                      actions: [
+                        BottomSheetAction(
+                          title: Text(
+                            "Fotomediathek",
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: getImageFromGallery,
+                          trailing: Icon(FontAwesomeIcons.solidImages),
+                        ),
+                        BottomSheetAction(
+                            title: Text(
+                              "Foto aufnehmen",
+                              textAlign: TextAlign.center,
+                            ),
+                            onPressed: getImageFromCam,
+                            trailing: Icon(FontAwesomeIcons.camera)),
+                      ],
+                      cancelAction: CancelAction(
+                        title: const Text('Schließen'),
+                      ),
+                    );
+                  }
+                },
               ),
               SizedBox(
                 width: kDefaultPadding / 2,
@@ -196,6 +218,8 @@ class _ChatInputRowState extends State<ChatInputRow> {
               icon: Icon(
                 FontAwesomeIcons.solidPaperPlane,
               ),
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
               padding: EdgeInsets.all(0),
               onPressed: () async {
                 await ChatFirebaseService.sendMessage(
