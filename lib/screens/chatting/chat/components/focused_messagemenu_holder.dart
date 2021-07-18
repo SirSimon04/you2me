@@ -78,26 +78,27 @@ class FocusedMessageMenu extends StatelessWidget {
               },
               backgroundColor: kFocusedMenuHolderBGColor,
             ),
-            FocusedMenuItem(
-              title: Text("Info"),
-              trailingIcon: Icon(FontAwesomeIcons.infoCircle),
-              onPressed: () {},
-              backgroundColor: kFocusedMenuHolderBGColor,
-            ),
+            // FocusedMenuItem(
+            //   title: Text("Info"),
+            //   trailingIcon: Icon(FontAwesomeIcons.infoCircle),
+            //   onPressed: () {},
+            //   backgroundColor: kFocusedMenuHolderBGColor,
+            // ),
             FocusedMenuItem(
               title: Text("Bearbeiten"),
               onPressed: () {},
               backgroundColor: kFocusedMenuHolderBGColor,
               trailingIcon: Icon(FontAwesomeIcons.solidEdit),
             ),
-            FocusedMenuItem(
-              onPressed: () {
-                FlutterClipboard.copy(message.text);
-              },
-              title: Text("Kopieren"),
-              trailingIcon: Icon(FontAwesomeIcons.solidCopy),
-              backgroundColor: kFocusedMenuHolderBGColor,
-            ),
+            if (!message.isImage)
+              FocusedMenuItem(
+                onPressed: () {
+                  FlutterClipboard.copy(message.text);
+                },
+                title: Text("Kopieren"),
+                trailingIcon: Icon(FontAwesomeIcons.solidCopy),
+                backgroundColor: kFocusedMenuHolderBGColor,
+              ),
             FocusedMenuItem(
               title: Text("Löschen"),
               trailingIcon: Icon(FontAwesomeIcons.trash),

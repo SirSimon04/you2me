@@ -142,37 +142,37 @@ class _ChatInputRowState extends State<ChatInputRow> {
               SizedBox(
                 width: kDefaultPadding / 2,
               ),
-              SizedBox(
-                height: 24,
-                width: 24,
-                child: FocusedMenuHolder(
-                  menuItems: getRightContextMenuActions(
-                    normalPressed: () {
-                      setState(() {
-                        _rightContextButton = Icon(FontAwesomeIcons.ellipsisH);
-                      });
-                    },
-                    importantPressed: () {
-                      setState(() {
-                        _rightContextButton =
-                            Icon(FontAwesomeIcons.exclamation);
-                      });
-                    },
-                    plannedPressed: () {
-                      setState(() {
-                        _rightContextButton =
-                            Icon(FontAwesomeIcons.solidCalendar);
-                      });
-                    },
-                  ),
-                  onPressed: () {},
-                  openWithTap: true,
-                  animateMenuItems: false,
-                  bottomOffsetHeight: 10.0,
-                  menuOffset: 10.0,
-                  child: _rightContextButton,
-                ),
-              ),
+              // SizedBox(
+              //   height: 24,
+              //   width: 24,
+              //   child: FocusedMenuHolder(
+              //     menuItems: getRightContextMenuActions(
+              //       normalPressed: () {
+              //         setState(() {
+              //           _rightContextButton = Icon(FontAwesomeIcons.ellipsisH);
+              //         });
+              //       },
+              //       importantPressed: () {
+              //         setState(() {
+              //           _rightContextButton =
+              //               Icon(FontAwesomeIcons.exclamation);
+              //         });
+              //       },
+              //       plannedPressed: () {
+              //         setState(() {
+              //           _rightContextButton =
+              //               Icon(FontAwesomeIcons.solidCalendar);
+              //         });
+              //       },
+              //     ),
+              //     onPressed: () {},
+              //     openWithTap: true,
+              //     animateMenuItems: false,
+              //     bottomOffsetHeight: 10.0,
+              //     menuOffset: 10.0,
+              //     child: _rightContextButton,
+              //   ),
+              // ),
               SizedBox(
                 width: kDefaultPadding / 2,
               ),

@@ -52,12 +52,13 @@ List<FocusedMenuItem> getLeftContextMenuActions(
       backgroundColor: kFocusedMenuHolderBGColor,
       trailingIcon: Icon(FontAwesomeIcons.solidImages),
     ),
-    FocusedMenuItem(
-        title: Text(
-          "Dokument",
-        ),
-        onPressed: () {},
-        backgroundColor: kFocusedMenuHolderBGColor,
-        trailingIcon: Icon(FontAwesomeIcons.fileUpload)),
+    // FocusedMenuItem(
+    //   title: Text(
+    //     "Dokument",
+    //   ),
+    //   onPressed: () {},
+    //   backgroundColor: kFocusedMenuHolderBGColor,
+    //   trailingIcon: Icon(FontAwesomeIcons.fileUpload),
+    // ),
   ];
 }
