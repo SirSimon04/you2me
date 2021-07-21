@@ -90,8 +90,8 @@ class _ChatListState extends State<ChatList>
         ),
         child: Column(
           children: [
-            ChatListAppBarExtension(),
-            ChatListDivider(),
+            // ChatListAppBarExtension(),
+            // ChatListDivider(),
             ChatListStreamBuilder(isArchiveOpen: isArchiveOpen),
           ],
         ),

@@ -12,7 +12,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 getChatListAppBar(bool isArchiveOpen, VoidCallback onPressed) {
   return AppBar(
     automaticallyImplyLeading: isArchiveOpen,
-    elevation: 0,
     title: isArchiveOpen ? Text("Archivierte Chats") : Text("Chats"),
     actions: [
       !isArchiveOpen
