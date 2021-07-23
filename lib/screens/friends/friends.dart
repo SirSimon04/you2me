@@ -74,6 +74,7 @@ class _FriendListsState extends State<FriendLists>
                                           userUid: doc.id,
                                           isFriend: doc["hasChatWith"]
                                               .contains(_auth.currentUser?.uid),
+                                          photoUrl: doc["fotourl"],
                                         ),
                                       ),
                                     ),

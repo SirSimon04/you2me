@@ -55,11 +55,13 @@ class _ChatInputRowState extends State<ChatInputRow> {
         .getImage(source: ImageSource.camera)
         .then((pickedFile) => pickedFile!.path));
 
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => ImageSendScreen(image: imageFile, chat: chat),
-      ),
-    );
+    Navigator.of(context)
+        .push(
+          CupertinoPageRoute(
+            builder: (context) => ImageSendScreen(image: imageFile, chat: chat),
+          ),
+        )
+        .then((value) => Navigator.pop(context));
   }
 
   Future getImageFromGallery() async {
@@ -207,7 +209,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
   }
 
   checkUserInput() {
-    if (textController.text.isNotEmpty) {
+    if (textController.text.trim().length != 0) {
       UserFirebaseService.setWritingTrue(chat.uid);
       sendIconButton = Row(
         children: [

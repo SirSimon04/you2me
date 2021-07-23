@@ -23,9 +23,15 @@ class ChatInfoScreen extends StatefulWidget {
   final bool? comesFromFriends;
   final bool? isFriend;
   final String? userUid;
+  final String? photoUrl;
 
-  ChatInfoScreen(this.chat,
-      {this.userUid, this.comesFromFriends, this.isFriend});
+  ChatInfoScreen(
+    this.chat, {
+    this.userUid,
+    this.comesFromFriends,
+    this.isFriend,
+    this.photoUrl,
+  });
 
   @override
   _ChatInfoScreenState createState() =>
@@ -88,7 +94,10 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                         image: DecorationImage(
                           fit: BoxFit.fill,
                           image: CachedNetworkImageProvider(
-                              GeneralUserService.getOtherUserFotoUrl(chat)),
+                            widget.comesFromFriends == true
+                                ? widget.photoUrl ?? ""
+                                : GeneralUserService.getOtherUserFotoUrl(chat),
+                          ), //TODO: REMOVE ERROR
                         ),
                       ),
                     ),
