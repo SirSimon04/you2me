@@ -122,8 +122,6 @@ class UserFirebaseService {
   }
 
   static Future<void> changeUserName(String newName) async {
-    //TODO: change chat member list
-
     var snapshots = await _firestore
         .collection("chat")
         .where("members",
@@ -148,6 +146,21 @@ class UserFirebaseService {
             [(_auth.currentUser?.uid ?? "") + "|" + (newName)])
       });
     }
+
+    List<String> splitList = newName.split(" ");
+
+    List<String> indexList = [];
+
+    for (int i = 0; i < splitList.length; i++) {
+      for (int j = 1; j < splitList[i].length + 1; j++) {
+        indexList.add(splitList[i].substring(0, j).toLowerCase());
+      }
+    }
+
+    _firestore.collection("user").doc(_auth.currentUser?.uid).update({
+      "name": newName,
+      "searchIndex": indexList,
+    });
 
     await _auth.currentUser?.updateDisplayName(newName);
   }

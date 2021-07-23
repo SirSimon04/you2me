@@ -103,6 +103,7 @@ class ChatListStreamBuilder extends StatelessWidget {
   }
 
   String getName(doc) {
+    print(doc);
     if (doc[0] ==
         (_auth.currentUser?.uid ?? "") +
             "|" +
