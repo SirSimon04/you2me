@@ -186,6 +186,7 @@ class ChatFirebaseService {
     }
   }
 
+  //TODO: wen einzige nachricht chat leeren
   static Future<void> deleteMessage({required chatUid, required msgUid}) async {
     var snapshots = await _firestore
         .collection("chat")
@@ -200,22 +201,28 @@ class ChatFirebaseService {
 
     //check works
     if (documents[documents.length - 1].id == msgUid) {
-      print("letzte");
-      //replace last message text
+      if (documents.length == 1) {
+        //wenn nur eine Nachricht im Chat ist
+        await _firestore.collection("chat").doc(chatUid).update({
+          "lastmessagetext": "",
+          "lastmessagesenderid": "",
+          "lastmessagedate": Timestamp.now(),
+        });
+      } else {
+        //replace msg text
+        String lastMessageText = documents[documents.length - 2]["text"];
 
-      String lastMessageText = documents[documents.length - 2]["text"];
+        String lastMessageSenderId =
+            documents[documents.length - 2]["senderid"];
 
-      String lastMessageSenderId = documents[documents.length - 2]["senderid"];
+        Timestamp lastMessageDate = documents[documents.length - 2]["time"];
 
-      Timestamp lastMessageDate = documents[documents.length - 2]["time"];
-
-      await _firestore.collection("chat").doc(chatUid).update({
-        "lastmessagetext": lastMessageText,
-        "lastmessagesenderid": lastMessageSenderId,
-        "lastmessagedate": lastMessageDate,
-      });
-
-      print("text nachricht davor: " + lastMessageText);
+        await _firestore.collection("chat").doc(chatUid).update({
+          "lastmessagetext": lastMessageText,
+          "lastmessagesenderid": lastMessageSenderId,
+          "lastmessagedate": lastMessageDate,
+        });
+      }
     } else {
       print("nicht letzte");
     }
