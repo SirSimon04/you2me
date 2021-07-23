@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
@@ -186,6 +187,38 @@ class ChatFirebaseService {
   }
 
   static Future<void> deleteMessage({required chatUid, required msgUid}) async {
+    var snapshots = await _firestore
+        .collection("chat")
+        .doc(chatUid)
+        .collection("messages")
+        .orderBy("time")
+        .get();
+
+    print("delete");
+
+    var documents = snapshots.docs;
+
+    //check works
+    if (documents[documents.length - 1].id == msgUid) {
+      print("letzte");
+      //replace last message text
+
+      String lastMessageText = documents[documents.length - 2]["text"];
+
+      String lastMessageSenderId = documents[documents.length - 2]["senderid"];
+
+      Timestamp lastMessageDate = documents[documents.length - 2]["time"];
+
+      await _firestore.collection("chat").doc(chatUid).update({
+        "lastmessagetext": lastMessageText,
+        "lastmessagesenderid": lastMessageSenderId,
+        "lastmessagedate": lastMessageDate,
+      });
+
+      print("text nachricht davor: " + lastMessageText);
+    } else {
+      print("nicht letzte");
+    }
     _firestore
         .collection("chat")
         .doc(chatUid)
