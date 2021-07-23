@@ -212,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigator.of(context).pushReplacement(FadePageRoute(
         //   builder: (context) => DashboardScreen(),
         // ));
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           CupertinoPageRoute(
             builder: (context) => MyHomePage(),
           ),

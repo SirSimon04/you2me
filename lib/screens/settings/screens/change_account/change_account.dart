@@ -235,6 +235,7 @@ class _ChangeAccountState extends State<ChangeAccount> {
                   builder: (context) => AlertDialog(
                     title: Text("E-Mail ändern ändern"),
                     content: Column(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextField(
@@ -324,6 +325,8 @@ class _ChangeAccountState extends State<ChangeAccount> {
                   builder: (context) => AlertDialog(
                     title: Text("Passwort ändern"),
                     content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextField(
                           controller: _passwordController,
