@@ -85,10 +85,12 @@ class _ChatInputRowState extends State<ChatInputRow> {
 
   Icon _rightContextButton = Icon(FontAwesomeIcons.ellipsisH);
 
+  int _lineCount = 1;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: _lineCount > 1 ? 90 : 70,
       color: Colors.black26,
       child: Column(
         children: [
@@ -145,6 +147,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
               ),
               Expanded(
                 child: TextField(
+                  keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius:
@@ -152,12 +155,24 @@ class _ChatInputRowState extends State<ChatInputRow> {
                     ),
                     filled: true,
                     isDense: true,
-                    contentPadding: EdgeInsets.all(12),
+                    contentPadding: EdgeInsets.all(14),
                   ),
-                  maxLines: null,
+                  minLines: _lineCount > 1 ? 2 : 1,
+                  maxLines: 2,
                   controller: textController,
-                  onChanged: (text) {
+                  onChanged: (String text) {
+                    // print(('\n'.allMatches(text).length + 1).toString());
+                    print("zeilen " +
+                        ((textController.text.length /
+                                    (MediaQuery.of(context).size.width *
+                                        0.055)) //TODO: test this on other devices
+                                .round())
+                            .toString());
+
                     setState(() {
+                      _lineCount = (textController.text.length /
+                              (MediaQuery.of(context).size.width * 0.055))
+                          .round();
                       checkUserInput();
                     });
                   },
@@ -202,6 +217,9 @@ class _ChatInputRowState extends State<ChatInputRow> {
               ),
               sendIconButton,
             ],
+          ),
+          SizedBox(
+            height: kDefaultPadding / 2,
           ),
         ],
       ),
