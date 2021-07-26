@@ -53,7 +53,7 @@ class ChatFirebaseService {
       )
     });
     await _firestore.collection("chat").doc(chatUid).update({
-      "notarchivedby": FieldValue.arrayUnion(
+      "notarchivedby": FieldValue.arrayRemove(
         [_auth.currentUser?.uid],
       )
     });

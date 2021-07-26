@@ -11,11 +11,13 @@ class GeneralUserService {
     //   return chat.fotoUrls[1];
     // }
     // return "";
-
+    print("fotourls" + chat.fotoUrls.toString());
     if (chat.fotoUrls[1] == _auth.currentUser?.photoURL) {
       return chat.fotoUrls[0];
-    } else {
+    } else if (chat.fotoUrls[0] == _auth.currentUser?.photoURL) {
       return chat.fotoUrls[1];
+    } else {
+      return "";
     }
   }
 }

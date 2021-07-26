@@ -162,7 +162,9 @@ class UserFirebaseService {
       "searchIndex": indexList,
     });
 
-    await _auth.currentUser?.updateDisplayName(newName);
+    await _auth.currentUser
+        ?.updateDisplayName(newName)
+        .then((value) => print("name change success"));
   }
 
   static Future<void> changeMail(String newEmail) async {

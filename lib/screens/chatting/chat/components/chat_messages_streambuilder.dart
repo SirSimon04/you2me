@@ -31,9 +31,12 @@ class ChatMessagesStreambuilder extends StatelessWidget {
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Center(
-            child: Text("Loading"),
-          );
+          return Container();
+          // return Center(
+          //   child: Center(
+          //     child: CircularProgressIndicator(),
+          //   ),
+          // );
         } else {
           final List<DocumentSnapshot> documents = snapshot.data!.docs;
 

@@ -242,6 +242,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
                 setState(() {
                   // Reset textfield and scroll to bottom
                   textController.clear();
+                  checkUserInput();
                   widget.scrollController.animateTo(
                     widget.scrollController.position.maxScrollExtent,
                     duration: Duration(milliseconds: 500),
