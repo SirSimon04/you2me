@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
+import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FriendsSearchPage extends StatefulWidget {
@@ -104,11 +106,26 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                               leading: CircleAvatar(
                                 backgroundImage: AssetImage("assets/user.png"),
                               ),
-                              trailing: IconButton(
-                                  onPressed: () {
-                                    UserFirebaseService.addFriend(doc.id);
-                                  },
-                                  icon: Icon(FontAwesomeIcons.userPlus)),
+                              trailing: doc["friends"]
+                                      .contains(_auth.currentUser?.uid)
+                                  ? IconButton(
+                                      onPressed: () {
+                                        UserFirebaseService.deleteFriend(doc.id)
+                                            .then(
+                                          (value) => ToastService.showLongToast(
+                                              "${doc["name"]} wurde als Freund entfernt"),
+                                        );
+                                      },
+                                      icon: Icon(FontAwesomeIcons.userMinus))
+                                  : IconButton(
+                                      onPressed: () {
+                                        UserFirebaseService.addFriend(doc.id)
+                                            .then(
+                                          (value) => ToastService.showLongToast(
+                                              "${doc["name"]} wurde als Freund hinzugefügt"),
+                                        );
+                                      },
+                                      icon: Icon(FontAwesomeIcons.userPlus)),
                             );
                           }).toList(),
                         );
