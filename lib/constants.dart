@@ -25,7 +25,8 @@ const kColorOpacityValue = 0.25;
 //Message-Bubble-Style
 
 const kMyMessageColorDark = Colors.black54;
-const kMyMessageColorLight = Colors.white70;
+const kMyMessageColorLight =
+    Color(0x5900BFA6); // kPrimaryColor.withOpacity(0.5);
 
 const kOtherMessageColorDark = Color(0xFF414141);
 const kOtherMessageColorLight = Colors.white24;
@@ -33,7 +34,6 @@ const kOtherMessageColorLight = Colors.white24;
 const styleSomebody = BubbleStyle(
   nip: BubbleNip.leftBottom,
   color: Colors.blue,
-  elevation: 4,
   margin: BubbleEdges.only(top: 8, right: 50),
   alignment: Alignment.topLeft,
 );
@@ -41,7 +41,6 @@ const styleSomebody = BubbleStyle(
 const styleMe = BubbleStyle(
   nip: BubbleNip.rightBottom,
   color: Colors.blue,
-  elevation: 4,
   margin: BubbleEdges.only(top: 8, left: 50),
   alignment: Alignment.topRight,
 );

@@ -105,7 +105,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
   Widget build(BuildContext context) {
     return Container(
       height: _lineCount > 1 ? 90 : 70,
-      color: Colors.black26,
+      color: Colors.black45,
       child: Column(
         children: [
           SizedBox(
@@ -165,10 +165,13 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   cursorColor: Theme.of(context).primaryColor,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(kCircularBorderRadius),
-                        borderSide:
-                            BorderSide(color: Theme.of(context).primaryColor)),
+                      borderRadius:
+                          BorderRadius.circular(kCircularBorderRadius),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 3,
+                      ),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(kCircularBorderRadius),
@@ -283,6 +286,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
                 setState(() {
                   // Reset textfield and scroll to bottom
                   textController.clear();
+                  _lineCount = 0;
                   checkUserInput();
                   widget.scrollController.animateTo(
                     widget.scrollController.position.maxScrollExtent,
