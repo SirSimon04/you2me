@@ -1,20 +1,17 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/chat_list_screen.dart';
 import 'package:flutter_dispuatio/screens/login/login_screen.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/themes.dart';
-import 'screens/settings/settings.dart';
-import 'screens/channel/channel.dart';
-import 'screens/friends/friends.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'screens/friends/friends.dart';
+import 'screens/settings/settings.dart';
 
 // void main() {
 //   runApp(

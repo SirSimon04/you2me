@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 
 class ChatFirebaseService {
@@ -15,7 +15,7 @@ class ChatFirebaseService {
     String url1 =
         await UserFirebaseService.getFotoUrlbyUid(_auth.currentUser?.uid ?? "");
     String url2 = await UserFirebaseService.getFotoUrlbyUid(doc.id);
-    await _firestore.collection("chat").add({
+    DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": false,
       "lastmessagedate": DateTime.now(),
       "lastmessagesenderid": "",
@@ -44,6 +44,7 @@ class ChatFirebaseService {
     await _firestore.collection("user").doc(doc.id).update({
       "hasChatWith": FieldValue.arrayUnion([_auth.currentUser?.uid]),
     });
+    ChatFcmService.subscribeToChat(chatUid: docRef.id);
   }
 
   static Future<void> archiveChat(String chatUid) async {
@@ -283,7 +284,7 @@ class ChatFirebaseService {
 
   static Future<void> markMessage(
       {required String chatUid, required MessageModel msg}) async {
-    _firestore.doc("chat/${chatUid}/messages/${msg.uid}").update({
+    _firestore.doc("chat/$chatUid/messages/${msg.uid}").update({
       "favby": FieldValue.arrayUnion([_auth.currentUser?.uid])
     });
     _firestore

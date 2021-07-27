@@ -1,23 +1,17 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
+import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/components/focused_messagemenu_holder.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_dispuatio/constants.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:implicitly_animated_reorderable_list/transitions.dart';
+
 import 'components/chat_appbar.dart';
-import 'package:flutter_dispuatio/models/message_model.dart';
-import 'package:flutter_dispuatio/models/Data.dart' as data;
 import 'components/chat_input_row.dart';
-import 'components/chat_message_bubble.dart';
 import 'components/chat_messages_streambuilder.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -30,7 +24,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
 
   _ChatScreenState(this.chat);
   ChatModel chat;

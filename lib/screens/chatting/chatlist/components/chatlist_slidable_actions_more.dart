@@ -1,14 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 
 List<BottomSheetAction> chatlistSlidableActionsMoreMaterial(context, chat) {
-  final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
   return [
     BottomSheetAction(
       title: const Text('Info'),

@@ -1,13 +1,11 @@
 import 'package:clipboard/clipboard.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OpenAnswer extends Notification {
@@ -27,8 +25,6 @@ class FocusedMessageMenu extends StatelessWidget {
   final MessageModel message;
   final ChatModel chat;
   final bool isMy;
-  final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {

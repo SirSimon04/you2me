@@ -5,7 +5,6 @@ import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FriendsSearchPage extends StatefulWidget {

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_dispuatio/models/message_model.dart';
 
 class ChatModel {
   final String name;

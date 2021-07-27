@@ -2,18 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
 import 'package:flutter_dispuatio/screens/friends/components/friends_appbar.dart';
-import 'package:flutter_dispuatio/screens/friends/components/friends_searchpage.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../../services/chat_service/chat_firebase_service.dart';
-import '../../constants.dart';
 
 class FriendLists extends StatefulWidget {
   const FriendLists({Key? key}) : super(key: key);

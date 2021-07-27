@@ -2,9 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final _auth = FirebaseAuth.instance;
-final _firestore = FirebaseFirestore.instance;
-
 class UserFirebaseService {
   UserFirebaseService();
   static final _auth = FirebaseAuth.instance;
@@ -54,22 +51,21 @@ class UserFirebaseService {
       {required String email,
       required String password,
       required String username}) async {
-    final newUser = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-
-    var users = await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
-
     var user = _auth.currentUser;
 
     if (user != null) {
       print("here");
 
-      await _auth.currentUser?.updateProfile(
-        displayName: username,
-        photoURL:
-            "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a",
-      );
+      await _auth.currentUser?.updatePhotoURL(
+          "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a");
+      await _auth.currentUser?.updateDisplayName(username);
+
+      //old Auth version
+      // await _auth.currentUser?.updateProfile(
+      //   displayName: username,
+      //   photoURL:
+      //       "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a",
+      // );
 
       List<String> splitList = username.split(" ");
 
@@ -87,7 +83,6 @@ class UserFirebaseService {
         "isonline": true,
         "info": "Hey there! I'm using Disputatio",
         "searchIndex": indexList,
-        "isonline": true,
         "lastonline": Timestamp.now(),
         "bio": "Hallo, ich wünsche einen guten Tag!",
         "hasChatWith": [],

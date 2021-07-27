@@ -1,12 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dispuatio/models/Data.dart' as data;
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
-import 'package:flutter_dispuatio/models/Data.dart' as data;
 import 'package:flutter_dispuatio/screens/chatting/chat/components/chat_message_bubble.dart';
 import 'package:platform_list_tile/platform_list_tile.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkedMessages extends StatefulWidget {
   MarkedMessages({this.chatUid, required this.isInChat});
@@ -21,7 +20,6 @@ class MarkedMessages extends StatefulWidget {
 class _MarkedMessagesState extends State<MarkedMessages> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
-  final _push = FirebaseMessaging.instance;
 
   Future<List<MessageModel>> getMessages() async {
     List<MessageModel> messages = data.getMessages();

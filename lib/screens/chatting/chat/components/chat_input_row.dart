@@ -1,26 +1,18 @@
+import 'dart:io';
+
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
-import 'package:flutter_dispuatio/models/story.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/screens/image_send/image_send_screen.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
-import 'package:focused_menu/focused_menu.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_dispuatio/constants.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:image_picker/image_picker.dart';
-import 'chat_contextmenu_actions.dart';
-import 'dart:io';
 
 class SendMessage extends Notification {
   SendMessage();
@@ -50,7 +42,6 @@ class _ChatInputRowState extends State<ChatInputRow> {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  File _image = File("");
   final picker = ImagePicker();
 
   Future getImageFromCam() async {
@@ -85,8 +76,6 @@ class _ChatInputRowState extends State<ChatInputRow> {
     textController.dispose();
     super.dispose();
   }
-
-  Icon _rightContextButton = Icon(FontAwesomeIcons.ellipsisH);
 
   int _lineCount = 1;
 

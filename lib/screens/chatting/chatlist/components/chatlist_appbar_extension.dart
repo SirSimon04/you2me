@@ -1,13 +1,6 @@
-import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_dispuatio/widgets/fill_outlined_button.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/constants.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ChatListAppBarExtension extends StatelessWidget {
   ChatListAppBarExtension();

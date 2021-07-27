@@ -1,17 +1,16 @@
-import 'package:flutter/gestures.dart';
+import 'package:bubble/bubble.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dispuatio/constants.dart';
-import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
-import 'package:bubble/bubble.dart';
+import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import 'answer_container.dart';
 import 'focused_messagemenu_holder.dart';
@@ -206,7 +205,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                       child: SizedBox(
                         width: 5,
                       ),
-                      visible: widget.message.readByAll != null ? true : false,
+                      visible: widget.message.readByAll ? true : false,
                     ),
                     Visibility(
                       child: Icon(

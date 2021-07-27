@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/data/users.dart';
-import 'package:flutter_dispuatio/models/story.dart';
 import 'package:flutter_dispuatio/models/user.dart';
 import 'package:flutter_dispuatio/screens/channel/profile_widget.dart';
 import 'package:story_view/story_view.dart';
-import 'dart:io';
 
 class StoryWidget extends StatefulWidget {
   final User user;

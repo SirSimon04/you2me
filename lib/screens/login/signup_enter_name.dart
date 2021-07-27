@@ -1,10 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dispuatio/constants.dart';
-import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
-import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter_login/theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignUpEnterName extends StatefulWidget {

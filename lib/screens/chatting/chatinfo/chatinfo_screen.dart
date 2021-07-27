@@ -10,13 +10,9 @@ import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.da
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
-import 'package:time_ago_provider/time_ago_provider.dart' as time_ago;
-import 'package:platform_list_tile/platform_list_tile.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_dispuatio/widgets/listdivider.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
-import 'package:cupertino_list_tile/cupertino_list_tile.dart';
+import 'package:platform_list_tile/platform_list_tile.dart';
+import 'package:time_ago_provider/time_ago_provider.dart' as time_ago;
 
 class ChatInfoScreen extends StatefulWidget {
   final ChatModel chat;

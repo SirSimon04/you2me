@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_dispuatio/screens/login/signup_enter_name.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../main.dart';
 

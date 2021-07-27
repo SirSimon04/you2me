@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/data/users.dart';
-import 'package:flutter_dispuatio/models/user.dart';
 import 'package:flutter_dispuatio/screens/channel/story_page_view.dart';
-import 'package:story_view/story_view.dart';
 
 // class Channel extends StatefulWidget {
 //   const Channel({Key? key}) : super(key: key);
@@ -44,8 +41,6 @@ import 'package:story_view/story_view.dart';
 // }
 
 class Channel extends StatelessWidget {
-  final _auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
