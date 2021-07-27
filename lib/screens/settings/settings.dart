@@ -24,8 +24,6 @@ class _SettingsState extends State<Settings>
   bool notifications = false;
   bool profFilter = true;
   final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
-  final _push = FirebaseMessaging.instance;
 
   @override
   bool get wantKeepAlive => true;

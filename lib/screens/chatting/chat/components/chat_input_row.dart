@@ -8,6 +8,7 @@ import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/models/story.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/screens/image_send/image_send_screen.dart';
+import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -46,6 +47,8 @@ class _ChatInputRowState extends State<ChatInputRow> {
   final textController = TextEditingController();
 
   Widget sendIconButton = Container();
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   File _image = File("");
   final picker = ImagePicker();
@@ -257,6 +260,9 @@ class _ChatInputRowState extends State<ChatInputRow> {
 
                 SendMessage().dispatch(context); //Notify parent msg got send
 
+                String msgText =
+                    textController.text; //save msgText for sending the FCM-Msg
+
                 setState(() {
                   // Reset textfield and scroll to bottom
                   textController.clear();
@@ -267,6 +273,12 @@ class _ChatInputRowState extends State<ChatInputRow> {
                     curve: Curves.fastOutSlowIn,
                   );
                 });
+
+                ChatFcmService.sendMsgPrivate(
+                  chatUid: widget.chat.uid,
+                  name: _auth.currentUser?.displayName ?? "",
+                  msgText: msgText,
+                );
               },
             ),
           ),
