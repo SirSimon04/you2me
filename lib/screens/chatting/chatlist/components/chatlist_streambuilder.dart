@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
@@ -40,6 +42,29 @@ class ChatListStreamBuilder extends StatelessWidget {
             //   itemCount: 10,
             // );
           } else {
+            // print("length of docs: " + snapshot.data!.docs.length.toString());
+
+            if (snapshot.data!.docs.length == 0) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(40),
+                      child: SvgPicture.asset(
+                        "assets/placeholders/chat.svg",
+                        height: MediaQuery.of(context).size.height * 0.5,
+                      ),
+                    ),
+                    Text(
+                      "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              );
+            }
+
             List<DocumentSnapshot> allChatsUnsorted = snapshot.data!.docs;
 
             List<DocumentSnapshot> pinned = [];

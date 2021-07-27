@@ -9,6 +9,7 @@ import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.da
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../services/chat_service/chat_firebase_service.dart';
@@ -49,6 +50,39 @@ class _FriendListsState extends State<FriendLists>
                       case ConnectionState.waiting:
                         return Center(child: CircularProgressIndicator());
                       default:
+                        if (snapshot.data!.docs.length == 0) {
+                          return Column(
+                            children: [
+                              SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(40),
+                                      child: SvgPicture.asset(
+                                        "assets/placeholders/friends.svg",
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.5,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.7,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Du hast noch keine Freunde. Klicke auf die Lupe, um Freunde hinzuzfügen.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
                         final List<DocumentSnapshot> documents =
                             snapshot.data!.docs;
                         return ListView(

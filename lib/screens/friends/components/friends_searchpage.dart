@@ -5,6 +5,7 @@ import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FriendsSearchPage extends StatefulWidget {
@@ -92,6 +93,47 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                       case ConnectionState.waiting:
                         return Center(child: CircularProgressIndicator());
                       default:
+                        if (snapshot.data!.docs.length == 0 &&
+                            textController.text.trim().isEmpty) {
+                          return SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(40),
+                                  child: SvgPicture.asset(
+                                    "assets/placeholders/add_friend.svg",
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        if (snapshot.data!.docs.length == 0) {
+                          return SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(40),
+                                  child: SvgPicture.asset(
+                                    "assets/placeholders/no_results.svg",
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                  ),
+                                ),
+                                Text(
+                                  "Der gesuchte Nutzer wurde nicht gefunden.",
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          );
+                        }
+
                         final List<DocumentSnapshot> documents =
                             snapshot.data!.docs;
                         return ListView(

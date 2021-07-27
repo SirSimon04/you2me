@@ -5,6 +5,7 @@ import 'package:flutter_dispuatio/models/Data.dart' as data;
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/components/chat_message_bubble.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:platform_list_tile/platform_list_tile.dart';
 
 class MarkedMessages extends StatefulWidget {
@@ -46,6 +47,32 @@ class _MarkedMessagesState extends State<MarkedMessages> {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
+                  if (snapshot.data!.docs.length == 0) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(40),
+                            child: SvgPicture.asset(
+                              "assets/placeholders/marked_messages.svg",
+                              height: MediaQuery.of(context).size.height * 0.5,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              widget.isInChat
+                                  ? "Du hast in diesem Chat bisher noch keine Nachricht mit Stern markiert. Drücke lange auf eine Nachricht, um sie mit einem Stern markieren zu können."
+                                  : "Du hast bisher noch keine Nachricht mit Stern markiert. Drücke lange auf eine Nachricht, um sie mit einem Stern markieren zu können.",
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+
                   final List<DocumentSnapshot> documents = snapshot.data!.docs;
                   return ListView(
                     children: documents.map((doc) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class ChatFcmService {
   ChatFcmService();
@@ -16,7 +17,7 @@ class ChatFcmService {
     required String name,
     required String msgText,
   }) async {
-    http.post(
+    Response r = await http.post(
       Uri.parse("https://fcm.googleapis.com/fcm/send"),
       headers: <String, String>{
         "Content-Type": "application/json",
@@ -34,6 +35,7 @@ class ChatFcmService {
         },
       ),
     );
+    print(r.body + " code: " + r.statusCode.toString());
   }
 
   static Future<String?> getToken() async {
