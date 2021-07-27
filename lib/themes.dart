@@ -39,9 +39,8 @@ ThemeData darkThemeData(BuildContext context) {
     scaffoldBackgroundColor: kBackgroundDark,
     iconTheme: IconThemeData(color: kContentColorDarkTheme),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: kContentColorLightTheme,
       selectedItemColor: Colors.white70,
-      unselectedItemColor: kContentColorDarkTheme.withOpacity(0.32),
+      unselectedItemColor: kContentColorDarkTheme.withOpacity(0.6),
       selectedIconTheme: IconThemeData(color: kPrimaryColor),
     ),
     cardTheme: CardTheme(
@@ -50,5 +49,6 @@ ThemeData darkThemeData(BuildContext context) {
       elevation: 12,
       color: ThemeData.dark().cardColor,
     ),
+    bottomAppBarColor: Colors.grey[800],
   );
 }

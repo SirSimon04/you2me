@@ -97,36 +97,62 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: CurvedNavigationBar(
+        bottomNavigationBar: BottomNavigationBar(
           items: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(2, 4, 7, 4),
-              child: Icon(
-                FontAwesomeIcons.userFriends,
-                size: 30,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                FontAwesomeIcons.solidComment,
-                size: 40,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(2, 4, 7, 4),
-              child: Icon(
-                FontAwesomeIcons.userCog,
-                size: 30,
-              ),
-            ),
+            BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Icon(FontAwesomeIcons.userFriends),
+                ),
+                label: "Freunde"),
+            BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Icon(FontAwesomeIcons.solidComment),
+                ),
+                label: "Chats"),
+            BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Icon(FontAwesomeIcons.userCog),
+                ),
+                label: "Einstellungen"),
           ],
           onTap: onItemTapped,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          color: Colors.grey.shade700,
-          height: 60.0,
-          index: 1,
+          currentIndex: currentPageIndex,
+          backgroundColor: Theme.of(context).bottomAppBarColor,
+          selectedFontSize: 14,
         ),
+        // bottomNavigationBar: CurvedNavigationBar(
+        //   items: [
+        //     Padding(
+        //       padding: const EdgeInsets.fromLTRB(2, 4, 7, 4),
+        //       child: Icon(
+        //         FontAwesomeIcons.userFriends,
+        //         size: 30,
+        //       ),
+        //     ),
+        //     Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: Icon(
+        //         FontAwesomeIcons.solidComment,
+        //         size: 40,
+        //       ),
+        //     ),
+        //     Padding(
+        //       padding: const EdgeInsets.fromLTRB(2, 4, 7, 4),
+        //       child: Icon(
+        //         FontAwesomeIcons.userCog,
+        //         size: 30,
+        //       ),
+        //     ),
+        //   ],
+        //   onTap: onItemTapped,
+        //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        //   color: Colors.grey.shade700,
+        //   height: 60.0,
+        //   index: 1,
+        // ),
         body: PageView(
           controller: _pageController,
           physics: NeverScrollableScrollPhysics(),
