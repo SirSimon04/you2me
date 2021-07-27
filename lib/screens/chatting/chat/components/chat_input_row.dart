@@ -162,7 +162,13 @@ class _ChatInputRowState extends State<ChatInputRow> {
               Expanded(
                 child: TextField(
                   keyboardType: TextInputType.multiline,
+                  cursorColor: Theme.of(context).primaryColor,
                   decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(kCircularBorderRadius),
+                        borderSide:
+                            BorderSide(color: Theme.of(context).primaryColor)),
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(kCircularBorderRadius),

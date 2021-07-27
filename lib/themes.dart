@@ -22,32 +22,33 @@ ThemeData lightThemeData(BuildContext context) {
 
 ThemeData darkThemeData(BuildContext context) {
   return ThemeData.dark().copyWith(
-      appBarTheme: AppBarTheme(
-        backgroundColor: kBackgroundDark,
+    primaryColorDark: kPrimaryColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: kBackgroundDark,
+    ),
+    textTheme: TextTheme(
+      bodyText1: TextStyle(
+        color: Colors.white,
       ),
-      textTheme: TextTheme(
-        bodyText1: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      colorScheme: ColorScheme.dark().copyWith(
-        secondary: kMyMessageColorDark, //MessageColors
-        secondaryVariant: kOtherMessageColorDark,
-      ),
-      primaryColor: kPrimaryColor,
-      scaffoldBackgroundColor: kBackgroundDark,
-      iconTheme: IconThemeData(color: kContentColorDarkTheme),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: kContentColorLightTheme,
-        selectedItemColor: Colors.white70,
-        unselectedItemColor: kContentColorDarkTheme.withOpacity(0.32),
-        selectedIconTheme: IconThemeData(color: kPrimaryColor),
-      ),
-      cardTheme: CardTheme(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        margin: EdgeInsets.all(4),
-        elevation: 12,
-        color: ThemeData.dark().cardColor,
-      ));
+    ),
+    colorScheme: ColorScheme.dark().copyWith(
+      secondary: kMyMessageColorDark, //MessageColors
+      secondaryVariant: kOtherMessageColorDark,
+    ),
+    primaryColor: kPrimaryColor,
+    scaffoldBackgroundColor: kBackgroundDark,
+    iconTheme: IconThemeData(color: kContentColorDarkTheme),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: kContentColorLightTheme,
+      selectedItemColor: Colors.white70,
+      unselectedItemColor: kContentColorDarkTheme.withOpacity(0.32),
+      selectedIconTheme: IconThemeData(color: kPrimaryColor),
+    ),
+    cardTheme: CardTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      margin: EdgeInsets.all(4),
+      elevation: 12,
+      color: ThemeData.dark().cardColor,
+    ),
+  );
 }

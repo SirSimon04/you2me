@@ -63,6 +63,7 @@ class _SettingsState extends State<Settings>
               value: profFilter,
               onChanged: (value) => {setState(() => profFilter = value)},
               title: Text("Wortfilter"),
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           Card(
@@ -71,6 +72,7 @@ class _SettingsState extends State<Settings>
               value: notifications,
               onChanged: (value) => {setState(() => notifications = value)},
               title: Text("Benachrichtigungen"),
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           SizedBox(

@@ -7,7 +7,7 @@ const double kChatListTileHeight = 25;
 
 const double kCircularBorderRadius = 30;
 
-const kPrimaryColor = Colors.blue;
+const kPrimaryColor = Color(0xFF00BFA6);
 const kSecondaryColor = Color(0xFFFE9901);
 const kContentColorLightTheme = Color(0xFF1D1D35);
 const kContentColorDarkTheme = Color(0xFFF5FCF9);
