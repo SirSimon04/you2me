@@ -13,6 +13,7 @@ import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.da
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SendMessage extends Notification {
   SendMessage();
@@ -70,9 +71,30 @@ class _ChatInputRowState extends State<ChatInputRow> {
     );
   }
 
+  Future<Null> getWrittenText() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      setState(() {
+        textController.text = (prefs.getString(chat.uid))!;
+      });
+    } catch (e) {}
+  }
+
+  Future<Null> setWrittenText() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(chat.uid, textController.text);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getWrittenText();
+  }
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
+    setWrittenText();
     textController.dispose();
     super.dispose();
   }
