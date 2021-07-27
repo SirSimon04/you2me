@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
@@ -38,6 +39,30 @@ class ChatMessagesStreambuilder extends StatelessWidget {
           //   ),
           // );
         } else {
+          if (snapshot.data!.docs.length == 0) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(40),
+                    child: SvgPicture.asset(
+                      "assets/placeholders/chat.svg",
+                      height: MediaQuery.of(context).size.height * 0.5,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      "Ihr habt bisher noch keine Nachrichten geschrieben. Fange direkt damit an.",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+
           final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
           return ImplicitlyAnimatedList<ChatMessageBubble>(
