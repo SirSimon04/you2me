@@ -63,7 +63,10 @@ class FocusedMessageMenu extends StatelessWidget {
                       chatUid: chat.uid, msg: message);
                 }
               },
-              backgroundColor: kFocusedMenuHolderBGColor,
+              backgroundColor:
+                  Theme.of(context).brightness == ThemeData.dark().brightness
+                      ? kFocusedMenuHolderBGColorDark
+                      : kFocusedMenuHolderBGColorLight,
             ),
             FocusedMenuItem(
               title: Text("Antworten"),
@@ -72,7 +75,10 @@ class FocusedMessageMenu extends StatelessWidget {
                 print("focused message menu pressed");
                 OpenAnswer(message).dispatch(context);
               },
-              backgroundColor: kFocusedMenuHolderBGColor,
+              backgroundColor:
+                  Theme.of(context).brightness == ThemeData.dark().brightness
+                      ? kFocusedMenuHolderBGColorDark
+                      : kFocusedMenuHolderBGColorLight,
             ),
             // FocusedMenuItem(
             //   title: Text("Info"),
@@ -83,7 +89,10 @@ class FocusedMessageMenu extends StatelessWidget {
             FocusedMenuItem(
               title: Text("Bearbeiten"),
               onPressed: () {},
-              backgroundColor: kFocusedMenuHolderBGColor,
+              backgroundColor:
+                  Theme.of(context).brightness == ThemeData.dark().brightness
+                      ? kFocusedMenuHolderBGColorDark
+                      : kFocusedMenuHolderBGColorLight,
               trailingIcon: Icon(FontAwesomeIcons.solidEdit),
             ),
             if (!message.isImage)
@@ -93,7 +102,10 @@ class FocusedMessageMenu extends StatelessWidget {
                 },
                 title: Text("Kopieren"),
                 trailingIcon: Icon(FontAwesomeIcons.solidCopy),
-                backgroundColor: kFocusedMenuHolderBGColor,
+                backgroundColor:
+                    Theme.of(context).brightness == ThemeData.dark().brightness
+                        ? kFocusedMenuHolderBGColorDark
+                        : kFocusedMenuHolderBGColorLight,
               ),
             FocusedMenuItem(
               title: Text("Löschen"),
@@ -124,7 +136,10 @@ class FocusedMessageMenu extends StatelessWidget {
                       chatUid: chat.uid, msg: message);
                 }
               },
-              backgroundColor: kFocusedMenuHolderBGColor,
+              backgroundColor:
+                  Theme.of(context).brightness == ThemeData.dark().brightness
+                      ? kFocusedMenuHolderBGColorDark
+                      : kFocusedMenuHolderBGColorLight,
             ),
             FocusedMenuItem(
               title: Text("Antworten"),
@@ -132,7 +147,10 @@ class FocusedMessageMenu extends StatelessWidget {
               onPressed: () {
                 OpenAnswer(message).dispatch(context);
               },
-              backgroundColor: kFocusedMenuHolderBGColor,
+              backgroundColor:
+                  Theme.of(context).brightness == ThemeData.dark().brightness
+                      ? kFocusedMenuHolderBGColorDark
+                      : kFocusedMenuHolderBGColorLight,
             ),
             FocusedMenuItem(
               onPressed: () {
@@ -140,7 +158,10 @@ class FocusedMessageMenu extends StatelessWidget {
               },
               title: Text("Kopieren"),
               trailingIcon: Icon(FontAwesomeIcons.solidCopy),
-              backgroundColor: kFocusedMenuHolderBGColor,
+              backgroundColor:
+                  Theme.of(context).brightness == ThemeData.dark().brightness
+                      ? kFocusedMenuHolderBGColorDark
+                      : kFocusedMenuHolderBGColorLight,
             ),
           ];
   }

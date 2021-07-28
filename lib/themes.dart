@@ -34,6 +34,7 @@ ThemeData darkThemeData(BuildContext context) {
     colorScheme: ColorScheme.dark().copyWith(
       secondary: kMyMessageColorDark, //MessageColors
       secondaryVariant: kOtherMessageColorDark,
+      onSurface: kFocusedMenuHolderBGColorDark,
     ),
     primaryColor: kPrimaryColor,
     scaffoldBackgroundColor: kBackgroundDark,

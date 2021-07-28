@@ -53,9 +53,21 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                     },
                     controller: textController,
                     decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(kCircularBorderRadius),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 3,
+                        ),
+                      ),
                       border: OutlineInputBorder(
                         borderRadius:
                             BorderRadius.circular(kCircularBorderRadius),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor,
+                          width: 3,
+                        ),
                       ),
                       hintText: "Suchen",
                       hintStyle: TextStyle(

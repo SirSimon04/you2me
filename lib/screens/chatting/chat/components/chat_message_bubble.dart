@@ -70,7 +70,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   ChatFirebaseService.unmarkMessageFromFavPage(
                       msg: widget.message);
                 },
-                backgroundColor: kFocusedMenuHolderBGColor,
+                backgroundColor: kFocusedMenuHolderBGColorDark,
               ),
             ],
             child: Bubble(

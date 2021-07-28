@@ -14,20 +14,20 @@ List<FocusedMenuItem> getRightContextMenuActions({
         "Normal senden",
       ),
       onPressed: normalPressed,
-      backgroundColor: kFocusedMenuHolderBGColor,
+      backgroundColor: kFocusedMenuHolderBGColorDark,
     ),
     FocusedMenuItem(
       title: Text(
         "Wichtige Nachricht",
       ),
       onPressed: importantPressed,
-      backgroundColor: kFocusedMenuHolderBGColor,
+      backgroundColor: kFocusedMenuHolderBGColorDark,
       trailingIcon: Icon(FontAwesomeIcons.exclamation),
     ),
     FocusedMenuItem(
       title: Text("Geplant senden"),
       onPressed: plannedPressed,
-      backgroundColor: kFocusedMenuHolderBGColor,
+      backgroundColor: kFocusedMenuHolderBGColorDark,
       trailingIcon: Icon(FontAwesomeIcons.solidCalendar),
     ),
   ];
@@ -41,7 +41,7 @@ List<FocusedMenuItem> getLeftContextMenuActions(
         "Kamera",
       ),
       onPressed: camera,
-      backgroundColor: kFocusedMenuHolderBGColor,
+      backgroundColor: kFocusedMenuHolderBGColorDark,
       trailingIcon: Icon(FontAwesomeIcons.camera),
     ),
     FocusedMenuItem(
@@ -49,7 +49,7 @@ List<FocusedMenuItem> getLeftContextMenuActions(
         "Foto- und Videomediathek",
       ),
       onPressed: pic,
-      backgroundColor: kFocusedMenuHolderBGColor,
+      backgroundColor: kFocusedMenuHolderBGColorDark,
       trailingIcon: Icon(FontAwesomeIcons.solidImages),
     ),
     // FocusedMenuItem(
