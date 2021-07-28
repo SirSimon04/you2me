@@ -51,6 +51,7 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                         text = value;
                       });
                     },
+                    cursorColor: Theme.of(context).primaryColor,
                     controller: textController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
