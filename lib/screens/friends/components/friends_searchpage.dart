@@ -70,13 +70,10 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                         ),
                       ),
                       hintText: "Suchen",
-                      hintStyle: TextStyle(
-                        color: Colors.white,
-                      ),
                       filled: true,
                       prefixIcon: Icon(
                         FontAwesomeIcons.search,
-                        color: Colors.white,
+                        color: kPrimaryColor,
                       ),
                       prefixIconConstraints:
                           BoxConstraints(minWidth: 44, minHeight: 44),
@@ -119,6 +116,10 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                                         0.25,
                                   ),
                                 ),
+                                Text(
+                                  "Suche nach Nutzern, um sie als Freunde hinzuzufügen.",
+                                  textAlign: TextAlign.center,
+                                )
                               ],
                             ),
                           );
