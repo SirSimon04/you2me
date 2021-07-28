@@ -56,11 +56,15 @@ class _ChatListState extends State<ChatList>
     // print("UID ist " + _auth.currentUser!.uid);
     // print(_auth.currentUser!.displayName);
     return Scaffold(
-      appBar: getChatListAppBar(isArchiveOpen, () {
-        setState(() {
-          isArchiveOpen = !isArchiveOpen;
-        });
-      }),
+      appBar: getChatListAppBar(
+        isArchiveOpen: isArchiveOpen,
+        onArchivePress: () {
+          setState(() {
+            isArchiveOpen = !isArchiveOpen;
+          });
+        },
+        context: context,
+      ),
       body: Container(
         decoration: BoxDecoration(
           image: gmOn

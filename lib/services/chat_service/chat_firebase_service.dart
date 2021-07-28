@@ -187,7 +187,6 @@ class ChatFirebaseService {
     }
   }
 
-  //TODO: wen einzige nachricht chat leeren
   static Future<void> deleteMessage({required chatUid, required msgUid}) async {
     var snapshots = await _firestore
         .collection("chat")
