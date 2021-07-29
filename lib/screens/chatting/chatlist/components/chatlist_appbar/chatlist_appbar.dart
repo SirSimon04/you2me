@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dispuatio/screens/chatting/chatlist/components/create_group_bottom_sheet.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatlist/components/create_group/create_group_bottom_sheet_1.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 getChatListAppBar({
@@ -24,7 +24,7 @@ getChatListAppBar({
       Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: IconButton(
-            onPressed: () => createGroupModalMaterialBottomSheet(context),
+            onPressed: () => createGroupModalMaterialBottomSheet1(context),
             icon: Icon(FontAwesomeIcons.users)),
       )
     ],

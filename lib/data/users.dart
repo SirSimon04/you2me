@@ -1,5 +1,5 @@
 import 'package:flutter_dispuatio/data/stories.dart';
-import 'package:flutter_dispuatio/models/user.dart';
+import 'package:flutter_dispuatio/models/user_old.dart';
 
 final users = [
   User(

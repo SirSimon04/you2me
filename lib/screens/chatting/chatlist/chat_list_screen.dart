@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dispuatio/constants.dart';
-import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_appbar.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_appbar/chatlist_appbar.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_streambuilder.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 

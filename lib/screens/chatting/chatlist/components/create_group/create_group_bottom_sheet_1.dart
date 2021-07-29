@@ -2,30 +2,35 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dispuatio/constants.dart';
+import 'package:flutter_dispuatio/models/user_model.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatlist/components/create_group/create_group_bottom_sheet_2.dart';
+import 'package:flutter_dispuatio/widgets/fill_outlined_button.dart';
+import 'package:flutter_dispuatio/widgets/rounded_button.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-createGroupModalMaterialBottomSheet(BuildContext context) {
+createGroupModalMaterialBottomSheet1(BuildContext context) {
   showMaterialModalBottomSheet(
     context: context,
     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-    builder: (context) => CreateGroup(),
+    builder: (context) => CreateGroup1(),
   );
 }
 
-class CreateGroup extends StatefulWidget {
-  const CreateGroup({Key? key}) : super(key: key);
+class CreateGroup1 extends StatefulWidget {
+  const CreateGroup1({Key? key}) : super(key: key);
 
   @override
-  _CreateGroupState createState() => _CreateGroupState();
+  _CreateGroup1State createState() => _CreateGroup1State();
 }
 
-class _CreateGroupState extends State<CreateGroup> {
+class _CreateGroup1State extends State<CreateGroup1> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
-  bool _checked = false;
+  final textController = TextEditingController();
 
   Map<String, bool> usersChecked = {};
 
@@ -150,81 +155,33 @@ class _CreateGroupState extends State<CreateGroup> {
                     default:
                       return Container();
                   }
-                  return Text("");
                 },
               ),
-              // child: StreamBuilder<QuerySnapshot>(
-              //   stream: _firestore.collection("user").where("friends",
-              //       arrayContainsAny: [_auth.currentUser?.uid]).snapshots(),
-              //   builder: (context, snapshot) {
-              //     switch (snapshot.connectionState) {
-              //       case ConnectionState.waiting:
-              //         return Center(child: CircularProgressIndicator());
-              //       default:
-              //         if (snapshot.data!.docs.length == 0) {
-              //           return Column(
-              //             children: [
-              //               SingleChildScrollView(
-              //                 controller: ModalScrollController.of(context),
-              //                 child: Column(
-              //                   mainAxisAlignment: MainAxisAlignment.center,
-              //                   children: [
-              //                     Padding(
-              //                       padding: EdgeInsets.all(40),
-              //                       child: SvgPicture.asset(
-              //                         "assets/placeholders/friends.svg",
-              //                         height:
-              //                             MediaQuery.of(context).size.height *
-              //                                 0.3,
-              //                         width: MediaQuery.of(context).size.width *
-              //                             0.7,
-              //                       ),
-              //                     ),
-              //                     Padding(
-              //                       padding: const EdgeInsets.all(8.0),
-              //                       child: Text(
-              //                         "Du hast noch keine Freunde, um sie zu einer Gruppe hinzuzufügen",
-              //                         textAlign: TextAlign.center,
-              //                       ),
-              //                     )
-              //                   ],
-              //                 ),
-              //               ),
-              //             ],
-              //           ); // Placeholder
-              //         }
-              //
-              //         final List<DocumentSnapshot> documents =
-              //             snapshot.data!.docs;
-              //         return ListView(
-              //           children: documents
-              //               .map(
-              //                 (doc) => CheckboxListTile(
-              //                   value: _checked,
-              //                   onChanged: (bool? newV) {
-              //                     setState(
-              //                       () {
-              //                         _checked = newV ?? false;
-              //                       },
-              //                     );
-              //                   },
-              //                 ),
-              //               )
-              //               .toList(),
-              //           // PlatformListTile(
-              //           //       title: Text(doc["name"]),
-              //           //       subtitle: Text(doc["info"]),
-              //           //       leading: UserProfilePic(
-              //           //         isOnline: doc["isonline"],
-              //           //         url: doc["fotourl"],
-              //           //       ),
-              //           //       isElevatedM: true,
-              //           //     ))
-              //           // .toList(),
-              //         );
-              //     }
-              //   },
-              // ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.0),
+              child: Material(
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(30.0),
+                color: Theme.of(context).primaryColor,
+                child: MaterialButton(
+                  onPressed: () {
+                    List<UserModel> addedUsers = [];
+
+                    createGroupModalMaterialBottomSheet2(context, addedUsers);
+                  },
+                  minWidth: MediaQuery.of(context).size.width * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  child: Text(
+                    "Weiter",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

@@ -7,7 +7,7 @@ import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/chat_screen.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
-import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_slidable_actions.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_tile/chatlist_slidable_actions.dart';
 import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';

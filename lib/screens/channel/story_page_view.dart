@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/data/users.dart';
-import 'package:flutter_dispuatio/models/user.dart';
+import 'package:flutter_dispuatio/models/user_old.dart';
 import 'package:flutter_dispuatio/screens/channel/story_widget.dart';
 
 class StoryPage extends StatefulWidget {

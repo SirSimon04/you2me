@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
-import 'chatlist_tile.dart';
+import 'chatlist_tile/chatlist_tile.dart';
 
 class ChatListStreamBuilder extends StatelessWidget {
   ChatListStreamBuilder({required this.isArchiveOpen});
