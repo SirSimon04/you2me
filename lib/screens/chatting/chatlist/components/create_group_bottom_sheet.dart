@@ -27,12 +27,17 @@ class _CreateGroupState extends State<CreateGroup> {
 
   bool _checked = false;
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getDocuments() async {
+  Map<String, bool> usersChecked = {};
+
+  void buildMap() async {
     var documents = await _firestore
         .collection("user")
         .where("friends", arrayContainsAny: [_auth.currentUser?.uid]).get();
     print(documents.docs[0]["name"]);
-    return documents;
+    for (var doc in documents.docs) {
+      usersChecked[doc["name"]] = false;
+    }
+    print(usersChecked);
   }
 
   Future<QuerySnapshot<Object?>>? _future;
@@ -40,6 +45,7 @@ class _CreateGroupState extends State<CreateGroup> {
   @override
   void initState() {
     super.initState();
+    buildMap();
     _future = _firestore
         .collection("user")
         .where("friends", arrayContainsAny: [_auth.currentUser?.uid]).get();
@@ -118,12 +124,15 @@ class _CreateGroupState extends State<CreateGroup> {
                       return ListView(
                           children: documents
                               .map((doc) => CheckboxListTile(
-                                    value: _checked,
-                                    selected: _checked,
+                                    value: usersChecked[doc["name"]],
+                                    selected:
+                                        usersChecked[doc["name"]] ?? false,
                                     onChanged: (bool? newVal) {
                                       setState(() {
-                                        _checked = newVal ?? false;
+                                        usersChecked[doc["name"]] =
+                                            newVal ?? false;
                                       });
+                                      print(usersChecked);
                                     },
                                     title: Text(doc["name"]),
                                     secondary: UserProfilePic(
