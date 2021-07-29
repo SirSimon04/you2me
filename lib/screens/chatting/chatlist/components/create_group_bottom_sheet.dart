@@ -119,6 +119,7 @@ class _CreateGroupState extends State<CreateGroup> {
                           children: documents
                               .map((doc) => CheckboxListTile(
                                     value: _checked,
+                                    selected: _checked,
                                     onChanged: (bool? newVal) {
                                       setState(() {
                                         _checked = newVal ?? false;
@@ -129,6 +130,12 @@ class _CreateGroupState extends State<CreateGroup> {
                                       url: doc["fotourl"],
                                       isOnline: doc["isonline"],
                                     ),
+                                    activeColor: Theme.of(context).primaryColor,
+                                    selectedTileColor: Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.05),
+                                    // Theme.of(context).primaryColor,,
+                                    // checkColor: Theme.of(context).primaryColor,
                                   ))
                               .toList());
                     default:
