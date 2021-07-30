@@ -248,12 +248,16 @@ class _CreateGroup2State extends State<CreateGroup2> {
                   child: Material(
                     elevation: 5.0,
                     borderRadius: BorderRadius.circular(30.0),
-                    color: Theme.of(context).primaryColor,
+                    color: nameController.text.trim().length == 0
+                        ? Colors.grey
+                        : Theme.of(context).primaryColor,
                     child: MaterialButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: nameController.text.trim().length == 0
+                          ? null
+                          : () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            },
                       minWidth: MediaQuery.of(context).size.width * 0.6,
                       height: MediaQuery.of(context).size.height * 0.07,
                       child: Text(
