@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_dispuatio/screens/chatting/chat/components/chat_group_appbar.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/components/focused_messagemenu_holder.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
@@ -88,7 +89,9 @@ class _ChatScreenState extends State<ChatScreen> {
         },
         child: Scaffold(
           backgroundColor: Theme.of(context).canvasColor,
-          appBar: getChatAppBar(chat, context),
+          appBar: chat.isGroup
+              ? getGroupAppBar(chat, context)
+              : getChatAppBar(chat, context),
           body: Column(
             children: [
               Expanded(
