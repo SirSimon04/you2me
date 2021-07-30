@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,6 +35,8 @@ class _CreateGroup1State extends State<CreateGroup1> {
   final textController = TextEditingController();
 
   Map<String, bool> usersChecked = {};
+
+  Map<String, UserModel> usersSelected = {};
 
   void buildMap() async {
     var documents = await _firestore
@@ -133,11 +137,29 @@ class _CreateGroup1State extends State<CreateGroup1> {
                                     selected:
                                         usersChecked[doc["name"]] ?? false,
                                     onChanged: (bool? newVal) {
+                                      print("newVal " + newVal.toString());
                                       setState(() {
                                         usersChecked[doc["name"]] =
                                             newVal ?? false;
                                       });
-                                      print(usersChecked);
+
+                                      //add to selected if not added before
+                                      if (newVal == true) {
+                                        usersSelected[doc["name"]] = UserModel(
+                                          name: doc["name"],
+                                          isOnline: doc["isonline"],
+                                          profilePic: UserProfilePic(
+                                            url: doc["fotourl"],
+                                            isOnline: doc["isonline"],
+                                          ),
+                                        );
+                                      }
+                                      if (newVal == false) {
+                                        usersSelected.remove(doc["name"]);
+                                      }
+
+                                      print("usersSelected " +
+                                          usersSelected.toString());
                                     },
                                     title: Text(doc["name"]),
                                     secondary: UserProfilePic(
@@ -167,6 +189,10 @@ class _CreateGroup1State extends State<CreateGroup1> {
                 child: MaterialButton(
                   onPressed: () {
                     List<UserModel> addedUsers = [];
+
+                    usersSelected.forEach((key, value) {
+                      addedUsers.add(value);
+                    });
 
                     createGroupModalMaterialBottomSheet2(context, addedUsers);
                   },
