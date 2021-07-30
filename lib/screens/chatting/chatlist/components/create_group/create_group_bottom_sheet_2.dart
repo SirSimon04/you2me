@@ -8,6 +8,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/user_model.dart';
+import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/chip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -254,7 +255,13 @@ class _CreateGroup2State extends State<CreateGroup2> {
                     child: MaterialButton(
                       onPressed: nameController.text.trim().length == 0
                           ? null
-                          : () {
+                          : () async {
+                              await ChatFirebaseService.createGroup(
+                                addedUsers: addedUsers,
+                                name: nameController.text,
+                                info: desController.text,
+                              );
+
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
                             },

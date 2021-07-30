@@ -55,7 +55,9 @@ class _ChatListTileState extends State<ChatListTile> {
         enableFeedback: true,
         leading: UserProfilePic(
             isOnline: false,
-            url: GeneralUserService.getOtherUserFotoUrl(widget.chat)),
+            url: widget.chat.isGroup
+                ? widget.chat.fotoUrls.first
+                : GeneralUserService.getOtherUserFotoUrl(widget.chat)),
         title: Text(widget.chat.name),
         subtitle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

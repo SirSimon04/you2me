@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_dispuatio/models/user_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 
@@ -35,7 +36,7 @@ class ChatFirebaseService {
       "pinnedby": [],
       "name": "${doc["name"]} + ${_auth.currentUser?.displayName}",
       "writing": [],
-      "fotourls": [url1, url2], //Important: url on same place as members
+      "fotourls": [url1, url2],
     });
 
     await _firestore.collection("user").doc(_auth.currentUser?.uid).update({
@@ -43,6 +44,59 @@ class ChatFirebaseService {
     });
     await _firestore.collection("user").doc(doc.id).update({
       "hasChatWith": FieldValue.arrayUnion([_auth.currentUser?.uid]),
+    });
+    ChatFcmService.subscribeToChat(chatUid: docRef.id);
+  }
+
+  static Map<dynamic, dynamic> getMemberMap(List<UserModel> addedUsers) {
+    Map<dynamic, dynamic> users = {};
+    for (UserModel user in addedUsers) {
+      users["name"] = user.name;
+      users["photourl"] = user.fotoUrl;
+    }
+    return users;
+  }
+
+  static List<String> getNotArchivedBy(List<UserModel> addedUsers) {
+    List<String> names = [];
+    for (UserModel user in addedUsers) {
+      names.add(user.uid);
+    }
+    names.add(_auth.currentUser?.uid ?? "");
+    return names;
+  }
+
+  static List<String> getMemberUids(List<UserModel> addedUsers) {
+    List<String> uid = [];
+    for (UserModel user in addedUsers) {
+      uid.add(user.uid);
+    }
+    uid.add(_auth.currentUser?.uid ?? "");
+    return uid;
+  }
+
+  static Future<void> createGroup(
+      {required List<UserModel> addedUsers,
+      String? fotoUrl,
+      required String name,
+      String? info}) async {
+    DocumentReference docRef = await _firestore.collection("chat").add({
+      "isgroup": true,
+      "lastmessagedate": DateTime.now(),
+      "lastmessagesenderid": "",
+      "lastmessagesendername": "",
+      "lastmessagetext": "",
+      "members": getMemberUids(addedUsers),
+      "archivedby": [],
+      "notarchivedby": getNotArchivedBy(addedUsers),
+      "pinnedby": [],
+      "name": name,
+      "info": info ?? "",
+      "writing": [],
+      "fotourls": [
+        (fotoUrl ??
+            "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a")
+      ],
     });
     ChatFcmService.subscribeToChat(chatUid: docRef.id);
   }

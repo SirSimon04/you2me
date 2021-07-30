@@ -146,6 +146,7 @@ class _CreateGroup1State extends State<CreateGroup1> {
                                       //add to selected if not added before
                                       if (newVal == true) {
                                         usersSelected[doc["name"]] = UserModel(
+                                          uid: doc.id,
                                           name: doc["name"],
                                           isOnline: doc["isonline"],
                                           profilePic: UserProfilePic(
