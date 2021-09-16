@@ -101,6 +101,29 @@ class ChatFirebaseService {
     ChatFcmService.subscribeToChat(chatUid: docRef.id);
   }
 
+  static Future<void> leaveGroup(ChatModel chat) async {
+    await _firestore.collection("chat").doc(chat.uid).update({
+      "members": FieldValue.arrayRemove(
+        [_auth.currentUser?.uid],
+      )
+    });
+    await _firestore.collection("chat").doc(chat.uid).update({
+      "notarchivedby": FieldValue.arrayRemove(
+        [_auth.currentUser?.uid],
+      )
+    });
+    await _firestore.collection("chat").doc(chat.uid).update({
+      "pinnedby": FieldValue.arrayRemove(
+        [_auth.currentUser?.uid],
+      )
+    });
+    await _firestore.collection("chat").doc(chat.uid).update({
+      "writing": FieldValue.arrayRemove(
+        [_auth.currentUser?.uid],
+      )
+    });
+  }
+
   static Future<void> archiveChat(String chatUid) async {
     await _firestore.collection("chat").doc(chatUid).update({
       "archivedby": FieldValue.arrayUnion(
