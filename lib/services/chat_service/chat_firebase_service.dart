@@ -57,14 +57,14 @@ class ChatFirebaseService {
     return users;
   }
 
-  static List<String> getNotArchivedBy(List<UserModel> addedUsers) {
-    List<String> names = [];
-    for (UserModel user in addedUsers) {
-      names.add(user.uid);
-    }
-    names.add(_auth.currentUser?.uid ?? "");
-    return names;
-  }
+  // static List<String> getNotArchivedBy(List<UserModel> addedUsers) {
+  //   List<String> names = [];
+  //   for (UserModel user in addedUsers) {
+  //     names.add(user.uid);
+  //   }
+  //   names.add(_auth.currentUser?.uid ?? "");
+  //   return names;
+  // }
 
   static List<String> getMemberUids(List<UserModel> addedUsers) {
     List<String> uid = [];
@@ -88,7 +88,7 @@ class ChatFirebaseService {
       "lastmessagetext": "",
       "members": getMemberUids(addedUsers),
       "archivedby": [],
-      "notarchivedby": getNotArchivedBy(addedUsers),
+      "notarchivedby": getMemberUids(addedUsers),
       "pinnedby": [],
       "name": name,
       "info": info ?? "",

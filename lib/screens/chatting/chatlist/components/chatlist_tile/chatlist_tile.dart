@@ -34,7 +34,13 @@ class _ChatListTileState extends State<ChatListTile> {
     if (widget.chat.lastMessageSenderId == _auth.currentUser?.uid) {
       return "Du: " + widget.chat.lastMessageText;
     } else if (widget.chat.isGroup) {
-      return widget.chat.lastMessageSender + ": " + widget.chat.lastMessageText;
+      if (widget.chat.lastMessageText == "") {
+        return "";
+      } else {
+        return widget.chat.lastMessageSender +
+            ": " +
+            widget.chat.lastMessageText;
+      }
     } else {
       return widget.chat.lastMessageText;
     }
