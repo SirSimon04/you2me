@@ -26,7 +26,16 @@ class _ImageSendScreenState extends State<ImageSendScreen> {
       inAsyncCall: showSpinner,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Bild versenden"),
+          title: Text("Bild versenden",
+              style: TextStyle(
+                color: Colors.white,
+              )),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            color: Colors.white,
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {

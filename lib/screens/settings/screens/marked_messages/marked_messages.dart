@@ -31,7 +31,18 @@ class _MarkedMessagesState extends State<MarkedMessages> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mit Stern markiert"),
+        title: Text(
+          "Mit Stern markiert",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Column(
         children: [

@@ -32,7 +32,16 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Nach Nutzern suchen"),
+        title: Text("Nach Nutzern suchen",
+            style: TextStyle(
+              color: Colors.white,
+            )),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Column(
         children: [

@@ -83,7 +83,16 @@ class _ChangeAccountState extends State<ChangeAccount> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Account bearbeiten"),
+        title: Text("Account bearbeiten",
+            style: TextStyle(
+              color: Colors.white,
+            )),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Stack(
         children: [

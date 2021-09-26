@@ -11,26 +11,42 @@ getChatListAppBar({
 }) {
   return AppBar(
     automaticallyImplyLeading: isArchiveOpen,
-    title: isArchiveOpen ? Text("Archivierte Chats") : Text("Chats"),
+    title: isArchiveOpen
+        ? Text("Archivierte Chats")
+        : Text(
+            "Chats",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
     actions: [
       !isArchiveOpen
           ? IconButton(
               onPressed: () {
                 onArchivePress();
               },
-              icon: Icon(FontAwesomeIcons.solidFolderOpen),
+              icon: Icon(
+                FontAwesomeIcons.solidFolderOpen,
+                color: Colors.white,
+              ),
             )
           : Container(),
       Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: IconButton(
             onPressed: () => createGroupModalMaterialBottomSheet1(context),
-            icon: Icon(FontAwesomeIcons.users)),
+            icon: Icon(
+              FontAwesomeIcons.users,
+              color: Colors.white,
+            )),
       )
     ],
     leading: isArchiveOpen
         ? IconButton(
-            icon: Icon(FontAwesomeIcons.arrowLeft),
+            icon: Icon(
+              FontAwesomeIcons.arrowLeft,
+              color: Colors.white,
+            ),
             onPressed: onArchivePress,
           )
         : null,

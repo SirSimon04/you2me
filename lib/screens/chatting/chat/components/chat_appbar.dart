@@ -33,9 +33,18 @@ getChatAppBar(chat, context) {
       ),
     ),
     appBar: AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        color: Colors.white,
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       actions: [
         IconButton(
-          icon: Icon(FontAwesomeIcons.infoCircle),
+          icon: Icon(
+            FontAwesomeIcons.infoCircle,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.of(context).push(
               CupertinoPageRoute(
@@ -70,6 +79,7 @@ getChatAppBar(chat, context) {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 15,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(
@@ -115,6 +125,7 @@ StreamBuilder getTextIfOnline(ChatModel chat, context) {
             style: TextStyle(
               fontStyle: FontStyle.italic,
               fontSize: 12,
+              color: Colors.white,
             ),
           );
         } else {
@@ -122,6 +133,7 @@ StreamBuilder getTextIfOnline(ChatModel chat, context) {
             "Online",
             style: TextStyle(
               fontSize: 12,
+              color: Colors.white,
             ),
           );
         }

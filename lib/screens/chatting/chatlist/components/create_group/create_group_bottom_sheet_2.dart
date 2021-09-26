@@ -76,7 +76,9 @@ class _CreateGroup2State extends State<CreateGroup2> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
+                color: Colors.white,
               ),
+              textAlign: TextAlign.center,
             ),
             automaticallyImplyLeading: false,
             elevation: 0,

@@ -67,7 +67,18 @@ class SavedOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Speicherübersicht"),
+        title: Text(
+          "Speicherübersicht",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

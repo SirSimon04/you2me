@@ -14,9 +14,18 @@ getGroupAppBar(ChatModel chat, BuildContext context) {
       ),
     ),
     appBar: AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        color: Colors.white,
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       actions: [
         IconButton(
-          icon: Icon(FontAwesomeIcons.infoCircle),
+          icon: Icon(
+            FontAwesomeIcons.infoCircle,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.of(context).push(
               CupertinoPageRoute(
@@ -35,7 +44,12 @@ getGroupAppBar(ChatModel chat, BuildContext context) {
           SizedBox(
             width: 20,
           ),
-          Text(chat.name),
+          Text(
+            chat.name,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
     ),

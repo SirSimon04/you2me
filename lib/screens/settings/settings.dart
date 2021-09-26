@@ -28,7 +28,7 @@ class _SettingsState extends State<Settings>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: Text("Settings", style: TextStyle(color: Colors.white)),
         automaticallyImplyLeading: false,
       ),
       body: ListView(

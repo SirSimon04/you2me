@@ -69,7 +69,16 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
     time_ago.setLocale('de', time_ago.German());
     return Scaffold(
       appBar: AppBar(
-        title: Text("Info"),
+        title: Text(
+          "Info",
+          style: TextStyle(color: Colors.white),
+        ),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: !widget.chat.isGroup
           ? StreamBuilder<DocumentSnapshot>(
