@@ -107,6 +107,7 @@ class ChatFirebaseService {
         [_auth.currentUser?.uid],
       )
     });
+
     await _firestore.collection("chat").doc(chat.uid).update({
       "notarchivedby": FieldValue.arrayRemove(
         [_auth.currentUser?.uid],

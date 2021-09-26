@@ -22,6 +22,14 @@ another_transformer_page_view
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/another_transformer_page_view-1.0.1/
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/another_transformer_page_view-1.0.1/lib/
+archive
+2.12
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/archive-3.1.2/
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/archive-3.1.2/lib/
+args
+2.12
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/args-2.3.0/
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/args-2.3.0/lib/
 async
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.1/
@@ -182,6 +190,10 @@ flutter_cache_manager
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_cache_manager-3.1.2/
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_cache_manager-3.1.2/lib/
+flutter_launcher_icons
+2.12
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.9.2/
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.9.2/lib/
 flutter_login
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_login-2.2.1/
@@ -226,6 +238,10 @@ http_parser
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib/
+image
+2.12
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/image-3.0.5/
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/image-3.0.5/lib/
 image_picker
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.7.5+4/
@@ -458,6 +474,10 @@ xml
 2.12
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/xml-5.1.2/
 file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/xml-5.1.2/lib/
+yaml
+2.12
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/yaml-3.1.0/
+file:///home/simon/snap/flutter/common/flutter/.pub-cache/hosted/pub.dartlang.org/yaml-3.1.0/lib/
 sky_engine
 2.12
 file:///home/simon/snap/flutter/common/flutter/bin/cache/pkg/sky_engine/
