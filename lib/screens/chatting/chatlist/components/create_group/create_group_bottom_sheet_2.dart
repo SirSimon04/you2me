@@ -1,10 +1,7 @@
 import 'dart:io';
 
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/user_model.dart';
@@ -43,7 +40,7 @@ class _CreateGroup2State extends State<CreateGroup2> {
   final desController = TextEditingController();
 
   Future getImageFromCam() async {
-    File imageFile = File(await ImagePicker()
+    File(await ImagePicker()
         .getImage(source: ImageSource.camera)
         .then((pickedFile) => pickedFile!.path));
 
@@ -51,7 +48,7 @@ class _CreateGroup2State extends State<CreateGroup2> {
   }
 
   Future getImageFromGallery() async {
-    File imageFile = File(await ImagePicker()
+    File(await ImagePicker()
         .getImage(source: ImageSource.gallery)
         .then((pickedFile) => pickedFile!.path));
     Navigator.of(context).pop();
