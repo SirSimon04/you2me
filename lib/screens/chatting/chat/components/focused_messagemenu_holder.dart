@@ -113,7 +113,10 @@ class FocusedMessageMenu extends StatelessWidget {
               onPressed: () {
                 print("deleted");
                 ChatFirebaseService.deleteMessage(
-                    chatUid: chat.uid, msgUid: message.uid);
+                  chatUid: chat.uid,
+                  msgUid: message.uid,
+                  members: chat.members,
+                );
               },
               backgroundColor: Colors.redAccent[700],
             ),

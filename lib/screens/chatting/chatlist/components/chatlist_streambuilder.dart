@@ -89,7 +89,7 @@ class ChatListStreamBuilder extends StatelessWidget {
 
             return ImplicitlyAnimatedList<ChatListTile>(
               items: allChatsSorted.map((doc) {
-                List users = doc["members"];
+                var users = doc["members"];
                 final int ownUidPos =
                     GeneralUserService.getOwnUidPosFromList(users);
                 return ChatListTile(

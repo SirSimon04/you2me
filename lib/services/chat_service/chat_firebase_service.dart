@@ -4,6 +4,7 @@ import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/models/user_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 
 class ChatFirebaseService {
@@ -18,10 +19,10 @@ class ChatFirebaseService {
     String url2 = await UserFirebaseService.getFotoUrlbyUid(doc.id);
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": false,
-      "lastmessagedate": DateTime.now(),
-      "lastmessagesenderid": "",
-      "lastmessagesendername": "",
-      "lastmessagetext": "",
+      "lastmessagedate": [for (int i = 0; i < 2; i++) DateTime.now()],
+      "lastmessagesenderid": [for (int i = 0; i < 2; i++) ""],
+      "lastmessagesendername": [for (int i = 0; i < 2; i++) ""],
+      "lastmessagetext": [for (int i = 0; i < 2; i++) ""],
       "members": [
         (doc.id + "|" + doc["name"]),
         ((_auth.currentUser?.uid ?? "") +
@@ -81,12 +82,13 @@ class ChatFirebaseService {
     required String name,
     String? info,
   }) async {
+    int memberCount = addedUsers.length;
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": true,
-      "lastmessagedate": DateTime.now(),
-      "lastmessagesenderid": "",
-      "lastmessagesendername": "",
-      "lastmessagetext": "",
+      "lastmessagedate": [for (int i = 0; i < memberCount; i++) DateTime.now()],
+      "lastmessagesenderid": [for (int i = 0; i < memberCount; i++) ""],
+      "lastmessagesendername": [for (int i = 0; i < memberCount; i++) ""],
+      "lastmessagetext": [for (int i = 0; i < memberCount; i++) ""],
       "members": getMemberUids(addedUsers),
       "archivedby": [],
       "notarchivedby": getMemberUids(addedUsers),
@@ -269,27 +271,61 @@ class ChatFirebaseService {
     }
   }
 
-  static Future<void> deleteMessage({required chatUid, required msgUid}) async {
+//TODO: THIOS METHOD
+  static Future<void> deleteMessage({
+    required chatUid,
+    required msgUid,
+    required List members,
+  }) async {
     var snapshots = await _firestore
         .collection("chat")
         .doc(chatUid)
         .collection("messages")
+        .where("canbeseenby", arrayContainsAny: [_auth.currentUser?.uid])
         .orderBy("time")
         .get();
 
-    print("delete");
+    print("delete length " + snapshots.size.toString());
 
     var documents = snapshots.docs;
 
+    final int ownUidPos = GeneralUserService.getOwnUidPosFromList(members);
+
     //check works
     if (documents[documents.length - 1].id == msgUid) {
+      //checks if newest message
+      print("this is after first if");
       if (documents.length == 1) {
+        print("this is after second  if");
         //wenn nur eine Nachricht im Chat ist
-        await _firestore.collection("chat").doc(chatUid).update({
-          "lastmessagetext": "",
-          "lastmessagesenderid": "",
-          "lastmessagedate": Timestamp.now(),
-        });
+        // await _firestore.collection("chat").doc(chatUid).update({
+        //   "lastmessagetext": [],
+        //   "lastmessagesenderid": [],
+        //   "lastmessagedate": [],
+        // });
+
+        var docSnapshot =
+            await _firestore.collection("chat").doc(chatUid).get();
+
+        if (docSnapshot.exists) {
+          Map<String, dynamic>? data = docSnapshot.data();
+          var lastMessageTexts = data?["lastmessagetext"];
+          var lastmessagesenderids = data?["lastmessagesenderid"];
+          var lastmessagesendernames = data?["lastmessagesendername"];
+          var lastmessagedates = data?["lastmessagedate"];
+
+          lastMessageTexts[ownUidPos] = "";
+          lastmessagedates[ownUidPos] = Timestamp.now();
+          lastmessagesenderids[ownUidPos] = "";
+          lastmessagesendernames[ownUidPos] = "";
+
+          await _firestore.collection("chat").doc(chatUid).update({
+            "lastmessagetext": lastMessageTexts,
+            "lastmessagesenderid": lastmessagesenderids,
+            "lastmessagedate": lastmessagedates,
+            "lastmessagesendername": lastmessagesendernames
+          });
+        }
       } else {
         //replace msg text
         String lastMessageText = documents[documents.length - 2]["text"];
@@ -299,21 +335,47 @@ class ChatFirebaseService {
 
         Timestamp lastMessageDate = documents[documents.length - 2]["time"];
 
-        await _firestore.collection("chat").doc(chatUid).update({
-          "lastmessagetext": lastMessageText,
-          "lastmessagesenderid": lastMessageSenderId,
-          "lastmessagedate": lastMessageDate,
-        });
+        String lastMessageSenderName =
+            documents[documents.length - 2]["sender"];
+        //get the chat
+
+        var docSnapshot =
+            await _firestore.collection("chat").doc(chatUid).get();
+
+        if (docSnapshot.exists) {
+          Map<String, dynamic>? data = docSnapshot.data();
+          var lastMessageTexts = data?["lastmessagetext"];
+          var lastmessagesenderids = data?["lastmessagesenderid"];
+          var lastmessagesendernames = data?["lastmessagesendername"];
+          var lastmessagedates = data?["lastmessagedate"];
+
+          lastMessageTexts[ownUidPos] = lastMessageText;
+          lastmessagedates[ownUidPos] = lastMessageDate;
+          lastmessagesenderids[ownUidPos] = lastMessageSenderId;
+          lastmessagesendernames[ownUidPos] = lastMessageSenderName;
+
+          await _firestore.collection("chat").doc(chatUid).update({
+            "lastmessagetext": lastMessageTexts,
+            "lastmessagesenderid": lastmessagesenderids,
+            "lastmessagedate": lastmessagedates,
+            "lastmessagesendername": lastmessagesendernames
+          });
+        }
       }
     } else {
       print("nicht letzte");
     }
+    // _firestore.doc("chat/$chatUid/messages/${msg.uid}").update({
+    //   "favby": FieldValue.arrayUnion([_auth.currentUser?.uid])
+    // });
     _firestore
         .collection("chat")
         .doc(chatUid)
         .collection("messages")
         .doc(msgUid)
-        .delete();
+        .update(({
+          "canbeseenby": FieldValue.arrayRemove([_auth.currentUser?.uid]),
+        }));
   }
 
   static Future<void> sendImage(
