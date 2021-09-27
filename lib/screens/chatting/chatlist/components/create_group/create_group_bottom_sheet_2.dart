@@ -6,10 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/user_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
+import 'package:flutter_dispuatio/services/general_services/firebase_storage_service.dart';
 import 'package:flutter_dispuatio/widgets/chip.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 createGroupModalMaterialBottomSheet2(
     BuildContext context, List<UserModel> addedUsers) {
@@ -39,19 +42,36 @@ class _CreateGroup2State extends State<CreateGroup2> {
   final nameController = TextEditingController();
   final desController = TextEditingController();
 
+  File? image;
+
   Future getImageFromCam() async {
-    File(await ImagePicker()
+    File curImg = File(await ImagePicker()
         .getImage(source: ImageSource.camera)
         .then((pickedFile) => pickedFile!.path));
-
+    setState(() {
+      image = curImg;
+    });
     Navigator.of(context).pop();
   }
 
   Future getImageFromGallery() async {
-    File(await ImagePicker()
+    File curImg = File(await ImagePicker()
         .getImage(source: ImageSource.gallery)
         .then((pickedFile) => pickedFile!.path));
+    setState(() {
+      image = curImg;
+    });
     Navigator.of(context).pop();
+  }
+
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('assets/$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
   }
 
   @override
@@ -89,10 +109,17 @@ class _CreateGroup2State extends State<CreateGroup2> {
                 ),
                 Stack(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage("assets/user.png"),
-                      radius: MediaQuery.of(context).size.width * 0.25,
-                    ),
+                    image == null
+                        ? CircleAvatar(
+                            backgroundImage: AssetImage("assets/user.png"),
+                            radius: MediaQuery.of(context).size.width * 0.25,
+                            backgroundColor: Colors.black,
+                          )
+                        : CircleAvatar(
+                            backgroundImage: FileImage(image ?? File("")),
+                            radius: MediaQuery.of(context).size.width * 0.25,
+                            backgroundColor: Colors.black,
+                          ),
                     Positioned(
                       right: 0,
                       bottom: 0,
@@ -217,7 +244,7 @@ class _CreateGroup2State extends State<CreateGroup2> {
                       ),
                       minLines: 1,
                       maxLines: 2,
-                      controller: nameController,
+                      controller: desController,
                     ),
                   ),
                 ),
@@ -255,10 +282,20 @@ class _CreateGroup2State extends State<CreateGroup2> {
                       onPressed: nameController.text.trim().length == 0
                           ? null
                           : () async {
+                              String url = "";
+                              if (image == null) {
+                                url =
+                                    "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a";
+                              } else {
+                                url = await FireBaseStorageService.uploadImage(
+                                    image ?? File(""));
+                              }
+
                               await ChatFirebaseService.createGroup(
                                 addedUsers: addedUsers,
                                 name: nameController.text,
                                 info: desController.text,
+                                fotoUrl: url,
                               );
 
                               Navigator.of(context).pop();

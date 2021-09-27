@@ -77,7 +77,7 @@ class ChatFirebaseService {
 
   static Future<void> createGroup(
       {required List<UserModel> addedUsers,
-      String? fotoUrl,
+      required String fotoUrl,
       required String name,
       String? info}) async {
     DocumentReference docRef = await _firestore.collection("chat").add({
@@ -93,10 +93,7 @@ class ChatFirebaseService {
       "name": name,
       "info": info ?? "",
       "writing": [],
-      "fotourls": [
-        (fotoUrl ??
-            "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a")
-      ],
+      "fotourls": [(fotoUrl)],
     });
     ChatFcmService.subscribeToChat(chatUid: docRef.id);
   }
