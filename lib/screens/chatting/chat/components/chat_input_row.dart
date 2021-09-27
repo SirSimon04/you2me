@@ -10,6 +10,7 @@ import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/screens/image_send/image_send_screen.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -269,6 +270,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   ansMsg: widget.answerMessage,
                   text: textController.text,
                   chatUid: widget.chat.uid,
+                  usersUid: GeneralUserService.getUidsFromMembers(widget.chat),
                 );
 
                 await ChatFirebaseService.updateChatAfterSend(

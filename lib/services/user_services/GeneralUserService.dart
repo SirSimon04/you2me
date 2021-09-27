@@ -20,4 +20,12 @@ class GeneralUserService {
       return "";
     }
   }
+
+  static List<String> getUidsFromMembers(ChatModel chat) {
+    List<String> uids = [];
+    for (String nameUid in chat.members) {
+      uids.add(nameUid.substring(0, nameUid.lastIndexOf("|")));
+    }
+    return uids;
+  }
 }

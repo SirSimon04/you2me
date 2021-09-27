@@ -23,11 +23,13 @@ class ChatMessagesStreambuilder extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
+    print("uid " + (_auth.currentUser?.uid ?? " leer"));
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection("chat")
           .doc(chat.uid)
           .collection("messages")
+          // .where("canbeseenby", whereIn: ["1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2"])
           .orderBy("time")
           .snapshots(),
       builder: (context, snapshot) {
@@ -63,14 +65,24 @@ class ChatMessagesStreambuilder extends StatelessWidget {
             );
           }
 
-          final List<DocumentSnapshot> documents = snapshot.data!.docs;
-
+          final List<DocumentSnapshot> allDocuments = snapshot.data!.docs;
+          List<DocumentSnapshot> documents = [];
+          for (DocumentSnapshot doc in allDocuments) {
+            if (doc["canbeseenby"].contains(_auth.currentUser?.uid)) {
+              documents.add(doc);
+            }
+          }
           return ImplicitlyAnimatedList<ChatMessageBubble>(
             controller: _controller,
             items: documents.map((doc) {
               List favBy = doc["favby"];
               List readBy = doc["readby"];
-
+              print("canbeseenby " + doc["canbeseenby"].toString());
+              print("does contain me " +
+                  doc["canbeseenby"]
+                      .contains(_auth.currentUser?.uid)
+                      .toString());
+              if (doc["canbeseenby"].contains(_auth.currentUser?.uid)) {}
               try {
                 //if message is an answer message
                 return ChatMessageBubble(

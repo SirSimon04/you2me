@@ -229,7 +229,8 @@ class ChatFirebaseService {
   static Future<void> sendMessage(
       {required MessageModel ansMsg,
       required String text,
-      required String chatUid}) async {
+      required String chatUid,
+      required List<String> usersUid}) async {
     if (ansMsg.uid == "n.a.") {
       await _firestore
           .collection("chat")
@@ -243,6 +244,7 @@ class ChatFirebaseService {
         "readby": [_auth.currentUser?.uid],
         "favby": [],
         "isimage": false,
+        "canbeseenby": usersUid,
       });
     } else {
       //set answermessage
@@ -260,6 +262,7 @@ class ChatFirebaseService {
         "answersender": ansMsg.sender,
         "answertext": ansMsg.text,
         "isimage": false,
+        "canbeseenby": usersUid,
       });
     }
   }
@@ -311,8 +314,11 @@ class ChatFirebaseService {
         .delete();
   }
 
-  static Future<void> sendImage(
-      {required String chatUid, required String url}) async {
+  static Future<void> sendImage({
+    required String chatUid,
+    required String url,
+    required List<String> usersUid,
+  }) async {
     await _firestore
         .collection("chat")
         .doc(chatUid)
@@ -326,6 +332,7 @@ class ChatFirebaseService {
       "favby": [],
       "isimage": true,
       "url": url,
+      "canbeseenby": usersUid,
     });
   }
 

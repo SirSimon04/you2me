@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/general_services/firebase_storage_service.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -46,7 +47,10 @@ class _ImageSendScreenState extends State<ImageSendScreen> {
                 chatUid: widget.chat.uid, text: "Foto");
             String url = await FireBaseStorageService.uploadImage(widget.image);
             await ChatFirebaseService.sendImage(
-                chatUid: widget.chat.uid, url: url);
+              chatUid: widget.chat.uid,
+              url: url,
+              usersUid: GeneralUserService.getUidsFromMembers(widget.chat),
+            );
 
             setState(() {
               showSpinner = false;
