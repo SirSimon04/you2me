@@ -217,14 +217,46 @@ class ChatFirebaseService {
     return entry.split("|").first;
   }
 
-  static Future<void> emptyChat(String chatUid) async {
+  static Future<void> emptyChat(String chatUid, List members) async {
+    final int ownUidPos = GeneralUserService.getOwnUidPosFromList(members);
+
+    var docSnapshot = await _firestore.collection("chat").doc(chatUid).get();
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var lastMessageTexts = data?["lastmessagetext"];
+      var lastmessagesenderids = data?["lastmessagesenderid"];
+      var lastmessagesendernames = data?["lastmessagesendername"];
+      var lastmessagedates = data?["lastmessagedate"];
+
+      lastMessageTexts[ownUidPos] = "";
+      lastmessagedates[ownUidPos] = Timestamp.now();
+      lastmessagesenderids[ownUidPos] = "";
+      lastmessagesendernames[ownUidPos] = "";
+
+      await _firestore.collection("chat").doc(chatUid).update({
+        "lastmessagetext": lastMessageTexts,
+        "lastmessagesenderid": lastmessagesenderids,
+        "lastmessagedate": lastmessagedates,
+        "lastmessagesendername": lastmessagesendernames
+      });
+    }
+
     await _firestore
         .collection("chat")
         .doc(chatUid)
         .collection("messages")
         .get()
         .then((snapshot) => {
-              for (DocumentSnapshot ds in snapshot.docs) {ds.reference.delete()}
+              for (DocumentSnapshot ds in snapshot.docs)
+                {
+                  ds.reference.update(
+                    ({
+                      "canbeseenby":
+                          FieldValue.arrayRemove([_auth.currentUser?.uid]),
+                    }),
+                  ),
+                }
             });
   }
 
@@ -271,7 +303,6 @@ class ChatFirebaseService {
     }
   }
 
-//TODO: THIOS METHOD
   static Future<void> deleteMessage({
     required chatUid,
     required msgUid,
