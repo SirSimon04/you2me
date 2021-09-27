@@ -52,6 +52,7 @@ class _ImageSendScreenState extends State<ImageSendScreen> {
               chatUid: widget.chat.uid,
               url: url,
               usersUid: GeneralUserService.getUidsFromMembers(widget.chat),
+              memberCount: widget.chat.members.length,
             );
 
             setState(() {

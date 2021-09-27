@@ -239,14 +239,10 @@ class ChatFirebaseService {
           .doc(chatUid)
           .collection("messages")
           .add({
-        "text": [for (int i = 0; i < memberCount; i++) text],
-        "time": [for (int i = 0; i < memberCount; i++) DateTime.now()],
-        "sender": [
-          for (int i = 0; i < memberCount; i++) _auth.currentUser?.displayName
-        ],
-        "senderid": [
-          for (int i = 0; i < memberCount; i++) _auth.currentUser?.uid
-        ],
+        "text": text,
+        "time": DateTime.now(),
+        "sender": _auth.currentUser?.displayName,
+        "senderid": _auth.currentUser?.uid,
         "readby": [_auth.currentUser?.uid],
         "favby": [],
         "isimage": false,
@@ -320,11 +316,11 @@ class ChatFirebaseService {
         .delete();
   }
 
-  static Future<void> sendImage({
-    required String chatUid,
-    required String url,
-    required List<String> usersUid,
-  }) async {
+  static Future<void> sendImage(
+      {required String chatUid,
+      required String url,
+      required List<String> usersUid,
+      required memberCount}) async {
     await _firestore
         .collection("chat")
         .doc(chatUid)
@@ -342,7 +338,6 @@ class ChatFirebaseService {
     });
   }
 
-//TODO: HOW THE FUCK?
   static Future<void> updateChatAfterSend({
     required String chatUid,
     required String text,

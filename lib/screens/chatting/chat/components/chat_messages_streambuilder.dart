@@ -83,27 +83,22 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
             }
           }
 
-          final int ownUidIndex = GeneralUserService.getOwnUidPos(widget.chat);
-          print("ownUidIndex " + ownUidIndex.toString());
           return ImplicitlyAnimatedList<ChatMessageBubble>(
             controller: widget._controller,
             items: documents.map((doc) {
               List favBy = doc["favby"];
               List readBy = doc["readby"];
-              List timestamps = doc["time"];
-              print("timestamps  " + timestamps.toString());
               try {
                 //if message is an answer message
                 return ChatMessageBubble(
                   message: MessageModel(
-                    text: doc["text"][ownUidIndex],
-                    isMy:
-                        doc["senderid"][ownUidIndex] == _auth.currentUser?.uid,
+                    text: doc["text"],
+                    isMy: doc["senderid"] == _auth.currentUser?.uid,
                     isFav: favBy.contains(_auth.currentUser?.uid),
-                    date: doc["time"][ownUidIndex],
+                    date: doc["time"],
                     uid: doc.id,
                     readByAll: widget.chat.userCount == readBy.length,
-                    sender: doc["sender"][ownUidIndex],
+                    sender: doc["sender"],
                     isImage: doc["isimage"],
                     url: doc["isimage"] ? doc["url"] : "",
                   ),
@@ -122,14 +117,13 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
               } catch (e) {
                 return ChatMessageBubble(
                   message: MessageModel(
-                    text: doc["text"][ownUidIndex],
-                    isMy:
-                        doc["senderid"][ownUidIndex] == _auth.currentUser?.uid,
+                    text: doc["text"],
+                    isMy: doc["senderid"] == _auth.currentUser?.uid,
                     isFav: favBy.contains(_auth.currentUser?.uid),
-                    date: doc["time"][ownUidIndex],
+                    date: doc["time"],
                     uid: doc.id,
                     readByAll: widget.chat.userCount == readBy.length,
-                    sender: doc["sender"][ownUidIndex],
+                    sender: doc["sender"],
                     isImage: doc["isimage"],
                     url: doc["isimage"] ? doc["url"] : "",
                   ),
