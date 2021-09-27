@@ -275,9 +275,9 @@ class _ChatInputRowState extends State<ChatInputRow> {
                 );
 
                 await ChatFirebaseService.updateChatAfterSend(
-                  chatUid: widget.chat.uid,
-                  text: textController.text,
-                );
+                    chatUid: widget.chat.uid,
+                    text: textController.text,
+                    memberCount: widget.chat.members.length);
 
                 await UserFirebaseService.setWritingFalse(chat.uid);
 

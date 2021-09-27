@@ -40,4 +40,16 @@ class GeneralUserService {
     }
     return -1;
   }
+
+  static int getOwnUidPosFromList(List nameUids) {
+    for (String nameUid in nameUids) {
+      if (nameUid ==
+          ((_auth.currentUser?.uid ?? "") +
+              "|" +
+              (_auth.currentUser?.displayName ?? ""))) {
+        return nameUids.indexOf(nameUid);
+      }
+    }
+    return -1;
+  }
 }

@@ -44,7 +44,9 @@ class _ImageSendScreenState extends State<ImageSendScreen> {
               showSpinner = true;
             });
             await ChatFirebaseService.updateChatAfterSend(
-                chatUid: widget.chat.uid, text: "Foto");
+                chatUid: widget.chat.uid,
+                text: "Foto",
+                memberCount: widget.chat.members.length);
             String url = await FireBaseStorageService.uploadImage(widget.image);
             await ChatFirebaseService.sendImage(
               chatUid: widget.chat.uid,

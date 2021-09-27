@@ -343,13 +343,20 @@ class ChatFirebaseService {
   }
 
 //TODO: HOW THE FUCK?
-  static Future<void> updateChatAfterSend(
-      {required String chatUid, required String text}) async {
+  static Future<void> updateChatAfterSend({
+    required String chatUid,
+    required String text,
+    required int memberCount,
+  }) async {
     await _firestore.doc("chat/$chatUid").update({
-      "lastmessagedate": DateTime.now(),
-      "lastmessagesenderid": _auth.currentUser?.uid,
-      "lastmessagesendername": _auth.currentUser?.displayName,
-      "lastmessagetext": text,
+      "lastmessagedate": [for (int i = 0; i < memberCount; i++) DateTime.now()],
+      "lastmessagesenderid": [
+        for (int i = 0; i < memberCount; i++) _auth.currentUser?.uid
+      ],
+      "lastmessagesendername": [
+        for (int i = 0; i < memberCount; i++) _auth.currentUser?.displayName
+      ],
+      "lastmessagetext": [for (int i = 0; i < memberCount; i++) text],
     });
   }
 

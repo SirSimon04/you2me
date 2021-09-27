@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
@@ -11,7 +12,9 @@ import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'chatlist_tile/chatlist_tile.dart';
 
 class ChatListStreamBuilder extends StatelessWidget {
-  ChatListStreamBuilder({required this.isArchiveOpen});
+  ChatListStreamBuilder({
+    required this.isArchiveOpen,
+  });
 
   final bool isArchiveOpen;
 
@@ -87,6 +90,8 @@ class ChatListStreamBuilder extends StatelessWidget {
             return ImplicitlyAnimatedList<ChatListTile>(
               items: allChatsSorted.map((doc) {
                 List users = doc["members"];
+                final int ownUidPos =
+                    GeneralUserService.getOwnUidPosFromList(users);
                 return ChatListTile(
                   ChatModel(
                     name:
@@ -94,10 +99,10 @@ class ChatListStreamBuilder extends StatelessWidget {
                     isGroup: doc["isgroup"],
                     uid: doc.id,
                     userCount: users.length,
-                    lastMessageSender: doc["lastmessagesendername"],
-                    lastMessageSenderId: doc["lastmessagesenderid"],
-                    lastMessageDate: doc["lastmessagedate"],
-                    lastMessageText: doc["lastmessagetext"],
+                    lastMessageSender: doc["lastmessagesendername"][ownUidPos],
+                    lastMessageSenderId: doc["lastmessagesenderid"][ownUidPos],
+                    lastMessageDate: doc["lastmessagedate"][ownUidPos],
+                    lastMessageText: doc["lastmessagetext"][ownUidPos],
                     members: List<String>.from(doc["members"]),
                     writing: List<String>.from(doc["writing"]),
                     isArchived: isArchiveOpen,
