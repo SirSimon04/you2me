@@ -3,13 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 
 import 'chat_message_bubble.dart';
 
-class ChatMessagesStreambuilder extends StatelessWidget {
+class ChatMessagesStreambuilder extends StatefulWidget {
   ChatMessagesStreambuilder({
     Key? key,
     required this.chat,
@@ -19,15 +20,24 @@ class ChatMessagesStreambuilder extends StatelessWidget {
 
   final ChatModel chat;
   final ScrollController _controller;
+
+  @override
+  State<ChatMessagesStreambuilder> createState() =>
+      _ChatMessagesStreambuilderState();
+}
+
+class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     print("uid " + (_auth.currentUser?.uid ?? " leer"));
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection("chat")
-          .doc(chat.uid)
+          .doc(widget.chat.uid)
           .collection("messages")
           // .where("canbeseenby", whereIn: ["1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2"])
           .orderBy("time")
@@ -72,32 +82,32 @@ class ChatMessagesStreambuilder extends StatelessWidget {
               documents.add(doc);
             }
           }
+
+          final int ownUidIndex = GeneralUserService.getOwnUidPos(widget.chat);
+          print("ownUidIndex " + ownUidIndex.toString());
           return ImplicitlyAnimatedList<ChatMessageBubble>(
-            controller: _controller,
+            controller: widget._controller,
             items: documents.map((doc) {
               List favBy = doc["favby"];
               List readBy = doc["readby"];
-              print("canbeseenby " + doc["canbeseenby"].toString());
-              print("does contain me " +
-                  doc["canbeseenby"]
-                      .contains(_auth.currentUser?.uid)
-                      .toString());
-              if (doc["canbeseenby"].contains(_auth.currentUser?.uid)) {}
+              List timestamps = doc["time"];
+              print("timestamps  " + timestamps.toString());
               try {
                 //if message is an answer message
                 return ChatMessageBubble(
                   message: MessageModel(
-                    text: doc["text"],
-                    isMy: doc["senderid"] == _auth.currentUser?.uid,
+                    text: doc["text"][ownUidIndex],
+                    isMy:
+                        doc["senderid"][ownUidIndex] == _auth.currentUser?.uid,
                     isFav: favBy.contains(_auth.currentUser?.uid),
-                    date: doc["time"],
+                    date: doc["time"][ownUidIndex],
                     uid: doc.id,
-                    readByAll: chat.userCount == readBy.length,
-                    sender: doc["sender"],
+                    readByAll: widget.chat.userCount == readBy.length,
+                    sender: doc["sender"][ownUidIndex],
                     isImage: doc["isimage"],
                     url: doc["isimage"] ? doc["url"] : "",
                   ),
-                  chat: chat,
+                  chat: widget.chat,
                   answerMessage: MessageModel(
                     uid: "",
                     text: doc["answertext"],
@@ -112,17 +122,18 @@ class ChatMessagesStreambuilder extends StatelessWidget {
               } catch (e) {
                 return ChatMessageBubble(
                   message: MessageModel(
-                    text: doc["text"],
-                    isMy: doc["senderid"] == _auth.currentUser?.uid,
+                    text: doc["text"][ownUidIndex],
+                    isMy:
+                        doc["senderid"][ownUidIndex] == _auth.currentUser?.uid,
                     isFav: favBy.contains(_auth.currentUser?.uid),
-                    date: doc["time"],
+                    date: doc["time"][ownUidIndex],
                     uid: doc.id,
-                    readByAll: chat.userCount == readBy.length,
-                    sender: doc["sender"],
+                    readByAll: widget.chat.userCount == readBy.length,
+                    sender: doc["sender"][ownUidIndex],
                     isImage: doc["isimage"],
                     url: doc["isimage"] ? doc["url"] : "",
                   ),
-                  chat: chat,
+                  chat: widget.chat,
                 );
               }
             }).toList(),

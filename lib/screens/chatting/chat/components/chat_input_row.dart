@@ -271,6 +271,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   text: textController.text,
                   chatUid: widget.chat.uid,
                   usersUid: GeneralUserService.getUidsFromMembers(widget.chat),
+                  memberCount: widget.chat.members.length,
                 );
 
                 await ChatFirebaseService.updateChatAfterSend(

@@ -28,4 +28,16 @@ class GeneralUserService {
     }
     return uids;
   }
+
+  static int getOwnUidPos(ChatModel chat) {
+    for (String nameUid in chat.members) {
+      if (nameUid ==
+          ((_auth.currentUser?.uid ?? "") +
+              "|" +
+              (_auth.currentUser?.displayName ?? ""))) {
+        return chat.members.indexOf(nameUid);
+      }
+    }
+    return -1;
+  }
 }
