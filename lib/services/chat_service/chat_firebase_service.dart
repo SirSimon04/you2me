@@ -75,11 +75,12 @@ class ChatFirebaseService {
     return uid;
   }
 
-  static Future<void> createGroup(
-      {required List<UserModel> addedUsers,
-      required String fotoUrl,
-      required String name,
-      String? info}) async {
+  static Future<void> createGroup({
+    required List<UserModel> addedUsers,
+    required String fotoUrl,
+    required String name,
+    String? info,
+  }) async {
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": true,
       "lastmessagedate": DateTime.now(),
@@ -94,6 +95,7 @@ class ChatFirebaseService {
       "info": info ?? "",
       "writing": [],
       "fotourls": [(fotoUrl)],
+      "groupinfo": info ?? "Das ist die Gruppenbeschreibung",
     });
     ChatFcmService.subscribeToChat(chatUid: docRef.id);
   }

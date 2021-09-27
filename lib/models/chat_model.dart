@@ -14,6 +14,7 @@ class ChatModel {
   final List<String> members;
   List<String> writing;
   final List<String> fotoUrls;
+  final String? description;
 
   ChatModel({
     required this.name,
@@ -29,6 +30,7 @@ class ChatModel {
     required this.isArchived,
     required this.isPinned,
     required this.fotoUrls,
+    this.description,
   });
 
   static ChatModel getEmptyChat() {

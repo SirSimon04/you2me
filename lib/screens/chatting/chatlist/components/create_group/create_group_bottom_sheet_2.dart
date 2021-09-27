@@ -294,7 +294,9 @@ class _CreateGroup2State extends State<CreateGroup2> {
                               await ChatFirebaseService.createGroup(
                                 addedUsers: addedUsers,
                                 name: nameController.text,
-                                info: desController.text,
+                                info: desController.text.trim().length == 0
+                                    ? null
+                                    : desController.text,
                                 fotoUrl: url,
                               );
 

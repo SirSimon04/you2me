@@ -365,7 +365,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                   PlatformListTile(
                     isElevatedM: true,
                     title: Text(
-                      "Hier könnte Ihre Gruppenbeschreibung stehen.",
+                      widget.chat.description ?? "",
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     leading: Icon(FontAwesomeIcons.infoCircle),
