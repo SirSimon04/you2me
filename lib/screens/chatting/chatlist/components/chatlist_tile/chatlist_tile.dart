@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,15 +48,43 @@ class _ChatListTileState extends State<ChatListTile> {
     }
   }
 
+  String? timeAgo = "";
+
   @override
   void initState() {
     super.initState();
+
+    // sets first value
+    // _now = DateTime.now().second.toString();
+    timeAgo = time_ago.format(
+        DateTime.fromMillisecondsSinceEpoch(
+            widget.chat.lastMessageDate.millisecondsSinceEpoch),
+        locale: "de_short");
+    // defines a timer
+    Timer.periodic(Duration(minutes: 1), (Timer t) {
+      setState(() {
+        // _now = DateTime.now().second.toString();
+        timeAgo = time_ago.format(
+            DateTime.fromMillisecondsSinceEpoch(
+                widget.chat.lastMessageDate.millisecondsSinceEpoch),
+            locale: "de_short");
+        // print(_now);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     time_ago.setLocale('de', time_ago.German());
     time_ago.setLocale('de_short', time_ago.German(shortForm: true));
+    setState(() {
+      // _now = DateTime.now().second.toString();
+      timeAgo = time_ago.format(
+          DateTime.fromMillisecondsSinceEpoch(
+              widget.chat.lastMessageDate.millisecondsSinceEpoch),
+          locale: "de_short");
+      // print(_now);
+    });
     return Slidable(
       child: ListTile(
         minVerticalPadding: kChatListTileHeight,
@@ -112,10 +142,7 @@ class _ChatListTileState extends State<ChatListTile> {
     return Row(
       children: [
         Text(
-          time_ago.format(
-              DateTime.fromMillisecondsSinceEpoch(
-                  widget.chat.lastMessageDate.millisecondsSinceEpoch),
-              locale: "de_short"),
+          timeAgo ?? "",
         ),
         SizedBox(
           width: 5,
