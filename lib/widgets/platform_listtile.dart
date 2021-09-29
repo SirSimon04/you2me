@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cupertino_list_tile/cupertino_list_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class PlatformListTile extends StatelessWidget {
   PlatformListTile({
@@ -61,6 +62,64 @@ class PlatformListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      if (isElevatedM) {
+        return Card(
+          elevation: elevation,
+          child: MaterialListTile(
+            title: title,
+            leading: leading,
+            subtitle: subtitle,
+            trailing: trailing,
+            enabled: enabled,
+            isThreeLine: isThreeLine,
+            dense: dense,
+            contentPadding: contentPadding,
+            onTap: onTap,
+            onLongPress: onLongPress,
+            selected: selected,
+            focusColor: focusColor,
+            hoverColor: hoverColor,
+            focusNode: focusNode,
+            autofocus: autofocus,
+            tileColor: tileColorM,
+            selectedTileColor: selectedTileColorM,
+            enableFeedback: enableFeedbackM,
+            horizontalTitleGap: horizontalTitleGapM,
+            minVerticalPadding: minVerticalPaddingM,
+            minLeadingWidth: minLeadingWidthM,
+            shape: shapeM,
+            visualDensity: visualDensitiyM,
+          ),
+        );
+      } else {
+        return MaterialListTile(
+          title: title,
+          leading: leading,
+          subtitle: subtitle,
+          trailing: trailing,
+          enabled: enabled,
+          isThreeLine: isThreeLine,
+          dense: dense,
+          contentPadding: contentPadding,
+          onTap: onTap,
+          onLongPress: onLongPress,
+          selected: selected,
+          focusColor: focusColor,
+          hoverColor: hoverColor,
+          focusNode: focusNode,
+          autofocus: autofocus,
+          tileColor: tileColorM,
+          selectedTileColor: selectedTileColorM,
+          enableFeedback: enableFeedbackM,
+          horizontalTitleGap: horizontalTitleGapM,
+          minVerticalPadding: minVerticalPaddingM,
+          minLeadingWidth: minLeadingWidthM,
+          shape: shapeM,
+          visualDensity: visualDensitiyM,
+        );
+      }
+    }
     if (Platform.isIOS) {
       return CupertinoListTile(
         isThreeLine: isThreeLine,

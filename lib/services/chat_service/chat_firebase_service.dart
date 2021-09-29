@@ -6,6 +6,7 @@ import 'package:flutter_dispuatio/models/user_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ChatFirebaseService {
   ChatFirebaseService();
@@ -82,7 +83,7 @@ class ChatFirebaseService {
     required String name,
     String? info,
   }) async {
-    int memberCount = addedUsers.length;
+    int memberCount = addedUsers.length + 1;
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": true,
       "lastmessagedate": [for (int i = 0; i < memberCount; i++) DateTime.now()],
@@ -99,7 +100,9 @@ class ChatFirebaseService {
       "fotourls": [(fotoUrl)],
       "groupinfo": info ?? "Das ist die Gruppenbeschreibung",
     });
-    ChatFcmService.subscribeToChat(chatUid: docRef.id);
+    if (!kIsWeb) {
+      ChatFcmService.subscribeToChat(chatUid: docRef.id);
+    }
   }
 
   static Future<void> leaveGroup(ChatModel chat) async {

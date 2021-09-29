@@ -10,8 +10,8 @@ import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.da
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
+import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:platform_list_tile/platform_list_tile.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as time_ago;
 
 class ChatInfoScreen extends StatefulWidget {
@@ -34,6 +34,7 @@ class ChatInfoScreen extends StatefulWidget {
       _ChatInfoScreenState(chat, isFriend: isFriend);
 }
 
+//TODO: Refactor into two multiple screens
 class _ChatInfoScreenState extends State<ChatInfoScreen> {
   final _auth = FirebaseAuth.instance;
 

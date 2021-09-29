@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/change_account/change_account.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/marked_messages/marked_messages.dart';
+import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:platform_list_tile/platform_list_tile.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);

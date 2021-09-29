@@ -26,9 +26,10 @@ void main() async {
   await Firebase.initializeApp();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString("email");
-  runApp(MyApp(
-    loggedIn: email != null,
-  ));
+  runApp(DevicePreview(
+      builder: (context) => MyApp(
+            loggedIn: email != null,
+          )));
 }
 
 class MyApp extends StatelessWidget {

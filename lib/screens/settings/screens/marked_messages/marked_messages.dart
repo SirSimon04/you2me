@@ -5,8 +5,8 @@ import 'package:flutter_dispuatio/models/Data.dart' as data;
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chat/components/chat_message_bubble.dart';
+import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:platform_list_tile/platform_list_tile.dart';
 
 class MarkedMessages extends StatefulWidget {
   MarkedMessages({this.chatUid, required this.isInChat});

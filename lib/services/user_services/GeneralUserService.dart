@@ -42,11 +42,9 @@ class GeneralUserService {
   }
 
   static int getOwnUidPosFromList(List nameUids) {
+    print("displayname " + (_auth.currentUser?.displayName ?? ""));
     for (String nameUid in nameUids) {
-      if (nameUid ==
-          ((_auth.currentUser?.uid ?? "") +
-              "|" +
-              (_auth.currentUser?.displayName ?? ""))) {
+      if (nameUid == (_auth.currentUser?.uid ?? "")) {
         return nameUids.indexOf(nameUid);
       }
     }
