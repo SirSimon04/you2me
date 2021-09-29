@@ -5,12 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatinfo/widgets/userlisttile.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/marked_messages/marked_messages.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
+import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:time_ago_provider/time_ago_provider.dart' as time_ago;
 
@@ -52,6 +54,12 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
       return chat.members[0].split("|")[0];
     }
     return "";
+  }
+
+  List<String> orderMemberList(List<String> members) {
+    members.remove(_auth.currentUser?.uid ?? "");
+    members.insert(0, _auth.currentUser?.uid ?? "");
+    return members;
   }
 
   Stream<DocumentSnapshot<Object?>>? getStream() {
@@ -193,6 +201,9 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                         height: 70,
                       ),
 
+                      SizedBox(
+                        height: 70,
+                      ),
                       // PlatformListTile(
                       //   isElevatedM: true,
                       //   title: Text(
@@ -407,7 +418,11 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                   SizedBox(
                     height: 70,
                   ),
-
+                  for (String uid in orderMemberList(chat.members))
+                    UserListTile(uid: uid),
+                  SizedBox(
+                    height: 30,
+                  ),
                   // PlatformListTile(
                   //   isElevatedM: true,
                   //   title: Text(
