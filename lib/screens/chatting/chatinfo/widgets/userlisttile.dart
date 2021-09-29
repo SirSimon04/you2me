@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dispuatio/models/chat_model.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -34,7 +37,9 @@ class UserListTile extends StatelessWidget {
         if (snapshot.hasData) {
           print("here");
           print(snapshot.data.toString());
+
           var data = snapshot.data as DocumentSnapshot;
+          print("Id x " + data.id);
           return PlatformListTile(
             title: Text(data["name"].toString()),
             isElevatedM: true,
@@ -42,8 +47,20 @@ class UserListTile extends StatelessWidget {
               isOnline: false,
               url: data["fotourl"].toString(),
             ),
-            trailing: Icon(
-              FontAwesomeIcons.infoCircle,
+            trailing: IconButton(
+              onPressed: () => Navigator.of(context).push(
+                CupertinoPageRoute(
+                  builder: (context) => ChatInfoScreen(
+                    ChatModel.getEmptyChat(),
+                    comesFromFriends: true,
+                    userUid: data.id,
+                    isFriend:
+                        data["hasChatWith"].contains(_auth.currentUser?.uid),
+                    photoUrl: data["fotourl"],
+                  ),
+                ),
+              ),
+              icon: Icon(FontAwesomeIcons.infoCircle),
             ),
           );
         } else {
