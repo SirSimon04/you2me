@@ -13,7 +13,7 @@ class UserListTile extends StatelessWidget {
 
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  String uid;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
