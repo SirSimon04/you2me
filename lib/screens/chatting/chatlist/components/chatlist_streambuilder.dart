@@ -111,6 +111,7 @@ class ChatListStreamBuilder extends StatelessWidget {
                       doc["fotourls"],
                     ),
                     description: getGroupInfo(doc),
+                    adminList: doc["isgroup"] ? doc["adminList"] : null,
                   ),
                 );
               }).toList(),

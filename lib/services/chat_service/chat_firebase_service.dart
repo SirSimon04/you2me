@@ -99,6 +99,7 @@ class ChatFirebaseService {
       "writing": [],
       "fotourls": [(fotoUrl)],
       "groupinfo": info ?? "Das ist die Gruppenbeschreibung",
+      "adminList": [_auth.currentUser?.uid],
     });
     if (!kIsWeb) {
       ChatFcmService.subscribeToChat(chatUid: docRef.id);

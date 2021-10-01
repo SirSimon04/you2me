@@ -9,11 +9,15 @@ import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserListTile extends StatelessWidget {
-  UserListTile({required this.uid});
+  UserListTile({
+    required this.uid,
+    required this.isAdmin,
+  });
 
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final String uid;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +51,29 @@ class UserListTile extends StatelessWidget {
               isOnline: false,
               url: data["fotourl"].toString(),
             ),
-            trailing: IconButton(
-              onPressed: () => Navigator.of(context).push(
-                CupertinoPageRoute(
-                  builder: (context) => ChatInfoScreen(
-                    ChatModel.getEmptyChat(),
-                    comesFromFriends: true,
-                    userUid: data.id,
-                    isFriend:
-                        data["hasChatWith"].contains(_auth.currentUser?.uid),
-                    photoUrl: data["fotourl"],
+            trailing: Row(
+              children: [
+                if (isAdmin)
+                  Text(
+                    "Admin",
+                    style: TextStyle(fontStyle: FontStyle.italic),
                   ),
+                IconButton(
+                  onPressed: () => Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (context) => ChatInfoScreen(
+                        ChatModel.getEmptyChat(),
+                        comesFromFriends: true,
+                        userUid: data.id,
+                        isFriend: data["hasChatWith"]
+                            .contains(_auth.currentUser?.uid),
+                        photoUrl: data["fotourl"],
+                      ),
+                    ),
+                  ),
+                  icon: Icon(FontAwesomeIcons.infoCircle),
                 ),
-              ),
-              icon: Icon(FontAwesomeIcons.infoCircle),
+              ],
             ),
           );
         } else {

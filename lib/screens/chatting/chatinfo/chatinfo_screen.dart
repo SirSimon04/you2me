@@ -418,7 +418,10 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                     height: 70,
                   ),
                   for (String uid in orderMemberList(chat.members))
-                    UserListTile(uid: uid),
+                    UserListTile(
+                      uid: uid,
+                      isAdmin: chat.adminList?.contains(uid) ?? false,
+                    ),
                   SizedBox(
                     height: 30,
                   ),
