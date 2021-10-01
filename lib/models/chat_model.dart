@@ -10,7 +10,7 @@ class ChatModel {
   final Timestamp lastMessageDate;
   bool isArchived;
   bool isPinned;
-  final int userCount; //TODO: replace with memberlist
+  final int userCount;
   final List<String> members;
   List<String> writing;
   final List<String> fotoUrls;

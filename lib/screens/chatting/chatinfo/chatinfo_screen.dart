@@ -115,7 +115,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                                       ? widget.photoUrl ?? ""
                                       : GeneralUserService.getOtherUserFotoUrl(
                                           chat),
-                                ), //TODO: REMOVE ERROR
+                                ),
                               ),
                             ),
                           ),
@@ -360,7 +360,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                             fit: BoxFit.fill,
                             image: CachedNetworkImageProvider(
                                 widget.chat.fotoUrls.first),
-                          ), //TODO: REMOVE ERROR
+                          ),
                         ),
                       ),
                     ),

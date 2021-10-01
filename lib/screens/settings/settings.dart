@@ -50,9 +50,6 @@ class _SettingsState extends State<Settings>
                   CupertinoPageRoute(builder: (context) => ChangeAccount())),
             ),
             isElevatedM: true,
-            onTap: () {
-              //TODO: Implement Account page
-            },
           ),
           SizedBox(
             height: 30,
