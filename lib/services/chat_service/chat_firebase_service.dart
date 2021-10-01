@@ -180,6 +180,7 @@ class ChatFirebaseService {
       var lastmessagedates = data?["lastmessagedate"];
       var members = data?["members"];
       var notarchivedby = data?["notarchivedby"];
+      var adminList = data?["adminList"];
 
       lastmessagedates.removeAt(index);
       lastMessageTexts.removeAt(index);
@@ -187,6 +188,7 @@ class ChatFirebaseService {
       lastmessagesendernames.removeAt(index);
       members.remove(uid);
       notarchivedby.remove(uid);
+      adminList.remove(uid);
 
       await _firestore.collection("chat").doc(chat.uid).update({
         "lastmessagetext": lastMessageTexts,
@@ -195,6 +197,7 @@ class ChatFirebaseService {
         "lastmessagesendername": lastmessagesendernames,
         "members": members,
         "notarchivedby": notarchivedby,
+        "adminList": adminList,
       });
     }
 
