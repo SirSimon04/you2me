@@ -29,7 +29,7 @@ class GeneralUserService {
     return uids;
   }
 
-  static int getOwnUidPos(ChatModel chat) {
+  static int getOwnUidPosInChatFromChatModel(ChatModel chat) {
     for (String nameUid in chat.members) {
       if (nameUid ==
           ((_auth.currentUser?.uid ?? "") +
@@ -41,13 +41,26 @@ class GeneralUserService {
     return -1;
   }
 
-  static int getOwnUidPosFromList(List nameUids) {
+  static int getOwnUidPosInChatFromMemberList(List members) {
+    for (String nameUid in members) {
+      if (nameUid ==
+          ((_auth.currentUser?.uid ?? "") +
+              "|" +
+              (_auth.currentUser?.displayName ?? ""))) {
+        return members.indexOf(nameUid);
+      }
+    }
+    return -1;
+  }
+
+  static int getOwnUidPosInGroupFromList(List nameUids) {
     print("displayname " + (_auth.currentUser?.displayName ?? ""));
     for (String nameUid in nameUids) {
       if (nameUid == (_auth.currentUser?.uid ?? "")) {
         return nameUids.indexOf(nameUid);
       }
     }
+    print("WTF");
     return -1;
   }
 }

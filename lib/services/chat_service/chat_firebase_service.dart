@@ -330,7 +330,8 @@ class ChatFirebaseService {
   }
 
   static Future<void> emptyChat(String chatUid, List members) async {
-    final int ownUidPos = GeneralUserService.getOwnUidPosFromList(members);
+    final int ownUidPos =
+        GeneralUserService.getOwnUidPosInGroupFromList(members);
 
     var docSnapshot = await _firestore.collection("chat").doc(chatUid).get();
 
@@ -432,7 +433,8 @@ class ChatFirebaseService {
 
     var documents = snapshots.docs;
 
-    final int ownUidPos = GeneralUserService.getOwnUidPosFromList(members);
+    final int ownUidPos =
+        GeneralUserService.getOwnUidPosInGroupFromList(members);
 
     //check works
     if (documents[documents.length - 1].id == msgUid) {

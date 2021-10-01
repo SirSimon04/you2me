@@ -251,6 +251,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
   }
 
   checkUserInput() {
+    print("checkUserInput");
     if (textController.text.trim().length != 0) {
       UserFirebaseService.setWritingTrue(chat.uid);
       sendIconButton = Row(
@@ -270,7 +271,9 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   ansMsg: widget.answerMessage,
                   text: textController.text,
                   chatUid: widget.chat.uid,
-                  usersUid: GeneralUserService.getUidsFromMembers(widget.chat),
+                  usersUid: widget.chat.isGroup
+                      ? widget.chat.members
+                      : GeneralUserService.getUidsFromMembers(widget.chat),
                   memberCount: widget.chat.members.length,
                 );
 
