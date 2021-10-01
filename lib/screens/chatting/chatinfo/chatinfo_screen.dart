@@ -58,6 +58,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
   List<String> orderMemberList(List<String> members) {
     members.remove(_auth.currentUser?.uid ?? "");
     members.insert(0, _auth.currentUser?.uid ?? "");
+    print("members " + members.toString());
     return members;
   }
 
@@ -74,6 +75,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("adminList " + widget.chat.adminList.toString());
     time_ago.setLocale('de', time_ago.German());
     return Scaffold(
       appBar: AppBar(

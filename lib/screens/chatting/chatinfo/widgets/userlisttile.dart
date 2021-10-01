@@ -23,9 +23,22 @@ class UserListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     if (uid == _auth.currentUser?.uid) {
       return PlatformListTile(
-        title: Text(
-          "Du",
-          style: TextStyle(fontStyle: FontStyle.italic),
+        title: Row(
+          children: [
+            Text(
+              "Du",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+            Spacer(),
+            isAdmin
+                ? Text(
+                    "Admin",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  )
+                : Text(""),
+          ],
         ),
         isElevatedM: true,
         leading: UserProfilePic(
@@ -35,52 +48,54 @@ class UserListTile extends StatelessWidget {
       );
     }
 
-    return FutureBuilder(
-      future: _firestore.collection("user").doc(uid).get(),
+    return StreamBuilder<DocumentSnapshot>(
+      stream: _firestore.collection("user").doc(uid).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          print("here");
-          print(snapshot.data.toString());
-
+          print("snapshot " + snapshot.toString());
+          print("data " + snapshot.data!.data().toString());
           var data = snapshot.data as DocumentSnapshot;
-          print("Id x " + data.id);
+          // print("test2 " + data["name"]);
+          // print("data2 " + data.data().toString());
+          // return Container();
           return PlatformListTile(
-            title: Text(data["name"].toString()),
+            title: Row(
+              children: [
+                Text(data["name"].toString()),
+                Spacer(),
+                isAdmin
+                    ? Text(
+                        "Admin",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                      )
+                    : Text(""),
+              ],
+            ),
             isElevatedM: true,
             leading: UserProfilePic(
               isOnline: false,
               url: data["fotourl"].toString(),
             ),
-            trailing: Row(
-              children: [
-                if (isAdmin)
-                  Text(
-                    "Admin",
-                    style: TextStyle(fontStyle: FontStyle.italic),
+            trailing: IconButton(
+              onPressed: () => Navigator.of(context).push(
+                CupertinoPageRoute(
+                  builder: (context) => ChatInfoScreen(
+                    ChatModel.getEmptyChat(),
+                    comesFromFriends: true,
+                    userUid: data.id,
+                    isFriend:
+                        data["hasChatWith"].contains(_auth.currentUser?.uid),
+                    photoUrl: data["fotourl"],
                   ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (context) => ChatInfoScreen(
-                        ChatModel.getEmptyChat(),
-                        comesFromFriends: true,
-                        userUid: data.id,
-                        isFriend: data["hasChatWith"]
-                            .contains(_auth.currentUser?.uid),
-                        photoUrl: data["fotourl"],
-                      ),
-                    ),
-                  ),
-                  icon: Icon(FontAwesomeIcons.infoCircle),
                 ),
-              ],
+              ),
+              icon: Icon(FontAwesomeIcons.infoCircle),
             ),
           );
         } else {
-          return PlatformListTile(
-            isElevatedM: true,
-            title: Text("Fehler"),
-          );
+          return Container();
         }
       },
     );

@@ -161,11 +161,11 @@
 97                android:value="com.google.firebase.components.ComponentRegistrar" />
 97-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:79:17-82
 98            <meta-data
-98-->[com.google.firebase:firebase-firestore:23.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/9b84e16e205e131f44404e0ab409936d/jetified-firebase-firestore-23.0.1/AndroidManifest.xml:20:13-22:85
+98-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:20:13-22:85
 99                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
-99-->[com.google.firebase:firebase-firestore:23.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/9b84e16e205e131f44404e0ab409936d/jetified-firebase-firestore-23.0.1/AndroidManifest.xml:21:17-111
+99-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:21:17-111
 100                android:value="com.google.firebase.components.ComponentRegistrar" />
-100-->[com.google.firebase:firebase-firestore:23.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/9b84e16e205e131f44404e0ab409936d/jetified-firebase-firestore-23.0.1/AndroidManifest.xml:22:17-82
+100-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:22:17-82
 101            <meta-data
 101-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:33:13-35:85
 102                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
