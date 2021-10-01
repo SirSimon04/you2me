@@ -108,47 +108,52 @@ class _UserListTileState extends State<UserListTile> {
               ),
               icon: Icon(FontAwesomeIcons.infoCircle),
             ),
-            onLongPress: () {
-              showAdaptiveActionSheet(
-                context: context,
-                actions: [
-                  BottomSheetAction(
-                    title: Text("Entfernen"),
-                    onPressed: () =>
-                        ChatFirebaseService.kickOutOfGroup(uid: data.id),
-                  ),
-                  BottomSheetAction(
-                    title: isAdmin
-                        ? Text("Admin entfernen")
-                        : Text("Zum Admin machen"),
-                    onPressed: isAdmin
-                        ? () async {
-                            await ChatFirebaseService.removeAdmin(
-                              userUid: data.id,
-                              chatUid: widget.chat.uid,
-                            );
-                            setState(() {
-                              isAdmin = false;
-                            });
-                            Navigator.of(context).pop();
-                          }
-                        : () async {
-                            await ChatFirebaseService.makeAdmin(
-                              userUid: data.id,
-                              chatUid: widget.chat.uid,
-                            );
-                            setState(() {
-                              isAdmin = true;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                  ),
-                ],
-                cancelAction: CancelAction(
-                  title: const Text('Schließen'),
-                ),
-              );
-            },
+            onTap: (widget.chat.adminList!
+                    .contains(_auth.currentUser?.uid ?? ""))
+                ? () {
+                    showAdaptiveActionSheet(
+                      context: context,
+                      actions: [
+                        BottomSheetAction(
+                          title: Text("Entfernen"),
+                          onPressed: () => ChatFirebaseService.kickOutOfGroup(
+                            uid: data.id,
+                            chat: widget.chat,
+                          ),
+                        ),
+                        BottomSheetAction(
+                          title: isAdmin
+                              ? Text("Admin entfernen")
+                              : Text("Zum Admin machen"),
+                          onPressed: isAdmin
+                              ? () async {
+                                  await ChatFirebaseService.removeAdmin(
+                                    userUid: data.id,
+                                    chatUid: widget.chat.uid,
+                                  );
+                                  setState(() {
+                                    isAdmin = false;
+                                  });
+                                  Navigator.of(context).pop();
+                                }
+                              : () async {
+                                  await ChatFirebaseService.makeAdmin(
+                                    userUid: data.id,
+                                    chatUid: widget.chat.uid,
+                                  );
+                                  setState(() {
+                                    isAdmin = true;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                        ),
+                      ],
+                      cancelAction: CancelAction(
+                        title: const Text('Schließen'),
+                      ),
+                    );
+                  }
+                : null,
           );
         } else {
           return Container();

@@ -130,9 +130,58 @@ class ChatFirebaseService {
     });
   }
 
-  static Future<void> kickOutOfGroup({required String uid}) async {}
-
   static Future<void> addToGroup({required String uid}) async {}
+
+  static Future<void> kickOutOfGroup({
+    required String uid,
+    required ChatModel chat,
+  }) async {
+    int index = chat.members.indexOf(uid);
+
+    var docSnapshot = await _firestore.collection("caht").doc(chat.uid).get();
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var lastMessageTexts = data?["lastmessagetext"];
+      var lastmessagesenderids = data?["lastmessagesenderid"];
+      var lastmessagesendernames = data?["lastmessagesendername"];
+      var lastmessagedates = data?["lastmessagedate"];
+
+      lastmessagedates.removeAt(index);
+      lastMessageTexts.removeAt(index);
+      lastmessagesenderids.removeAt(index);
+      lastmessagesendernames.removeAt(index);
+
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "lastmessagetext": lastMessageTexts,
+        "lastmessagesenderid": lastmessagesenderids,
+        "lastmessagedate": lastmessagedates,
+        "lastmessagesendername": lastmessagesendernames
+      });
+    }
+
+    // var docSnapshot = await _firestore.collection("chat").doc(chatUid).get();
+    //
+    // if (docSnapshot.exists) {
+    //   Map<String, dynamic>? data = docSnapshot.data();
+    //   var lastMessageTexts = data?["lastmessagetext"];
+    //   var lastmessagesenderids = data?["lastmessagesenderid"];
+    //   var lastmessagesendernames = data?["lastmessagesendername"];
+    //   var lastmessagedates = data?["lastmessagedate"];
+    //
+    //   lastMessageTexts[ownUidPos] = "";
+    //   lastmessagedates[ownUidPos] = Timestamp.now();
+    //   lastmessagesenderids[ownUidPos] = "";
+    //   lastmessagesendernames[ownUidPos] = "";
+    //
+    //   await _firestore.collection("chat").doc(chatUid).update({
+    //     "lastmessagetext": lastMessageTexts,
+    //     "lastmessagesenderid": lastmessagesenderids,
+    //     "lastmessagedate": lastmessagedates,
+    //     "lastmessagesendername": lastmessagesendernames
+    //   });
+    // }
+  }
 
   static Future<void> makeAdmin(
       {required String userUid, required String chatUid}) async {

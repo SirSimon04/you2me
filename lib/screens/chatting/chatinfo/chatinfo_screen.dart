@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
+import 'package:flutter_dispuatio/screens/chatting/chatinfo/widgets/add_users_bottom_sheet.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/widgets/userlisttile.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/marked_messages/marked_messages.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
@@ -424,6 +425,17 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                       uid: uid,
                       isAdmin: chat.adminList?.contains(uid) ?? false,
                       chat: widget.chat,
+                    ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  if (widget.chat.adminList!
+                      .contains(_auth.currentUser?.uid ?? null))
+                    PlatformListTile(
+                      isElevatedM: true,
+                      title: Text("Nutzer hinzufügen"),
+                      leading: Icon(FontAwesomeIcons.plus),
+                      onTap: () => addUserBottomSheet(context, chat),
                     ),
                   SizedBox(
                     height: 30,
