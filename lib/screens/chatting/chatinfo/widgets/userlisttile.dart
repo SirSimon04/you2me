@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
+import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -108,52 +109,59 @@ class _UserListTileState extends State<UserListTile> {
               ),
               icon: Icon(FontAwesomeIcons.infoCircle),
             ),
-            onTap: (widget.chat.adminList!
-                    .contains(_auth.currentUser?.uid ?? ""))
-                ? () {
-                    showAdaptiveActionSheet(
-                      context: context,
-                      actions: [
-                        BottomSheetAction(
-                          title: Text("Entfernen"),
-                          onPressed: () => ChatFirebaseService.kickOutOfGroup(
-                            uid: data.id,
-                            chat: widget.chat,
+            onTap:
+                (widget.chat.adminList!.contains(_auth.currentUser?.uid ?? ""))
+                    ? () {
+                        showAdaptiveActionSheet(
+                          context: context,
+                          actions: [
+                            BottomSheetAction(
+                                title: Text("Entfernen"),
+                                onPressed: () {
+                                  ChatFirebaseService.kickOutOfGroup(
+                                    uid: data.id,
+                                    chat: widget.chat,
+                                  );
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  ToastService.showLongToast(data["name"]
+                                          .toString() +
+                                      " wurde aus der Gruppe ${widget.chat.name} entfernt");
+                                }),
+                            BottomSheetAction(
+                              title: isAdmin
+                                  ? Text("Admin entfernen")
+                                  : Text("Zum Admin machen"),
+                              onPressed: isAdmin
+                                  ? () async {
+                                      await ChatFirebaseService.removeAdmin(
+                                        userUid: data.id,
+                                        chatUid: widget.chat.uid,
+                                      );
+                                      setState(() {
+                                        isAdmin = false;
+                                      });
+                                      Navigator.of(context).pop();
+                                    }
+                                  : () async {
+                                      await ChatFirebaseService.makeAdmin(
+                                        userUid: data.id,
+                                        chatUid: widget.chat.uid,
+                                      );
+                                      setState(() {
+                                        isAdmin = true;
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                            ),
+                          ],
+                          cancelAction: CancelAction(
+                            title: const Text('Schließen'),
                           ),
-                        ),
-                        BottomSheetAction(
-                          title: isAdmin
-                              ? Text("Admin entfernen")
-                              : Text("Zum Admin machen"),
-                          onPressed: isAdmin
-                              ? () async {
-                                  await ChatFirebaseService.removeAdmin(
-                                    userUid: data.id,
-                                    chatUid: widget.chat.uid,
-                                  );
-                                  setState(() {
-                                    isAdmin = false;
-                                  });
-                                  Navigator.of(context).pop();
-                                }
-                              : () async {
-                                  await ChatFirebaseService.makeAdmin(
-                                    userUid: data.id,
-                                    chatUid: widget.chat.uid,
-                                  );
-                                  setState(() {
-                                    isAdmin = true;
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                        ),
-                      ],
-                      cancelAction: CancelAction(
-                        title: const Text('Schließen'),
-                      ),
-                    );
-                  }
-                : null,
+                        );
+                      }
+                    : null,
           );
         } else {
           return Container();

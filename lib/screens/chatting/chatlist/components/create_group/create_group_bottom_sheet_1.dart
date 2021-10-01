@@ -129,47 +129,52 @@ class _CreateGroup1State extends State<CreateGroup1> {
                           snapshot.data!.docs;
                       return ListView(
                           children: documents
-                              .map((doc) => CheckboxListTile(
-                                    value: usersChecked[doc["name"]],
-                                    selected:
-                                        usersChecked[doc["name"]] ?? false,
-                                    onChanged: (bool? newVal) {
-                                      print("newVal " + newVal.toString());
-                                      setState(() {
-                                        usersChecked[doc["name"]] =
-                                            newVal ?? false;
-                                      });
+                              .map((doc) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CheckboxListTile(
+                                      value: usersChecked[doc["name"]],
+                                      selected:
+                                          usersChecked[doc["name"]] ?? false,
+                                      onChanged: (bool? newVal) {
+                                        print("newVal " + newVal.toString());
+                                        setState(() {
+                                          usersChecked[doc["name"]] =
+                                              newVal ?? false;
+                                        });
 
-                                      //add to selected if not added before
-                                      if (newVal == true) {
-                                        usersSelected[doc["name"]] = UserModel(
-                                          uid: doc.id,
-                                          name: doc["name"],
-                                          isOnline: doc["isonline"],
-                                          profilePic: UserProfilePic(
-                                            url: doc["fotourl"],
+                                        //add to selected if not added before
+                                        if (newVal == true) {
+                                          usersSelected[doc["name"]] =
+                                              UserModel(
+                                            uid: doc.id,
+                                            name: doc["name"],
                                             isOnline: doc["isonline"],
-                                          ),
-                                        );
-                                      }
-                                      if (newVal == false) {
-                                        usersSelected.remove(doc["name"]);
-                                      }
+                                            profilePic: UserProfilePic(
+                                              url: doc["fotourl"],
+                                              isOnline: doc["isonline"],
+                                            ),
+                                          );
+                                        }
+                                        if (newVal == false) {
+                                          usersSelected.remove(doc["name"]);
+                                        }
 
-                                      print("usersSelected " +
-                                          usersSelected.toString());
-                                    },
-                                    title: Text(doc["name"]),
-                                    secondary: UserProfilePic(
-                                      url: doc["fotourl"],
-                                      isOnline: doc["isonline"],
+                                        print("usersSelected " +
+                                            usersSelected.toString());
+                                      },
+                                      title: Text(doc["name"]),
+                                      secondary: UserProfilePic(
+                                        url: doc["fotourl"],
+                                        isOnline: doc["isonline"],
+                                      ),
+                                      activeColor:
+                                          Theme.of(context).primaryColor,
+                                      selectedTileColor: Theme.of(context)
+                                          .primaryColor
+                                          .withOpacity(0.05),
+                                      // Theme.of(context).primaryColor,,
+                                      // checkColor: Theme.of(context).primaryColor,
                                     ),
-                                    activeColor: Theme.of(context).primaryColor,
-                                    selectedTileColor: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.05),
-                                    // Theme.of(context).primaryColor,,
-                                    // checkColor: Theme.of(context).primaryColor,
                                   ))
                               .toList());
                     default:

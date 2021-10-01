@@ -130,15 +130,11 @@ class ChatFirebaseService {
     });
   }
 
-  static Future<void> addToGroup({required String uid}) async {}
-
-  static Future<void> kickOutOfGroup({
+  static Future<void> addToGroup({
     required String uid,
     required ChatModel chat,
   }) async {
-    int index = chat.members.indexOf(uid);
-
-    var docSnapshot = await _firestore.collection("caht").doc(chat.uid).get();
+    var docSnapshot = await _firestore.collection("chat").doc(chat.uid).get();
 
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
@@ -146,17 +142,59 @@ class ChatFirebaseService {
       var lastmessagesenderids = data?["lastmessagesenderid"];
       var lastmessagesendernames = data?["lastmessagesendername"];
       var lastmessagedates = data?["lastmessagedate"];
+      var members = data?["members"];
+      var notarchivedby = data?["notarchivedby"];
 
-      lastmessagedates.removeAt(index);
-      lastMessageTexts.removeAt(index);
-      lastmessagesenderids.removeAt(index);
-      lastmessagesendernames.removeAt(index);
+      lastmessagedates.add(DateTime.now());
+      lastMessageTexts.add("");
+      lastmessagesenderids.add("");
+      lastmessagesendernames.add("");
+      members.add(uid);
+      notarchivedby.add(uid);
 
       await _firestore.collection("chat").doc(chat.uid).update({
         "lastmessagetext": lastMessageTexts,
         "lastmessagesenderid": lastmessagesenderids,
         "lastmessagedate": lastmessagedates,
-        "lastmessagesendername": lastmessagesendernames
+        "lastmessagesendername": lastmessagesendernames,
+        "members": members,
+        "notarchivedby": notarchivedby,
+      });
+    }
+  }
+
+  static Future<void> kickOutOfGroup({
+    required String uid,
+    required ChatModel chat,
+  }) async {
+    int index = chat.members.indexOf(uid);
+    print("index " + index.toString());
+
+    var docSnapshot = await _firestore.collection("chat").doc(chat.uid).get();
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var lastMessageTexts = data?["lastmessagetext"];
+      var lastmessagesenderids = data?["lastmessagesenderid"];
+      var lastmessagesendernames = data?["lastmessagesendername"];
+      var lastmessagedates = data?["lastmessagedate"];
+      var members = data?["members"];
+      var notarchivedby = data?["notarchivedby"];
+
+      lastmessagedates.removeAt(index);
+      lastMessageTexts.removeAt(index);
+      lastmessagesenderids.removeAt(index);
+      lastmessagesendernames.removeAt(index);
+      members.remove(uid);
+      notarchivedby.remove(uid);
+
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "lastmessagetext": lastMessageTexts,
+        "lastmessagesenderid": lastmessagesenderids,
+        "lastmessagedate": lastmessagedates,
+        "lastmessagesendername": lastmessagesendernames,
+        "members": members,
+        "notarchivedby": notarchivedby,
       });
     }
 
