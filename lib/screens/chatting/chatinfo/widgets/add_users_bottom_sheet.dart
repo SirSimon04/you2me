@@ -73,7 +73,19 @@ class _AddUsersState extends State<AddUsers> {
                     case ConnectionState.waiting:
                       return Center(child: CircularProgressIndicator());
                     case ConnectionState.done:
-                      if (snapshot.data!.docs.length == 0) {
+                      final List<DocumentSnapshot> documents =
+                          snapshot.data!.docs;
+
+                      List<dynamic> filteredDocs = [];
+
+                      for (var doc in documents) {
+                        print("docid " + doc.id);
+                        if (!widget.chat.members.contains(doc.id)) {
+                          filteredDocs.add(doc);
+                        }
+                      }
+
+                      if (filteredDocs.length == 0) {
                         return Column(
                           children: [
                             SingleChildScrollView(
@@ -106,11 +118,8 @@ class _AddUsersState extends State<AddUsers> {
                         ); // Placeholder
                       }
 
-                      final List<DocumentSnapshot> documents =
-                          snapshot.data!.docs;
-
                       return ListView(
-                        children: documents
+                        children: filteredDocs
                             .map(
                               (doc) => PlatformListTile(
                                 title: Text(doc["name"]),
