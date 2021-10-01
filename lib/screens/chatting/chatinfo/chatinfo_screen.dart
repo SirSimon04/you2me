@@ -423,6 +423,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                     UserListTile(
                       uid: uid,
                       isAdmin: chat.adminList?.contains(uid) ?? false,
+                      chat: widget.chat,
                     ),
                   SizedBox(
                     height: 30,

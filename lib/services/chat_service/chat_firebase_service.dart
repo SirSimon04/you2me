@@ -130,6 +130,24 @@ class ChatFirebaseService {
     });
   }
 
+  static Future<void> kickOutOfGroup({required String uid}) async {}
+
+  static Future<void> addToGroup({required String uid}) async {}
+
+  static Future<void> makeAdmin(
+      {required String userUid, required String chatUid}) async {
+    await _firestore.collection("chat").doc(chatUid).update({
+      "adminList": FieldValue.arrayUnion([userUid]),
+    });
+  }
+
+  static Future<void> removeAdmin(
+      {required String userUid, required String chatUid}) async {
+    await _firestore.collection("chat").doc(chatUid).update({
+      "adminList": FieldValue.arrayRemove([userUid]),
+    });
+  }
+
   static Future<void> archiveChat(String chatUid) async {
     await _firestore.collection("chat").doc(chatUid).update({
       "archivedby": FieldValue.arrayUnion(

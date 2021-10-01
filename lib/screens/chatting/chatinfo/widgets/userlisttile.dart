@@ -1,27 +1,42 @@
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatinfo/chatinfo_screen.dart';
+import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:flutter_dispuatio/widgets/userprofile_pic.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class UserListTile extends StatelessWidget {
+class UserListTile extends StatefulWidget {
   UserListTile({
     required this.uid,
     required this.isAdmin,
+    required this.chat,
   });
 
-  final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
   final String uid;
   final bool isAdmin;
+  final ChatModel chat;
+
+  @override
+  State<UserListTile> createState() => _UserListTileState(isAdmin);
+}
+
+class _UserListTileState extends State<UserListTile> {
+  _UserListTileState(this.isAdmin);
+
+  final _firestore = FirebaseFirestore.instance;
+
+  final _auth = FirebaseAuth.instance;
+
+  bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
-    if (uid == _auth.currentUser?.uid) {
+    if (widget.uid == _auth.currentUser?.uid) {
       return PlatformListTile(
         title: Row(
           children: [
@@ -30,7 +45,7 @@ class UserListTile extends StatelessWidget {
               style: TextStyle(fontStyle: FontStyle.italic),
             ),
             Spacer(),
-            isAdmin
+            widget.isAdmin
                 ? Text(
                     "Admin",
                     style: TextStyle(
@@ -49,7 +64,7 @@ class UserListTile extends StatelessWidget {
     }
 
     return StreamBuilder<DocumentSnapshot>(
-      stream: _firestore.collection("user").doc(uid).snapshots(),
+      stream: _firestore.collection("user").doc(widget.uid).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           print("snapshot " + snapshot.toString());
@@ -93,6 +108,47 @@ class UserListTile extends StatelessWidget {
               ),
               icon: Icon(FontAwesomeIcons.infoCircle),
             ),
+            onLongPress: () {
+              showAdaptiveActionSheet(
+                context: context,
+                actions: [
+                  BottomSheetAction(
+                    title: Text("Entfernen"),
+                    onPressed: () =>
+                        ChatFirebaseService.kickOutOfGroup(uid: data.id),
+                  ),
+                  BottomSheetAction(
+                    title: isAdmin
+                        ? Text("Admin entfernen")
+                        : Text("Zum Admin machen"),
+                    onPressed: isAdmin
+                        ? () async {
+                            await ChatFirebaseService.removeAdmin(
+                              userUid: data.id,
+                              chatUid: widget.chat.uid,
+                            );
+                            setState(() {
+                              isAdmin = false;
+                            });
+                            Navigator.of(context).pop();
+                          }
+                        : () async {
+                            await ChatFirebaseService.makeAdmin(
+                              userUid: data.id,
+                              chatUid: widget.chat.uid,
+                            );
+                            setState(() {
+                              isAdmin = true;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                  ),
+                ],
+                cancelAction: CancelAction(
+                  title: const Text('Schließen'),
+                ),
+              );
+            },
           );
         } else {
           return Container();
