@@ -77,59 +77,16 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
           final List<DocumentSnapshot> allDocuments = snapshot.data!.docs;
           List<DocumentSnapshot> documents = [];
           for (DocumentSnapshot doc in allDocuments) {
+            print(doc["time"]);
             if (doc["canbeseenby"].contains(_auth.currentUser?.uid)) {
               documents.add(doc);
             }
           }
-
+          //TODO: smh add days
+          //put documents.map in different function and after that method walk through and add dates
           return ImplicitlyAnimatedList<ChatMessageBubble>(
             controller: widget._controller,
-            items: documents.map((doc) {
-              List favBy = doc["favby"];
-              List readBy = doc["readby"];
-              try {
-                //if message is an answer message
-                return ChatMessageBubble(
-                  message: MessageModel(
-                    text: doc["text"],
-                    isMy: doc["senderid"] == _auth.currentUser?.uid,
-                    isFav: favBy.contains(_auth.currentUser?.uid),
-                    date: doc["time"],
-                    uid: doc.id,
-                    readByAll: widget.chat.userCount == readBy.length,
-                    sender: doc["sender"],
-                    isImage: doc["isimage"],
-                    url: doc["isimage"] ? doc["url"] : "",
-                  ),
-                  chat: widget.chat,
-                  answerMessage: MessageModel(
-                    uid: "",
-                    text: doc["answertext"],
-                    sender: doc["answersender"],
-                    isMy: false,
-                    isFav: false,
-                    readByAll: false,
-                    isImage: false,
-                    date: Timestamp.now(),
-                  ),
-                );
-              } catch (e) {
-                return ChatMessageBubble(
-                  message: MessageModel(
-                    text: doc["text"],
-                    isMy: doc["senderid"] == _auth.currentUser?.uid,
-                    isFav: favBy.contains(_auth.currentUser?.uid),
-                    date: doc["time"],
-                    uid: doc.id,
-                    readByAll: widget.chat.userCount == readBy.length,
-                    sender: doc["sender"],
-                    isImage: doc["isimage"],
-                    url: doc["isimage"] ? doc["url"] : "",
-                  ),
-                  chat: widget.chat,
-                );
-              }
-            }).toList(),
+            items: getListItems(documents),
             itemBuilder: (context, animation, item, index) {
               // Specifiy a transition to be used by the ImplicitlyAnimatedList.
               // See the Transitions section on how to import this transition.
@@ -145,5 +102,57 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
         }
       },
     );
+  }
+
+  List<ChatMessageBubble> getListItems(List<DocumentSnapshot> documents){
+    List<ChatMessageBubble> msgList = documents.map((doc) {
+      List favBy = doc["favby"];
+      List readBy = doc["readby"];
+
+      try {
+        //if message is an answer message
+        return ChatMessageBubble(
+          message: MessageModel(
+            text: doc["text"],
+            isMy: doc["senderid"] == _auth.currentUser?.uid,
+            isFav: favBy.contains(_auth.currentUser?.uid),
+            date: doc["time"],
+            uid: doc.id,
+            readByAll: widget.chat.userCount == readBy.length,
+            sender: doc["sender"],
+            isImage: doc["isimage"],
+            url: doc["isimage"] ? doc["url"] : "",
+          ),
+          chat: widget.chat,
+          answerMessage: MessageModel(
+            uid: "",
+            text: doc["answertext"],
+            sender: doc["answersender"],
+            isMy: false,
+            isFav: false,
+            readByAll: false,
+            isImage: false,
+            date: Timestamp.now(),
+          ),
+        );
+      } catch (e) {
+        return ChatMessageBubble(
+          message: MessageModel(
+            text: doc["text"],
+            isMy: doc["senderid"] == _auth.currentUser?.uid,
+            isFav: favBy.contains(_auth.currentUser?.uid),
+            date: doc["time"],
+            uid: doc.id,
+            readByAll: widget.chat.userCount == readBy.length,
+            sender: doc["sender"],
+            isImage: doc["isimage"],
+            url: doc["isimage"] ? doc["url"] : "",
+          ),
+          chat: widget.chat,
+        );
+      }
+    }).toList();
+
+    return msgList;
   }
 }
