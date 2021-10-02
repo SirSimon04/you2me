@@ -22,6 +22,19 @@ class MessageModel {
     this.url,
   });
 
+  static MessageModel getEmptyMessage() {
+    return MessageModel(
+      text: "",
+      isMy: false,
+      isFav: false,
+      readByAll: false,
+      date: Timestamp.now(),
+      uid: "uid",
+      sender: "sender",
+      isImage: false,
+    );
+  }
+
   @override
   String toString() {
     return super.toString();

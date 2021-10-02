@@ -21,12 +21,16 @@ class ChatMessageBubble extends StatefulWidget {
     required this.chat,
     this.answerMessage,
     this.allFav = false,
+    this.isDate = false,
+    this.dateString,
   });
 
   final MessageModel message;
   final ChatModel chat;
   final MessageModel? answerMessage;
   final bool allFav;
+  final bool isDate;
+  final String? dateString;
 
   @override
   _ChatMessageBubbleState createState() => _ChatMessageBubbleState();
@@ -35,6 +39,19 @@ class ChatMessageBubble extends StatefulWidget {
 class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   @override
   Widget build(BuildContext context) {
+    if (widget.isDate)
+      return Bubble(
+        color: Colors.blueGrey,
+        child: Text(
+          widget.dateString ?? "",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 11.0,
+          ),
+        ),
+        alignment: Alignment.center,
+      );
+
     return !widget.allFav
         ? FocusedMessageMenu(
             isMy: widget.message.isMy,

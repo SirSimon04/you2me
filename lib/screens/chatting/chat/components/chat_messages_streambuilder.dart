@@ -6,7 +6,7 @@ import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
-
+import 'package:intl/intl.dart';
 import 'chat_message_bubble.dart';
 
 class ChatMessagesStreambuilder extends StatefulWidget {
@@ -152,6 +152,55 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
         );
       }
     }).toList();
+
+    var dateBubbles = new Map();
+
+    int curDays = -1;
+
+    for (ChatMessageBubble bubble in msgList) {
+      print("Tage " +
+          (bubble.message.date.seconds / 86400).truncate().toString());
+      if (curDays != (bubble.message.date.seconds / 86400).truncate()) {
+        //we have new day
+        print("new day");
+        curDays = (bubble.message.date.seconds / 86400).truncate(); //upd
+        // ate days
+        dateBubbles[msgList.indexOf(bubble)] = ChatMessageBubble(
+          isDate: true,
+          chat: ChatModel.getEmptyChat(),
+          message: MessageModel.getEmptyMessage(),
+          dateString: DateFormat('dd/MM/yyyy').format(
+              DateTime.fromMillisecondsSinceEpoch(
+                  bubble.message.date.seconds * 1000)),
+        );
+      }
+      curDays = (bubble.message.date.seconds / 86400).truncate();
+    }
+
+    print(dateBubbles);
+
+    int i = 0;
+
+    dateBubbles.forEach((key, value) {
+      msgList.insert(key + i, value);
+      i++;
+    });
+
+    // for (int i = 0; i < dateBubbles.length; i++) {
+    //   msgList.insert(
+    //       dateBubbles[i],
+    //       ChatMessageBubble(
+    //         isDate: true,
+    //         chat: ChatModel.getEmptyChat(),
+    //         message: MessageModel.getEmptyMessage(),
+    //       ));
+    // }
+
+    // msgList.add(ChatMessageBubble(
+    //   isDate: true,
+    //   chat: ChatModel.getEmptyChat(),
+    //   message: MessageModel.getEmptyMessage(),
+    // ));
 
     return msgList;
   }
