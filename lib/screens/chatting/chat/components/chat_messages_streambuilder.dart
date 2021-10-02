@@ -104,7 +104,7 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
     );
   }
 
-  List<ChatMessageBubble> getListItems(List<DocumentSnapshot> documents){
+  List<ChatMessageBubble> getListItems(List<DocumentSnapshot> documents) {
     List<ChatMessageBubble> msgList = documents.map((doc) {
       List favBy = doc["favby"];
       List readBy = doc["readby"];
