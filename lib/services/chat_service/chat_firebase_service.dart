@@ -417,13 +417,12 @@ class ChatFirebaseService {
   }
 
   static Future<void> deleteMessage({
-    required chatUid,
+    required ChatModel chat,
     required msgUid,
-    required List members,
   }) async {
     var snapshots = await _firestore
         .collection("chat")
-        .doc(chatUid)
+        .doc(chat.uid)
         .collection("messages")
         .where("canbeseenby", arrayContainsAny: [_auth.currentUser?.uid])
         .orderBy("time")
@@ -433,15 +432,16 @@ class ChatFirebaseService {
 
     var documents = snapshots.docs;
 
-    final int ownUidPos =
-        GeneralUserService.getOwnUidPosInGroupFromList(members);
+    final int ownUidPos = chat.isGroup
+        ? GeneralUserService.getOwnUidPosInGroupFromList(chat.members)
+        : GeneralUserService.getOwnUidPosInChatFromChatModel(chat);
 
     //check works
     if (documents[documents.length - 1].id == msgUid) {
       //checks if newest message
-      print("this is after first if");
+      print("the message to delete is the newest msg in chat");
       if (documents.length == 1) {
-        print("this is after second  if");
+        print("the message to delelte is the only message in chat");
         //wenn nur eine Nachricht im Chat ist
         // await _firestore.collection("chat").doc(chatUid).update({
         //   "lastmessagetext": [],
@@ -450,7 +450,7 @@ class ChatFirebaseService {
         // });
 
         var docSnapshot =
-            await _firestore.collection("chat").doc(chatUid).get();
+            await _firestore.collection("chat").doc(chat.uid).get();
 
         if (docSnapshot.exists) {
           Map<String, dynamic>? data = docSnapshot.data();
@@ -464,7 +464,7 @@ class ChatFirebaseService {
           lastmessagesenderids[ownUidPos] = "";
           lastmessagesendernames[ownUidPos] = "";
 
-          await _firestore.collection("chat").doc(chatUid).update({
+          await _firestore.collection("chat").doc(chat.uid).update({
             "lastmessagetext": lastMessageTexts,
             "lastmessagesenderid": lastmessagesenderids,
             "lastmessagedate": lastmessagedates,
@@ -473,6 +473,7 @@ class ChatFirebaseService {
         }
       } else {
         //replace msg text
+        print("the message to delete is not only one in chat");
         String lastMessageText = documents[documents.length - 2]["text"];
 
         String lastMessageSenderId =
@@ -485,7 +486,7 @@ class ChatFirebaseService {
         //get the chat
 
         var docSnapshot =
-            await _firestore.collection("chat").doc(chatUid).get();
+            await _firestore.collection("chat").doc(chat.uid).get();
 
         if (docSnapshot.exists) {
           Map<String, dynamic>? data = docSnapshot.data();
@@ -499,7 +500,7 @@ class ChatFirebaseService {
           lastmessagesenderids[ownUidPos] = lastMessageSenderId;
           lastmessagesendernames[ownUidPos] = lastMessageSenderName;
 
-          await _firestore.collection("chat").doc(chatUid).update({
+          await _firestore.collection("chat").doc(chat.uid).update({
             "lastmessagetext": lastMessageTexts,
             "lastmessagesenderid": lastmessagesenderids,
             "lastmessagedate": lastmessagedates,
@@ -508,19 +509,21 @@ class ChatFirebaseService {
         }
       }
     } else {
-      print("nicht letzte");
+      print("the message to delete is not the newest one and not the only one");
     }
     // _firestore.doc("chat/$chatUid/messages/${msg.uid}").update({
     //   "favby": FieldValue.arrayUnion([_auth.currentUser?.uid])
     // });
-    _firestore
+    print("before remove");
+    await _firestore
         .collection("chat")
-        .doc(chatUid)
+        .doc(chat.uid)
         .collection("messages")
         .doc(msgUid)
         .update(({
           "canbeseenby": FieldValue.arrayRemove([_auth.currentUser?.uid]),
         }));
+    print("after remove");
   }
 
   static Future<void> sendImage(
