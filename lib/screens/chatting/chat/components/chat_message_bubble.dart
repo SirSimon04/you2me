@@ -13,6 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'answer_container.dart';
+import 'chat_message_bubble_image.dart';
 import 'focused_messagemenu_holder.dart';
 
 class ChatMessageBubble extends StatefulWidget {
@@ -124,13 +125,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   ? Text(
                       widget.message.text + "                  ",
                     )
-                  : ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(kCircularBorderRadius * 0.5),
-                      child: Image.network(
-                        widget.message.url ?? "",
-                      ),
-                    ),
+                  : ChatMessageBubbleImage(widget.message.url ?? ""),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -179,16 +174,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   ? Text(
                       widget.message.text + "                  ",
                     )
-                  : ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(kCircularBorderRadius * 0.5),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.message.url ?? "",
-                        placeholder: (context, url) => Padding(
-                            padding: EdgeInsets.all(128),
-                            child: CircularProgressIndicator()),
-                      ),
-                    ),
+                  : ChatMessageBubbleImage(widget.message.url ?? ""),
               Positioned(
                 bottom: 0,
                 right: 0,
