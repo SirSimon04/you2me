@@ -169,7 +169,7 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
           isDate: true,
           chat: ChatModel.getEmptyChat(),
           message: MessageModel.getEmptyMessage(),
-          dateString: DateFormat('dd/MM/yyyy').format(
+          dateString: DateFormat('dd.MM. yyyy').format(
               DateTime.fromMillisecondsSinceEpoch(
                   bubble.message.date.seconds * 1000)),
         );

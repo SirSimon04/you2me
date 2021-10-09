@@ -86,7 +86,8 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   print("pressed in unmark");
 
                   ChatFirebaseService.unmarkMessageFromFavPage(
-                      msg: widget.message);
+                    msg: widget.message,
+                  );
                 },
                 backgroundColor: kFocusedMenuHolderBGColorDark,
               ),
@@ -125,7 +126,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   ? Text(
                       widget.message.text + "                  ",
                     )
-                  : ChatMessageBubbleImage(widget.message.url ?? ""),
+                  : ChatMessageBubbleImage(widget.message),
               Positioned(
                 bottom: 0,
                 right: 0,
@@ -174,7 +175,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   ? Text(
                       widget.message.text + "                  ",
                     )
-                  : ChatMessageBubbleImage(widget.message.url ?? ""),
+                  : ChatMessageBubbleImage(widget.message),
               Positioned(
                 bottom: 0,
                 right: 0,
