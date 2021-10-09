@@ -158,11 +158,11 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
     int curDays = -1;
 
     for (ChatMessageBubble bubble in msgList) {
-      print("Tage " +
-          (bubble.message.date.seconds / 86400).truncate().toString());
+      // print("Tage " +
+      //     (bubble.message.date.seconds / 86400).truncate().toString());
       if (curDays != (bubble.message.date.seconds / 86400).truncate()) {
         //we have new day
-        print("new day");
+        // print("new day");
         curDays = (bubble.message.date.seconds / 86400).truncate(); //upd
         // ate days
         dateBubbles[msgList.indexOf(bubble)] = ChatMessageBubble(
@@ -177,7 +177,7 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
       curDays = (bubble.message.date.seconds / 86400).truncate();
     }
 
-    print(dateBubbles);
+    // print(dateBubbles);
 
     int i = 0;
 
