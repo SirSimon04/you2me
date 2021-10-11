@@ -3,7 +3,7 @@
     android:installLocation="preferExternal"
     >
    <application
-        android:label="flutter_dispuatio"
+        android:label="you2me"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

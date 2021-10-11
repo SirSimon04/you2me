@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "flutter_dispuatio")
-set(APPLICATION_ID "package_name.flutter_dispuatio")
+set(BINARY_NAME "you2me")
+set(APPLICATION_ID "com.simon-engel.you2me")
 
 cmake_policy(SET CMP0063 NEW)
 
