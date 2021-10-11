@@ -60,7 +60,24 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       logo: "assets/logo.png",
       loginAfterSignUp: true,
-      messages: LoginMessages(),
+      messages: LoginMessages(
+        loginButton: "LOGIN",
+        signupButton: "SIGNUP",
+        recoverPasswordButton: "E-Mail senden",
+        recoverPasswordDescription:
+            "Dir wird eine E-Mail zugeschickt, mit der du dein Passwort zurücksetzen kannst",
+        recoverPasswordIntro: "Hier kannst du dein Passwort zurücksetzen",
+        recoverPasswordSuccess: "E-Mail wurde versendet",
+        forgotPasswordButton: "Passwort vergessen?",
+        goBackButton: "Zurück",
+        passwordHint: "Passwort",
+        userHint: "E-Mail",
+        confirmPasswordHint: "Passwort bestätigen",
+        signUpSuccess: "Erfolgreich angemeldet",
+        flushbarTitleSuccess: "Erfolgreich",
+        flushbarTitleError: "Fehler",
+      ),
+      navigateBackAfterRecovery: true,
       userValidator: (value) {
         if (!value!.contains('@')) {
           return "Email muss ein '@' enthalten";
