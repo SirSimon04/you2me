@@ -19,100 +19,102 @@ class _SignUpEnterNameState extends State<SignUpEnterName> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "Nutzernamen wählen",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Text(
-                        "Dieser ist für andere Nutzer sichtbar",
-                        style: Theme.of(context).textTheme.subtitle1,
-                        textAlign: TextAlign.center,
+    return Scaffold(
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Nutzernamen wählen",
+                        style: Theme.of(context).textTheme.headline6,
                       ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: kDefaultPadding),
-                      child: TextField(
-                        controller: myController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
-                          fillColor: Color.alphaBlend(
-                            Colors.grey.shade200.withOpacity(.07),
-                            Colors.grey.withOpacity(.04),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 4.0),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(width: 1.5),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: kErrorColor),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: kDefaultPadding),
-                      child: TextButton(
-                        onPressed: myController.text.isEmpty
-                            ? null
-                            : () {
-                                Navigator.pop(context, myController.text);
-                              },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
                         child: Text(
-                          "SIGNUP",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                          "Dieser ist für andere Nutzer sichtbar",
+                          style: Theme.of(context).textTheme.subtitle1,
+                          textAlign: TextAlign.center,
                         ),
-                        style: ButtonStyle(
-                          elevation: MaterialStateProperty.all<double>(8),
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                            EdgeInsets.symmetric(
-                              horizontal: kDefaultPadding * 1.5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: kDefaultPadding),
+                        child: TextField(
+                          controller: myController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
+                            fillColor: Color.alphaBlend(
+                              Colors.grey.shade200.withOpacity(.07),
+                              Colors.grey.withOpacity(.04),
                             ),
-                          ),
-                          backgroundColor: myController.text.isEmpty
-                              ? MaterialStateProperty.all<Color>(Colors.grey)
-                              : MaterialStateProperty.all<Color>(Colors.blue),
-                          shadowColor: myController.text.isEmpty
-                              ? MaterialStateProperty.all<Color>(Colors.grey)
-                              : MaterialStateProperty.all<Color>(Colors.blue),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
+                            contentPadding: EdgeInsets.symmetric(vertical: 4.0),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(width: 1.5),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: kErrorColor),
                               borderRadius: BorderRadius.circular(100),
                             ),
                           ),
                         ),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: kDefaultPadding),
+                        child: TextButton(
+                          onPressed: myController.text.isEmpty
+                              ? null
+                              : () {
+                                  Navigator.pop(context, myController.text);
+                                },
+                          child: Text(
+                            "SIGNUP",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                          style: ButtonStyle(
+                            elevation: MaterialStateProperty.all<double>(8),
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.symmetric(
+                                horizontal: kDefaultPadding * 1.5,
+                              ),
+                            ),
+                            backgroundColor: myController.text.isEmpty
+                                ? MaterialStateProperty.all<Color>(Colors.grey)
+                                : MaterialStateProperty.all<Color>(Colors.blue),
+                            shadowColor: myController.text.isEmpty
+                                ? MaterialStateProperty.all<Color>(Colors.grey)
+                                : MaterialStateProperty.all<Color>(Colors.blue),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
