@@ -157,6 +157,8 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
 
     int curDays = -1;
 
+    bool isFirstDate = true;
+
     for (ChatMessageBubble bubble in msgList) {
       // print("Tage " +
       //     (bubble.message.date.seconds / 86400).truncate().toString());
@@ -165,14 +167,27 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
         // print("new day");
         curDays = (bubble.message.date.seconds / 86400).truncate(); //upd
         // ate days
-        dateBubbles[msgList.indexOf(bubble)] = ChatMessageBubble(
-          isDate: true,
-          chat: ChatModel.getEmptyChat(),
-          message: MessageModel.getEmptyMessage(),
-          dateString: DateFormat('dd.MM. yyyy').format(
-              DateTime.fromMillisecondsSinceEpoch(
-                  bubble.message.date.seconds * 1000)),
-        );
+        if (isFirstDate) {
+          dateBubbles[msgList.indexOf(bubble)] = ChatMessageBubble(
+            isDate: true,
+            isFirstDate: true,
+            chat: ChatModel.getEmptyChat(),
+            message: MessageModel.getEmptyMessage(),
+            dateString: DateFormat('dd.MM. yyyy').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    bubble.message.date.seconds * 1000)),
+          );
+        } else {
+          dateBubbles[msgList.indexOf(bubble)] = ChatMessageBubble(
+            isDate: true,
+            chat: ChatModel.getEmptyChat(),
+            message: MessageModel.getEmptyMessage(),
+            dateString: DateFormat('dd.MM. yyyy').format(
+                DateTime.fromMillisecondsSinceEpoch(
+                    bubble.message.date.seconds * 1000)),
+          );
+        }
+        isFirstDate = false;
       }
       curDays = (bubble.message.date.seconds / 86400).truncate();
     }

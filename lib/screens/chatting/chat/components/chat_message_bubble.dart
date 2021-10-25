@@ -23,6 +23,7 @@ class ChatMessageBubble extends StatefulWidget {
     this.answerMessage,
     this.allFav = false,
     this.isDate = false,
+    this.isFirstDate = false,
     this.dateString,
   });
 
@@ -32,6 +33,7 @@ class ChatMessageBubble extends StatefulWidget {
   final bool allFav;
   final bool isDate;
   final String? dateString;
+  final bool isFirstDate;
 
   @override
   _ChatMessageBubbleState createState() => _ChatMessageBubbleState();
@@ -40,7 +42,25 @@ class ChatMessageBubble extends StatefulWidget {
 class _ChatMessageBubbleState extends State<ChatMessageBubble> {
   @override
   Widget build(BuildContext context) {
-    if (widget.isDate)
+    if (widget.isDate) {
+      if (widget.isFirstDate) {
+        return Padding(
+          padding: const EdgeInsets.only(
+            top: 12,
+          ),
+          child: Bubble(
+            color: Colors.blueGrey,
+            child: Text(
+              widget.dateString ?? "",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11.0,
+              ),
+            ),
+            alignment: Alignment.center,
+          ),
+        );
+      }
       return Bubble(
         color: Colors.blueGrey,
         child: Text(
@@ -52,7 +72,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
         ),
         alignment: Alignment.center,
       );
-
+    }
     return !widget.allFav
         ? FocusedMessageMenu(
             isMy: widget.message.isMy,
