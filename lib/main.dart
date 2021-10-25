@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -113,32 +114,62 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: CurvedNavigationBar(
           items: [
-            BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Icon(FontAwesomeIcons.userFriends),
-                ),
-                label: "Freunde"),
-            BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Icon(FontAwesomeIcons.solidComment),
-                ),
-                label: "Chats"),
-            BottomNavigationBarItem(
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Icon(FontAwesomeIcons.userCog),
-                ),
-                label: "Einstellungen"),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 12, 8),
+              child: Icon(
+                FontAwesomeIcons.userFriends,
+                size: 30,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+              child: Icon(
+                FontAwesomeIcons.solidComment,
+                size: 30,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                FontAwesomeIcons.userCog,
+                size: 30,
+              ),
+            ),
           ],
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).bottomAppBarColor,
+          height: 60,
+          index: currentPageIndex,
           onTap: onItemTapped,
-          currentIndex: currentPageIndex,
-          backgroundColor: Theme.of(context).bottomAppBarColor,
-          selectedFontSize: 14,
         ),
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: [
+        //     BottomNavigationBarItem(
+        //         icon: Padding(
+        //           padding: const EdgeInsets.only(bottom: 8.0),
+        //           child: Icon(FontAwesomeIcons.userFriends),
+        //         ),
+        //         label: "Freunde"),
+        //     BottomNavigationBarItem(
+        //         icon: Padding(
+        //           padding: const EdgeInsets.only(bottom: 8.0),
+        //           child: Icon(FontAwesomeIcons.solidComment),
+        //         ),
+        //         label: "Chats"),
+        //     BottomNavigationBarItem(
+        //         icon: Padding(
+        //           padding: const EdgeInsets.only(bottom: 8),
+        //           child: Icon(FontAwesomeIcons.userCog),
+        //         ),
+        //         label: "Einstellungen"),
+        //   ],
+        //   onTap: onItemTapped,
+        //   currentIndex: currentPageIndex,
+        //   backgroundColor: Theme.of(context).bottomAppBarColor,
+        //   selectedFontSize: 14,
+        // ),
         // bottomNavigationBar: CurvedNavigationBar(
         //   items: [
         //     Padding(
