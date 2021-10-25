@@ -28,22 +28,22 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString("email");
 
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => MyApp(
-        loggedIn: email != null,
-      ),
-      plugins: [
-        const ScreenshotPlugin(),
-        const FileExplorerPlugin(),
-        const SharedPreferencesExplorerPlugin(),
-      ],
-    ),
-  );
-  // runApp(MyApp(
-  //   loggedIn: email != null,
-  // ));
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => MyApp(
+  //       loggedIn: email != null,
+  //     ),
+  //     plugins: [
+  //       const ScreenshotPlugin(),
+  //       const FileExplorerPlugin(),
+  //       const SharedPreferencesExplorerPlugin(),
+  //     ],
+  //   ),
+  // );
+  runApp(MyApp(
+    loggedIn: email != null,
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -59,8 +59,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       // theme: lightThemeData(context),
       // darkTheme: darkThemeData(context),
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
+      theme: lightThemeData(context),
+      darkTheme: darkThemeData(context),
       // home: WelcomeScreen(),
       home: loggedIn ? MyHomePage() : LoginScreen(),
       debugShowCheckedModeBanner: false,

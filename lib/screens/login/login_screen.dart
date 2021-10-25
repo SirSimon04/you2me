@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return _recoverPassword(mail);
         // Show new password dialog
       },
-      showDebugButtons: true,
+      showDebugButtons: false,
     );
   }
 }
