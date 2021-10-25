@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
+import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
@@ -82,7 +83,7 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
               documents.add(doc);
             }
           }
-          //TODO: smh add days
+          readMessages(documents);
           //put documents.map in different function and after that method walk through and add dates
           return ImplicitlyAnimatedList<ChatMessageBubble>(
             controller: widget._controller,
@@ -102,6 +103,11 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
         }
       },
     );
+  }
+
+  void readMessages(List<DocumentSnapshot> documents) {
+    print("read messages");
+    ChatFirebaseService.readMessages(chatUid: widget.chat.uid);
   }
 
   List<ChatMessageBubble> getListItems(List<DocumentSnapshot> documents) {
