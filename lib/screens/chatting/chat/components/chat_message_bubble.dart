@@ -55,6 +55,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11.0,
+                color: Colors.white,
               ),
             ),
             alignment: Alignment.center,
@@ -68,6 +69,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 11.0,
+            color: Colors.white,
           ),
         ),
         alignment: Alignment.center,
