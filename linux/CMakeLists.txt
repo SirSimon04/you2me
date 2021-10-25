@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
 set(BINARY_NAME "you2me")
-set(APPLICATION_ID "com.simon-engel.you2me")
+set(APPLICATION_ID "com.simonengel.you2me")
 
 cmake_policy(SET CMP0063 NEW)
 

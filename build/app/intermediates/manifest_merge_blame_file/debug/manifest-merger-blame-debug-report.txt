@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.engelsimon.flutter_dispuatio"
+3    package="com.simonengel.you2me"
 4    android:installLocation="preferExternal"
 5    android:versionCode="1"
 6    android:versionName="1.0.0" >
@@ -39,8 +39,8 @@
 25        android:debuggable="true"
 26        android:icon="@mipmap/ic_launcher"
 26-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:7:9-43
-27        android:label="flutter_dispuatio" >
-27-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:6:9-42
+27        android:label="you2me" >
+27-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:6:9-31
 28        <activity
 28-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:8:9-36:20
 29            android:name="com.engel_simon.flutter_dispuatio.MainActivity"
@@ -221,7 +221,7 @@
 129-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:39:9-43:38
 130            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
 130-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:40:13-102
-131            android:authorities="com.engelsimon.flutter_dispuatio.flutterfirebasemessaginginitprovider"
+131            android:authorities="com.simonengel.you2me.flutterfirebasemessaginginitprovider"
 131-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:41:13-88
 132            android:exported="false"
 132-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:42:13-37
@@ -231,7 +231,7 @@
 134-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:11:9-19:20
 135            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
 135-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-82
-136            android:authorities="com.engelsimon.flutter_dispuatio.flutter.image_provider"
+136            android:authorities="com.simonengel.you2me.flutter.image_provider"
 136-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-74
 137            android:exported="false"
 137-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-37
@@ -388,7 +388,7 @@
 220-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:26:9-31:39
 221            android:name="com.google.firebase.provider.FirebaseInitProvider"
 221-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:27:13-77
-222            android:authorities="com.engelsimon.flutter_dispuatio.firebaseinitprovider"
+222            android:authorities="com.simonengel.you2me.firebaseinitprovider"
 222-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:28:13-72
 223            android:directBootAware="true"
 223-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:29:13-43

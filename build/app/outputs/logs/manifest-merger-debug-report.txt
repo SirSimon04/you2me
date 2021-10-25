@@ -156,7 +156,7 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] /home/simon
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/f4a15a5606c9a028857d8a3e89eefa0f/core-1.1.0/AndroidManifest.xml:24:18-86
 	android:label
-		ADDED from /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:6:9-42
+		ADDED from /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:6:9-31
 	android:icon
 		ADDED from /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:7:9-43
 activity#com.engel_simon.flutter_dispuatio.MainActivity

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.engelsimon.flutter_dispuatio"
+    package="com.simonengel.you2me"
     android:installLocation="preferExternal"
     android:versionCode="1"
     android:versionName="1.0.0" >
@@ -24,7 +24,7 @@
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="flutter_dispuatio" >
+        android:label="you2me" >
         <activity
             android:name="com.engel_simon.flutter_dispuatio.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -128,12 +128,12 @@
 
         <provider
             android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
-            android:authorities="com.engelsimon.flutter_dispuatio.flutterfirebasemessaginginitprovider"
+            android:authorities="com.simonengel.you2me.flutterfirebasemessaginginitprovider"
             android:exported="false"
             android:initOrder="99" />
         <provider
             android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
-            android:authorities="com.engelsimon.flutter_dispuatio.flutter.image_provider"
+            android:authorities="com.simonengel.you2me.flutter.image_provider"
             android:exported="false"
             android:grantUriPermissions="true" >
             <meta-data
@@ -219,7 +219,7 @@
 
         <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="com.engelsimon.flutter_dispuatio.firebaseinitprovider"
+            android:authorities="com.simonengel.you2me.firebaseinitprovider"
             android:directBootAware="true"
             android:exported="false"
             android:initOrder="100" />
