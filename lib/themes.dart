@@ -5,18 +5,22 @@ import 'constants.dart';
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
     primaryColor: kPrimaryColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: kPrimaryColor,
+    ),
     scaffoldBackgroundColor: Colors.white,
     iconTheme: IconThemeData(color: kContentColorLightTheme),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: kContentColorLightTheme.withOpacity(0.7),
-      unselectedItemColor: kContentColorLightTheme.withOpacity(0.32),
-      selectedIconTheme: IconThemeData(color: kPrimaryColor),
-    ),
+    // bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    //   backgroundColor: Colors.white,
+    //   selectedItemColor: kContentColorLightTheme.withOpacity(0.7),
+    //   unselectedItemColor: kContentColorLightTheme.withOpacity(0.32),
+    //   selectedIconTheme: IconThemeData(color: kPrimaryColor),
+    // ),
     colorScheme: ColorScheme.light().copyWith(
       secondary: kMyMessageColorLight, //MessageColors
       secondaryVariant: kOtherMessageColorLight,
     ),
+    bottomAppBarColor: Colors.grey[200],
   );
 }
 

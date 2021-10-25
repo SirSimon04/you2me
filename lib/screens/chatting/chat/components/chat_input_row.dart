@@ -106,7 +106,7 @@ class _ChatInputRowState extends State<ChatInputRow> {
   Widget build(BuildContext context) {
     return Container(
       height: _lineCount > 1 ? 90 : 70,
-      color: Colors.black45,
+      color: Theme.of(context).bottomAppBarColor,
       child: Column(
         children: [
           SizedBox(
