@@ -12,7 +12,10 @@ getChatListAppBar({
   return AppBar(
     automaticallyImplyLeading: isArchiveOpen,
     title: isArchiveOpen
-        ? Text("Archivierte Chats")
+        ? Text(
+            "Archivierte Chats",
+            style: TextStyle(color: Colors.white),
+          )
         : Text(
             "Chats",
             style: TextStyle(

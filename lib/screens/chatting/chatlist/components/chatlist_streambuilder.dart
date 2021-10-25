@@ -59,10 +59,19 @@ class ChatListStreamBuilder extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.5,
                       ),
                     ),
-                    Text(
-                      "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
-                      textAlign: TextAlign.center,
-                    )
+                    isArchiveOpen
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(
+                              "Du hast gerade keine Chats archiviert. Du kanst einen Chat archivieren, indem du auf einem Chat nach rechts wischst.",
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : Text(
+                            "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
+                            textAlign: TextAlign.center,
+                          )
                   ],
                 ),
               );
