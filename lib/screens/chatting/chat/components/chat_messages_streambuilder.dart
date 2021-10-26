@@ -114,6 +114,7 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
     List<ChatMessageBubble> msgList = documents.map((doc) {
       List favBy = doc["favby"];
       List readBy = doc["readby"];
+      List canBeSeenBy = doc["canbeseenby"];
 
       try {
         //if message is an answer message
@@ -124,7 +125,7 @@ class _ChatMessagesStreambuilderState extends State<ChatMessagesStreambuilder> {
             isFav: favBy.contains(_auth.currentUser?.uid),
             date: doc["time"],
             uid: doc.id,
-            readByAll: widget.chat.userCount == readBy.length,
+            readByAll: readBy.length >= canBeSeenBy.length,
             sender: doc["sender"],
             isImage: doc["isimage"],
             url: doc["isimage"] ? doc["url"] : "",

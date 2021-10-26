@@ -128,6 +128,18 @@ class ChatFirebaseService {
         [_auth.currentUser?.uid],
       )
     });
+
+    var snapshots = await _firestore
+        .collection("chat")
+        .doc(chat.uid)
+        .collection("messages")
+        .get();
+
+    for (var doc in snapshots.docs) {
+      await doc.reference.update({
+        'canbeseenby': FieldValue.arrayRemove([_auth.currentUser?.uid ?? ""]),
+      });
+    }
   }
 
   static Future<void> addToGroup({
@@ -168,7 +180,6 @@ class ChatFirebaseService {
     required ChatModel chat,
   }) async {
     int index = chat.members.indexOf(uid);
-    print("index " + index.toString());
 
     var docSnapshot = await _firestore.collection("chat").doc(chat.uid).get();
 
@@ -201,6 +212,17 @@ class ChatFirebaseService {
       });
     }
 
+    var snapshots = await _firestore
+        .collection("chat")
+        .doc(chat.uid)
+        .collection("messages")
+        .get();
+
+    for (var doc in snapshots.docs) {
+      await doc.reference.update({
+        'canbeseenby': FieldValue.arrayRemove([uid]),
+      });
+    }
     // var docSnapshot = await _firestore.collection("chat").doc(chatUid).get();
     //
     // if (docSnapshot.exists) {
