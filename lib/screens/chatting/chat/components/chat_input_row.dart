@@ -305,6 +305,8 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   chatUid: widget.chat.uid,
                   name: _auth.currentUser?.displayName ?? "",
                   msgText: msgText,
+                  isGroup: widget.chat.isGroup,
+                  groupName: widget.chat.name,
                 );
               },
             ),
