@@ -10,7 +10,7 @@ import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'components/chat_appbar.dart';
 import 'components/chat_input_row.dart';
 import 'components/chat_messages_streambuilder.dart';
@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     ChatFirebaseService.readMessages(chatUid: widget.chat.uid);
-    ChatFcmService.subscribeToChat(chatUid: widget.chat.uid);
+    if (!kIsWeb) ChatFcmService.subscribeToChat(chatUid: widget.chat.uid);
   }
 
   @override

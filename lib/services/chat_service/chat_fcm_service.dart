@@ -1,8 +1,9 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ChatFcmService {
   ChatFcmService();
@@ -21,7 +22,12 @@ class ChatFcmService {
     required isGroup,
     String? groupName,
   }) async {
-    await _push.unsubscribeFromTopic(chatUid);
+    print("sendMsgPrivate");
+    if (!kIsWeb) {
+      await _push.unsubscribeFromTopic(chatUid);
+      sleep(Duration(seconds: 1));
+      print("unsubschribed");
+    }
     Response r = await http.post(
       Uri.parse("https://fcm.googleapis.com/fcm/send"),
       headers: <String, String>{
@@ -31,7 +37,7 @@ class ChatFcmService {
       },
       body: jsonEncode(
         <String, dynamic>{
-          "to": "/topics/wAOg0eQSox4YBBEhAGJi",
+          "to": "/topics/$chatUid",
           "collapse_key": "Neue Nachricht",
           "notification": isGroup
               ? {"body": msgText, "title": name + " @ " + (groupName ?? "")}
@@ -43,7 +49,11 @@ class ChatFcmService {
       ),
     );
     print(r.body + " code: " + r.statusCode.toString());
-    _push.subscribeToTopic(chatUid);
+    if (!kIsWeb) {
+      sleep(Duration(seconds: 1));
+      await _push.subscribeToTopic(chatUid);
+      print("subscribed");
+    }
   }
 
   static Future<String?> getToken() async {
