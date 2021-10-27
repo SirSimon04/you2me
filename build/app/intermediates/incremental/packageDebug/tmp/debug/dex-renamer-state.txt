@@ -1,4 +1,4 @@
-#Tue Oct 26 14:55:35 CEST 2021
+#Wed Oct 27 20:37:00 CEST 2021
 base.2=/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/app/intermediates/dex/debug/mergeDexDebug/classes3.dex
 path.2=classes3.dex
 base.1=/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/app/intermediates/dex/debug/mergeDexDebug/classes2.dex

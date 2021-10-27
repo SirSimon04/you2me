@@ -51,45 +51,46 @@ class UserFirebaseService {
       {required String email,
       required String password,
       required String username}) async {
-    var user = _auth.currentUser;
+    print("here");
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    await _auth.currentUser?.updatePhotoURL(
+        "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a");
+    await _auth.currentUser?.updateDisplayName(username);
 
-    if (user != null) {
-      print("here");
+    //old Auth version
+    // await _auth.currentUser?.updateProfile(
+    //   displayName: username,
+    //   photoURL:
+    //       "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a",
+    // );
 
-      await _auth.currentUser?.updatePhotoURL(
-          "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a");
-      await _auth.currentUser?.updateDisplayName(username);
+    List<String> splitList = username.split(" ");
 
-      //old Auth version
-      // await _auth.currentUser?.updateProfile(
-      //   displayName: username,
-      //   photoURL:
-      //       "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a",
-      // );
+    List<String> indexList = [];
 
-      List<String> splitList = username.split(" ");
-
-      List<String> indexList = [];
-
-      for (int i = 0; i < splitList.length; i++) {
-        for (int j = 1; j < splitList[i].length + 1; j++) {
-          indexList.add(splitList[i].substring(0, j).toLowerCase());
-        }
+    for (int i = 0; i < splitList.length; i++) {
+      for (int j = 1; j < splitList[i].length + 1; j++) {
+        indexList.add(splitList[i].substring(0, j).toLowerCase());
       }
-
-      _firestore.collection("user").doc(user.uid).set({
-        "name": _auth.currentUser?.displayName,
-        "friends": [],
-        "isonline": true,
-        "info": "Hey there! I'm using Disputatio",
-        "searchIndex": indexList,
-        "lastonline": Timestamp.now(),
-        "bio": "Hallo, ich wünsche einen guten Tag!",
-        "hasChatWith": [],
-        "fotorul":
-            "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a,"
-      });
     }
+    print(indexList);
+    await _firestore.collection("user").doc(_auth.currentUser?.uid ?? "").set({
+      "name": _auth.currentUser?.displayName,
+      "friends": [],
+      "isonline": true,
+      "info": "Hey there! I'm using Disputatio",
+      "searchIndex": indexList,
+      "lastonline": Timestamp.now(),
+      "bio": "Hallo, ich wünsche einen guten Tag!",
+      "hasChatWith": [],
+      "fotorul":
+          "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a,"
+    });
+    print("added to firebase");
   }
 
   static Future<void> resetPassword(String mail) async {

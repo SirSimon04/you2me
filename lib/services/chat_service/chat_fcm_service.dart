@@ -15,6 +15,12 @@ class ChatFcmService {
     await _push.subscribeToTopic(chatUid);
   }
 
+  static Future<void> unsubscribeFromChat({
+    required String chatUid,
+  }) async {
+    await _push.unsubscribeFromTopic(chatUid);
+  }
+
   static Future<void> sendMsgPrivate({
     required String chatUid,
     required String name,
