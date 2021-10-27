@@ -96,77 +96,84 @@ class _ChangeAccountState extends State<ChangeAccount> {
       ),
       body: Stack(
         children: [
-          Column(
+          ListView(
             children: [
               SizedBox(
                 height: 30,
               ),
-              Stack(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                        _auth.currentUser?.photoURL ?? ""),
-                    radius: MediaQuery.of(context).size.width * 0.25,
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        border: Border.all(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          width: 3,
-                        ),
+                  Stack(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: CachedNetworkImageProvider(
+                            _auth.currentUser?.photoURL ?? ""),
+                        radius: MediaQuery.of(context).size.width * 0.25,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(
-                            MediaQuery.of(context).size.width * 0.01),
-                        child: IconButton(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          icon: Icon(
-                            Icons.add_a_photo,
-                            size: MediaQuery.of(context).size.width * 0.1,
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            border: Border.all(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              width: 3,
+                            ),
                           ),
-                          onPressed: () {
-                            if (Platform.isIOS) {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => CupertinoActionSheet(),
-                              );
-                            } else {
-                              showAdaptiveActionSheet(
-                                context: context,
-                                actions: [
-                                  BottomSheetAction(
-                                    title: Text(
-                                      "Fotomediathek",
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    onPressed: getImageFromGallery,
-                                    trailing:
-                                        Icon(FontAwesomeIcons.solidImages),
-                                  ),
-                                  BottomSheetAction(
-                                      title: Text(
-                                        "Foto aufnehmen",
-                                        textAlign: TextAlign.center,
+                          child: Padding(
+                            padding: EdgeInsets.all(
+                                MediaQuery.of(context).size.width * 0.01),
+                            child: IconButton(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              icon: Icon(
+                                Icons.add_a_photo,
+                                size: MediaQuery.of(context).size.width * 0.1,
+                              ),
+                              onPressed: () {
+                                if (Platform.isIOS) {
+                                  showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) =>
+                                        CupertinoActionSheet(),
+                                  );
+                                } else {
+                                  showAdaptiveActionSheet(
+                                    context: context,
+                                    actions: [
+                                      BottomSheetAction(
+                                        title: Text(
+                                          "Fotomediathek",
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        onPressed: getImageFromGallery,
+                                        trailing:
+                                            Icon(FontAwesomeIcons.solidImages),
                                       ),
-                                      onPressed: getImageFromCam,
-                                      trailing: Icon(FontAwesomeIcons.camera)),
-                                ],
-                                cancelAction: CancelAction(
-                                  title: const Text('Schließen'),
-                                ),
-                              );
-                            }
-                          },
+                                      BottomSheetAction(
+                                          title: Text(
+                                            "Foto aufnehmen",
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          onPressed: getImageFromCam,
+                                          trailing:
+                                              Icon(FontAwesomeIcons.camera)),
+                                    ],
+                                    cancelAction: CancelAction(
+                                      title: const Text('Schließen'),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
+                      )
+                    ],
+                  ),
                 ],
               ),
               SizedBox(

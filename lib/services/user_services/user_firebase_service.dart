@@ -57,6 +57,7 @@ class UserFirebaseService {
       email: email,
       password: password,
     );
+    //TODO: add exceptions
     await _auth.currentUser?.updatePhotoURL(
         "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a");
     await _auth.currentUser?.updateDisplayName(username);
