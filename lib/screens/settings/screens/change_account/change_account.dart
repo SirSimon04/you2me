@@ -453,10 +453,31 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                         ),
                                       ),
                                       content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             'Bist du dir sicher, dass du deinen Acount wirklich löschen möchtest? Diese Aktion ist nicht zu widerrufen!',
                                           ),
+                                          SizedBox(height: 10),
+                                          TextField(
+                                            controller: _oldMail,
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                              hintText: "E-Mail",
+                                            ),
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                          ),
+                                          TextField(
+                                            controller: _oldPassword,
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                              hintText: "Passwort",
+                                            ),
+                                            obscureText: true,
+                                          )
                                         ],
                                       ),
                                       actions: <Widget>[
@@ -478,7 +499,10 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                               color: Colors.red,
                                             ),
                                           ),
-                                          onPressed: () {
+                                          onPressed: () async {
+                                            await UserFirebaseService.login(
+                                                email: _oldMail.text,
+                                                password: _oldPassword.text);
                                             UserFirebaseService.deleteAccount()
                                                 .then((value) => Navigator.of(
                                                         context)
