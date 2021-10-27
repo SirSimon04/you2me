@@ -9,7 +9,7 @@ class SignUpEnterName extends StatefulWidget {
 
 class _SignUpEnterNameState extends State<SignUpEnterName> {
   final myController = TextEditingController();
-
+  bool isButtonEnabled = false;
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -48,6 +48,17 @@ class _SignUpEnterNameState extends State<SignUpEnterName> {
                             vertical: kDefaultPadding),
                         child: TextField(
                           controller: myController,
+                          onChanged: (String x) {
+                            if (x.trim().length > 0) {
+                              setState(() {
+                                isButtonEnabled = true;
+                              });
+                            } else {
+                              setState(() {
+                                isButtonEnabled = false;
+                              });
+                            }
+                          },
                           decoration: InputDecoration(
                             filled: true,
                             prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
@@ -74,7 +85,7 @@ class _SignUpEnterNameState extends State<SignUpEnterName> {
                       Padding(
                         padding: const EdgeInsets.only(top: kDefaultPadding),
                         child: TextButton(
-                          onPressed: myController.text.isEmpty
+                          onPressed: !isButtonEnabled
                               ? null
                               : () {
                                   Navigator.pop(context, myController.text);
