@@ -87,6 +87,7 @@ class _FriendListsState extends State<FriendLists>
                             snapshot.data!.docs;
                         return ListView(
                           children: documents.map((doc) {
+                            print(doc);
                             return PlatformListTile(
                               title: Text(doc["name"]),
                               subtitle: Text(doc["info"]),

@@ -452,8 +452,13 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                           color: Colors.red,
                                         ),
                                       ),
-                                      content: Text(
-                                          'Bist du dir sicher, dass du deinen Acount wirklich löschen möchtest? Diese Aktion ist nicht zu widerrufen!'),
+                                      content: Column(
+                                        children: [
+                                          Text(
+                                            'Bist du dir sicher, dass du deinen Acount wirklich löschen möchtest? Diese Aktion ist nicht zu widerrufen!',
+                                          ),
+                                        ],
+                                      ),
                                       actions: <Widget>[
                                         TextButton(
                                             child: Text(
