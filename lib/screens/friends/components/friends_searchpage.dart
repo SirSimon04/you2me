@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -168,7 +169,8 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                               leading: CircleAvatar(
-                                backgroundImage: AssetImage("assets/user.png"),
+                                backgroundImage:
+                                    CachedNetworkImageProvider(doc["fotourl"]),
                               ),
                               trailing: doc["friends"]
                                       .contains(_auth.currentUser?.uid)
