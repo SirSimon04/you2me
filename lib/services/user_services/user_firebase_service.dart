@@ -184,7 +184,7 @@ class UserFirebaseService {
     print("length of snapshots: " + snapshots.docs.length.toString());
     for (var doc in snapshots.docs) {
       List members = doc.get("members");
-      if (doc.get("isgroup") && members.contains(uid)) {
+      if (doc.get("isgroup") && members.contains(uid)){
         int index = members.indexOf(uid);
 
         Map<String, dynamic>? data = doc.data();
@@ -224,19 +224,24 @@ class UserFirebaseService {
           "notarchivedby": notarchivedby,
           "adminList": adminList,
         });
+
+        var snapshots = await _firestore
+            .collection("chat")
+            .doc(doc.id)
+            .collection("messages")
+            .get();
+
+        for (var doc in snapshots.docs) {
+          await doc.reference.update({
+            'canbeseenby': FieldValue.arrayRemove([uid]),
+          });
+        }
       }
 
-      var snapshots = await _firestore
-          .collection("chat")
-          .doc(doc.id)
-          .collection("messages")
-          .get();
-
-      for (var doc in snapshots.docs) {
-        await doc.reference.update({
-          'canbeseenby': FieldValue.arrayRemove([uid]),
-        });
+      if(!doc.get("isgroup") && members.contains(uidName)){
+        await _firestore.collection("chat").doc(doc.id).delete();
       }
+
     }
   }
 
