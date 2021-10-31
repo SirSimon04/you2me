@@ -20,13 +20,9 @@ class _SignUpEnterNameState extends State<SignUpEnterName> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundDark,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.white,
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         title: Text("Wähle einen Nutzernamen",
             style: TextStyle(color: Colors.white)),
       ),
