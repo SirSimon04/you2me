@@ -104,9 +104,12 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                   stream: _firestore
                       .collection("user")
                       .where("searchIndex", arrayContains: textController.text)
+                      .where("name",
+                          isNotEqualTo: _auth.currentUser?.displayName)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
+                      print(snapshot.error);
                       return Text("Error: ${snapshot.error}");
                     }
                     switch (snapshot.connectionState) {
