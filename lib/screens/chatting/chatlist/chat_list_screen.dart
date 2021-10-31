@@ -45,7 +45,7 @@ class _ChatListState extends State<ChatList>
 
   void test() async {
     String url =
-        await UserFirebaseService.getFotoUrlbyUid(_auth.currentUser?.uid ?? "");
+        await UserFirebaseService.getFotoUrlByUid(_auth.currentUser?.uid ?? "");
     print(url);
   }
 

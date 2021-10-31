@@ -500,16 +500,17 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                             ),
                                           ),
                                           onPressed: () async {
-                                            await UserFirebaseService.login(
-                                                email: _oldMail.text,
-                                                password: _oldPassword.text);
-                                            UserFirebaseService.deleteAccount()
-                                                .then((value) => Navigator.of(
-                                                        context)
-                                                    .pushReplacement(
-                                                        CupertinoPageRoute(
-                                                            builder: (context) =>
-                                                                LoginScreen())));
+                                            UserFirebaseService.deleteAccount();
+                                            // await UserFirebaseService.login(
+                                            //     email: _oldMail.text,
+                                            //     password: _oldPassword.text);
+                                            // UserFirebaseService.deleteAccount()
+                                            //     .then((value) => Navigator.of(
+                                            //             context)
+                                            //         .pushReplacement(
+                                            //             CupertinoPageRoute(
+                                            //                 builder: (context) =>
+                                            //                     LoginScreen())));
                                           },
                                         ),
                                       ],

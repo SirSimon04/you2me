@@ -18,8 +18,8 @@ class ChatFirebaseService {
   ///@param doc is the user from firestore
   static Future<void> createChat(var doc) async {
     String url1 =
-        await UserFirebaseService.getFotoUrlbyUid(_auth.currentUser?.uid ?? "");
-    String url2 = await UserFirebaseService.getFotoUrlbyUid(doc.id);
+        await UserFirebaseService.getFotoUrlByUid(_auth.currentUser?.uid ?? "");
+    String url2 = await UserFirebaseService.getFotoUrlByUid(doc.id);
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": false,
       "lastmessagedate": [for (int i = 0; i < 2; i++) DateTime.now()],

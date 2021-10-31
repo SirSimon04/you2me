@@ -173,10 +173,74 @@ class UserFirebaseService {
   }
 
   static Future<void> deleteAccount() async {
-    await _auth.currentUser?.delete();
+    // await _auth.currentUser?.delete();
+    //TODO: iterate over all chats and remove own info
+    var snapshots = await _firestore.collection("chat").get();
+
+    String uidName =
+        (_auth.currentUser?.uid ?? "") + (_auth.currentUser?.displayName ?? "");
+    String uid = (_auth.currentUser?.uid ?? "");
+
+    print("length of snapshots: " + snapshots.docs.length.toString());
+    for (var doc in snapshots.docs) {
+      List members = doc.get("members");
+      if (doc.get("isgroup") && members.contains(uid)) {
+        int index = members.indexOf(uid);
+
+        Map<String, dynamic>? data = doc.data();
+        var lastMessageTexts = data["lastmessagetext"];
+        var lastmessagesenderids = data["lastmessagesenderid"];
+        var lastmessagesendernames = data["lastmessagesendername"];
+        var lastmessagedates = data["lastmessagedate"];
+        var newMembers = data["members"];
+        var notarchivedby = data["notarchivedby"];
+        var adminList = data["adminList"];
+
+        lastmessagedates.removeAt(index);
+        lastMessageTexts.removeAt(index);
+        lastmessagesenderids.removeAt(index);
+        lastmessagesendernames.removeAt(index);
+        newMembers.remove(uid);
+        notarchivedby.remove(uid);
+        adminList.remove(uid);
+
+        if (newMembers.length == 0) {
+          await _firestore.collection("chat").doc(doc.id).delete();
+          return;
+        }
+
+        if (adminList.length == 0) {
+          print("no admins");
+          adminList.add(newMembers[0]);
+          print(adminList);
+        }
+
+        await _firestore.collection("chat").doc(doc.id).update({
+          "lastmessagetext": lastMessageTexts,
+          "lastmessagesenderid": lastmessagesenderids,
+          "lastmessagedate": lastmessagedates,
+          "lastmessagesendername": lastmessagesendernames,
+          "members": newMembers,
+          "notarchivedby": notarchivedby,
+          "adminList": adminList,
+        });
+      }
+
+      var snapshots = await _firestore
+          .collection("chat")
+          .doc(doc.id)
+          .collection("messages")
+          .get();
+
+      for (var doc in snapshots.docs) {
+        await doc.reference.update({
+          'canbeseenby': FieldValue.arrayRemove([uid]),
+        });
+      }
+    }
   }
 
-  static Future<String> getFotoUrlbyUid(String uid) async {
+  static Future<String> getFotoUrlByUid(String uid) async {
     String url =
         await _firestore.collection("user").doc(uid).get().then((value) {
       return value.get("fotourl");
