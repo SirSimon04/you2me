@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/screens/login/login_screen.dart';
 import 'package:flutter_dispuatio/services/general_services/firebase_storage_service.dart';
+import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter_dispuatio/widgets/loader.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
@@ -501,16 +502,24 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                           ),
                                           onPressed: () async {
                                             // UserFirebaseService.deleteAccount();
-                                            await UserFirebaseService.login(
-                                                email: _oldMail.text,
-                                                password: _oldPassword.text);
-                                            UserFirebaseService.deleteAccount()
-                                                .then((value) => Navigator.of(
-                                                        context)
-                                                    .pushReplacement(
-                                                        CupertinoPageRoute(
-                                                            builder: (context) =>
-                                                                LoginScreen())));
+                                            await UserFirebaseService
+                                                    .loginForDelete(
+                                                        email: _oldMail.text,
+                                                        password:
+                                                            _oldPassword.text)
+                                                .onError((error, stackTrace) =>
+                                                    ToastService.showLongToast(
+                                                        error.toString()))
+                                                .then((value) {
+                                              UserFirebaseService
+                                                      .deleteAccount()
+                                                  .then((value) => Navigator.of(
+                                                          context)
+                                                      .pushReplacement(
+                                                          CupertinoPageRoute(
+                                                              builder: (context) =>
+                                                                  LoginScreen())));
+                                            });
                                           },
                                         ),
                                       ],

@@ -16,6 +16,38 @@ class UserFirebaseService {
     prefs.setString("email", "mail");
   }
 
+  static Future<void> loginForDelete({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "";
+      print(e.code);
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "Die Email-Adresse hat das falsche Format.";
+          break;
+        case "wrong-password":
+          errorMessage = "Das Passwort ist falsch.";
+          break;
+        case "user-not-found":
+          errorMessage = "Diese Email-Adresse existiert nicht.";
+          break;
+        case "user-disabled":
+          errorMessage = "Der Nutzer mit dieser Email ist deaktiviert.";
+          break;
+        case "too-many-requests":
+          errorMessage = "Zu viele Anfragen. Versuche es später nochmal";
+          break;
+        default:
+          errorMessage = "Ein unbestimmter Fehler ist aufgetreten.";
+      }
+      throw errorMessage;
+    }
+  }
+
   static Future<void> logout() async {
     await _auth.signOut();
     SharedPreferences prefs = await SharedPreferences.getInstance();
