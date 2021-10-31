@@ -184,7 +184,7 @@ class UserFirebaseService {
     print("length of snapshots: " + snapshots.docs.length.toString());
     for (var doc in snapshots.docs) {
       List members = doc.get("members");
-      if (doc.get("isgroup") && members.contains(uid)){
+      if (doc.get("isgroup") && members.contains(uid)) {
         int index = members.indexOf(uid);
 
         Map<String, dynamic>? data = doc.data();
@@ -238,10 +238,9 @@ class UserFirebaseService {
         }
       }
 
-      if(!doc.get("isgroup") && members.contains(uidName)){
+      if (!doc.get("isgroup") && members.contains(uidName)) {
         await _firestore.collection("chat").doc(doc.id).delete();
       }
-
     }
   }
 
