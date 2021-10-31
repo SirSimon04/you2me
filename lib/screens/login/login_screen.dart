@@ -33,6 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<String?> _signUp(LoginData data) async {
     final name = await Navigator.of(context)
         .push(CupertinoPageRoute(builder: (context) => SignUpEnterName()));
+    if (name == null) {
+      return "Kein Name gewählt";
+    }
     try {
       await UserFirebaseService.register(
           email: data.name, password: data.password, username: name);
@@ -55,9 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return FlutterLogin(
       theme: LoginTheme(
-        pageColorLight: kBackgroundDark,
-        pageColorDark: kBackgroundDark,
-      ),
+          pageColorLight: kBackgroundDark,
+          pageColorDark: kBackgroundDark,
+          cardTheme: CardTheme(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24.0),
+            ),
+          )),
       logo: "assets/logo.png",
       loginAfterSignUp: true,
       messages: LoginMessages(
@@ -76,6 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
         signUpSuccess: "Erfolgreich angemeldet",
         flushbarTitleSuccess: "Erfolgreich",
         flushbarTitleError: "Fehler",
+        confirmPasswordError: "Die Passwörter sind nicht gleich",
       ),
       navigateBackAfterRecovery: true,
       userValidator: (value) {

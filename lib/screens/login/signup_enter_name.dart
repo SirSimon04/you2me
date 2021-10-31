@@ -21,11 +21,6 @@ class _SignUpEnterNameState extends State<SignUpEnterName> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundDark,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text("Wähle einen Nutzernamen",
-            style: TextStyle(color: Colors.white)),
-      ),
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -35,6 +30,9 @@ class _SignUpEnterNameState extends State<SignUpEnterName> {
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
