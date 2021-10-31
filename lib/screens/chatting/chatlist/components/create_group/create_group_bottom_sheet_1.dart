@@ -146,14 +146,14 @@ class _CreateGroup1State extends State<CreateGroup1> {
                                         if (newVal == true) {
                                           usersSelected[doc["name"]] =
                                               UserModel(
-                                            uid: doc.id,
-                                            name: doc["name"],
-                                            isOnline: doc["isonline"],
-                                            profilePic: UserProfilePic(
-                                              url: doc["fotourl"],
-                                              isOnline: doc["isonline"],
-                                            ),
-                                          );
+                                                  uid: doc.id,
+                                                  name: doc["name"],
+                                                  isOnline: doc["isonline"],
+                                                  profilePic: UserProfilePic(
+                                                    url: doc["fotourl"],
+                                                    isOnline: doc["isonline"],
+                                                  ),
+                                                  fcmIds: doc["fcmids"]);
                                         }
                                         if (newVal == false) {
                                           usersSelected.remove(doc["name"]);

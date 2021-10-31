@@ -6,6 +6,7 @@ class UserModel {
   bool isOnline;
   String? fotoUrl;
   Widget? profilePic;
+  List<String>? fcmIds;
 
   UserModel({
     required this.uid,
@@ -13,6 +14,7 @@ class UserModel {
     required this.isOnline,
     this.fotoUrl,
     this.profilePic,
+    this.fcmIds,
   });
 
   static UserModel getEmptyUser() {

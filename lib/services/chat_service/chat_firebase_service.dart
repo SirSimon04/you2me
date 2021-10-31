@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
@@ -14,12 +15,34 @@ class ChatFirebaseService {
   ChatFirebaseService();
   static final _auth = FirebaseAuth.instance;
   static final _firestore = FirebaseFirestore.instance;
+  static final _fcm = FirebaseMessaging.instance;
 
   ///@param doc is the user from firestore
   static Future<void> createChat(var doc) async {
     String url1 =
         await UserFirebaseService.getFotoUrlByUid(_auth.currentUser?.uid ?? "");
     String url2 = await UserFirebaseService.getFotoUrlByUid(doc.id);
+
+    //TODO:get all own fcm ids
+
+    String ownFcmId = await _fcm.getToken() ?? "";
+    String ownUid = _auth.currentUser?.uid ?? "";
+    String ownFcmIdUid = ownFcmId + "|" + ownUid;
+
+    List fcmIdsUids = [ownFcmIdUid];
+
+    List otherUserFcmIds = doc["fcmids"];
+
+    print("otherUserFcmIds " + otherUserFcmIds.toString());
+
+    // otherUserFcmIds.forEach((fcmId) {
+    //   fcmIdsUids.add((fcmId + "|" + doc.id));
+    // });
+
+    for (var fcmId in otherUserFcmIds) {
+      fcmIdsUids.add((fcmId + "|" + doc.id));
+    }
+
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": false,
       "lastmessagedate": [for (int i = 0; i < 2; i++) DateTime.now()],
@@ -41,6 +64,7 @@ class ChatFirebaseService {
       "name": "${doc["name"]} + ${_auth.currentUser?.displayName}",
       "writing": [],
       "fotourls": [url1, url2],
+      "fcmids": fcmIdsUids,
     });
 
     await _firestore.collection("user").doc(_auth.currentUser?.uid).update({
@@ -85,7 +109,24 @@ class ChatFirebaseService {
     required String name,
     String? info,
   }) async {
+    print("addedUsers: " + addedUsers.toString());
+
     int memberCount = addedUsers.length + 1;
+
+    //TODO:get all own fcm ids
+    String fcmId = await _fcm.getToken() ?? "";
+    String uid = _auth.currentUser?.uid ?? "";
+    String fcmIdUid = fcmId + "|" + uid;
+
+    List<String> fcmIdsUids = [fcmIdUid];
+
+    for (UserModel user in addedUsers) {
+      List<String> fcmIds = user.fcmIds ?? [];
+      for (String fcmId in fcmIds) {
+        fcmIdsUids.add((fcmId + "|" + user.uid));
+      }
+    }
+
     DocumentReference docRef = await _firestore.collection("chat").add({
       "isgroup": true,
       "lastmessagedate": [for (int i = 0; i < memberCount; i++) DateTime.now()],
@@ -102,6 +143,7 @@ class ChatFirebaseService {
       "fotourls": [(fotoUrl)],
       "groupinfo": info ?? "Das ist die Gruppenbeschreibung",
       "adminList": [_auth.currentUser?.uid],
+      "fcmids": fcmIdsUids,
     });
     if (!kIsWeb) {
       ChatFcmService.subscribeToChat(chatUid: docRef.id);

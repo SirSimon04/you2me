@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserFirebaseService {
   UserFirebaseService();
   static final _auth = FirebaseAuth.instance;
   static final _firestore = FirebaseFirestore.instance;
+  static final _fcm = FirebaseMessaging.instance;
 
   static Future<void> login({
     required String email,
@@ -111,6 +113,9 @@ class UserFirebaseService {
       }
     }
     print(indexList);
+
+    String fcmId = await _fcm.getToken() ?? "";
+
     await _firestore.collection("user").doc(_auth.currentUser?.uid ?? "").set({
       "name": _auth.currentUser?.displayName,
       "friends": [],
@@ -121,7 +126,8 @@ class UserFirebaseService {
       "bio": "Hallo, ich wünsche einen guten Tag!",
       "hasChatWith": [],
       "fotourl":
-          "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a"
+          "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a",
+      "fcmids": [fcmId],
     });
     print("added to firebase");
   }
