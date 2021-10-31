@@ -4,6 +4,7 @@ import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/models/user_model.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_fcm_service.dart';
+import 'package:flutter_dispuatio/services/general_services/toast_service.dart';
 import 'package:flutter_dispuatio/services/user_services/GeneralUserService.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -107,38 +108,44 @@ class ChatFirebaseService {
   }
 
   static Future<void> leaveGroup(ChatModel chat) async {
-    await _firestore.collection("chat").doc(chat.uid).update({
-      "members": FieldValue.arrayRemove(
-        [_auth.currentUser?.uid],
-      )
-    });
-
-    await _firestore.collection("chat").doc(chat.uid).update({
-      "notarchivedby": FieldValue.arrayRemove(
-        [_auth.currentUser?.uid],
-      )
-    });
-    await _firestore.collection("chat").doc(chat.uid).update({
-      "pinnedby": FieldValue.arrayRemove(
-        [_auth.currentUser?.uid],
-      )
-    });
-    await _firestore.collection("chat").doc(chat.uid).update({
-      "writing": FieldValue.arrayRemove(
-        [_auth.currentUser?.uid],
-      )
-    });
-
-    var snapshots = await _firestore
-        .collection("chat")
-        .doc(chat.uid)
-        .collection("messages")
-        .get();
-
-    for (var doc in snapshots.docs) {
-      await doc.reference.update({
-        'canbeseenby': FieldValue.arrayRemove([_auth.currentUser?.uid ?? ""]),
+    if (chat.adminList!.length == 1 &&
+        chat.adminList!.contains(_auth.currentUser?.uid ?? "")) {
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "members": FieldValue.arrayRemove(
+          [_auth.currentUser?.uid],
+        )
       });
+
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "notarchivedby": FieldValue.arrayRemove(
+          [_auth.currentUser?.uid],
+        )
+      });
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "pinnedby": FieldValue.arrayRemove(
+          [_auth.currentUser?.uid],
+        )
+      });
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "writing": FieldValue.arrayRemove(
+          [_auth.currentUser?.uid],
+        )
+      });
+
+      var snapshots = await _firestore
+          .collection("chat")
+          .doc(chat.uid)
+          .collection("messages")
+          .get();
+
+      for (var doc in snapshots.docs) {
+        await doc.reference.update({
+          'canbeseenby': FieldValue.arrayRemove([_auth.currentUser?.uid ?? ""]),
+        });
+      }
+    } else {
+      ToastService.showLongToast(
+          "Du bist der einzige Admin und kannst die Gruppe erst verlassen, wenn du einen anderen Nutzer zum Admin ernannt hast");
     }
   }
 
