@@ -177,8 +177,9 @@ class UserFirebaseService {
     //TODO: iterate over all chats and remove own info
     var snapshots = await _firestore.collection("chat").get();
 
-    String uidName =
-        (_auth.currentUser?.uid ?? "") + (_auth.currentUser?.displayName ?? "");
+    String uidName = (_auth.currentUser?.uid ?? "") +
+        "|" +
+        (_auth.currentUser?.displayName ?? "");
     String uid = (_auth.currentUser?.uid ?? "");
 
     print("length of snapshots: " + snapshots.docs.length.toString());
