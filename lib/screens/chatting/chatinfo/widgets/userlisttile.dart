@@ -148,7 +148,10 @@ class _UserListTileState extends State<UserListTile> {
                                       await ChatFirebaseService.makeAdmin(
                                         userUid: data.id,
                                         chatUid: widget.chat.uid,
-                                      );
+                                      ).then((value) {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      });
                                       setState(() {
                                         isAdmin = true;
                                       });

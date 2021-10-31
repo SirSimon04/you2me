@@ -506,11 +506,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                       ),
                       leading: Icon(FontAwesomeIcons.trash),
                       onTap: () =>
-                          ChatFirebaseService.leaveGroup(chat).then((value) {
-                        ToastService.showLongToast("Gruppe wurde verlassen");
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      }),
+                          ChatFirebaseService.leaveGroup(chat, context),
                     ),
                 ],
               ),

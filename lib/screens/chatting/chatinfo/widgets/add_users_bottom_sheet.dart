@@ -130,7 +130,9 @@ class _AddUsersState extends State<AddUsers> {
                                 isElevatedM: true,
                                 onTap: () async {
                                   await ChatFirebaseService.addToGroup(
-                                      uid: doc.id, chat: widget.chat);
+                                    uid: doc.id,
+                                    chat: widget.chat,
+                                  );
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();

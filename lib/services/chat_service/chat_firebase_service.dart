@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dispuatio/models/chat_model.dart';
 import 'package:flutter_dispuatio/models/message_model.dart';
 import 'package:flutter_dispuatio/models/user_model.dart';
@@ -107,9 +108,17 @@ class ChatFirebaseService {
     }
   }
 
-  static Future<void> leaveGroup(ChatModel chat) async {
-    if (chat.adminList!.length == 1 &&
+  static Future<void> leaveGroup(ChatModel chat, dynamic context) async {
+    if (chat.members.length == 1) {
+      await _firestore.collection("chat").doc(chat.uid).delete();
+      ToastService.showLongToast("Gruppe wurde verlassen");
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } else if (chat.adminList!.length == 1 &&
         chat.adminList!.contains(_auth.currentUser?.uid ?? "")) {
+      ToastService.showLongToast(
+          "Du bist der einzige Admin und kannst die Gruppe erst verlassen, wenn du einen anderen Nutzer zum Admin ernannt hast");
+    } else {
       await _firestore.collection("chat").doc(chat.uid).update({
         "members": FieldValue.arrayRemove(
           [_auth.currentUser?.uid],
@@ -143,9 +152,9 @@ class ChatFirebaseService {
           'canbeseenby': FieldValue.arrayRemove([_auth.currentUser?.uid ?? ""]),
         });
       }
-    } else {
-      ToastService.showLongToast(
-          "Du bist der einzige Admin und kannst die Gruppe erst verlassen, wenn du einen anderen Nutzer zum Admin ernannt hast");
+      ToastService.showLongToast("Gruppe wurde verlassen");
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
     }
   }
 
