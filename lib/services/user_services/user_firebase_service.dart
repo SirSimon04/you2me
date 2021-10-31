@@ -173,17 +173,16 @@ class UserFirebaseService {
   }
 
   static Future<void> deleteAccount() async {
-    // await _auth.currentUser?.delete();
     //TODO: iterate over all chats and remove own info
-    var snapshots = await _firestore.collection("chat").get();
 
     String uidName = (_auth.currentUser?.uid ?? "") +
         "|" +
         (_auth.currentUser?.displayName ?? "");
     String uid = (_auth.currentUser?.uid ?? "");
 
-    print("length of snapshots: " + snapshots.docs.length.toString());
-    for (var doc in snapshots.docs) {
+    var groupSnapshots = await _firestore.collection("chat").get();
+
+    for (var doc in groupSnapshots.docs) {
       List members = doc.get("members");
       if (doc.get("isgroup") && members.contains(uid)) {
         int index = members.indexOf(uid);
@@ -243,6 +242,24 @@ class UserFirebaseService {
         await _firestore.collection("chat").doc(doc.id).delete();
       }
     }
+
+    var userSnapshots = await _firestore.collection("user").get();
+
+    for (var doc in userSnapshots.docs) {
+      if (doc.get("friends").contains(uid)) {
+        await _firestore.collection("user").doc(doc.id).update({
+          "friends": FieldValue.arrayRemove([uid]),
+        });
+      }
+      if (doc.get("hasChatWith").contains(uid)) {
+        await _firestore.collection("user").doc(doc.id).update({
+          "hasChatWith": FieldValue.arrayRemove([uid]),
+        });
+      }
+    }
+
+    await _firestore.collection("user").doc(uid).delete();
+    await _auth.currentUser?.delete();
   }
 
   static Future<String> getFotoUrlByUid(String uid) async {
