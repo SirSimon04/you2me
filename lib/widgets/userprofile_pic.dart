@@ -9,10 +9,14 @@ class UserProfilePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("url here " + url);
     return Stack(
       children: [
         CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(url),
+          backgroundImage: url ==
+                  "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a"
+              ? Image.asset("assets/user.png").image
+              : CachedNetworkImageProvider(url),
         ),
         if (isOnline)
           Positioned(
