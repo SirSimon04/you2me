@@ -255,8 +255,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                           ),
                           leading: Icon(FontAwesomeIcons.backspace),
                           onTap: () async {
-                            await ChatFirebaseService.emptyChat(
-                                chat.uid, chat.members);
+                            await ChatFirebaseService.emptyChat(chat);
                             ToastService.showLongToast("Chat wurde geleert");
                           },
                         ),
@@ -488,8 +487,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                       ),
                       leading: Icon(FontAwesomeIcons.backspace),
                       onTap: () async {
-                        await ChatFirebaseService.emptyChat(
-                            chat.uid, chat.members);
+                        await ChatFirebaseService.emptyChat(chat);
                         ToastService.showLongToast("Chat wurde geleert");
                       },
                     ),

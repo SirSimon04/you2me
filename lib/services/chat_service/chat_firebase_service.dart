@@ -367,11 +367,15 @@ class ChatFirebaseService {
     return entry.split("|").first;
   }
 
-  static Future<void> emptyChat(String chatUid, List members) async {
-    final int ownUidPos =
-        GeneralUserService.getOwnUidPosInGroupFromList(members);
+  static Future<void> emptyChat(ChatModel chat) async {
+    int ownUidPos = -1;
+    if (chat.isGroup) {
+      ownUidPos = GeneralUserService.getOwnUidPosInGroupFromList(chat.members);
+    } else {
+      ownUidPos = GeneralUserService.getOwnUidPosInChatFromChatModel(chat);
+    }
 
-    var docSnapshot = await _firestore.collection("chat").doc(chatUid).get();
+    var docSnapshot = await _firestore.collection("chat").doc(chat.uid).get();
 
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
@@ -385,7 +389,7 @@ class ChatFirebaseService {
       lastmessagesenderids[ownUidPos] = "";
       lastmessagesendernames[ownUidPos] = "";
 
-      await _firestore.collection("chat").doc(chatUid).update({
+      await _firestore.collection("chat").doc(chat.uid).update({
         "lastmessagetext": lastMessageTexts,
         "lastmessagesenderid": lastmessagesenderids,
         "lastmessagedate": lastmessagedates,
@@ -395,7 +399,7 @@ class ChatFirebaseService {
 
     await _firestore
         .collection("chat")
-        .doc(chatUid)
+        .doc(chat.uid)
         .collection("messages")
         .get()
         .then((snapshot) => {
