@@ -201,6 +201,17 @@ class ChatFirebaseService {
           'canbeseenby': FieldValue.arrayRemove([_auth.currentUser?.uid ?? ""]),
         });
       }
+
+      String uid = _auth.currentUser?.uid ?? "";
+      List fcmIds = await UserFirebaseService.getFcmIds(uid);
+
+      for (String fcmId in fcmIds) {
+        print("DELETEINDEX " + (fcmId + "|" + uid));
+        await _firestore.collection("chat").doc(chat.uid).update({
+          "fcmids": FieldValue.arrayRemove([(fcmId + "|" + uid)])
+        });
+      }
+
       ToastService.showLongToast("Gruppe wurde verlassen");
       Navigator.of(context).pop();
       Navigator.of(context).pop();
@@ -236,6 +247,14 @@ class ChatFirebaseService {
         "lastmessagesendername": lastmessagesendernames,
         "members": members,
         "notarchivedby": notarchivedby,
+      });
+    }
+
+    List fcmIds = await UserFirebaseService.getFcmIds(uid);
+
+    for (String fcmId in fcmIds) {
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "fcmids": FieldValue.arrayUnion([(fcmId + "|" + uid)])
       });
     }
   }
@@ -288,27 +307,14 @@ class ChatFirebaseService {
         'canbeseenby': FieldValue.arrayRemove([uid]),
       });
     }
-    // var docSnapshot = await _firestore.collection("chat").doc(chatUid).get();
-    //
-    // if (docSnapshot.exists) {
-    //   Map<String, dynamic>? data = docSnapshot.data();
-    //   var lastMessageTexts = data?["lastmessagetext"];
-    //   var lastmessagesenderids = data?["lastmessagesenderid"];
-    //   var lastmessagesendernames = data?["lastmessagesendername"];
-    //   var lastmessagedates = data?["lastmessagedate"];
-    //
-    //   lastMessageTexts[ownUidPos] = "";
-    //   lastmessagedates[ownUidPos] = Timestamp.now();
-    //   lastmessagesenderids[ownUidPos] = "";
-    //   lastmessagesendernames[ownUidPos] = "";
-    //
-    //   await _firestore.collection("chat").doc(chatUid).update({
-    //     "lastmessagetext": lastMessageTexts,
-    //     "lastmessagesenderid": lastmessagesenderids,
-    //     "lastmessagedate": lastmessagedates,
-    //     "lastmessagesendername": lastmessagesendernames
-    //   });
-    // }
+
+    List fcmIds = await UserFirebaseService.getFcmIds(uid);
+
+    for (String fcmId in fcmIds) {
+      await _firestore.collection("chat").doc(chat.uid).update({
+        "fcmids": FieldValue.arrayRemove([(fcmId + "|" + uid)])
+      });
+    }
   }
 
   static Future<void> makeAdmin(
