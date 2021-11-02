@@ -339,4 +339,12 @@ class UserFirebaseService {
 
     await _auth.currentUser?.updatePhotoURL(url);
   }
+
+  static Future<List> getFcmIds(String uid) async {
+    var doc = await _firestore.collection("user").doc(uid).get();
+
+    List fcmIds = doc.get("fcmids");
+
+    return fcmIds;
+  }
 }

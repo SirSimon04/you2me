@@ -25,19 +25,20 @@ class ChatFirebaseService {
 
     //TODO:get all own fcm ids
 
-    String ownFcmId = await _fcm.getToken() ?? "";
+    List fcmIdsUids = [];
+
+    List ownFcmIds =
+        await UserFirebaseService.getFcmIds(_auth.currentUser?.uid ?? "");
+
     String ownUid = _auth.currentUser?.uid ?? "";
-    String ownFcmIdUid = ownFcmId + "|" + ownUid;
 
-    List fcmIdsUids = [ownFcmIdUid];
-
+    for (String fcmId in ownFcmIds) {
+      String ownFcmIdUid = fcmId + "|" + ownUid;
+      fcmIdsUids.add(ownFcmIdUid);
+    }
     List otherUserFcmIds = doc["fcmids"];
 
     print("otherUserFcmIds " + otherUserFcmIds.toString());
-
-    // otherUserFcmIds.forEach((fcmId) {
-    //   fcmIdsUids.add((fcmId + "|" + doc.id));
-    // });
 
     for (var fcmId in otherUserFcmIds) {
       fcmIdsUids.add((fcmId + "|" + doc.id));
