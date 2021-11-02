@@ -16,6 +16,7 @@ class ChatModel {
   final List<String> fotoUrls;
   final String? description;
   final List<String>? adminList;
+  final List fcmIds;
 
   ChatModel({
     required this.name,
@@ -33,6 +34,7 @@ class ChatModel {
     required this.fotoUrls,
     this.description,
     this.adminList,
+    required this.fcmIds,
   });
 
   static ChatModel getEmptyChat() {
@@ -50,6 +52,7 @@ class ChatModel {
       lastMessageSenderId: "",
       lastMessageSender: "",
       fotoUrls: [],
+      fcmIds: [],
     );
   }
 

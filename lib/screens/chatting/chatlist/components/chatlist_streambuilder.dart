@@ -125,6 +125,7 @@ class ChatListStreamBuilder extends StatelessWidget {
                     adminList: doc["isgroup"]
                         ? List<String>.from(doc["adminList"])
                         : null,
+                    fcmIds: doc["fcmids"],
                   ),
                 );
               }).toList(),

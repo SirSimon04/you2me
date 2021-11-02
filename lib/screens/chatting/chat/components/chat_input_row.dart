@@ -301,8 +301,8 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   );
                 });
 
-                ChatFcmService.sendMsgPrivate(
-                  chatUid: widget.chat.uid,
+                ChatFcmService.sendFcmMessage(
+                  chat: widget.chat,
                   name: _auth.currentUser?.displayName ?? "",
                   msgText: msgText,
                   isGroup: widget.chat.isGroup,
