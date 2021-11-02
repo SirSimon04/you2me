@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserFirebaseService {
@@ -16,6 +17,14 @@ class UserFirebaseService {
     await _auth.signInWithEmailAndPassword(email: email, password: password);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("email", "mail");
+
+    String? fcmId = await _fcm.getToken();
+
+    if (fcmId != null) {
+      print("FCMID-NOT-NULL " + fcmId);
+      addFcmId(fcmId);
+      ChatFirebaseService.addFcmIdToAllChats(fcmId);
+    }
   }
 
   static Future<void> loginForDelete({
@@ -54,6 +63,13 @@ class UserFirebaseService {
     await _auth.signOut();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("email");
+
+    String? fcmId = await _fcm.getToken();
+
+    if (fcmId != null) {
+      removeFcmId(fcmId);
+      ChatFirebaseService.removeFcmIdFromAllChats(fcmId);
+    }
   }
 
   static Future<void> setOnline() async {
@@ -346,5 +362,17 @@ class UserFirebaseService {
     List fcmIds = doc.get("fcmids");
 
     return fcmIds;
+  }
+
+  static Future<void> addFcmId(String fcmId) async {
+    _firestore.collection("user").doc(_auth.currentUser?.uid).update({
+      "fcmids": FieldValue.arrayUnion([fcmId])
+    });
+  }
+
+  static Future<void> removeFcmId(String fcmId) async {
+    _firestore.collection("user").doc(_auth.currentUser?.uid).update({
+      "fcmids": FieldValue.arrayRemove([fcmId])
+    });
   }
 }

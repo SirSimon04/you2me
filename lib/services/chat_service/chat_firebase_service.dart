@@ -734,4 +734,54 @@ class ChatFirebaseService {
           .delete();
     });
   }
+
+  static Future<void> addFcmIdToAllChats(String fcmId) async {
+    List test = [
+      (_auth.currentUser?.uid ?? "").toString(),
+      ((_auth.currentUser?.uid ?? "FEHLER") +
+              "|" +
+              (_auth.currentUser?.displayName ?? "FEHLER"))
+          .toString()
+    ];
+
+    print("QUERY-LIST: " + test.toString());
+    print("UID " + (_auth.currentUser?.uid ?? ""));
+
+    var snapshots = _firestore
+        .collection("chat")
+        .where("members", arrayContainsAny: test)
+        .snapshots();
+
+    await for (var snapshot in snapshots) {
+      List<DocumentSnapshot> docs = snapshot.docs;
+      print("DOC-LENGTH " + docs.length.toString());
+      for (var doc in docs) {
+        await doc.reference.update({
+          "fcmids": FieldValue.arrayUnion(
+              [(fcmId) + "|" + (_auth.currentUser?.uid ?? "FEHLER")])
+        });
+      }
+    }
+  }
+
+  static Future<void> removeFcmIdFromAllChats(String fcmId) async {
+    var snapshots =
+        _firestore.collection("user").where("members", arrayContainsAny: [
+      (_auth.currentUser?.uid),
+      ((_auth.currentUser?.uid ?? "FEHLER") +
+          "|" +
+          (_auth.currentUser?.displayName ?? "FEHLER"))
+    ]).snapshots();
+
+    await for (var snapshot in snapshots) {
+      List<DocumentSnapshot> docs = snapshot.docs;
+
+      for (var doc in docs) {
+        await doc.reference.update({
+          "fcmids": FieldValue.arrayRemove(
+              [(fcmId) + "|" + (_auth.currentUser?.uid ?? "FEHLER")])
+        });
+      }
+    }
+  }
 }
