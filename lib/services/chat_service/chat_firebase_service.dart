@@ -23,8 +23,6 @@ class ChatFirebaseService {
         await UserFirebaseService.getFotoUrlByUid(_auth.currentUser?.uid ?? "");
     String url2 = await UserFirebaseService.getFotoUrlByUid(doc.id);
 
-    //TODO:get all own fcm ids
-
     List fcmIdsUids = [];
 
     List ownFcmIds =
@@ -744,44 +742,38 @@ class ChatFirebaseService {
           .toString()
     ];
 
-    print("QUERY-LIST: " + test.toString());
-    print("UID " + (_auth.currentUser?.uid ?? ""));
-
-    var snapshots = _firestore
+    var snapshots = await _firestore
         .collection("chat")
         .where("members", arrayContainsAny: test)
-        .snapshots();
+        .get();
 
-    await for (var snapshot in snapshots) {
-      List<DocumentSnapshot> docs = snapshot.docs;
-      print("DOC-LENGTH " + docs.length.toString());
-      for (var doc in docs) {
-        await doc.reference.update({
-          "fcmids": FieldValue.arrayUnion(
-              [(fcmId) + "|" + (_auth.currentUser?.uid ?? "FEHLER")])
-        });
-      }
+    for (var doc in snapshots.docs) {
+      await doc.reference.update({
+        "fcmids": FieldValue.arrayUnion(
+            [(fcmId) + "|" + (_auth.currentUser?.uid ?? "FEHLER")])
+      });
     }
   }
 
   static Future<void> removeFcmIdFromAllChats(String fcmId) async {
-    var snapshots =
-        _firestore.collection("user").where("members", arrayContainsAny: [
-      (_auth.currentUser?.uid),
+    List test = [
+      (_auth.currentUser?.uid ?? "").toString(),
       ((_auth.currentUser?.uid ?? "FEHLER") +
-          "|" +
-          (_auth.currentUser?.displayName ?? "FEHLER"))
-    ]).snapshots();
+              "|" +
+              (_auth.currentUser?.displayName ?? "FEHLER"))
+          .toString()
+    ];
 
-    await for (var snapshot in snapshots) {
-      List<DocumentSnapshot> docs = snapshot.docs;
+    var snapshots = await _firestore
+        .collection("chat")
+        .where("members", arrayContainsAny: test)
+        .get();
 
-      for (var doc in docs) {
-        await doc.reference.update({
-          "fcmids": FieldValue.arrayRemove(
-              [(fcmId) + "|" + (_auth.currentUser?.uid ?? "FEHLER")])
-        });
-      }
+    for (var doc in snapshots.docs) {
+      await doc.reference.update({
+        "fcmids": FieldValue.arrayRemove(
+            [(fcmId) + "|" + (_auth.currentUser?.uid ?? "FEHLER")])
+      });
     }
   }
 }
