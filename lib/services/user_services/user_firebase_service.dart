@@ -60,16 +60,19 @@ class UserFirebaseService {
   }
 
   static Future<void> logout() async {
-    await _auth.signOut();
+    print("logged out called");
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("email");
 
     String? fcmId = await _fcm.getToken();
 
     if (fcmId != null) {
-      removeFcmId(fcmId);
-      ChatFirebaseService.removeFcmIdFromAllChats(fcmId);
+      print("fcm id is not null");
+      await removeFcmId(fcmId);
+      await ChatFirebaseService.removeFcmIdFromAllChats(fcmId);
     }
+    await _auth.signOut();
   }
 
   static Future<void> setOnline() async {
