@@ -6,7 +6,7 @@ class UserModel {
   bool isOnline;
   String? fotoUrl;
   Widget? profilePic;
-  List<String>? fcmIds;
+  List? fcmIds;
 
   UserModel({
     required this.uid,
