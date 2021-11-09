@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dispuatio/screens/homepages/responsive.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/change_account/change_account.dart';
 import 'package:flutter_dispuatio/screens/settings/screens/marked_messages/marked_messages.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
@@ -30,6 +31,10 @@ class _SettingsState extends State<Settings>
       appBar: AppBar(
         title: Text("Settings", style: TextStyle(color: Colors.white)),
         automaticallyImplyLeading: false,
+        actions: [
+          if (Responsive.isTablet(context) || Responsive.isDesktop(context))
+            CloseButton(),
+        ],
       ),
       body: ListView(
         children: [

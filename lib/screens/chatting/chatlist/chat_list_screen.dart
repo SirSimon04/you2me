@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_dispuatio/constants.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_appbar/chatlist_appbar.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/components/chatlist_streambuilder.dart';
+import 'package:flutter_dispuatio/screens/settings/settings.dart';
 import 'package:flutter_dispuatio/services/user_services/user_firebase_service.dart';
 
 class ChatList extends StatefulWidget {
@@ -16,6 +17,7 @@ class ChatList extends StatefulWidget {
 class _ChatListState extends State<ChatList>
     with AutomaticKeepAliveClientMixin {
   final _auth = FirebaseAuth.instance;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isArchiveOpen = false;
 
@@ -56,12 +58,18 @@ class _ChatListState extends State<ChatList>
     // print("UID ist " + _auth.currentUser!.uid);
     // print(_auth.currentUser!.displayName);
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Settings(),
       appBar: getChatListAppBar(
         isArchiveOpen: isArchiveOpen,
         onArchivePress: () {
           setState(() {
             isArchiveOpen = !isArchiveOpen;
           });
+        },
+        onSettingsPress: () {
+          print(_scaffoldKey.currentState == null);
+          _scaffoldKey.currentState!.openDrawer();
         },
         context: context,
       ),

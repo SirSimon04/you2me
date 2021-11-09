@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 getChatListAppBar({
   required bool isArchiveOpen,
   required VoidCallback onArchivePress,
+  required VoidCallback onSettingsPress,
   required BuildContext context,
 }) {
   return AppBar(
@@ -52,7 +53,7 @@ getChatListAppBar({
             FontAwesomeIcons.ellipsisV,
             color: Colors.white,
           ),
-          onPressed: () {},
+          onPressed: onSettingsPress,
         ),
       )
     ],
