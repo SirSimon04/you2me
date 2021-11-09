@@ -37,7 +37,6 @@ class ChatListStreamBuilder extends StatelessWidget {
                 //    arrayContains: "1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2|simi")
                 .snapshots(),
         builder: (context, snapshot) {
-          print("snapshot data " + snapshot.data.toString());
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               return Center(child: CupertinoActivityIndicator());
