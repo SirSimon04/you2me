@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_dispuatio/home_page.dart';
 import 'package:flutter_dispuatio/screens/chatting/chatlist/chat_list_screen.dart';
 import 'package:flutter_dispuatio/screens/homepages/homepage.dart';
 import 'package:flutter_dispuatio/screens/login/login_screen.dart';
