@@ -37,117 +37,114 @@ class ChatListStreamBuilder extends StatelessWidget {
                 //    arrayContains: "1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2|simi")
                 .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return CupertinoActivityIndicator();
-            // return ListView.builder(
-            //   shrinkWrap: true,
-            //   itemBuilder: (context, index) => ChatListLoading(),
-            //   itemCount: 10,
-            // );
-          } else {
-            // print("length of docs: " + snapshot.data!.docs.length.toString());
+          print("snapshot data " + snapshot.data.toString());
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Center(child: CupertinoActivityIndicator());
+            case ConnectionState.waiting:
+              return Center(child: CupertinoActivityIndicator());
+            case ConnectionState.active:
+            case ConnectionState.done:
+          }
+          // print("length of docs: " + snapshot.data!.docs.length.toString());
 
-            if (snapshot.data!.docs.length == 0) {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(40),
-                      child: SvgPicture.asset(
-                        "assets/placeholders/chat.svg",
-                        height: MediaQuery.of(context).size.height * 0.5,
-                      ),
+          if (snapshot.data!.docs.length == 0) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(40),
+                    child: SvgPicture.asset(
+                      "assets/placeholders/chat.svg",
+                      height: MediaQuery.of(context).size.height * 0.5,
                     ),
-                    isArchiveOpen
-                        ? Padding(
+                  ),
+                  isArchiveOpen
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            "Du hast gerade keine Chats archiviert. Du kanst einen Chat archivieren, indem du auf einem Chat nach rechts wischst.",
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Center(
+                          child: Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Text(
-                              "Du hast gerade keine Chats archiviert. Du kanst einen Chat archivieren, indem du auf einem Chat nach rechts wischst.",
+                              "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
                               textAlign: TextAlign.center,
                             ),
-                          )
-                        : Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              child: Text(
-                                "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          )
-                  ],
-                ),
-              );
-            }
-
-            List<DocumentSnapshot> allChatsUnsorted = snapshot.data!.docs;
-
-            List<DocumentSnapshot> pinned = [];
-            List<DocumentSnapshot> notPinned = [];
-
-            List<DocumentSnapshot> allChatsSorted = [];
-
-            // print("pin debug:::;");
-            for (DocumentSnapshot doc in allChatsUnsorted) {
-              //   print(doc["pinnedby"].contains(_auth.currentUser?.uid));
-              if (doc["pinnedby"].contains(_auth.currentUser?.uid)) {
-                pinned.add(doc);
-              } else {
-                notPinned.add(doc);
-              }
-            }
-            allChatsSorted.addAll(pinned);
-            allChatsSorted.addAll(notPinned);
-
-            return ImplicitlyAnimatedList<ChatListTile>(
-              items: allChatsSorted.map((doc) {
-                var users = doc["members"];
-                final int ownUidPos = doc["isgroup"]
-                    ? GeneralUserService.getOwnUidPosInGroupFromList(users)
-                    : GeneralUserService.getOwnUidPosInChatFromMemberList(
-                        users);
-                return ChatListTile(
-                  ChatModel(
-                    name:
-                        doc["isgroup"] ? doc["name"] : getName(doc["members"]),
-                    isGroup: doc["isgroup"],
-                    uid: doc.id,
-                    userCount: users.length,
-                    lastMessageSender: doc["lastmessagesendername"][ownUidPos],
-                    lastMessageSenderId: doc["lastmessagesenderid"][ownUidPos],
-                    lastMessageDate: doc["lastmessagedate"][ownUidPos],
-                    lastMessageText: doc["lastmessagetext"][ownUidPos],
-                    members: List<String>.from(doc["members"]),
-                    writing: List<String>.from(doc["writing"]),
-                    isArchived: isArchiveOpen,
-                    isPinned: doc["pinnedby"].contains(_auth.currentUser?.uid),
-                    fotoUrls: List<String>.from(
-                      doc["fotourls"],
-                    ),
-                    description: getGroupInfo(doc),
-                    adminList: doc["isgroup"]
-                        ? List<String>.from(doc["adminList"])
-                        : null,
-                    fcmIds: doc["fcmids"],
-                  ),
-                );
-              }).toList(),
-              areItemsTheSame: (a, b) => a.chat.uid == b.chat.uid,
-              itemBuilder: (context, animation, item, index) {
-                // Specifiy a transition to be used by the ImplicitlyAnimatedList.
-                // See the Transitions section on how to import this transition.
-                return SizeFadeTransition(
-                  sizeFraction: 0.7,
-                  curve: Curves.easeInOut,
-                  animation: animation,
-                  child: item,
-                );
-              },
+                          ),
+                        )
+                ],
+              ),
             );
           }
+
+          List<DocumentSnapshot> allChatsUnsorted = snapshot.data!.docs;
+
+          List<DocumentSnapshot> pinned = [];
+          List<DocumentSnapshot> notPinned = [];
+
+          List<DocumentSnapshot> allChatsSorted = [];
+
+          // print("pin debug:::;");
+          for (DocumentSnapshot doc in allChatsUnsorted) {
+            //   print(doc["pinnedby"].contains(_auth.currentUser?.uid));
+            if (doc["pinnedby"].contains(_auth.currentUser?.uid)) {
+              pinned.add(doc);
+            } else {
+              notPinned.add(doc);
+            }
+          }
+          allChatsSorted.addAll(pinned);
+          allChatsSorted.addAll(notPinned);
+
+          return ImplicitlyAnimatedList<ChatListTile>(
+            items: allChatsSorted.map((doc) {
+              var users = doc["members"];
+              final int ownUidPos = doc["isgroup"]
+                  ? GeneralUserService.getOwnUidPosInGroupFromList(users)
+                  : GeneralUserService.getOwnUidPosInChatFromMemberList(users);
+              return ChatListTile(
+                ChatModel(
+                  name: doc["isgroup"] ? doc["name"] : getName(doc["members"]),
+                  isGroup: doc["isgroup"],
+                  uid: doc.id,
+                  userCount: users.length,
+                  lastMessageSender: doc["lastmessagesendername"][ownUidPos],
+                  lastMessageSenderId: doc["lastmessagesenderid"][ownUidPos],
+                  lastMessageDate: doc["lastmessagedate"][ownUidPos],
+                  lastMessageText: doc["lastmessagetext"][ownUidPos],
+                  members: List<String>.from(doc["members"]),
+                  writing: List<String>.from(doc["writing"]),
+                  isArchived: isArchiveOpen,
+                  isPinned: doc["pinnedby"].contains(_auth.currentUser?.uid),
+                  fotoUrls: List<String>.from(
+                    doc["fotourls"],
+                  ),
+                  description: getGroupInfo(doc),
+                  adminList: doc["isgroup"]
+                      ? List<String>.from(doc["adminList"])
+                      : null,
+                  fcmIds: doc["fcmids"],
+                ),
+              );
+            }).toList(),
+            areItemsTheSame: (a, b) => a.chat.uid == b.chat.uid,
+            itemBuilder: (context, animation, item, index) {
+              // Specifiy a transition to be used by the ImplicitlyAnimatedList.
+              // See the Transitions section on how to import this transition.
+              return SizeFadeTransition(
+                sizeFraction: 0.7,
+                curve: Curves.easeInOut,
+                animation: animation,
+                child: item,
+              );
+            },
+          );
         },
       ),
     );
