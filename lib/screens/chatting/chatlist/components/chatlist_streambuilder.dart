@@ -68,9 +68,15 @@ class ChatListStreamBuilder extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                           )
-                        : Text(
-                            "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
-                            textAlign: TextAlign.center,
+                        : Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: Text(
+                                "Du hast bisher noch keine Chats erstellt. Füge ein paar Freunde hinzu, um direkt damit zu beginnen.",
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           )
                   ],
                 ),
