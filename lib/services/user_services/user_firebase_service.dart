@@ -104,17 +104,23 @@ class UserFirebaseService {
       {required String email,
       required String password,
       required String username}) async {
-    print("here");
-    UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    print("register");
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print("Error  " + e.toString());
+    }
+    print("created firebaseuser");
     //TODO: add exceptions
     await _auth.currentUser?.updatePhotoURL(
         "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a");
     await _auth.currentUser?.updateDisplayName(username);
 
+    print("updated firebase info");
     //old Auth version
     // await _auth.currentUser?.updateProfile(
     //   displayName: username,
@@ -131,9 +137,11 @@ class UserFirebaseService {
         indexList.add(splitList[i].substring(0, j).toLowerCase());
       }
     }
-    print(indexList);
-
-    String fcmId = await _fcm.getToken() ?? "";
+    print("indexlist " + indexList.toString());
+    String fcmId = "";
+    try {
+      fcmId = await _fcm.getToken() ?? "";
+    } catch (e) {}
 
     await _firestore.collection("user").doc(_auth.currentUser?.uid ?? "").set({
       "name": _auth.currentUser?.displayName,

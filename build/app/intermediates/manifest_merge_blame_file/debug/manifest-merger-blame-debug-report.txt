@@ -13,8 +13,8 @@
 13         to allow setting breakpoints, to provide hot reload, etc.
 14    -->
 15    <uses-permission android:name="android.permission.INTERNET" />
-15-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:43:5-66
-15-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:43:22-64
+15-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:45:5-66
+15-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:45:22-64
 16    <uses-permission android:name="android.permission.WAKE_LOCK" />
 16-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:8:5-68
 16-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:8:22-65
@@ -32,403 +32,405 @@
 20-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:25:22-79
 21
 22    <application
-22-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:5:4-42:19
+22-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:5:4-44:19
 23        android:name="androidx.multidex.MultiDexApplication"
 24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 24-->[androidx.core:core:1.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/f4a15a5606c9a028857d8a3e89eefa0f/core-1.1.0/AndroidManifest.xml:24:18-86
 25        android:debuggable="true"
 26        android:icon="@mipmap/ic_launcher"
 26-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:7:9-43
-27        android:label="you2me" >
+27        android:label="you2me"
 27-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:6:9-31
-28        <activity
-28-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:8:9-36:20
-29            android:name="com.engel_simon.flutter_dispuatio.MainActivity"
-29-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:9:13-41
-30            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-30-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:12:13-163
-31            android:hardwareAccelerated="true"
-31-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:13:13-47
-32            android:launchMode="singleTop"
-32-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:10:13-43
-33            android:theme="@style/LaunchTheme"
-33-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:11:13-47
-34            android:windowSoftInputMode="adjustResize" >
-34-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:14:13-55
-35
-36            <!--
-37                 Specifies an Android theme to apply to this Activity as soon as
-38                 the Android process has started. This theme is visible to the user
-39                 while the Flutter UI initializes. After that, this theme continues
-40                 to determine the Window background behind the Flutter UI.
-41            -->
-42            <meta-data
-42-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:19:13-22:17
-43                android:name="io.flutter.embedding.android.NormalTheme"
-43-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:20:15-70
-44                android:resource="@style/NormalTheme" />
-44-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:21:15-52
-45            <!--
-46                 Displays an Android View that continues showing the launch screen
-47                 Drawable until Flutter paints its first frame, then this splash
-48                 screen fades out. A splash screen is useful to avoid any visual
-49                 gap between the end of Android's launch screen and the painting of
-50                 Flutter's first frame.
-51            -->
-52            <meta-data
-52-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:28:13-31:17
-53                android:name="io.flutter.embedding.android.SplashScreenDrawable"
-53-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:29:15-79
-54                android:resource="@drawable/launch_background" />
-54-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:30:15-61
-55
-56            <intent-filter>
-56-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:32:13-35:29
-57                <action android:name="android.intent.action.MAIN" />
-57-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:33:17-68
-57-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:33:25-66
-58
-59                <category android:name="android.intent.category.LAUNCHER" />
-59-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:34:17-76
-59-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:34:27-74
-60            </intent-filter>
-61        </activity>
-62        <!--
-63             Don't delete the meta-data below.
-64             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
-65        -->
-66        <meta-data
-66-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:39:9-41:33
-67            android:name="flutterEmbedding"
-67-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:40:13-44
-68            android:value="2" />
-68-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:41:13-30
-69
-70        <service
-70-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-12:19
-71            android:name="com.google.firebase.components.ComponentDiscoveryService"
-71-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:8:18-89
-72            android:directBootAware="true"
-72-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:35:13-43
-73            android:exported="false" >
-73-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:51:13-37
-74            <meta-data
-74-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-75                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
-75-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-134
-76                android:value="com.google.firebase.components.ComponentRegistrar" />
-76-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
-77            <meta-data
-77-->[:firebase_auth] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-78                android:name="com.google.firebase.components:io.flutter.plugins.firebase.auth.FlutterFirebaseAuthRegistrar"
-78-->[:firebase_auth] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-124
-79                android:value="com.google.firebase.components.ComponentRegistrar" />
-79-->[:firebase_auth] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
-80            <meta-data
-80-->[:firebase_storage] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_storage/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-81                android:name="com.google.firebase.components:io.flutter.plugins.firebase.storage.FlutterFirebaseAppRegistrar"
-81-->[:firebase_storage] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_storage/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-126
-82                android:value="com.google.firebase.components.ComponentRegistrar" />
-82-->[:firebase_storage] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_storage/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
-83            <meta-data
-83-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:34:13-36:85
-84                android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
-84-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:35:17-128
-85                android:value="com.google.firebase.components.ComponentRegistrar" />
-85-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:36:17-82
-86            <meta-data
-86-->[:firebase_core] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
-87                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
-87-->[:firebase_core] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-124
-88                android:value="com.google.firebase.components.ComponentRegistrar" />
-88-->[:firebase_core] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
-89            <meta-data
-89-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:52:13-54:85
-90                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
-90-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:53:17-119
-91                android:value="com.google.firebase.components.ComponentRegistrar" />
-91-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:54:17-82
-92            <meta-data
-92-->[com.google.firebase:firebase-datatransport:18.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2143f63b0fbb6459807ac91f4bf988f5/jetified-firebase-datatransport-18.0.0/AndroidManifest.xml:28:13-30:85
-93                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
-93-->[com.google.firebase:firebase-datatransport:18.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2143f63b0fbb6459807ac91f4bf988f5/jetified-firebase-datatransport-18.0.0/AndroidManifest.xml:29:17-115
-94                android:value="com.google.firebase.components.ComponentRegistrar" />
-94-->[com.google.firebase:firebase-datatransport:18.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2143f63b0fbb6459807ac91f4bf988f5/jetified-firebase-datatransport-18.0.0/AndroidManifest.xml:30:17-82
-95            <meta-data
-95-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:77:13-79:85
-96                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
-96-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:78:17-109
-97                android:value="com.google.firebase.components.ComponentRegistrar" />
-97-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:79:17-82
-98            <meta-data
-98-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:20:13-22:85
-99                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
-99-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:21:17-111
-100                android:value="com.google.firebase.components.ComponentRegistrar" />
-100-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:22:17-82
-101            <meta-data
-101-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:33:13-35:85
-102                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
-102-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:34:17-107
-103                android:value="com.google.firebase.components.ComponentRegistrar" />
-103-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:35:17-82
-104            <meta-data
-104-->[com.google.firebase:firebase-installations:17.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2733ee416a9a3a7703f654641d3c99ee/jetified-firebase-installations-17.0.0/AndroidManifest.xml:18:13-20:85
-105                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
-105-->[com.google.firebase:firebase-installations:17.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2733ee416a9a3a7703f654641d3c99ee/jetified-firebase-installations-17.0.0/AndroidManifest.xml:19:17-127
-106                android:value="com.google.firebase.components.ComponentRegistrar" />
-106-->[com.google.firebase:firebase-installations:17.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2733ee416a9a3a7703f654641d3c99ee/jetified-firebase-installations-17.0.0/AndroidManifest.xml:20:17-82
-107        </service>
-108        <service
-108-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-15:72
-109            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
-109-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-107
-110            android:exported="false"
-110-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-37
-111            android:permission="android.permission.BIND_JOB_SERVICE" />
-111-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:15:13-69
-112        <service
-112-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:16:9-22:19
-113            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
-113-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-97
-114            android:exported="false" >
-114-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:18:13-37
-115            <intent-filter>
-115-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-21:29
-116                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-116-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:17-78
-116-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:25-75
-117            </intent-filter>
-118        </service>
-119
-120        <receiver
-120-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:24:9-31:20
-121            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
-121-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:25:13-98
-122            android:exported="true"
-122-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-36
-123            android:permission="com.google.android.c2dm.permission.SEND" >
-123-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:27:13-73
-124            <intent-filter>
-124-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:28:13-30:29
-125                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-125-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:17-81
-125-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:25-78
-126            </intent-filter>
-127        </receiver>
-128
-129        <provider
-129-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:39:9-43:38
-130            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
-130-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:40:13-102
-131            android:authorities="com.simonengel.you2me.flutterfirebasemessaginginitprovider"
-131-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:41:13-88
-132            android:exported="false"
-132-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:42:13-37
-133            android:initOrder="99" />
-133-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:43:13-35
-134        <provider
-134-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:11:9-19:20
-135            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
-135-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-82
-136            android:authorities="com.simonengel.you2me.flutter.image_provider"
-136-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-74
-137            android:exported="false"
-137-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-37
-138            android:grantUriPermissions="true" >
-138-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:15:13-47
-139            <meta-data
-139-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-18:75
-140                android:name="android.support.FILE_PROVIDER_PATHS"
-140-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:17:17-67
-141                android:resource="@xml/flutter_image_picker_file_paths" />
-141-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:18:17-72
-142        </provider>
-143
-144        <receiver
-144-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:28:9-35:20
-145            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
-145-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:29:13-78
-146            android:exported="true"
-146-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:30:13-36
-147            android:permission="com.google.android.c2dm.permission.SEND" >
-147-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:31:13-73
-148            <intent-filter>
-148-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:28:13-30:29
-149                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-149-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:17-81
-149-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:25-78
-150            </intent-filter>
-151        </receiver>
-152        <!--
-153             FirebaseMessagingService performs security checks at runtime,
-154             but set to not exported to explicitly avoid allowing another app to call it.
-155        -->
-156        <service
-156-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:41:9-48:19
-157            android:name="com.google.firebase.messaging.FirebaseMessagingService"
-157-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:42:13-82
-158            android:directBootAware="true"
-158-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:43:13-43
-159            android:exported="false" >
-159-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:44:13-37
-160            <intent-filter android:priority="-500" >
-160-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-21:29
-161                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-161-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:17-78
-161-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:25-75
-162            </intent-filter>
-163        </service>
-164        <service
-164-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:29:9-35:19
-165            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
-165-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:30:13-103
-166            android:exported="false" >
-166-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:31:13-37
-167            <meta-data
-167-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:32:13-34:39
-168                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
-168-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:33:17-94
-169                android:value="cct" />
-169-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:34:17-36
-170        </service>
-171
-172        <activity
-172-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:27:9-44:20
-173            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
-173-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:28:13-80
-174            android:excludeFromRecents="true"
-174-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:29:13-46
-175            android:exported="true"
-175-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:30:13-36
-176            android:launchMode="singleTask"
-176-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:31:13-44
-177            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-177-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:32:13-72
-178            <intent-filter>
-178-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:33:13-43:29
-179                <action android:name="android.intent.action.VIEW" />
-179-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:17-69
-179-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:25-66
-180
-181                <category android:name="android.intent.category.DEFAULT" />
-181-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:17-76
-181-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:27-73
-182                <category android:name="android.intent.category.BROWSABLE" />
-182-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:17-78
-182-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:27-75
-183
-184                <data
-184-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:39:17-42:51
-185                    android:host="firebase.auth"
-185-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:40:21-49
-186                    android:path="/"
-186-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:41:21-37
-187                    android:scheme="genericidp" />
-187-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:42:21-48
-188            </intent-filter>
-189        </activity>
-190        <activity
-190-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:45:9-62:20
-191            android:name="com.google.firebase.auth.internal.RecaptchaActivity"
-191-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:46:13-79
-192            android:excludeFromRecents="true"
-192-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:47:13-46
-193            android:exported="true"
-193-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:48:13-36
-194            android:launchMode="singleTask"
-194-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:49:13-44
-195            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-195-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:50:13-72
-196            <intent-filter>
-196-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:51:13-61:29
-197                <action android:name="android.intent.action.VIEW" />
-197-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:17-69
-197-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:25-66
-198
-199                <category android:name="android.intent.category.DEFAULT" />
-199-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:17-76
-199-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:27-73
-200                <category android:name="android.intent.category.BROWSABLE" />
-200-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:17-78
-200-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:27-75
-201
-202                <data
-202-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:39:17-42:51
-203                    android:host="firebase.auth"
-203-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:40:21-49
-204                    android:path="/"
-204-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:41:21-37
-205                    android:scheme="recaptcha" />
-205-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:42:21-48
-206            </intent-filter>
-207        </activity>
-208
-209        <service
-209-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:64:9-73:19
-210            android:name="com.google.firebase.auth.api.fallback.service.FirebaseAuthFallbackService"
-210-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:65:13-101
-211            android:enabled="true"
-211-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:66:13-35
-212            android:exported="false" >
-212-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:67:13-37
-213            <intent-filter>
-213-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:68:13-72:29
-214                <action android:name="com.google.firebase.auth.api.gms.service.START" />
-214-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:69:17-89
-214-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:69:25-86
-215
-216                <category android:name="android.intent.category.DEFAULT" />
-216-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:17-76
-216-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:27-73
-217            </intent-filter>
-218        </service>
-219
-220        <provider
-220-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:26:9-31:39
-221            android:name="com.google.firebase.provider.FirebaseInitProvider"
-221-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:27:13-77
-222            android:authorities="com.simonengel.you2me.firebaseinitprovider"
-222-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:28:13-72
-223            android:directBootAware="true"
-223-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:29:13-43
-224            android:exported="false"
-224-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:30:13-37
-225            android:initOrder="100" />
-225-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:31:13-36
-226
-227        <activity
-227-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:23:9-26:75
-228            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-228-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:24:13-79
-229            android:exported="false"
-229-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:25:13-37
-230            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-230-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:26:13-72
-231
-232        <meta-data
-232-->[com.google.android.gms:play-services-basement:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/44839bb2c2273d4740a7525da7c26a24/jetified-play-services-basement-17.1.0/AndroidManifest.xml:23:9-25:69
-233            android:name="com.google.android.gms.version"
-233-->[com.google.android.gms:play-services-basement:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/44839bb2c2273d4740a7525da7c26a24/jetified-play-services-basement-17.1.0/AndroidManifest.xml:24:13-58
-234            android:value="@integer/google_play_services_version" />
-234-->[com.google.android.gms:play-services-basement:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/44839bb2c2273d4740a7525da7c26a24/jetified-play-services-basement-17.1.0/AndroidManifest.xml:25:13-66
-235
-236        <service
-236-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:26:9-30:19
-237            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
-237-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:27:13-117
-238            android:exported="false"
-238-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:28:13-37
-239            android:permission="android.permission.BIND_JOB_SERVICE" >
-239-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:29:13-69
-240        </service>
-241
-242        <receiver
-242-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:32:9-34:40
-243            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
-243-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:33:13-132
-244            android:exported="false" />
-244-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:34:13-37
-245    </application>
-246
-247</manifest>
+28        android:usesCleartextTraffic="true" >
+28-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:8:8-43
+29        <activity
+29-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:10:9-38:20
+30            android:name="com.engel_simon.flutter_dispuatio.MainActivity"
+30-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:11:13-41
+31            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+31-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:14:13-163
+32            android:hardwareAccelerated="true"
+32-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:15:13-47
+33            android:launchMode="singleTop"
+33-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:12:13-43
+34            android:theme="@style/LaunchTheme"
+34-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:13:13-47
+35            android:windowSoftInputMode="adjustResize" >
+35-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:16:13-55
+36
+37            <!--
+38                 Specifies an Android theme to apply to this Activity as soon as
+39                 the Android process has started. This theme is visible to the user
+40                 while the Flutter UI initializes. After that, this theme continues
+41                 to determine the Window background behind the Flutter UI.
+42            -->
+43            <meta-data
+43-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:21:13-24:17
+44                android:name="io.flutter.embedding.android.NormalTheme"
+44-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:22:15-70
+45                android:resource="@style/NormalTheme" />
+45-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:23:15-52
+46            <!--
+47                 Displays an Android View that continues showing the launch screen
+48                 Drawable until Flutter paints its first frame, then this splash
+49                 screen fades out. A splash screen is useful to avoid any visual
+50                 gap between the end of Android's launch screen and the painting of
+51                 Flutter's first frame.
+52            -->
+53            <meta-data
+53-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:30:13-33:17
+54                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+54-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:31:15-79
+55                android:resource="@drawable/launch_background" />
+55-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:32:15-61
+56
+57            <intent-filter>
+57-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:34:13-37:29
+58                <action android:name="android.intent.action.MAIN" />
+58-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:35:17-68
+58-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:35:25-66
+59
+60                <category android:name="android.intent.category.LAUNCHER" />
+60-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:36:17-76
+60-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:36:27-74
+61            </intent-filter>
+62        </activity>
+63        <!--
+64             Don't delete the meta-data below.
+65             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+66        -->
+67        <meta-data
+67-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:41:9-43:33
+68            android:name="flutterEmbedding"
+68-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:42:13-44
+69            android:value="2" />
+69-->/home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/android/app/src/main/AndroidManifest.xml:43:13-30
+70
+71        <service
+71-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-12:19
+72            android:name="com.google.firebase.components.ComponentDiscoveryService"
+72-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:8:18-89
+73            android:directBootAware="true"
+73-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:35:13-43
+74            android:exported="false" >
+74-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:51:13-37
+75            <meta-data
+75-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+76                android:name="com.google.firebase.components:io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreRegistrar"
+76-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-134
+77                android:value="com.google.firebase.components.ComponentRegistrar" />
+77-->[:cloud_firestore] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/cloud_firestore/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+78            <meta-data
+78-->[:firebase_auth] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+79                android:name="com.google.firebase.components:io.flutter.plugins.firebase.auth.FlutterFirebaseAuthRegistrar"
+79-->[:firebase_auth] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-124
+80                android:value="com.google.firebase.components.ComponentRegistrar" />
+80-->[:firebase_auth] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_auth/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+81            <meta-data
+81-->[:firebase_storage] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_storage/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+82                android:name="com.google.firebase.components:io.flutter.plugins.firebase.storage.FlutterFirebaseAppRegistrar"
+82-->[:firebase_storage] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_storage/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-126
+83                android:value="com.google.firebase.components.ComponentRegistrar" />
+83-->[:firebase_storage] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_storage/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+84            <meta-data
+84-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:34:13-36:85
+85                android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
+85-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:35:17-128
+86                android:value="com.google.firebase.components.ComponentRegistrar" />
+86-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:36:17-82
+87            <meta-data
+87-->[:firebase_core] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-11:85
+88                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+88-->[:firebase_core] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:10:17-124
+89                android:value="com.google.firebase.components.ComponentRegistrar" />
+89-->[:firebase_core] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_core/intermediates/library_manifest/debug/AndroidManifest.xml:11:17-82
+90            <meta-data
+90-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:52:13-54:85
+91                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+91-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:53:17-119
+92                android:value="com.google.firebase.components.ComponentRegistrar" />
+92-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:54:17-82
+93            <meta-data
+93-->[com.google.firebase:firebase-datatransport:18.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2143f63b0fbb6459807ac91f4bf988f5/jetified-firebase-datatransport-18.0.0/AndroidManifest.xml:28:13-30:85
+94                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+94-->[com.google.firebase:firebase-datatransport:18.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2143f63b0fbb6459807ac91f4bf988f5/jetified-firebase-datatransport-18.0.0/AndroidManifest.xml:29:17-115
+95                android:value="com.google.firebase.components.ComponentRegistrar" />
+95-->[com.google.firebase:firebase-datatransport:18.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2143f63b0fbb6459807ac91f4bf988f5/jetified-firebase-datatransport-18.0.0/AndroidManifest.xml:30:17-82
+96            <meta-data
+96-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:77:13-79:85
+97                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+97-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:78:17-109
+98                android:value="com.google.firebase.components.ComponentRegistrar" />
+98-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:79:17-82
+99            <meta-data
+99-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:20:13-22:85
+100                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+100-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:21:17-111
+101                android:value="com.google.firebase.components.ComponentRegistrar" />
+101-->[com.google.firebase:firebase-firestore:23.0.3] /home/simon/.gradle/caches/transforms-2/files-2.1/ec1ec19720eb10862d5cbe52066417fa/jetified-firebase-firestore-23.0.3/AndroidManifest.xml:22:17-82
+102            <meta-data
+102-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:33:13-35:85
+103                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
+103-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:34:17-107
+104                android:value="com.google.firebase.components.ComponentRegistrar" />
+104-->[com.google.firebase:firebase-storage:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1b1da317e75d1e5f9a3fdb04d44a433f/jetified-firebase-storage-20.0.0/AndroidManifest.xml:35:17-82
+105            <meta-data
+105-->[com.google.firebase:firebase-installations:17.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2733ee416a9a3a7703f654641d3c99ee/jetified-firebase-installations-17.0.0/AndroidManifest.xml:18:13-20:85
+106                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+106-->[com.google.firebase:firebase-installations:17.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2733ee416a9a3a7703f654641d3c99ee/jetified-firebase-installations-17.0.0/AndroidManifest.xml:19:17-127
+107                android:value="com.google.firebase.components.ComponentRegistrar" />
+107-->[com.google.firebase:firebase-installations:17.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/2733ee416a9a3a7703f654641d3c99ee/jetified-firebase-installations-17.0.0/AndroidManifest.xml:20:17-82
+108        </service>
+109        <service
+109-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:12:9-15:72
+110            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
+110-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-107
+111            android:exported="false"
+111-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-37
+112            android:permission="android.permission.BIND_JOB_SERVICE" />
+112-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:15:13-69
+113        <service
+113-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:16:9-22:19
+114            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+114-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:17:13-97
+115            android:exported="false" >
+115-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:18:13-37
+116            <intent-filter>
+116-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-21:29
+117                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+117-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:17-78
+117-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:25-75
+118            </intent-filter>
+119        </service>
+120
+121        <receiver
+121-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:24:9-31:20
+122            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
+122-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:25:13-98
+123            android:exported="true"
+123-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:26:13-36
+124            android:permission="com.google.android.c2dm.permission.SEND" >
+124-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:27:13-73
+125            <intent-filter>
+125-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:28:13-30:29
+126                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+126-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:17-81
+126-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:25-78
+127            </intent-filter>
+128        </receiver>
+129
+130        <provider
+130-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:39:9-43:38
+131            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
+131-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:40:13-102
+132            android:authorities="com.simonengel.you2me.flutterfirebasemessaginginitprovider"
+132-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:41:13-88
+133            android:exported="false"
+133-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:42:13-37
+134            android:initOrder="99" />
+134-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:43:13-35
+135        <provider
+135-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:11:9-19:20
+136            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+136-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:12:13-82
+137            android:authorities="com.simonengel.you2me.flutter.image_provider"
+137-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:13:13-74
+138            android:exported="false"
+138-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:14:13-37
+139            android:grantUriPermissions="true" >
+139-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:15:13-47
+140            <meta-data
+140-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:16:13-18:75
+141                android:name="android.support.FILE_PROVIDER_PATHS"
+141-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:17:17-67
+142                android:resource="@xml/flutter_image_picker_file_paths" />
+142-->[:image_picker] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/image_picker/intermediates/library_manifest/debug/AndroidManifest.xml:18:17-72
+143        </provider>
+144
+145        <receiver
+145-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:28:9-35:20
+146            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+146-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:29:13-78
+147            android:exported="true"
+147-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:30:13-36
+148            android:permission="com.google.android.c2dm.permission.SEND" >
+148-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:31:13-73
+149            <intent-filter>
+149-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:28:13-30:29
+150                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+150-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:17-81
+150-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:29:25-78
+151            </intent-filter>
+152        </receiver>
+153        <!--
+154             FirebaseMessagingService performs security checks at runtime,
+155             but set to not exported to explicitly avoid allowing another app to call it.
+156        -->
+157        <service
+157-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:41:9-48:19
+158            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+158-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:42:13-82
+159            android:directBootAware="true"
+159-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:43:13-43
+160            android:exported="false" >
+160-->[com.google.firebase:firebase-messaging:22.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/AndroidManifest.xml:44:13-37
+161            <intent-filter android:priority="-500" >
+161-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:19:13-21:29
+162                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+162-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:17-78
+162-->[:firebase_messaging] /home/simon/Dokumente/Programmieren/Projekte/GFOS/gfos_messenger/build/firebase_messaging/intermediates/library_manifest/debug/AndroidManifest.xml:20:25-75
+163            </intent-filter>
+164        </service>
+165        <service
+165-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:29:9-35:19
+166            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+166-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:30:13-103
+167            android:exported="false" >
+167-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:31:13-37
+168            <meta-data
+168-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:32:13-34:39
+169                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+169-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:33:17-94
+170                android:value="cct" />
+170-->[com.google.android.datatransport:transport-backend-cct:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/12200954332df4e7949ae523e1cf886f/jetified-transport-backend-cct-3.0.0/AndroidManifest.xml:34:17-36
+171        </service>
+172
+173        <activity
+173-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:27:9-44:20
+174            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
+174-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:28:13-80
+175            android:excludeFromRecents="true"
+175-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:29:13-46
+176            android:exported="true"
+176-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:30:13-36
+177            android:launchMode="singleTask"
+177-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:31:13-44
+178            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+178-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:32:13-72
+179            <intent-filter>
+179-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:33:13-43:29
+180                <action android:name="android.intent.action.VIEW" />
+180-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:17-69
+180-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:25-66
+181
+182                <category android:name="android.intent.category.DEFAULT" />
+182-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:17-76
+182-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:27-73
+183                <category android:name="android.intent.category.BROWSABLE" />
+183-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:17-78
+183-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:27-75
+184
+185                <data
+185-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:39:17-42:51
+186                    android:host="firebase.auth"
+186-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:40:21-49
+187                    android:path="/"
+187-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:41:21-37
+188                    android:scheme="genericidp" />
+188-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:42:21-48
+189            </intent-filter>
+190        </activity>
+191        <activity
+191-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:45:9-62:20
+192            android:name="com.google.firebase.auth.internal.RecaptchaActivity"
+192-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:46:13-79
+193            android:excludeFromRecents="true"
+193-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:47:13-46
+194            android:exported="true"
+194-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:48:13-36
+195            android:launchMode="singleTask"
+195-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:49:13-44
+196            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+196-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:50:13-72
+197            <intent-filter>
+197-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:51:13-61:29
+198                <action android:name="android.intent.action.VIEW" />
+198-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:17-69
+198-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:34:25-66
+199
+200                <category android:name="android.intent.category.DEFAULT" />
+200-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:17-76
+200-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:27-73
+201                <category android:name="android.intent.category.BROWSABLE" />
+201-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:17-78
+201-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:37:27-75
+202
+203                <data
+203-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:39:17-42:51
+204                    android:host="firebase.auth"
+204-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:40:21-49
+205                    android:path="/"
+205-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:41:21-37
+206                    android:scheme="recaptcha" />
+206-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:42:21-48
+207            </intent-filter>
+208        </activity>
+209
+210        <service
+210-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:64:9-73:19
+211            android:name="com.google.firebase.auth.api.fallback.service.FirebaseAuthFallbackService"
+211-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:65:13-101
+212            android:enabled="true"
+212-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:66:13-35
+213            android:exported="false" >
+213-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:67:13-37
+214            <intent-filter>
+214-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:68:13-72:29
+215                <action android:name="com.google.firebase.auth.api.gms.service.START" />
+215-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:69:17-89
+215-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:69:25-86
+216
+217                <category android:name="android.intent.category.DEFAULT" />
+217-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:17-76
+217-->[com.google.firebase:firebase-auth:21.0.1] /home/simon/.gradle/caches/transforms-2/files-2.1/39226147107c07d612c0b5c242740fda/jetified-firebase-auth-21.0.1/AndroidManifest.xml:36:27-73
+218            </intent-filter>
+219        </service>
+220
+221        <provider
+221-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:26:9-31:39
+222            android:name="com.google.firebase.provider.FirebaseInitProvider"
+222-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:27:13-77
+223            android:authorities="com.simonengel.you2me.firebaseinitprovider"
+223-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:28:13-72
+224            android:directBootAware="true"
+224-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:29:13-43
+225            android:exported="false"
+225-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:30:13-37
+226            android:initOrder="100" />
+226-->[com.google.firebase:firebase-common:20.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/3302300f084732ea1b649fcba8a3ed24/jetified-firebase-common-20.0.0/AndroidManifest.xml:31:13-36
+227
+228        <activity
+228-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:23:9-26:75
+229            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+229-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:24:13-79
+230            android:exported="false"
+230-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:25:13-37
+231            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+231-->[com.google.android.gms:play-services-base:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/93fbae78ce8dc134e45274d9cd223907/jetified-play-services-base-17.1.0/AndroidManifest.xml:26:13-72
+232
+233        <meta-data
+233-->[com.google.android.gms:play-services-basement:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/44839bb2c2273d4740a7525da7c26a24/jetified-play-services-basement-17.1.0/AndroidManifest.xml:23:9-25:69
+234            android:name="com.google.android.gms.version"
+234-->[com.google.android.gms:play-services-basement:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/44839bb2c2273d4740a7525da7c26a24/jetified-play-services-basement-17.1.0/AndroidManifest.xml:24:13-58
+235            android:value="@integer/google_play_services_version" />
+235-->[com.google.android.gms:play-services-basement:17.1.0] /home/simon/.gradle/caches/transforms-2/files-2.1/44839bb2c2273d4740a7525da7c26a24/jetified-play-services-basement-17.1.0/AndroidManifest.xml:25:13-66
+236
+237        <service
+237-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:26:9-30:19
+238            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+238-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:27:13-117
+239            android:exported="false"
+239-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:28:13-37
+240            android:permission="android.permission.BIND_JOB_SERVICE" >
+240-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:29:13-69
+241        </service>
+242
+243        <receiver
+243-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:32:9-34:40
+244            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+244-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:33:13-132
+245            android:exported="false" />
+245-->[com.google.android.datatransport:transport-runtime:3.0.0] /home/simon/.gradle/caches/transforms-2/files-2.1/a1a8534c906a0357f1eb5dff1a6e4134/jetified-transport-runtime-3.0.0/AndroidManifest.xml:34:13-37
+246    </application>
+247
+248</manifest>
