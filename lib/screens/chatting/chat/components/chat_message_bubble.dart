@@ -133,7 +133,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.chat.lastMessageSender,
+            widget.message.sender,
             style: TextStyle(
               color: kSecondaryColor,
             ),
