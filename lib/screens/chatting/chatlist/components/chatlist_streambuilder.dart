@@ -28,12 +28,14 @@ class ChatListStreamBuilder extends StatelessWidget {
         stream: isArchiveOpen
             ? _firestore
                 .collection("chat")
-                .where("archivedby", arrayContains: _auth.currentUser?.uid)
+                .where("archivedby",
+                    arrayContains: _auth.currentUser?.uid ?? "")
                 // .orderBy("lastmessagedate", descending: true)
                 .snapshots()
             : _firestore
                 .collection("chat")
-                .where("notarchivedby", arrayContains: _auth.currentUser!.uid)
+                .where("notarchivedby",
+                    arrayContains: _auth.currentUser!.uid ?? "")
                 // .orderBy("lastmessagedate", descending: true)
                 //.where("members",
                 //    arrayContains: "1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2|simi")
@@ -95,15 +97,8 @@ class ChatListStreamBuilder extends StatelessWidget {
                 notPinned.add(doc);
               }
             }
-            allChatsSorted.addAll(pinned);
-            allChatsSorted.addAll(notPinned);
 
-            print("DEBUG: " +
-                allChatsSorted[1]["lastmessagedate"][1]
-                    .millisecondsSinceEpoch
-                    .toString());
-
-            allChatsSorted.sort((a, b) => b["lastmessagedate"][!a["isgroup"]
+            pinned.sort((a, b) => b["lastmessagedate"][!a["isgroup"]
                     ? GeneralUserService.getOwnUidPosInChatFromMemberList(
                         a["members"])
                     : GeneralUserService.getOwnUidPosInGroupFromList(
@@ -114,6 +109,21 @@ class ChatListStreamBuilder extends StatelessWidget {
                             a["members"])
                         : GeneralUserService.getOwnUidPosInGroupFromList(a["members"])]
                     .millisecondsSinceEpoch));
+
+            notPinned.sort((a, b) => b["lastmessagedate"][!a["isgroup"]
+                    ? GeneralUserService.getOwnUidPosInChatFromMemberList(
+                        a["members"])
+                    : GeneralUserService.getOwnUidPosInGroupFromList(
+                        a["members"])]
+                .millisecondsSinceEpoch
+                .compareTo(a["lastmessagedate"][!a["isgroup"]
+                        ? GeneralUserService.getOwnUidPosInChatFromMemberList(
+                            a["members"])
+                        : GeneralUserService.getOwnUidPosInGroupFromList(a["members"])]
+                    .millisecondsSinceEpoch));
+
+            allChatsSorted.addAll(pinned);
+            allChatsSorted.addAll(notPinned);
 
             return ImplicitlyAnimatedList<ChatListTile>(
               items: allChatsSorted.map((doc) {
