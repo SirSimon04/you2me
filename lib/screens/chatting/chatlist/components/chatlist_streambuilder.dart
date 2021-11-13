@@ -29,10 +29,12 @@ class ChatListStreamBuilder extends StatelessWidget {
             ? _firestore
                 .collection("chat")
                 .where("archivedby", arrayContains: _auth.currentUser?.uid)
+                // .orderBy("lastmessagedate", descending: true)
                 .snapshots()
             : _firestore
                 .collection("chat")
                 .where("notarchivedby", arrayContains: _auth.currentUser!.uid)
+                // .orderBy("lastmessagedate", descending: true)
                 //.where("members",
                 //    arrayContains: "1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2|simi")
                 .snapshots(),
@@ -95,6 +97,23 @@ class ChatListStreamBuilder extends StatelessWidget {
             }
             allChatsSorted.addAll(pinned);
             allChatsSorted.addAll(notPinned);
+
+            print("DEBUG: " +
+                allChatsSorted[1]["lastmessagedate"][1]
+                    .millisecondsSinceEpoch
+                    .toString());
+
+            allChatsSorted.sort((a, b) => b["lastmessagedate"][!a["isgroup"]
+                    ? GeneralUserService.getOwnUidPosInChatFromMemberList(
+                        a["members"])
+                    : GeneralUserService.getOwnUidPosInGroupFromList(
+                        a["members"])]
+                .millisecondsSinceEpoch
+                .compareTo(a["lastmessagedate"][!a["isgroup"]
+                        ? GeneralUserService.getOwnUidPosInChatFromMemberList(
+                            a["members"])
+                        : GeneralUserService.getOwnUidPosInGroupFromList(a["members"])]
+                    .millisecondsSinceEpoch));
 
             return ImplicitlyAnimatedList<ChatListTile>(
               items: allChatsSorted.map((doc) {
