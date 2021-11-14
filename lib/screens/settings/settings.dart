@@ -6,6 +6,7 @@ import 'package:flutter_dispuatio/screens/settings/screens/change_account/change
 import 'package:flutter_dispuatio/screens/settings/screens/marked_messages/marked_messages.dart';
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -17,8 +18,10 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings>
     with AutomaticKeepAliveClientMixin {
   bool notifications = false;
-  bool profFilter = true;
+
   final _auth = FirebaseAuth.instance;
+
+  final picker = ImagePicker();
 
   @override
   bool get wantKeepAlive => true;
@@ -38,30 +41,16 @@ class _SettingsState extends State<Settings>
           ),
           PlatformListTile(
             title: Text(_auth.currentUser?.displayName ?? ""),
-            subtitle: Text("Hey there, I'm using Disputatio"),
+            subtitle: Text("Hier muss noch die Info hin"),
             leading: CircleAvatar(
               radius: 30,
               backgroundImage:
                   CachedNetworkImageProvider(_auth.currentUser?.photoURL ?? ""),
             ),
-            trailing: IconButton(
-              icon: Icon(FontAwesomeIcons.userEdit),
-              onPressed: () => Navigator.of(context).push(
-                  CupertinoPageRoute(builder: (context) => ChangeAccount())),
-            ),
             isElevatedM: true,
           ),
           SizedBox(
-            height: 30,
-          ),
-          Card(
-            elevation: 6,
-            child: SwitchListTile(
-              value: profFilter,
-              onChanged: (value) => {setState(() => profFilter = value)},
-              title: Text("Wortfilter"),
-              activeColor: Theme.of(context).primaryColor,
-            ),
+            height: 50,
           ),
           Card(
             elevation: 6,
@@ -86,15 +75,19 @@ class _SettingsState extends State<Settings>
                       )));
             },
           ),
-          // PlatformListTile(
-          //   title: Text("Speicherübersicht"),
-          //   leading: Icon(FontAwesomeIcons.solidSave),
-          //   isElevatedM: true,
-          //   onTap: () {
-          //     Navigator.of(context).push(
-          //         CupertinoPageRoute(builder: (context) => SavedOverview()));
-          //   },
-          // ),
+          SizedBox(
+            height: 50,
+          ),
+          PlatformListTile(
+            title: Text("Account bearbeiten"),
+            leading: Icon(FontAwesomeIcons.userEdit),
+            isElevatedM: true,
+            onTap: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) => ChangeAccount(),
+              ),
+            ),
+          )
         ],
       ),
     );
