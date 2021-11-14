@@ -11,6 +11,7 @@ import 'package:flutter_dispuatio/services/user_services/user_firebase_service.d
 import 'package:flutter_dispuatio/widgets/platform_listtile.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -28,6 +29,8 @@ class _SettingsState extends State<Settings>
   final picker = ImagePicker();
 
   String fcmId = "";
+
+  final String _url = "https://sirsimon04.github.io/you2me-data-policy/";
 
   updateFcmId() async {
     String newFcmId = await _fcm.getToken() ?? "";
@@ -137,10 +140,23 @@ class _SettingsState extends State<Settings>
                       builder: (context) => ChangeAccount(),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                PlatformListTile(
+                  title: Text("Datenschutzerklärung"),
+                  leading: Icon(FontAwesomeIcons.lock),
+                  isElevatedM: true,
+                  onTap: () => _launchURL(),
                 )
               ],
             );
           }),
     );
   }
+
+  void _launchURL() async => await canLaunch(_url)
+      ? await launch(_url)
+      : print('Could not launch $_url');
 }

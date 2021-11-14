@@ -21,23 +21,6 @@
                     }
                 },
                 {
-                    "source": "/home/simon/.gradle/caches/transforms-2/files-2.1/1c075310296ee9585f35188ad9e1b8a0/jetified-firebase-messaging-22.0.0/res/values-fr-rCA/values.xml",
-                    "from": {
-                        "startLines": "4",
-                        "startColumns": "0",
-                        "startOffsets": "211",
-                        "endColumns": "70",
-                        "endOffsets": "281"
-                    },
-                    "to": {
-                        "startLines": "20",
-                        "startColumns": "4",
-                        "startOffsets": "3006",
-                        "endColumns": "74",
-                        "endOffsets": "3076"
-                    }
-                },
-                {
                     "source": "/home/simon/.gradle/caches/transforms-2/files-2.1/f4a15a5606c9a028857d8a3e89eefa0f/core-1.1.0/res/values-fr-rCA/values-fr-rCA.xml",
                     "from": {
                         "startLines": "2",
@@ -52,6 +35,23 @@
                         "startOffsets": "3081",
                         "endColumns": "100",
                         "endOffsets": "3177"
+                    }
+                },
+                {
+                    "source": "/home/simon/.gradle/caches/transforms-2/files-2.1/faa7fba886dec8540a116fa216c20176/jetified-firebase-messaging-23.0.0/res/values-fr-rCA/values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "211",
+                        "endColumns": "70",
+                        "endOffsets": "281"
+                    },
+                    "to": {
+                        "startLines": "20",
+                        "startColumns": "4",
+                        "startOffsets": "3006",
+                        "endColumns": "74",
+                        "endOffsets": "3076"
                     }
                 },
                 {
