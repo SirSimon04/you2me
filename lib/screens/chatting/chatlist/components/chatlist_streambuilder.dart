@@ -35,7 +35,7 @@ class ChatListStreamBuilder extends StatelessWidget {
             : _firestore
                 .collection("chat")
                 .where("notarchivedby",
-                    arrayContains: _auth.currentUser!.uid ?? "")
+                    arrayContains: _auth.currentUser?.uid ?? "")
                 // .orderBy("lastmessagedate", descending: true)
                 //.where("members",
                 //    arrayContains: "1Ob6BHEmqLUG83AJ0Dv6nKHZK4b2|simi")

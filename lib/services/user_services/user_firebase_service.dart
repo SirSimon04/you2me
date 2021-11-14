@@ -150,7 +150,6 @@ class UserFirebaseService {
       "info": "Hey there! I'm using Disputatio",
       "searchIndex": indexList,
       "lastonline": Timestamp.now(),
-      "bio": "Hallo, ich wünsche einen guten Tag!",
       "hasChatWith": [],
       "fotourl":
           "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a",

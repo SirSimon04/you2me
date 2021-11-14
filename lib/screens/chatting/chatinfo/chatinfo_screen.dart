@@ -162,7 +162,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                       PlatformListTile(
                         isElevatedM: true,
                         title: Text(
-                          snapshot.data["bio"],
+                          snapshot.data["info"],
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
                         leading: Icon(FontAwesomeIcons.infoCircle),
