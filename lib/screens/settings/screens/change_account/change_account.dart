@@ -188,14 +188,23 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 isElevatedM: true,
                 onTap: () => showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
+                  builder: (context2) => AlertDialog(
                     title: Text("Benutzernamen ändern"),
-                    content: TextField(
-                      controller: _nameController,
-                      maxLines: 1,
-                      decoration: InputDecoration(
-                        hintText: "Neuer Benutzername",
-                      ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Nach dieser Aktion wirst du ausgeloggt",
+                          textAlign: TextAlign.center,
+                        ),
+                        TextField(
+                          controller: _nameController,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            hintText: "Neuer Benutzername",
+                          ),
+                        ),
+                      ],
                     ),
                     actions: [
                       TextButton(
@@ -211,29 +220,27 @@ class _ChangeAccountState extends State<ChangeAccount> {
                         },
                       ),
                       TextButton(
-                        child: Text(
-                          'Ändern',
-                          style: TextStyle(
-                            color: Colors.green,
+                          child: Text(
+                            'Ändern',
+                            style: TextStyle(
+                              color: Colors.green,
+                            ),
                           ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          UserFirebaseService.changeUserName(
-                                  _nameController.text)
-                              .then(
-                            (value) {
-                              setState(() {
-                                _isLoading = false;
-                                _nameController.clear();
-                              });
-                            },
-                          );
-                        },
-                      ),
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await UserFirebaseService.changeUserName(
+                                _nameController.text);
+                            print("changed name from flutter");
+                            UserFirebaseService.logout();
+                            Navigator.of(context).pushReplacement(
+                              CupertinoPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ),
+                            );
+                          }),
                     ],
                   ),
                 ),

@@ -72,7 +72,9 @@ class UserFirebaseService {
     if (fcmId != null) {
       print("fcm id is not null");
       await removeFcmId(fcmId);
+      print("removed fcm id own");
       await ChatFirebaseService.removeFcmIdFromAllChats(fcmId);
+      print("removed fcm id all");
     }
     await _auth.signOut();
   }
