@@ -1,18 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dispuatio/models/chat_model.dart';
 
 class ChatFcmService {
   ChatFcmService();
   static final _push = FirebaseMessaging.instance;
   static final _auth = FirebaseAuth.instance;
-  static final _firestore = FirebaseFirestore.instance;
 
   static Future<void> subscribeToChat({
     required String chatUid,
@@ -44,7 +40,7 @@ class ChatFcmService {
     }
 
     for (String fcmId in idsToSendTo) {
-      Response r = await http.post(
+      await http.post(
         Uri.parse("https://fcm.googleapis.com/fcm/send"),
         headers: <String, String>{
           "Content-Type": "application/json",
