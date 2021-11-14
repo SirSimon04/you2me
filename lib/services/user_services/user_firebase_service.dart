@@ -4,6 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dispuatio/services/chat_service/chat_firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'GeneralUserService.dart';
+
 class UserFirebaseService {
   UserFirebaseService();
   static final _auth = FirebaseAuth.instance;
@@ -183,6 +185,7 @@ class UserFirebaseService {
   }
 
   static Future<void> changeUserName(String newName) async {
+    print("changing username");
     var snapshots = await _firestore
         .collection("chat")
         .where("members",
@@ -191,22 +194,44 @@ class UserFirebaseService {
                 (_auth.currentUser?.displayName ?? "")))
         .get();
 
-    for (var doc in snapshots.docs) {
-      await doc.reference.update({
-        "members": FieldValue.arrayRemove(
-          [
-            ((_auth.currentUser?.uid ?? "") +
-                "|" +
-                (_auth.currentUser?.displayName ?? "")),
-          ],
-        ),
-      });
+    //After removing and inserting the member list order can be different, but it is important
 
-      await doc.reference.update({
-        "members": FieldValue.arrayUnion(
-            [(_auth.currentUser?.uid ?? "") + "|" + (newName)])
-      });
+    print("length change " + snapshots.docs.length.toString());
+
+    for (var doc in snapshots.docs) {
+      print("in while");
+      if (doc.exists) {
+        print("in if");
+        Map<String, dynamic>? data = doc.data();
+        var members = data["members"];
+
+        int ownUidPos =
+            GeneralUserService.getOwnUidPosInChatFromMemberList(members);
+
+        members[ownUidPos] = (_auth.currentUser?.uid ?? "") + "|" + (newName);
+
+        await _firestore.collection("chat").doc(doc.id).update({
+          "members": members,
+        });
+      }
     }
+
+    // for (var doc in snapshots.docs) {
+    //   await doc.reference.update({
+    //     "members": FieldValue.arrayRemove(
+    //       [
+    //         ((_auth.currentUser?.uid ?? "") +
+    //             "|" +
+    //             (_auth.currentUser?.displayName ?? "")),
+    //       ],
+    //     ),
+    //   });
+    //
+    //   await doc.reference.update({
+    //     "members": FieldValue.arrayUnion(
+    //         [(_auth.currentUser?.uid ?? "") + "|" + (newName)])
+    //   });
+    // }
 
     List<String> splitList = newName.split(" ");
 
