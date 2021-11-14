@@ -271,12 +271,59 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                             style: TextStyle(color: Colors.red),
                           ),
                           leading: Icon(FontAwesomeIcons.trash),
-                          onTap: () => ChatFirebaseService.deleteChat(chat)
-                              .then((value) {
-                            ToastService.showLongToast("Chat wurde gelöscht");
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          }),
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                  'Wirklich löschen?',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Bist du dir sicher, dass du diesen Chat wirklich löschen möchtest? Diese Aktion ist nicht zu widerrufen!',
+                                    ),
+                                  ],
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                      child: Text(
+                                        'Abbrechen',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        // Hier passiert etwas
+                                        Navigator.of(context).pop();
+                                      }),
+                                  TextButton(
+                                    child: Text(
+                                      'Löschen',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await ChatFirebaseService.deleteChat(chat)
+                                          .then((value) {
+                                        ToastService.showLongToast(
+                                            "Chat wurde gelöscht");
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       StreamBuilder<DocumentSnapshot>(
                         stream: _firestore
