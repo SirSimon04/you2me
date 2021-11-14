@@ -112,16 +112,16 @@ class ChatListStreamBuilder extends StatelessWidget {
                         : GeneralUserService.getOwnUidPosInGroupFromList(b["members"])]
                     .millisecondsSinceEpoch));
 
-            notPinned.sort((a, b) => a["lastmessagedate"][!a["isgroup"]
+            notPinned.sort((a, b) => b["lastmessagedate"][!b["isgroup"]
                     ? GeneralUserService.getOwnUidPosInChatFromMemberList(
-                        a["members"])
+                        b["members"])
                     : GeneralUserService.getOwnUidPosInGroupFromList(
-                        a["members"])]
+                        b["members"])]
                 .millisecondsSinceEpoch
-                .compareTo(b["lastmessagedate"][!b["isgroup"]
+                .compareTo(a["lastmessagedate"][!a["isgroup"]
                         ? GeneralUserService.getOwnUidPosInChatFromMemberList(
-                            b["members"])
-                        : GeneralUserService.getOwnUidPosInGroupFromList(b["members"])]
+                            a["members"])
+                        : GeneralUserService.getOwnUidPosInGroupFromList(a["members"])]
                     .millisecondsSinceEpoch));
 
             allChatsSorted.addAll(pinned);
