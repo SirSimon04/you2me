@@ -26,6 +26,8 @@ class _SettingsState extends State<Settings>
   final _firestore = FirebaseFirestore.instance;
   final _fcm = FirebaseMessaging.instance;
 
+  final TextEditingController _infoController = TextEditingController();
+
   final picker = ImagePicker();
 
   String fcmId = "";
@@ -88,6 +90,42 @@ class _SettingsState extends State<Settings>
                         CachedNetworkImageProvider(data?.get("fotourl") ?? ""),
                   ),
                   isElevatedM: true,
+                  trailing: IconButton(
+                    icon: Icon(FontAwesomeIcons.userEdit),
+                    onPressed: () {
+                      _infoController.text = data?.get("info");
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Info ändern"),
+                          content: TextField(
+                            controller: _infoController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                onPressed: _infoController.clear,
+                                icon: Icon(Icons.clear),
+                              ),
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                'Ändern',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(
                   height: 50,
