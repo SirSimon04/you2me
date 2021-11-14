@@ -196,7 +196,9 @@ class UserFirebaseService {
 
     //After removing and inserting the member list order can be different, but it is important
 
-    print("length change " + snapshots.docs.length.toString());
+    // print("length change " + snapshots.docs.length.toString());
+
+    String oldName = _auth.currentUser?.displayName ?? "";
 
     for (var doc in snapshots.docs) {
       print("in while");
@@ -210,28 +212,18 @@ class UserFirebaseService {
 
         members[ownUidPos] = (_auth.currentUser?.uid ?? "") + "|" + (newName);
 
+        String chatName = doc["name"];
+        print("chatname " + chatName);
+        print("oldname " + oldName);
+        print("newname " + newName);
+        chatName = chatName.replaceAll(oldName, newName);
+
         await _firestore.collection("chat").doc(doc.id).update({
           "members": members,
+          "name": chatName,
         });
       }
     }
-
-    // for (var doc in snapshots.docs) {
-    //   await doc.reference.update({
-    //     "members": FieldValue.arrayRemove(
-    //       [
-    //         ((_auth.currentUser?.uid ?? "") +
-    //             "|" +
-    //             (_auth.currentUser?.displayName ?? "")),
-    //       ],
-    //     ),
-    //   });
-    //
-    //   await doc.reference.update({
-    //     "members": FieldValue.arrayUnion(
-    //         [(_auth.currentUser?.uid ?? "") + "|" + (newName)])
-    //   });
-    // }
 
     List<String> splitList = newName.split(" ");
 
