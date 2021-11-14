@@ -29,22 +29,22 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var email = prefs.getString("email");
 
-  // runApp(
-  //   DevicePreview(
-  //     enabled: !kReleaseMode,
-  //     builder: (context) => MyApp(
-  //       loggedIn: email != null,
-  //     ),
-  //     plugins: [
-  //       const ScreenshotPlugin(),
-  //       const FileExplorerPlugin(),
-  //       const SharedPreferencesExplorerPlugin(),
-  //     ],
-  //   ),
-  // );
-  runApp(MyApp(
-    loggedIn: email != null,
-  ));
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => MyApp(
+        loggedIn: email != null,
+      ),
+      plugins: [
+        const ScreenshotPlugin(),
+        const FileExplorerPlugin(),
+        const SharedPreferencesExplorerPlugin(),
+      ],
+    ),
+  );
+  // runApp(MyApp(
+  //   loggedIn: email != null,
+  // ));
 }
 
 class MyApp extends StatelessWidget {
