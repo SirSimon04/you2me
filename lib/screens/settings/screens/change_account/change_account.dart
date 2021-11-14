@@ -312,13 +312,23 @@ class _ChangeAccountState extends State<ChangeAccount> {
                             _isLoading = true;
                           });
 
-                          UserFirebaseService.login(
+                          UserFirebaseService.loginForDelete(
                                   email: _oldMail.text.toString().trim(),
                                   password: _oldPassword.text)
-                              .then((value) {
+                              .onError((error, stackTrace) {
+                            ToastService.showLongToast(error.toString());
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }).then((value) {
                             UserFirebaseService.changeMail(
                               _mailController.text.toString().trim(),
-                            ).then(
+                            ).onError((error, stackTrace) {
+                              ToastService.showLongToast(error.toString());
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }).then(
                               (value) {
                                 setState(() {
                                   _isLoading = false;
@@ -326,6 +336,8 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                   _oldPassword.clear();
                                   _oldMail.clear();
                                 });
+                                ToastService.showLongToast(
+                                    "Deine Emailadresse wurde erfolgreich geändert");
                               },
                             );
                           });

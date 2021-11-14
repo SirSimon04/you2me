@@ -248,7 +248,20 @@ class UserFirebaseService {
   }
 
   static Future<void> changeMail(String newEmail) async {
-    await _auth.currentUser?.updateEmail(newEmail);
+    try {
+      await _auth.currentUser?.updateEmail(newEmail);
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "";
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "Die E-Mailadresse ist ungültig";
+          break;
+        case "email-already-in-use":
+          errorMessage = "Die E-Mailadresse wird schon benutzt";
+          break;
+      }
+      throw errorMessage;
+    }
   }
 
   static Future<void> changePassword(String newPassword) async {
@@ -256,8 +269,6 @@ class UserFirebaseService {
   }
 
   static Future<void> deleteAccount() async {
-    //TODO: iterate over all chats and remove own info
-
     String uidName = (_auth.currentUser?.uid ?? "") +
         "|" +
         (_auth.currentUser?.displayName ?? "");
