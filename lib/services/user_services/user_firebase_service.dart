@@ -278,6 +278,15 @@ class UserFirebaseService {
     }
   }
 
+  static Future<void> changeInfo(String newInfo) async {
+    await _firestore
+        .collection("user")
+        .doc(_auth.currentUser?.uid ?? "")
+        .update({
+      "info": newInfo,
+    });
+  }
+
   static Future<void> deleteAccount() async {
     String uidName = (_auth.currentUser?.uid ?? "") +
         "|" +
