@@ -6,7 +6,7 @@
     android:versionName="1.0.0" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="19"
         android:targetSdkVersion="30" />
     <!--
          Flutter needs it to communicate with the running application
@@ -141,6 +141,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/flutter_image_picker_file_paths" />
         </provider>
+
+        <activity
+            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
