@@ -96,7 +96,7 @@ class _SettingsState extends State<Settings>
                       ),
                       isElevatedM: true,
                       trailing: IconButton(
-                        icon: Icon(FontAwesomeIcons.userEdit),
+                        icon: Icon(FontAwesomeIcons.pencilAlt),
                         onPressed: () {
                           _infoController.text = data?.get("info");
                           showDialog(
