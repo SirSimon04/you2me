@@ -81,8 +81,8 @@ class _SettingsState extends State<Settings>
                   subtitle: Text(data?.get("info")),
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundImage: CachedNetworkImageProvider(
-                        _auth.currentUser?.photoURL ?? ""),
+                    backgroundImage:
+                        CachedNetworkImageProvider(data?.get("fotourl") ?? ""),
                   ),
                   isElevatedM: true,
                 ),
@@ -117,10 +117,12 @@ class _SettingsState extends State<Settings>
                   leading: Icon(FontAwesomeIcons.solidStar),
                   isElevatedM: true,
                   onTap: () {
-                    Navigator.of(context).push(CupertinoPageRoute(
-                        builder: (context) => MarkedMessages(
-                              isInChat: false,
-                            )));
+                    Navigator.of(context)
+                        .push(CupertinoPageRoute(
+                            builder: (context) => MarkedMessages(
+                                  isInChat: false,
+                                )))
+                        .then((value) => setState(() {}));
                   },
                 ),
                 SizedBox(
