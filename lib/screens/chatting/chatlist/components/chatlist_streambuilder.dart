@@ -51,6 +51,8 @@ class ChatListStreamBuilder extends StatelessWidget {
           } else {
             // print("length of docs: " + snapshot.data!.docs.length.toString());
 
+            print("length of chats to build " +
+                snapshot.data!.docs.length.toString());
             if (snapshot.data!.docs.length == 0) {
               return SingleChildScrollView(
                 child: Column(
@@ -98,28 +100,28 @@ class ChatListStreamBuilder extends StatelessWidget {
               }
             }
 
-            pinned.sort((a, b) => b["lastmessagedate"][!a["isgroup"]
+            pinned.sort((a, b) => a["lastmessagedate"][!a["isgroup"]
                     ? GeneralUserService.getOwnUidPosInChatFromMemberList(
                         a["members"])
                     : GeneralUserService.getOwnUidPosInGroupFromList(
                         a["members"])]
                 .millisecondsSinceEpoch
-                .compareTo(a["lastmessagedate"][!a["isgroup"]
+                .compareTo(b["lastmessagedate"][!b["isgroup"]
                         ? GeneralUserService.getOwnUidPosInChatFromMemberList(
-                            a["members"])
-                        : GeneralUserService.getOwnUidPosInGroupFromList(a["members"])]
+                            b["members"])
+                        : GeneralUserService.getOwnUidPosInGroupFromList(b["members"])]
                     .millisecondsSinceEpoch));
 
-            notPinned.sort((a, b) => b["lastmessagedate"][!a["isgroup"]
+            notPinned.sort((a, b) => a["lastmessagedate"][!a["isgroup"]
                     ? GeneralUserService.getOwnUidPosInChatFromMemberList(
                         a["members"])
                     : GeneralUserService.getOwnUidPosInGroupFromList(
                         a["members"])]
                 .millisecondsSinceEpoch
-                .compareTo(a["lastmessagedate"][!a["isgroup"]
+                .compareTo(b["lastmessagedate"][!b["isgroup"]
                         ? GeneralUserService.getOwnUidPosInChatFromMemberList(
-                            a["members"])
-                        : GeneralUserService.getOwnUidPosInGroupFromList(a["members"])]
+                            b["members"])
+                        : GeneralUserService.getOwnUidPosInGroupFromList(b["members"])]
                     .millisecondsSinceEpoch));
 
             allChatsSorted.addAll(pinned);

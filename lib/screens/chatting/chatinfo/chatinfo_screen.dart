@@ -286,7 +286,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Bist du dir sicher, dass du diesen Chat wirklich löschen möchtest? Diese Aktion ist nicht zu widerrufen!',
+                                      'Bist du dir sicher, dass du diesen Chat wirklich löschen möchtest?',
                                     ),
                                   ],
                                 ),

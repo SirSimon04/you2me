@@ -46,7 +46,7 @@ List<Widget> getPrimaryActions(ChatModel chat, context) {
   ];
 }
 
-List<Widget> getSecondaryActions(data, context) {
+List<Widget> getSecondaryActions(ChatModel data, context) {
   return <Widget>[
     IconSlideAction(
       caption: 'Info',
@@ -69,32 +69,33 @@ List<Widget> getSecondaryActions(data, context) {
         );
       },
     ),
-    IconSlideAction(
-      caption: 'Mehr',
-      color: Colors.grey[700],
-      iconWidget: Padding(
-        padding: const EdgeInsets.all(3.0),
-        child: Icon(FontAwesomeIcons.ellipsisH),
+    if (!data.isGroup)
+      IconSlideAction(
+        caption: 'Mehr',
+        color: Colors.grey[700],
+        iconWidget: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Icon(FontAwesomeIcons.ellipsisH),
+        ),
+        onTap: () {
+          if (Platform.isIOS) {
+            showCupertinoModalPopup(
+              context: context,
+              builder: (context) => chatlistSlidableActionsMoreCupertino(
+                context,
+              ),
+            );
+          } else {
+            showAdaptiveActionSheet(
+              context: context,
+              actions: chatlistSlidableActionsMoreMaterial(context, data),
+              cancelAction: CancelAction(
+                title: const Text('Schließen'),
+              ),
+            );
+          }
+        },
       ),
-      onTap: () {
-        if (Platform.isIOS) {
-          showCupertinoModalPopup(
-            context: context,
-            builder: (context) => chatlistSlidableActionsMoreCupertino(
-              context,
-            ),
-          );
-        } else {
-          showAdaptiveActionSheet(
-            context: context,
-            actions: chatlistSlidableActionsMoreMaterial(context, data),
-            cancelAction: CancelAction(
-              title: const Text('Schließen'),
-            ),
-          );
-        }
-      },
-    ),
   ];
 }
 

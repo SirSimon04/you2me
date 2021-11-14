@@ -47,6 +47,10 @@ class GeneralUserService {
           ((_auth.currentUser?.uid ?? "") +
               "|" +
               (_auth.currentUser?.displayName ?? ""))) {
+        print("result of chat " +
+            nameUid +
+            " " +
+            members.indexOf(nameUid).toString());
         return members.indexOf(nameUid);
       }
     }
@@ -54,12 +58,13 @@ class GeneralUserService {
   }
 
   static int getOwnUidPosInGroupFromList(List nameUids) {
-    print("getOwnUidPosInChatFromMemberList group");
     print(nameUids);
-    print("uid " + (_auth.currentUser?.uid ?? ""));
     for (String nameUid in nameUids) {
       if (nameUid == (_auth.currentUser?.uid ?? "")) {
-        print(nameUids.indexOf(nameUid));
+        print("result of group " +
+            nameUid +
+            " " +
+            nameUids.indexOf(nameUid).toString());
         return nameUids.indexOf(nameUid);
       }
     }
