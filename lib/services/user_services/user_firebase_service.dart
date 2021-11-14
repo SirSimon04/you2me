@@ -265,7 +265,17 @@ class UserFirebaseService {
   }
 
   static Future<void> changePassword(String newPassword) async {
-    await _auth.currentUser?.updatePassword(newPassword);
+    try {
+      await _auth.currentUser?.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "";
+      switch (e.code) {
+        case "weak-password":
+          errorMessage = "Das Passwort ist zu schwach. Bitte wähle ein Neues";
+          break;
+      }
+      throw errorMessage;
+    }
   }
 
   static Future<void> deleteAccount() async {

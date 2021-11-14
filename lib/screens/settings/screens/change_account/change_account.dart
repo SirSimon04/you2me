@@ -306,40 +306,32 @@ class _ChangeAccountState extends State<ChangeAccount> {
                             color: Colors.green,
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.of(context).pop();
                           setState(() {
                             _isLoading = true;
                           });
 
-                          UserFirebaseService.loginForDelete(
-                                  email: _oldMail.text.toString().trim(),
-                                  password: _oldPassword.text)
-                              .onError((error, stackTrace) {
-                            ToastService.showLongToast(error.toString());
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          }).then((value) {
-                            UserFirebaseService.changeMail(
+                          try {
+                            await UserFirebaseService.loginForDelete(
+                                email: _oldMail.text.toString().trim(),
+                                password: _oldPassword.text);
+
+                            await UserFirebaseService.changeMail(
                               _mailController.text.toString().trim(),
-                            ).onError((error, stackTrace) {
-                              ToastService.showLongToast(error.toString());
-                              setState(() {
-                                _isLoading = false;
-                              });
-                            }).then(
-                              (value) {
-                                setState(() {
-                                  _isLoading = false;
-                                  _mailController.clear();
-                                  _oldPassword.clear();
-                                  _oldMail.clear();
-                                });
-                                ToastService.showLongToast(
-                                    "Deine Emailadresse wurde erfolgreich geändert");
-                              },
                             );
+
+                            ToastService.showLongToast(
+                                "Dein Passwort wurde erfolgreich geändert");
+                          } catch (error) {
+                            ToastService.showLongToast(error.toString());
+                          }
+
+                          setState(() {
+                            _isLoading = false;
+                            _passwordController.clear();
+                            _oldPassword.clear();
+                            _oldMail.clear();
                           });
                         },
                       ),
@@ -374,7 +366,7 @@ class _ChangeAccountState extends State<ChangeAccount> {
                           controller: _oldMail,
                           maxLines: 1,
                           decoration: InputDecoration(
-                            hintText: "Alte E-Mail",
+                            hintText: "E-Mail",
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
@@ -383,7 +375,7 @@ class _ChangeAccountState extends State<ChangeAccount> {
                           obscureText: true,
                           maxLines: 1,
                           decoration: InputDecoration(
-                            hintText: "Passwort",
+                            hintText: "Altes Passwort",
                           ),
                         ),
                       ],
@@ -408,26 +400,33 @@ class _ChangeAccountState extends State<ChangeAccount> {
                             color: Colors.green,
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.of(context).pop();
                           setState(() {
                             _isLoading = true;
                           });
 
-                          UserFirebaseService.login(
-                                  email: _oldMail.text.toString().trim(),
-                                  password: _oldPassword.text)
-                              .then(
-                            (value) => {
-                              UserFirebaseService.changePassword(
-                                      _passwordController.text)
-                                  .then((value) {
-                                setState(() {
-                                  _isLoading = false;
-                                });
-                              }),
-                            },
-                          );
+                          try {
+                            await UserFirebaseService.loginForDelete(
+                                email: _oldMail.text.toString().trim(),
+                                password: _oldPassword.text);
+
+                            await UserFirebaseService.changePassword(
+                              _passwordController.text.toString().trim(),
+                            );
+
+                            ToastService.showLongToast(
+                                "Dein Passwort wurde erfolgreich geändert");
+                          } catch (error) {
+                            ToastService.showLongToast(error.toString());
+                          }
+
+                          setState(() {
+                            _isLoading = false;
+                            _passwordController.clear();
+                            _oldPassword.clear();
+                            _oldMail.clear();
+                          });
                         },
                       ),
                     ],
