@@ -145,9 +145,11 @@ class _SettingsState extends State<Settings>
                     SizedBox(
                       height: 50,
                     ),
-                    Card(
-                      elevation: 6,
-                      child: SwitchListTile(
+                    PlatformListTile(
+                      isElevatedM: true,
+                      title: Text("Benachrichtigungen"),
+                      leading:Icon(FontAwesomeIcons.solidEnvelope),
+                      trailing: Switch(
                         value: data?.get("fcmids").contains(fcmId),
                         onChanged: (value) async {
                           if (data?.get("fcmids").contains(fcmId)) {
@@ -161,8 +163,6 @@ class _SettingsState extends State<Settings>
                             updateFcmId();
                           }
                         },
-                        title: Text("Benachrichtigungen"),
-                        activeColor: Theme.of(context).primaryColor,
                       ),
                     ),
                     SizedBox(
@@ -171,6 +171,7 @@ class _SettingsState extends State<Settings>
                     PlatformListTile(
                       title: Text("Mit Stern markierte"),
                       leading: Icon(FontAwesomeIcons.solidStar),
+
                       isElevatedM: true,
                       onTap: () {
                         Navigator.of(context)

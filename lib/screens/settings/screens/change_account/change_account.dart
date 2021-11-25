@@ -440,21 +440,120 @@ class _ChangeAccountState extends State<ChangeAccount> {
                   if (Platform.isIOS) {
                     showCupertinoModalPopup(
                       context: context,
-                      builder: (context) => CupertinoActionSheet(),
+                      builder: (context) => CupertinoActionSheet(
+                        actions: [
+                          CupertinoActionSheetAction(
+                              onPressed: () => UserFirebaseService.logout()
+                                  .then((value) => Navigator.of(context)
+                                      .pushReplacement(CupertinoPageRoute(
+                                          builder: (context) =>
+                                              LoginScreen()))),
+                              child: Text(
+                                "Abmelden",
+                                style: TextStyle(color: Colors.red),
+                              )),
+                          CupertinoActionSheetAction(
+                            onPressed: () => showDialog<void>(
+                              context: context,
+                              builder: (context) => CupertinoAlertDialog(
+                                title: Text(
+                                  "Wirklich löschen?",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Bist du dir sicher, dass du deinen Acount wirklich löschen möchtest? Diese Aktion ist nicht zu widerrufen!',
+                                    ),
+                                    SizedBox(height: 10),
+                                    CupertinoTextField(
+                                      controller: _oldMail,
+                                      maxLines: 1,
+                                      placeholder: "E-Mail",
+                                      keyboardType: TextInputType.emailAddress,
+                                    ),
+                                    SizedBox(height: 10),
+                                    CupertinoTextField(
+                                      controller: _oldPassword,
+                                      maxLines: 1,
+                                      placeholder: "Passwort",
+                                      obscureText: true,
+                                    )
+                                  ],
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text("Abbrechen"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  CupertinoDialogAction(
+                                    child: Text(
+                                      "Löschen",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    onPressed:  () async {
+                                      // UserFirebaseService.deleteAccount();
+                                      await UserFirebaseService
+                                          .loginForDelete(
+                                          email: _oldMail.text,
+                                          password:
+                                          _oldPassword.text)
+                                          .onError((error, stackTrace) =>
+                                          ToastService.showLongToast(
+                                              error.toString()))
+                                          .then((value) {
+                                        UserFirebaseService
+                                            .deleteAccount()
+                                            .then((value) => Navigator.of(
+                                            context)
+                                            .pushReplacement(
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen())));
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                            child: Text(
+                              "Account löschen",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                        cancelButton: CupertinoActionSheetAction(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("Schließen"),
+                        ),
+                      ),
                     );
                   } else {
                     showAdaptiveActionSheet(
                       context: context,
                       actions: [
                         BottomSheetAction(
-                            title: Text(
-                              "Abmelden",
-                              style: TextStyle(color: Colors.red),
+                          title: Text(
+                            "Abmelden",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          onPressed: () => UserFirebaseService.logout().then(
+                            (value) => Navigator.of(context).pushReplacement(
+                              CupertinoPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ),
                             ),
-                            onPressed: () => UserFirebaseService.logout().then(
-                                (value) => Navigator.of(context)
-                                    .pushReplacement(CupertinoPageRoute(
-                                        builder: (context) => LoginScreen())))),
+                          ),
+                        ),
                         BottomSheetAction(
                             title: Text(
                               "Account löschen",
