@@ -137,8 +137,18 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                 if (Platform.isIOS) {
                                   showCupertinoModalPopup(
                                     context: context,
-                                    builder: (context) =>
-                                        CupertinoActionSheet(),
+                                    builder: (context) => CupertinoActionSheet(
+                                      actions: [
+                                        CupertinoActionSheetAction(
+                                          child: Text("Fotomediathek"),
+                                          onPressed: getImageFromGallery,
+                                        ),
+                                        CupertinoActionSheetAction(
+                                          child: Text("Foto aufnehmen"),
+                                          onPressed: getImageFromCam,
+                                        )
+                                      ],
+                                    ),
                                   );
                                 } else {
                                   showAdaptiveActionSheet(
@@ -184,64 +194,111 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 subtitle: Text("Nutzername ändern"),
                 leading: Icon(FontAwesomeIcons.solidUser),
                 isElevatedM: true,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context2) => AlertDialog(
-                    title: Text("Benutzernamen ändern"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Nach dieser Aktion wirst du ausgeloggt",
-                          textAlign: TextAlign.center,
-                        ),
-                        TextField(
-                          controller: _nameController,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                            hintText: "Neuer Benutzername",
-                          ),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        child: Text(
-                          'Abbrechen',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onPressed: () {
-                          // Hier passiert etwas
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                          child: Text(
-                            'Ändern',
-                            style: TextStyle(
-                              color: Colors.green,
-                            ),
-                          ),
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            await UserFirebaseService.changeUserName(
-                                _nameController.text);
-                            print("changed name from flutter");
-                            UserFirebaseService.logout();
-                            Navigator.of(context).pushReplacement(
-                              CupertinoPageRoute(
-                                builder: (context) => LoginScreen(),
+                onTap: () => Platform.isIOS
+                    ? showCupertinoDialog(
+                        context: context,
+                        builder: (context) => CupertinoAlertDialog(
+                          title: Text("Benutzernamen ändern"),
+                          content: Column(
+                            children: [
+                              Text(
+                                "Nach dieser Aktion wirst du ausgeloggt",
+                                textAlign: TextAlign.center,
                               ),
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CupertinoTextField(
+                                controller: _nameController,
+                                maxLines: 1,
+                                placeholder: "Neuer Benutzername",
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: Text("Abbrechen"),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            CupertinoDialogAction(
+                              child: Text("Ändern"),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await UserFirebaseService.changeUserName(
+                                    _nameController.text);
+                                print("changed name from flutter");
+                                UserFirebaseService.logout();
+                                Navigator.of(context).pushReplacement(
+                                  CupertinoPageRoute(
+                                    builder: (context) => LoginScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : showDialog(
+                        context: context,
+                        builder: (context2) => AlertDialog(
+                          title: Text("Benutzernamen ändern"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Nach dieser Aktion wirst du ausgeloggt",
+                                textAlign: TextAlign.center,
+                              ),
+                              TextField(
+                                controller: _nameController,
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: "Neuer Benutzername",
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                'Abbrechen',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              onPressed: () {
+                                // Hier passiert etwas
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                                child: Text(
+                                  'Ändern',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await UserFirebaseService.changeUserName(
+                                      _nameController.text);
+                                  print("changed name from flutter");
+                                  UserFirebaseService.logout();
+                                  Navigator.of(context).pushReplacement(
+                                    CupertinoPageRoute(
+                                      builder: (context) => LoginScreen(),
+                                    ),
+                                  );
+                                }),
+                          ],
+                        ),
+                      ),
               ),
               SizedBox(
                 height: 30,
@@ -251,91 +308,163 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 subtitle: Text("E-Mail ändern"),
                 leading: Icon(FontAwesomeIcons.mailBulk),
                 isElevatedM: true,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text("E-Mail ändern ändern"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
-                            controller: _mailController,
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              hintText: "Neue E-Mail",
+                onTap: () => Platform.isIOS
+                    ? showCupertinoDialog(
+                        context: context,
+                        builder: (context) => CupertinoAlertDialog(
+                          title: Text("E-Mail ändern"),
+                          content: Column(
+                            children: [
+                              CupertinoTextField(
+                                controller: _mailController,
+                                maxLines: 1,
+                                placeholder: "Neue Email",
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CupertinoTextField(
+                                controller: _oldMail,
+                                maxLines: 1,
+                                placeholder: "Alte Email",
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CupertinoTextField(
+                                controller: _oldPassword,
+                                maxLines: 1,
+                                obscureText: true,
+                                placeholder: "Passwort",
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: Text("SChließen"),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
-                            keyboardType: TextInputType.emailAddress),
-                        TextField(
-                          controller: _oldMail,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                            hintText: "Alte E-Mail",
-                          ),
-                          keyboardType: TextInputType.emailAddress,
+                            CupertinoDialogAction(
+                              child: Text("Ändern"),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                try {
+                                  await UserFirebaseService.loginForDelete(
+                                      email: _oldMail.text.toString().trim(),
+                                      password: _oldPassword.text);
+
+                                  await UserFirebaseService.changeMail(
+                                    _mailController.text.toString().trim(),
+                                  );
+
+                                  ToastService.showLongToast(
+                                      "Dein Passwort wurde erfolgreich geändert");
+                                } catch (error) {
+                                  ToastService.showLongToast(error.toString());
+                                }
+
+                                setState(() {
+                                  _isLoading = false;
+                                  _passwordController.clear();
+                                  _oldPassword.clear();
+                                  _oldMail.clear();
+                                });
+                              },
+                            )
+                          ],
                         ),
-                        TextField(
-                          controller: _oldPassword,
-                          maxLines: 1,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: "Passwort",
+                      )
+                    : showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("E-Mail ändern ändern"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextField(
+                                  controller: _mailController,
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    hintText: "Neue E-Mail",
+                                  ),
+                                  keyboardType: TextInputType.emailAddress),
+                              TextField(
+                                controller: _oldMail,
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: "Alte E-Mail",
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              TextField(
+                                controller: _oldPassword,
+                                maxLines: 1,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: "Passwort",
+                                ),
+                              ),
+                            ],
                           ),
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                'Abbrechen',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              onPressed: () {
+                                // Hier passiert etwas
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text(
+                                'Ändern',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                try {
+                                  await UserFirebaseService.loginForDelete(
+                                      email: _oldMail.text.toString().trim(),
+                                      password: _oldPassword.text);
+
+                                  await UserFirebaseService.changeMail(
+                                    _mailController.text.toString().trim(),
+                                  );
+
+                                  ToastService.showLongToast(
+                                      "Dein Passwort wurde erfolgreich geändert");
+                                } catch (error) {
+                                  ToastService.showLongToast(error.toString());
+                                }
+
+                                setState(() {
+                                  _isLoading = false;
+                                  _passwordController.clear();
+                                  _oldPassword.clear();
+                                  _oldMail.clear();
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        child: Text(
-                          'Abbrechen',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onPressed: () {
-                          // Hier passiert etwas
-                          Navigator.of(context).pop();
-                        },
                       ),
-                      TextButton(
-                        child: Text(
-                          'Ändern',
-                          style: TextStyle(
-                            color: Colors.green,
-                          ),
-                        ),
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _isLoading = true;
-                          });
-
-                          try {
-                            await UserFirebaseService.loginForDelete(
-                                email: _oldMail.text.toString().trim(),
-                                password: _oldPassword.text);
-
-                            await UserFirebaseService.changeMail(
-                              _mailController.text.toString().trim(),
-                            );
-
-                            ToastService.showLongToast(
-                                "Dein Passwort wurde erfolgreich geändert");
-                          } catch (error) {
-                            ToastService.showLongToast(error.toString());
-                          }
-
-                          setState(() {
-                            _isLoading = false;
-                            _passwordController.clear();
-                            _oldPassword.clear();
-                            _oldMail.clear();
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ),
               SizedBox(
                 height: 30,
@@ -345,91 +474,162 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 subtitle: Text("Passwort ändern"),
                 leading: Icon(FontAwesomeIcons.lock),
                 isElevatedM: true,
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text("Passwort ändern"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextField(
-                          controller: _passwordController,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                            hintText: "Neues Passwort",
+                onTap: () => Platform.isIOS
+                    ? showCupertinoDialog(
+                        context: context,
+                        builder: (context) => CupertinoAlertDialog(
+                          title: Text("Passwort ändern"),
+                          content: Column(
+                            children: [
+                              CupertinoTextField(
+                                controller: _passwordController,
+                                maxLines: 1,
+                                placeholder: "Neues Passwort",
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CupertinoTextField(
+                                controller: _oldMail,
+                                maxLines: 1,
+                                placeholder: "E-Mail",
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CupertinoTextField(
+                                controller: _oldPassword,
+                                obscureText: true,
+                                maxLines: 1,
+                                placeholder: "Altes Passwort",
+                              ),
+                            ],
                           ),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: Text("Abbrechen"),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            CupertinoDialogAction(
+                              child: Text("Ändern"),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                try {
+                                  await UserFirebaseService.loginForDelete(
+                                      email: _oldMail.text.toString().trim(),
+                                      password: _oldPassword.text);
+
+                                  await UserFirebaseService.changePassword(
+                                    _passwordController.text.toString().trim(),
+                                  );
+
+                                  ToastService.showLongToast(
+                                      "Dein Passwort wurde erfolgreich geändert");
+                                } catch (error) {
+                                  ToastService.showLongToast(error.toString());
+                                }
+
+                                setState(() {
+                                  _isLoading = false;
+                                  _passwordController.clear();
+                                  _oldPassword.clear();
+                                  _oldMail.clear();
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        TextField(
-                          controller: _oldMail,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                            hintText: "E-Mail",
+                      )
+                    : showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Passwort ändern"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextField(
+                                controller: _passwordController,
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: "Neues Passwort",
+                                ),
+                              ),
+                              TextField(
+                                controller: _oldMail,
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: "E-Mail",
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                              TextField(
+                                controller: _oldPassword,
+                                obscureText: true,
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: "Altes Passwort",
+                                ),
+                              ),
+                            ],
                           ),
-                          keyboardType: TextInputType.emailAddress,
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                'Abbrechen',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                ),
+                              ),
+                              onPressed: () {
+                                // Hier passiert etwas
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text(
+                                'Ändern',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                ),
+                              ),
+                              onPressed: () async {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                try {
+                                  await UserFirebaseService.loginForDelete(
+                                      email: _oldMail.text.toString().trim(),
+                                      password: _oldPassword.text);
+
+                                  await UserFirebaseService.changePassword(
+                                    _passwordController.text.toString().trim(),
+                                  );
+
+                                  ToastService.showLongToast(
+                                      "Dein Passwort wurde erfolgreich geändert");
+                                } catch (error) {
+                                  ToastService.showLongToast(error.toString());
+                                }
+
+                                setState(() {
+                                  _isLoading = false;
+                                  _passwordController.clear();
+                                  _oldPassword.clear();
+                                  _oldMail.clear();
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        TextField(
-                          controller: _oldPassword,
-                          obscureText: true,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                            hintText: "Altes Passwort",
-                          ),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        child: Text(
-                          'Abbrechen',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                        onPressed: () {
-                          // Hier passiert etwas
-                          Navigator.of(context).pop();
-                        },
                       ),
-                      TextButton(
-                        child: Text(
-                          'Ändern',
-                          style: TextStyle(
-                            color: Colors.green,
-                          ),
-                        ),
-                        onPressed: () async {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _isLoading = true;
-                          });
-
-                          try {
-                            await UserFirebaseService.loginForDelete(
-                                email: _oldMail.text.toString().trim(),
-                                password: _oldPassword.text);
-
-                            await UserFirebaseService.changePassword(
-                              _passwordController.text.toString().trim(),
-                            );
-
-                            ToastService.showLongToast(
-                                "Dein Passwort wurde erfolgreich geändert");
-                          } catch (error) {
-                            ToastService.showLongToast(error.toString());
-                          }
-
-                          setState(() {
-                            _isLoading = false;
-                            _passwordController.clear();
-                            _oldPassword.clear();
-                            _oldMail.clear();
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
               ),
               Spacer(),
               PlatformListTile(
@@ -500,25 +700,22 @@ class _ChangeAccountState extends State<ChangeAccount> {
                                         color: Colors.red,
                                       ),
                                     ),
-                                    onPressed:  () async {
+                                    onPressed: () async {
                                       // UserFirebaseService.deleteAccount();
-                                      await UserFirebaseService
-                                          .loginForDelete(
-                                          email: _oldMail.text,
-                                          password:
-                                          _oldPassword.text)
+                                      await UserFirebaseService.loginForDelete(
+                                              email: _oldMail.text,
+                                              password: _oldPassword.text)
                                           .onError((error, stackTrace) =>
-                                          ToastService.showLongToast(
-                                              error.toString()))
+                                              ToastService.showLongToast(
+                                                  error.toString()))
                                           .then((value) {
-                                        UserFirebaseService
-                                            .deleteAccount()
+                                        UserFirebaseService.deleteAccount()
                                             .then((value) => Navigator.of(
-                                            context)
-                                            .pushReplacement(
-                                            CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    LoginScreen())));
+                                                    context)
+                                                .pushReplacement(
+                                                    CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            LoginScreen())));
                                       });
                                     },
                                   )
