@@ -96,8 +96,18 @@ class _MarkedMessagesState extends State<MarkedMessages> {
                               subtitle: Padding(
                                 child: doc["sender"] ==
                                         _auth.currentUser?.displayName
-                                    ? Text("Du")
-                                    : Text(doc["sender"]),
+                                    ? Text(
+                                        "Du",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1,
+                                      )
+                                    : Text(
+                                        doc["sender"],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1,
+                                      ),
                                 padding: EdgeInsets.all(8.0),
                               ),
                               title: ChatMessageBubble(

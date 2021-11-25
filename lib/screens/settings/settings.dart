@@ -121,10 +121,8 @@ class _SettingsState extends State<Settings>
                                       controller: _infoController,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: null,
-                                      suffix: IconButton(
-                                        onPressed: _infoController.clear,
-                                        icon: Icon(Icons.clear),
-                                      ),
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                   ],
                                 ),
@@ -210,21 +208,39 @@ class _SettingsState extends State<Settings>
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       leading: Icon(FontAwesomeIcons.solidEnvelope),
-                      trailing: Switch(
-                        value: data?.get("fcmids").contains(fcmId),
-                        onChanged: (value) async {
-                          if (data?.get("fcmids").contains(fcmId)) {
-                            await UserFirebaseService.removeFcmId(fcmId);
-                            await ChatFirebaseService.removeFcmIdFromAllChats(
-                                fcmId);
-                            updateFcmId();
-                          } else {
-                            await UserFirebaseService.addFcmId(fcmId);
-                            await ChatFirebaseService.addFcmIdToAllChats(fcmId);
-                            updateFcmId();
-                          }
-                        },
-                      ),
+                      trailing: Platform.isIOS
+                          ? CupertinoSwitch(
+                              value: data?.get("fcmids").contains(fcmId),
+                              onChanged: (value) async {
+                                if (data?.get("fcmids").contains(fcmId)) {
+                                  await UserFirebaseService.removeFcmId(fcmId);
+                                  await ChatFirebaseService
+                                      .removeFcmIdFromAllChats(fcmId);
+                                  updateFcmId();
+                                } else {
+                                  await UserFirebaseService.addFcmId(fcmId);
+                                  await ChatFirebaseService.addFcmIdToAllChats(
+                                      fcmId);
+                                  updateFcmId();
+                                }
+                              },
+                            )
+                          : Switch(
+                              value: data?.get("fcmids").contains(fcmId),
+                              onChanged: (value) async {
+                                if (data?.get("fcmids").contains(fcmId)) {
+                                  await UserFirebaseService.removeFcmId(fcmId);
+                                  await ChatFirebaseService
+                                      .removeFcmIdFromAllChats(fcmId);
+                                  updateFcmId();
+                                } else {
+                                  await UserFirebaseService.addFcmId(fcmId);
+                                  await ChatFirebaseService.addFcmIdToAllChats(
+                                      fcmId);
+                                  updateFcmId();
+                                }
+                              },
+                            ),
                     ),
                     SizedBox(
                       height: 50,

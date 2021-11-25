@@ -118,7 +118,9 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).colorScheme.secondaryVariant,
               margin: BubbleEdges.only(top: 5, bottom: 5),
-              style: widget.message.isMy ? styleMe : styleSomebody,
+              style: widget.message.isMy
+                  ? styleMe
+                  : styleSomebody, //ASKJHFKJSHFASKJHFKSJAHFASFJHSAFHASKJFASHFJKASJHF
               radius: Radius.circular(kCircularBorderRadius * 0.5),
               child: getMessage(),
             ),
@@ -195,6 +197,7 @@ class _ChatMessageBubbleState extends State<ChatMessageBubble> {
               !widget.message.isImage
                   ? Text(
                       widget.message.text + "                  ",
+                      style: Theme.of(context).textTheme.bodyText1,
                     )
                   : ChatMessageBubbleImage(widget.message),
               Positioned(
