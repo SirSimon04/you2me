@@ -364,6 +364,7 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                                 isElevatedM: true,
                                 title: Text(
                                   "Freund hinzufügen",
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 leading: Icon(FontAwesomeIcons.solidUser),
                                 onTap: () => UserFirebaseService.addFriend(

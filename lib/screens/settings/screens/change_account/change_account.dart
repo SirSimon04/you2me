@@ -190,8 +190,14 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 height: 30,
               ),
               PlatformListTile(
-                title: Text(_auth.currentUser?.displayName ?? ""),
-                subtitle: Text("Nutzername ändern"),
+                title: Text(
+                  _auth.currentUser?.displayName ?? "",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  "Nutzername ändern",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
                 leading: Icon(FontAwesomeIcons.solidUser),
                 isElevatedM: true,
                 onTap: () => Platform.isIOS
@@ -304,8 +310,14 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 height: 30,
               ),
               PlatformListTile(
-                title: Text(_auth.currentUser?.email ?? ""),
-                subtitle: Text("E-Mail ändern"),
+                title: Text(
+                  _auth.currentUser?.email ?? "",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  "E-Mail ändern",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
                 leading: Icon(FontAwesomeIcons.mailBulk),
                 isElevatedM: true,
                 onTap: () => Platform.isIOS
@@ -470,9 +482,17 @@ class _ChangeAccountState extends State<ChangeAccount> {
                 height: 30,
               ),
               PlatformListTile(
-                title: Text("********"),
-                subtitle: Text("Passwort ändern"),
-                leading: Icon(FontAwesomeIcons.lock),
+                title: Text(
+                  "********",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                subtitle: Text(
+                  "Passwort ändern",
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+                leading: Icon(
+                  FontAwesomeIcons.lock,
+                ),
                 isElevatedM: true,
                 onTap: () => Platform.isIOS
                     ? showCupertinoDialog(
@@ -633,7 +653,10 @@ class _ChangeAccountState extends State<ChangeAccount> {
               ),
               Spacer(),
               PlatformListTile(
-                title: Text("Mehr"),
+                title: Text(
+                  "Mehr",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 isElevatedM: true,
                 leading: Icon(FontAwesomeIcons.ellipsisH),
                 onTap: () {

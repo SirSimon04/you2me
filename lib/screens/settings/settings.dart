@@ -89,8 +89,14 @@ class _SettingsState extends State<Settings>
                       height: 30,
                     ),
                     PlatformListTile(
-                      title: Text(_auth.currentUser?.displayName ?? ""),
-                      subtitle: Text(data?.get("info")),
+                      title: Text(
+                        _auth.currentUser?.displayName ?? "",
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      subtitle: Text(
+                        data?.get("info"),
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                       leading: CircleAvatar(
                         radius: 30,
                         backgroundImage: CachedNetworkImageProvider(
@@ -192,7 +198,10 @@ class _SettingsState extends State<Settings>
                     ),
                     PlatformListTile(
                       isElevatedM: true,
-                      title: Text("Benachrichtigungen"),
+                      title: Text(
+                        "Benachrichtigungen",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                       leading: Icon(FontAwesomeIcons.solidEnvelope),
                       trailing: Switch(
                         value: data?.get("fcmids").contains(fcmId),
@@ -214,7 +223,10 @@ class _SettingsState extends State<Settings>
                       height: 50,
                     ),
                     PlatformListTile(
-                      title: Text("Mit Stern markierte"),
+                      title: Text(
+                        "Mit Stern markierte",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                       leading: Icon(FontAwesomeIcons.solidStar),
                       isElevatedM: true,
                       onTap: () {
@@ -230,7 +242,10 @@ class _SettingsState extends State<Settings>
                       height: 50,
                     ),
                     PlatformListTile(
-                      title: Text("Account bearbeiten"),
+                      title: Text(
+                        "Account bearbeiten",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                       leading: Icon(FontAwesomeIcons.userEdit),
                       isElevatedM: true,
                       onTap: () => Navigator.of(context).push(
@@ -243,7 +258,10 @@ class _SettingsState extends State<Settings>
                       height: 50,
                     ),
                     PlatformListTile(
-                      title: Text("Datenschutzerklärung"),
+                      title: Text(
+                        "Datenschutzerklärung",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                       leading: Icon(FontAwesomeIcons.lock),
                       isElevatedM: true,
                       onTap: () => _launchURL(),
