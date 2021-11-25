@@ -89,8 +89,19 @@ class _FriendListsState extends State<FriendLists>
                           children: documents.map((doc) {
                             print(doc);
                             return PlatformListTile(
-                              title: Text(doc["name"]),
-                              subtitle: Text(doc["info"]),
+                              title: Text(
+                                doc["name"],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1!
+                                    .copyWith(
+                                      fontSize: 18.0,
+                                    ),
+                              ),
+                              subtitle: Text(
+                                doc["info"],
+                                style: Theme.of(context).textTheme.subtitle2,
+                              ),
                               leading: UserProfilePic(
                                 isOnline: doc["isonline"],
                                 url: doc["fotourl"],
