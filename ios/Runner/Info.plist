@@ -48,8 +48,8 @@
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>some description</string>
         <key>NSPhotoLibraryUsageDescription</key>
-        <string>Advent4you braucht den Fotozugriff, um Fotos an andere Nutzer zu versenden.</string>
+        <string>you2me benötigt den Fotozugriff, um Fotos zu versenden.</string>
         <key>NSCameraUsageDescription</key>
-        <string>Advent4you braucht den Kamerazugriff, um Fotos an andere Nutzer zu versenden.</string>
+        <string>you2me benötigt den Kamerazugriff, um Fotos zu versenden.</string>
 	</dict>
 </plist>
