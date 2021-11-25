@@ -122,7 +122,10 @@ class _AddUsersState extends State<AddUsers> {
                         children: filteredDocs
                             .map(
                               (doc) => PlatformListTile(
-                                title: Text(doc["name"]),
+                                title: Text(
+                                  doc["name"],
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
                                 leading: UserProfilePic(
                                   url: doc["fotourl"],
                                   isOnline: doc["isonline"],
