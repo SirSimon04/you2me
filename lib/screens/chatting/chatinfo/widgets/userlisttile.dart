@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,12 +82,18 @@ class _UserListTileState extends State<UserListTile> {
           return PlatformListTile(
             title: Row(
               children: [
-                Text(data["name"].toString(), style: Theme.of(context).textTheme.bodyText1,),
+                Text(
+                  data["name"].toString(),
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
                 Spacer(),
                 isAdmin
                     ? Text(
                         "Admin",
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontStyle: FontStyle.italic),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontStyle: FontStyle.italic),
                       )
                     : Text(""),
               ],
@@ -110,62 +118,120 @@ class _UserListTileState extends State<UserListTile> {
               ),
               icon: Icon(FontAwesomeIcons.infoCircle),
             ),
-            onTap:
-                (widget.chat.adminList!.contains(_auth.currentUser?.uid ?? ""))
-                    ? () {
-                        showAdaptiveActionSheet(
-                          context: context,
-                          actions: [
-                            BottomSheetAction(
-                                title: Text("Entfernen"),
-                                onPressed: () {
-                                  ChatFirebaseService.kickOutOfGroup(
-                                    uid: data.id,
-                                    chat: widget.chat,
-                                  );
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  ToastService.showLongToast(data["name"]
-                                          .toString() +
-                                      " wurde aus der Gruppe ${widget.chat.name} entfernt");
-                                }),
-                            BottomSheetAction(
-                              title: isAdmin
-                                  ? Text("Admin entfernen")
-                                  : Text("Zum Admin machen"),
-                              onPressed: isAdmin
-                                  ? () async {
-                                      await ChatFirebaseService.removeAdmin(
-                                        userUid: data.id,
-                                        chatUid: widget.chat.uid,
-                                      );
-                                      setState(() {
-                                        isAdmin = false;
-                                      });
-                                      Navigator.of(context).pop();
-                                    }
-                                  : () async {
-                                      await ChatFirebaseService.makeAdmin(
-                                        userUid: data.id,
-                                        chatUid: widget.chat.uid,
-                                      ).then((value) {
+            onTap: (widget.chat.adminList!
+                    .contains(_auth.currentUser?.uid ?? ""))
+                ? () {
+                    Platform.isIOS
+                        ? showModalBottomSheet(
+                            context: context,
+                            builder: (context) => CupertinoActionSheet(
+                                  actions: [
+                                    CupertinoActionSheetAction(
+                                        child: Text("Entfernen"),
+                                        onPressed: () {
+                                          ChatFirebaseService.kickOutOfGroup(
+                                            uid: data.id,
+                                            chat: widget.chat,
+                                          );
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          ToastService.showLongToast(data[
+                                                      "name"]
+                                                  .toString() +
+                                              " wurde aus der Gruppe ${widget.chat.name} entfernt");
+                                        }),
+                                    CupertinoActionSheetAction(
+                                      child: isAdmin
+                                          ? Text("Admin entfernen")
+                                          : Text("Zum Admin machen"),
+                                      onPressed: isAdmin
+                                          ? () async {
+                                              await ChatFirebaseService
+                                                  .removeAdmin(
+                                                userUid: data.id,
+                                                chatUid: widget.chat.uid,
+                                              );
+                                              setState(() {
+                                                isAdmin = false;
+                                              });
+                                              Navigator.of(context).pop();
+                                            }
+                                          : () async {
+                                              await ChatFirebaseService
+                                                  .makeAdmin(
+                                                userUid: data.id,
+                                                chatUid: widget.chat.uid,
+                                              ).then((value) {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              });
+                                              setState(() {
+                                                isAdmin = true;
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                    ),
+                                  ],
+                                  cancelButton: CupertinoActionSheetAction(
+                                    child: Text("Schließen"),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                ))
+                        : showAdaptiveActionSheet(
+                            context: context,
+                            actions: [
+                              BottomSheetAction(
+                                  title: Text("Entfernen"),
+                                  onPressed: () {
+                                    ChatFirebaseService.kickOutOfGroup(
+                                      uid: data.id,
+                                      chat: widget.chat,
+                                    );
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    ToastService.showLongToast(data["name"]
+                                            .toString() +
+                                        " wurde aus der Gruppe ${widget.chat.name} entfernt");
+                                  }),
+                              BottomSheetAction(
+                                title: isAdmin
+                                    ? Text("Admin entfernen")
+                                    : Text("Zum Admin machen"),
+                                onPressed: isAdmin
+                                    ? () async {
+                                        await ChatFirebaseService.removeAdmin(
+                                          userUid: data.id,
+                                          chatUid: widget.chat.uid,
+                                        );
+                                        setState(() {
+                                          isAdmin = false;
+                                        });
                                         Navigator.of(context).pop();
+                                      }
+                                    : () async {
+                                        await ChatFirebaseService.makeAdmin(
+                                          userUid: data.id,
+                                          chatUid: widget.chat.uid,
+                                        ).then((value) {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        });
+                                        setState(() {
+                                          isAdmin = true;
+                                        });
                                         Navigator.of(context).pop();
-                                      });
-                                      setState(() {
-                                        isAdmin = true;
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
+                                      },
+                              ),
+                            ],
+                            cancelAction: CancelAction(
+                              title: const Text('Schließen'),
                             ),
-                          ],
-                          cancelAction: CancelAction(
-                            title: const Text('Schließen'),
-                          ),
-                        );
-                      }
-                    : null,
+                          );
+                  }
+                : null,
           );
         } else {
           return Container();
