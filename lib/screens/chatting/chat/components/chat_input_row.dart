@@ -139,6 +139,10 @@ class _ChatInputRowState extends State<ChatInputRow> {
                             onPressed: getImageFromCam,
                           ),
                         ],
+                        cancelButton: CupertinoActionSheetAction(
+                          child: Text("Schließen"),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
                       ),
                     );
                   } else {
