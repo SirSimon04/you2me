@@ -122,7 +122,7 @@ class _UserListTileState extends State<UserListTile> {
                     .contains(_auth.currentUser?.uid ?? ""))
                 ? () {
                     Platform.isIOS
-                        ? showModalBottomSheet(
+                        ? showCupertinoModalPopup(
                             context: context,
                             builder: (context) => CupertinoActionSheet(
                                   actions: [

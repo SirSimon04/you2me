@@ -238,6 +238,9 @@ class _CreateGroup2State extends State<CreateGroup2> {
                           minLines: 1,
                           maxLines: 2,
                           controller: nameController,
+                          onChanged: (val) {
+                            setState(() {});
+                          },
                         ),
                       ),
                     ),
