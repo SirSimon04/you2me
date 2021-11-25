@@ -150,7 +150,7 @@ class UserFirebaseService {
       "name": _auth.currentUser?.displayName,
       "friends": [],
       "isonline": true,
-      "info": "Hey there! I'm using Disputatio",
+      "info": "Hey there! I'm using you2me",
       "searchIndex": indexList,
       "lastonline": Timestamp.now(),
       "hasChatWith": [],
