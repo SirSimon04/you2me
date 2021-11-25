@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,46 +101,89 @@ class _SettingsState extends State<Settings>
                         icon: Icon(FontAwesomeIcons.pencilAlt),
                         onPressed: () {
                           _infoController.text = data?.get("info");
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text("Info ändern"),
-                              content: TextField(
-                                controller: _infoController,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                  suffixIcon: IconButton(
+                          if (Platform.isIOS) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CupertinoAlertDialog(
+                                title: Text("Info ändern"),
+                                content: CupertinoTextField(
+                                  controller: _infoController,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  suffix: IconButton(
                                     onPressed: _infoController.clear,
                                     icon: Icon(Icons.clear),
                                   ),
                                 ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: Text("Schließen"),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                  CupertinoDialogAction(
+                                    child: Text(
+                                      "Ändern",
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+
+                                      await UserFirebaseService.changeInfo(
+                                          _infoController.text);
+
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    },
+                                  )
+                                ],
                               ),
-                              actions: [
-                                TextButton(
-                                  child: Text(
-                                    'Ändern',
-                                    style: TextStyle(
-                                      color: Colors.green,
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text("Info ändern"),
+                                content: TextField(
+                                  controller: _infoController,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      onPressed: _infoController.clear,
+                                      icon: Icon(Icons.clear),
                                     ),
                                   ),
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text(
+                                      'Ändern',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      Navigator.of(context).pop();
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
 
-                                    await UserFirebaseService.changeInfo(
-                                        _infoController.text);
+                                      await UserFirebaseService.changeInfo(
+                                          _infoController.text);
 
-                                    setState(() {
-                                      _isLoading = false;
-                                    });
-                                  },
-                                )
-                              ],
-                            ),
-                          );
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                            );
+                          }
                         },
                       ),
                     ),
@@ -148,7 +193,7 @@ class _SettingsState extends State<Settings>
                     PlatformListTile(
                       isElevatedM: true,
                       title: Text("Benachrichtigungen"),
-                      leading:Icon(FontAwesomeIcons.solidEnvelope),
+                      leading: Icon(FontAwesomeIcons.solidEnvelope),
                       trailing: Switch(
                         value: data?.get("fcmids").contains(fcmId),
                         onChanged: (value) async {
@@ -171,7 +216,6 @@ class _SettingsState extends State<Settings>
                     PlatformListTile(
                       title: Text("Mit Stern markierte"),
                       leading: Icon(FontAwesomeIcons.solidStar),
-
                       isElevatedM: true,
                       onTap: () {
                         Navigator.of(context)
