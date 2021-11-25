@@ -43,15 +43,18 @@ class _UserListTileState extends State<UserListTile> {
           children: [
             Text(
               "Du",
-              style: TextStyle(fontStyle: FontStyle.italic),
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
             ),
             Spacer(),
             widget.isAdmin
                 ? Text(
                     "Admin",
-                    style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(fontStyle: FontStyle.italic),
                   )
                 : Text(""),
           ],
@@ -77,14 +80,12 @@ class _UserListTileState extends State<UserListTile> {
           return PlatformListTile(
             title: Row(
               children: [
-                Text(data["name"].toString()),
+                Text(data["name"].toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Spacer(),
                 isAdmin
                     ? Text(
                         "Admin",
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                        ),
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontStyle: FontStyle.italic),
                       )
                     : Text(""),
               ],

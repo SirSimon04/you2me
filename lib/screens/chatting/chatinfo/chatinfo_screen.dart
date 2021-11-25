@@ -478,7 +478,10 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                       .contains(_auth.currentUser?.uid ?? null))
                     PlatformListTile(
                       isElevatedM: true,
-                      title: Text("Nutzer hinzufügen"),
+                      title: Text(
+                        "Nutzer hinzufügen",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
                       leading: Icon(FontAwesomeIcons.plus),
                       onTap: () => addUserBottomSheet(context, chat),
                     ),
