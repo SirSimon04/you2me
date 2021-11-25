@@ -208,6 +208,18 @@ class UserFirebaseService {
         Map<String, dynamic>? data = doc.data();
         var members = data["members"];
 
+        var lastMessageSenderName = data["lastmessagesendername"];
+
+        List newLastMessageSenderName = [];
+
+        for (String name in lastMessageSenderName) {
+          if (name == oldName) {
+            newLastMessageSenderName.add(newName);
+          } else {
+            newLastMessageSenderName.add(name);
+          }
+        }
+
         int ownUidPos =
             GeneralUserService.getOwnUidPosInChatFromMemberList(members);
 
@@ -222,6 +234,7 @@ class UserFirebaseService {
         await _firestore.collection("chat").doc(doc.id).update({
           "members": members,
           "name": chatName,
+          "lastmessagesendername": newLastMessageSenderName,
         });
       }
     }
