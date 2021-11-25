@@ -155,7 +155,24 @@ class _CreateGroup2State extends State<CreateGroup2> {
                                     showCupertinoModalPopup(
                                       context: context,
                                       builder: (context) =>
-                                          CupertinoActionSheet(),
+                                          CupertinoActionSheet(
+                                        actions: [
+                                          CupertinoActionSheetAction(
+                                            child: Text("Fotomediathek"),
+                                            onPressed: getImageFromGallery,
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Kamera"),
+                                            onPressed: getImageFromCam,
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text("Schließen"),
+                                        ),
+                                      ),
                                     );
                                   } else {
                                     showAdaptiveActionSheet(
@@ -284,11 +301,11 @@ class _CreateGroup2State extends State<CreateGroup2> {
                       child: Material(
                         elevation: 5.0,
                         borderRadius: BorderRadius.circular(30.0),
-                        color: nameController.text.trim().length == 0
+                        color: nameController.text.isEmpty
                             ? Colors.grey
                             : Theme.of(context).primaryColor,
                         child: MaterialButton(
-                          onPressed: nameController.text.trim().length == 0
+                          onPressed: nameController.text.isEmpty
                               ? null
                               : () async {
                                   setState(() {
