@@ -70,15 +70,47 @@ List<BottomSheetAction> chatlistSlidableActionsMoreMaterial(context, chat) {
   ];
 }
 
-CupertinoActionSheet chatlistSlidableActionsMoreCupertino(context) {
+CupertinoActionSheet chatlistSlidableActionsMoreCupertino(context, chat) {
   return CupertinoActionSheet(
     actions: [
       CupertinoActionSheetAction(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (context) => ChatInfoScreen(chat),
+            ),
+          );
+        },
         child: Text("Info"),
       ),
       CupertinoActionSheetAction(
-        onPressed: () {},
+        onPressed: () => showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: Text(
+              'Wirklich löschen?',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+            content: Text(
+                'Bist du dir sicher, dass du diesen Chat löschen möchtest?'),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("Abbrechen"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              CupertinoDialogAction(
+                child: Text("Löschen"),
+                onPressed: () {
+                  ChatFirebaseService.deleteChat(chat);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
         child: Text("Löschen"),
         isDestructiveAction: true,
       ),

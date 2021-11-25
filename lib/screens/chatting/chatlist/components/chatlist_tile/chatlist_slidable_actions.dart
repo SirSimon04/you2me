@@ -83,6 +83,7 @@ List<Widget> getSecondaryActions(ChatModel data, context) {
               context: context,
               builder: (context) => chatlistSlidableActionsMoreCupertino(
                 context,
+                data,
               ),
             );
           } else {

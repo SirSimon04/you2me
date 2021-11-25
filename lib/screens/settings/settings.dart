@@ -114,6 +114,9 @@ class _SettingsState extends State<Settings>
                                 title: Text("Info ändern"),
                                 content: Column(
                                   children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
                                     CupertinoTextField(
                                       controller: _infoController,
                                       keyboardType: TextInputType.multiline,
