@@ -128,7 +128,18 @@ class _ChatInputRowState extends State<ChatInputRow> {
                   if (Platform.isIOS) {
                     showCupertinoModalPopup(
                       context: context,
-                      builder: (context) => CupertinoActionSheet(),
+                      builder: (context) => CupertinoActionSheet(
+                        actions: [
+                          CupertinoActionSheetAction(
+                            child: Text("Fotomediathek"),
+                            onPressed: getImageFromGallery,
+                          ),
+                          CupertinoActionSheetAction(
+                            child: Text("Foto aufnhemen"),
+                            onPressed: getImageFromCam,
+                          ),
+                        ],
+                      ),
                     );
                   } else {
                     showAdaptiveActionSheet(
