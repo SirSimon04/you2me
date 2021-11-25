@@ -166,9 +166,13 @@ class _FriendsSearchPageState extends State<FriendsSearchPage> {
                         return ListView(
                           children: documents.map((doc) {
                             return PlatformListTile(
-                              title: Text(doc["name"]),
+                              title: Text(
+                                doc["name"],
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
                               subtitle: Text(
-                                doc["info"] + doc["info"],
+                                doc["info"],
+                                style: Theme.of(context).textTheme.subtitle2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               leading: CircleAvatar(
