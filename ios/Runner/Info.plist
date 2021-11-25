@@ -43,5 +43,13 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationAlwaysUsageDescription</key>
+        <string>some description</string>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>some description</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Advent4you braucht den Fotozugriff, um Fotos an andere Nutzer zu versenden.</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Advent4you braucht den Kamerazugriff, um Fotos an andere Nutzer zu versenden.</string>
 	</dict>
 </plist>
