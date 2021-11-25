@@ -183,29 +183,27 @@ class _ChatInfoScreenState extends State<ChatInfoScreen> {
                       //   leading: Icon(FontAwesomeIcons.photoVideo),
                       //   onTap: () {},
                       // ),
-                      PlatformListTile(
-                        isElevatedM: true,
-                        title: Text(
-                          "Mit Stern markiert",
-                          style: Theme.of(context).textTheme.bodyText1,
+                      if (widget.comesFromFriends != true)
+                        PlatformListTile(
+                          isElevatedM: true,
+                          title: Text(
+                            "Mit Stern markiert",
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          leading: Icon(FontAwesomeIcons.solidStar),
+                          onTap: () {
+                            Navigator.of(context).push(CupertinoPageRoute(
+                              builder: (context) => MarkedMessages(
+                                isInChat: true,
+                                chatUid: widget.chat.uid,
+                              ),
+                            ));
+                          },
                         ),
-                        leading: Icon(FontAwesomeIcons.solidStar),
-                        onTap: () {
-                          Navigator.of(context).push(CupertinoPageRoute(
-                            builder: (context) => MarkedMessages(
-                              isInChat: true,
-                              chatUid: widget.chat.uid,
-                            ),
-                          ));
-                        },
-                      ),
-                      SizedBox(
-                        height: 70,
-                      ),
-
-                      SizedBox(
-                        height: 70,
-                      ),
+                      if (widget.comesFromFriends != true)
+                        SizedBox(
+                          height: 70,
+                        ),
                       // PlatformListTile(
                       //   isElevatedM: true,
                       //   title: Text(
