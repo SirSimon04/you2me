@@ -108,18 +108,22 @@ class _SettingsState extends State<Settings>
                         onPressed: () {
                           _infoController.text = data?.get("info");
                           if (Platform.isIOS) {
-                            showDialog(
+                            showCupertinoDialog(
                               context: context,
                               builder: (context) => CupertinoAlertDialog(
                                 title: Text("Info ändern"),
-                                content: CupertinoTextField(
-                                  controller: _infoController,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  suffix: IconButton(
-                                    onPressed: _infoController.clear,
-                                    icon: Icon(Icons.clear),
-                                  ),
+                                content: Column(
+                                  children: [
+                                    CupertinoTextField(
+                                      controller: _infoController,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      suffix: IconButton(
+                                        onPressed: _infoController.clear,
+                                        icon: Icon(Icons.clear),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 actions: [
                                   CupertinoDialogAction(

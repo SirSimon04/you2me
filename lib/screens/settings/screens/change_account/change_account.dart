@@ -327,6 +327,9 @@ class _ChangeAccountState extends State<ChangeAccount> {
                           title: Text("E-Mail ändern"),
                           content: Column(
                             children: [
+                              SizedBox(
+                                height: 10,
+                              ),
                               CupertinoTextField(
                                 controller: _mailController,
                                 maxLines: 1,
@@ -501,6 +504,9 @@ class _ChangeAccountState extends State<ChangeAccount> {
                           title: Text("Passwort ändern"),
                           content: Column(
                             children: [
+                              SizedBox(
+                                height: 10,
+                              ),
                               CupertinoTextField(
                                 controller: _passwordController,
                                 maxLines: 1,
