@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -38,10 +39,26 @@ void main() async {
   // ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({required this.loggedIn});
 
   final bool loggedIn;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  void askPermission()async{
+    FirebaseMessaging m = FirebaseMessaging.instance;
+    await m.requestPermission();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    askPermission();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +71,7 @@ class MyApp extends StatelessWidget {
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),
       // home: WelcomeScreen(),
-      home: loggedIn ? MyHomePage() : LoginScreen(),
+      home: widget.loggedIn ? MyHomePage() : LoginScreen(),
       debugShowCheckedModeBanner: false,
       routes: {},
     );
