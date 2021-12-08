@@ -25,8 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
           email: data.name, password: data.password);
 
       return null;
-    } on FirebaseAuthException catch (e) {
-      return (e.message);
+    } catch (e) {
+      return (e.toString());
     }
   }
 
@@ -34,14 +34,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final name = await Navigator.of(context)
         .push(CupertinoPageRoute(builder: (context) => SignUpEnterName()));
     if (name == null) {
-      return "Kein Name gewählt";
+      return "Es wurde kein Name gewählt";
     }
     try {
       await UserFirebaseService.register(
           email: data.name, password: data.password, username: name);
       return null;
-    } on FirebaseAuthException catch (e) {
-      return e.message;
+    } catch (e) {
+      return e.toString();
     }
   }
 
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await UserFirebaseService.resetPassword(mail);
       return null;
     } catch (e) {
-      return "Fehler";
+      return e.toString();
     }
   }
 

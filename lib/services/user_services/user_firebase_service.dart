@@ -16,16 +16,43 @@ class UserFirebaseService {
     required String email,
     required String password,
   }) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("email", "mail");
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("email", "mail");
 
-    String? fcmId = await _fcm.getToken();
+      String? fcmId = await _fcm.getToken();
 
-    if (fcmId != null) {
-      print("FCMID-NOT-NULL " + fcmId);
-      addFcmId(fcmId);
-      ChatFirebaseService.addFcmIdToAllChats(fcmId);
+      if (fcmId != null) {
+        print("FCMID-NOT-NULL " + fcmId);
+        addFcmId(fcmId);
+        ChatFirebaseService.addFcmIdToAllChats(fcmId);
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "";
+      print(e.code);
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "Die Email-Adresse hat das falsche Format.";
+          break;
+        case "wrong-password":
+          errorMessage = "Das Passwort ist falsch.";
+          break;
+        case "user-not-found":
+          errorMessage = "Diese Email-Adresse existiert nicht.";
+          break;
+        case "user-disabled":
+          errorMessage = "Der Nutzer mit dieser Email ist deaktiviert.";
+          break;
+        case "too-many-requests":
+          errorMessage = "Zu viele Anfragen. Versuche es später nochmal";
+          break;
+        default:
+          errorMessage = "Ein unbestimmter Fehler ist aufgetreten.";
+      }
+      throw errorMessage;
+    } on Exception catch (e) {
+      throw "Ein unbestimmter Fehler ist aufgetreten";
     }
   }
 
@@ -114,8 +141,26 @@ class UserFirebaseService {
         email: email,
         password: password,
       );
-    } catch (e) {
-      print("Error  " + e.toString());
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "";
+      print(e.code);
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "Die Email-Adresse hat das falsche Format.";
+          break;
+        case "weak-password":
+          errorMessage = "Das eingegebene Passwort ist zu schwach";
+          break;
+        case "email-already-in-use":
+          errorMessage = "Diese E-Mail wird bereits verwendet";
+          break;
+        case "too-many-requests":
+          errorMessage = "Zu viele Anfragen. Versuche es später nochmal";
+          break;
+        default:
+          errorMessage = "Ein unbestimmter Fehler ist aufgetreten.";
+      }
+      throw errorMessage;
     }
     print("created firebaseuser");
     //TODO: add exceptions
@@ -162,7 +207,24 @@ class UserFirebaseService {
   }
 
   static Future<void> resetPassword(String mail) async {
-    await _auth.sendPasswordResetEmail(email: mail);
+    try {
+      await _auth.sendPasswordResetEmail(email: mail);
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "";
+      print(e.code);
+      switch (e.code) {
+        case "invalid-email":
+          errorMessage = "Die eingegeben E-Mail ist ungültig.";
+          break;
+        case "user-not-found":
+          errorMessage =
+              "Der Nutzer mit der eingebenen E-Mail wurde nicht gefunden.";
+          break;
+        default:
+          errorMessage = "Ein unbestimmer Fehler ist aufgetreten.";
+      }
+      throw errorMessage;
+    }
   }
 
   static Future<void> addFriend(String userUid) async {

@@ -657,7 +657,9 @@ class _ChangeAccountState extends State<ChangeAccount> {
                         ),
                       ),
               ),
-              Spacer(),
+              SizedBox(
+                height: 30,
+              ),
               PlatformListTile(
                 title: Text(
                   "Mehr",
@@ -876,33 +878,6 @@ class _ChangeAccountState extends State<ChangeAccount> {
                   }
                 },
               ),
-              SizedBox(
-                height: 30,
-              ),
-              // PlatformListTile(
-              //   title: Text("Ausloggen"),
-              //   leading: Icon(FontAwesomeIcons.signOutAlt),
-              //   isElevatedM: true,
-              //   onTap: () async {
-              //     await UserFirebaseService.logout();
-              //     Navigator.of(context).pushReplacement(
-              //         CupertinoPageRoute(builder: (context) => LoginScreen()));
-              //   },
-              //   focusColor: Colors.red,
-              //   tileColorM: Colors.red.withOpacity(0.6),
-              // ),
-              // PlatformListTile(
-              //   title: Text("Account löschen"),
-              //   leading: Icon(FontAwesomeIcons.signOutAlt),
-              //   isElevatedM: true,
-              //   onTap: () async {
-              //     await UserFirebaseService.logout();
-              //     Navigator.of(context).pushReplacement(
-              //         CupertinoPageRoute(builder: (context) => LoginScreen()));
-              //   },
-              //   focusColor: Colors.red,
-              //   tileColorM: Colors.red.withOpacity(0.6),
-              // ),
             ],
           ),
           Container(
