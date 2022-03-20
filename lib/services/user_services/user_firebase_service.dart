@@ -163,7 +163,6 @@ class UserFirebaseService {
       throw errorMessage;
     }
     print("created firebaseuser");
-    //TODO: add exceptions
     await _auth.currentUser?.updatePhotoURL(
         "https://firebasestorage.googleapis.com/v0/b/disputatio-a1039.appspot.com/o/user.png?alt=media&token=46927ec9-a8d4-431a-9fc1-60cbef1e4f2a");
     await _auth.currentUser?.updateDisplayName(username);
@@ -207,6 +206,7 @@ class UserFirebaseService {
   }
 
   static Future<void> resetPassword(String mail) async {
+    print(mail);
     try {
       await _auth.sendPasswordResetEmail(email: mail);
     } on FirebaseAuthException catch (e) {
@@ -214,7 +214,7 @@ class UserFirebaseService {
       print(e.code);
       switch (e.code) {
         case "invalid-email":
-          errorMessage = "Die eingegeben E-Mail ist ungültig.";
+          errorMessage = "Die eingegebe E-Mail ist ungültig.";
           break;
         case "user-not-found":
           errorMessage =
