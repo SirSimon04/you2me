@@ -3,4 +3,7 @@
 
 key.properties
 app/upload-keystore.jks
-
+.dart_tool/
+.packages
+build/
+pubspec.lock  # Except for application packages
