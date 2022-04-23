@@ -4,6 +4,15 @@
 key.properties
 app/upload-keystore.jks
 .dart_tool/
-.packages
+.packages/
 build/
-pubspec.lock  # Except for application packages
+.DS_Store
+.atom/
+.idea
+.packages
+.pub/
+build/
+ios/.generated/
+packages
+pubspec.lock
+.flutter-plugins
